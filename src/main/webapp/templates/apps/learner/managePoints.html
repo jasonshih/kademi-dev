@@ -140,7 +140,7 @@
 
                             #if( $page.paginator.isEmpty() )
                             <tr>
-                                <td colspan="7">There are no results matching the selected date range and criteria</td>
+                                <td colspan="9">There are no results matching the selected date range and criteria</td>
                             </tr>
                             #else
                             #foreach($p in $page.paginator.records)
@@ -323,7 +323,7 @@
                                 <label class="control-label col-md-3" for="issuedDate">Issued Date</label>
                                 <div class="col-md-9">
                                     <div class="input-group">
-                                        <input type="text" name="issuedDate" placeholder="Issued Date" data-format="DD/MM/YYYY" class="form-control DateTime" />
+                                        <input type="text" name="issuedDate" placeholder="Issued Date" data-format="DD/MM/YYYY" class="form-control DateTime required" />
                                         <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                     </div>
                                 </div>

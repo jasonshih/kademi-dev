@@ -1,0 +1,248 @@
+#macro( defaultMenuControls )
+<div class="form-group">
+    <div class="col-sm-12">
+        <label>Logo</label>
+        
+        <p><img src="/static/images/photo_holder.png" class="img-responsive img-thumbnail logo-previewer" /></p>
+        <button type="button" class="btn btn-block btn-primary logo-edit">Change Logo</button>
+        <button type="button" class="btn btn-block btn-xs btn-danger logo-delete">Remove Logo</button>
+        <input type="hidden" name="logo" class="form-control" />
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <label>Padding for logo</label><br />
+        <input type="text" class="form-control logo-padding" placeholder="15px" name="logopadding" value="" />
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-12">Navbar layout</label>
+    <div class="col-sm-12">
+        <select class="form-control navbar-layout">
+            <option selected value="container-fluid">Wide</option>
+            <option value="container">Box</option>
+        </select>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-12">Navbar styles</label>
+    <div class="col-sm-12">
+        <select class="form-control navbar-style">
+            <option value="navbar-default">Default</option>
+            <option value="navbar-inverse">Inverse</option>
+            <option value="navbar-transparent">Transparent</option>
+        </select>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <label>Display menu item as</label><br />
+        <select class="cbb-display-menu-item form-control">
+            <option value="text">Text</option>
+            <option value="text-icon">Text &amp; icon</option>
+            <option value="icon">Icon</option>
+        </select>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <label>
+            <input type="checkbox" class="chk-show-user-menu" />
+            Show profile drop-down
+        </label>
+        <br />
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <label>
+            <input type="checkbox" class="chk-show-search" />
+            Show search form
+        </label><br />
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <label>
+            <input type="checkbox" class="chk-show-org-selector" />
+            Organisation selector
+        </label><br />
+        <small class="help-block text-mute">Requires <code>reporting-lib</code></small>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <label>
+            <input type="checkbox" class="chk-show-lang-selector" />
+            Language selector
+        </label><br />
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <label>
+            <input type="checkbox" class="chk-show-sub-menu-on-hover" />
+            Show sub menu on hover
+        </label><br />
+    </div>
+</div>
+<hr />
+
+<label>Menu Items</label>
+<div class="menuTree clearfix">
+    <ol class="menuList rootMenuList">
+        <li>Loading...</li>
+    </ol>
+    
+    #set( $myMenu = $menuManager.rootMenuItem )
+    <script type="text/html" id="menuTreeTemplate">
+        #showMenu( $myMenu true )
+    </script>
+    
+    <button class="btn btn-primary saveMenu btn-block">
+        <span class="fa fa-check"></span>
+        Save menu
+    </button>
+</div>
+#end
+
+#macro( editMenuItemForm )
+<div class="editMenuItem" style="display: none">
+    <h4 style="margin-top: 0;">Edit menu item</h4>
+    
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Path</strong></label>
+        
+        <div class="col-sm-12">
+            <input type="text" name="href" class="form-control input-sm" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Icon</strong></label>
+        
+        <div class="col-sm-12">
+            <button class="btn btn-default btn-menu-icon"></button>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Text</strong></label>
+        
+        <div class="col-sm-12">
+            <input type="text" name="text" class="form-control input-sm" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Visible</strong></label>
+        
+        <div class="col-sm-12">
+            <select class="form-control" name="hidden">
+                <option value="false">Visible for all users</option>
+                <option value="true">Hidden for all users</option>
+                <option value="anon">Visible for not logged in users</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <button class="editMenuItemOk btn btn-sm btn-success">
+                <span class="fa fa-check"></span>
+            </button>
+            
+            <button class="editMenuItemDelete btn btn-sm btn-danger" title="Delete">
+                <span class="fa fa-times"></span>
+            </button>
+            
+            <button class="editMenuItemCancel btn btn-xs btn-default" title="Cancel">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+#end
+
+#macro( showMenu $menuItem $isRootMenuItem )
+    <li #if ($isRootMenuItem) class="rootMenuItem" #end>
+        <div data-id="$menuItem.id" data-href="$!menuItem.href" data-hidden="$menuItem.hidden" class="menuItem">
+            <span class="btn-group btn-group-xs small">
+                <a class="btn btn-success btnAddMenuItem" href="#">
+                    <span class="fa fa-plus small"></span>
+                </a>
+                #if (!$isRootMenuItem)
+                    <a class="btn btn-info btnSortMenuItem" href="#">
+                        <span class="fa fa-sort small"></span>
+                    </a>
+                #end
+                #if (!$isRootMenuItem)
+                    <a class="btn btn-primary btnEditMenuItem" href="#">
+                        <span class="fa fa-pencil small"></span>
+                    </a>
+                #end
+            </span>
+            
+            <span class="menuItemIcon"><i class="$!menuItem.cssClass"></i></span>
+            <span class="menuItemText">#if ($menuItem.text) $!menuItem.text #else Root Menu Item #end </span>
+        </div>
+        
+        #showMenuList($menuItem)
+    </li>
+#end
+
+#macro( showMenuList $menuItem )
+    <ol class="menuList" data-id="$menuItem.id">
+        #foreach($item in $menuItem.items)
+            #showMenu( $item false )
+        #end
+    </ol>
+#end
+
+#macro( showMenuItem $item $isSubmenu)
+    #if( $item.visible.isEmpty() )
+    <li class="$formatter.ifTrue($item.active, 'active', '') nav-${item.id}-wrapper" title="${item.text}">
+        <a class="nav-${item.id} translatable" href="$item.href" shape="rect" title="$formatter.translate($item.text)"
+           data-source-type="nav"
+           data-source-id="nav-$item.id"
+           data-source-field="nav-$item.id"
+           data-source-text="$item.text">
+            #if ($isSubmenu)
+                $formatter.translate($item.text)
+            #else
+                #if ($displayMenuItem == "icon" || $displayMenuItem == "text-icon")
+                    <i class="$item.cssClass"></i>
+                #end
+                #if ($displayMenuItem == "icon")
+                    <span class="visible-xs-inline visible-sm-inline">$formatter.translate($item.text)</span>
+                #end
+                #if ($displayMenuItem == "text" || $displayMenuItem == "text-icon")
+                    $formatter.translate($item.text)
+                #end
+            #end
+        </a>
+    </li>
+    #else
+    <li class="dropdown  nav-${item.id}-wrapper">
+        <a href="#" class="dropdown-toggle nav-${item.id}" data-toggle="dropdown" $formatter.ifTrue($showSubMenuOnHover,
+            'data-hover="dropdown"', '') title="$formatter.translate($item.text)"
+           data-source-type="nav"
+           data-source-id="nav-$item.id"
+           data-source-field="nav-$item.id"
+           data-source-text="$item.text"
+            >
+            #if ($displayMenuItem == "icon" || $displayMenuItem == "text-icon")
+                <i class="$item.cssClass"></i>
+            #end
+            #if ($displayMenuItem == "icon")
+                <span class="visible-xs-inline visible-sm-inline">$formatter.translate($item.text)</span>
+            #end
+            #if ($displayMenuItem == "text" || $displayMenuItem == "text-icon")
+                $formatter.translate($item.text)
+            #end
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            #foreach( $subitem in $item.visible )
+                #showMenuItem( $subitem, true )
+            #end
+        </ul>
+    </li>
+    #end
+#end

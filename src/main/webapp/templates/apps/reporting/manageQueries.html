@@ -17,9 +17,9 @@
             <tbody>
                 #foreach( $query in $page.children.ofType.query )
                 <tr>
-                    <td>$query.link</td>
-                    <td>$query.indexes</td>
-                    <td>$query.roles</td>
+                    <td>$!query.link</td>
+                    <td>$!query.indexes</td>
+                    <td>$!query.roles</td>
                 </tr>
                 #end
             </tbody>
@@ -38,8 +38,8 @@
             <tbody>
                 #foreach( $query in $page.children.ofType.table )
                 <tr>
-                    <td>$query.link</td>
-                    <td>$query.description</td>
+                    <td>$!query.link</td>
+                    <td>$!query.description</td>
                 </tr>
                 #end
             </tbody>

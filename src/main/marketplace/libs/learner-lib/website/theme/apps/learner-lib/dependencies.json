@@ -3,7 +3,10 @@
         {
             "appId": "forums",
             "branch": "1.0.1"
-        }
+        },
+        {
+            "appId": "userDashboardApp"
+        }        
     ],
     "dependencies": [
         {
@@ -16,6 +19,12 @@
             "less": {
                 "lessMedia": "all",
                 "path": "/theme/apps/learner/modulePage.less"
+            }
+        },
+        {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/learner/myLearning.less"
             }
         },
         {
@@ -45,13 +54,25 @@
         {
             "js": {
                 "group": "main",
+                "path": "/theme/apps/learner/jquery.module.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/dotdotdot/1.6.16/jquery.dotdotdot.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/learner/moduleSearch.js"
             }
         },
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/learner/moduleList.js"
+                "path": "/theme/apps/learner/modulesList.js"
             }
         },
         {
@@ -69,43 +90,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/learner/trainingResultsPortlet.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/learner/profileAdminPortlet.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/learner/myRewards.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/learner/jquery.module.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/dotdotdot/1.6.16/jquery.dotdotdot.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/learner/learningAdminDashboardPortlet.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/learner/myLearningModules.js"
+                "path": "/theme/apps/learner/coursePicker.js"
             }
         }
     ]

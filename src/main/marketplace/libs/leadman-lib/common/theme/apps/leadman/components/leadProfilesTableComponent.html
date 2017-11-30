@@ -1,0 +1,92 @@
+<div class="lead-contacts-wrap lead-profiles-table-component" id="searchResults">
+    #set($paginator = $formatter.paginator().skipToStart(false))
+    #set($searchResults = $page.getSearchResults($paginator.start, $paginator.pageSize))
+    #set($paginator = $paginator.totalRecords($page.totalProfiles))
+
+    $!paginator.setRecords($searchResults)
+    #if( $searchResults.isEmpty() )
+    <p class="lead">No results matched the search</p>
+    #else
+    <ul class="list-group">
+        #foreach($p in $searchResults)
+        <li class="list-group-item">
+            <div class="media">
+                <div class="media-left hidden-xs">
+                    <div class="avatar avatar-away">
+                        <img alt="..." src="/theme/apps/leadman/user-placeholder.png" class="img img-circle" style="width: 100px" />
+                        <i class="avatar avatar-busy"></i>
+                    </div>
+                </div>
+                <div class="media-body" style="padding-left: 20px; position: relative">
+                    <div class="row">
+                        <div class="col-md-11">
+                        <h3 class="media-heading">
+                            #if($p.fields.nickName.value)
+                            <a href="$p.fields.userName.value">
+                                $formatter.htmlEncode($p.fields.nickName.value)
+                            </a>
+                            #elseif($p.fields.firstName.value)
+                            <a href="$p.fields.userName.value">
+                                $!formatter.htmlEncode($p.fields.firstName.value)
+                                $!formatter.htmlEncode($p.fields.surName.value)
+                            </a>
+                            #else
+                            <a href="$p.fields.userName.value">No Name</a>
+                            #end
+                        </h3>
+                        </div>
+                        <div class="col-md-1" style="text-align:right;">
+                            <input type="checkbox" name="custId" value="$p.fields.userId.value"> 
+                        </div>
+                    </div>
+
+                    <p>
+                        #if( $p.fields.email.value )
+                        <i aria-hidden="true" class="fa fa-map-marker"></i>
+                        $p.fields.email.value
+                        #end
+
+                        #if( $p.fields.phone.value )
+                        , $p.fields.phone.value
+                        #end
+                    </p>
+
+                    #set( $leads = $page.leads($p.fields.userName.value) )
+                    #if( $leads.size() > 0 )
+                    <p>$leads.size() leads in progress</p>
+                    #else
+                    <p>
+                        <i>No leads in progress</i>
+                    </p>
+                    #end
+
+                    #if( $page.getLastContactDate($p.fields.userName.value) )
+                    #set($cd = $page.getLastContactDate($p.fields.userName.value))
+                    <small class="pull-right">Last contact: <abbr class="timeago" title="$formatter.formatDateISO8601($cd, $page.organisation.timezone)">$formatter.formatDateISO8601($cd, $page.organisation.timezone)</abbr></small>
+                    #end
+                    <div class="text-muted leadContactMethods">
+                        #if( $p.fields.email.value )
+                        <a href="mailto:$p.fields.email.value" class="text-muted">
+                            <em aria-hidden="true" class="fa fa-envelope"></em>
+                        </a>
+                        #end
+                        #if( $p.fields.phone.value )
+                        <a href="tel:$p.fields.phone.value" class="text-muted">
+                            <em aria-hidden="true" class="fa fa-mobile"></em>
+                        </a>
+                        #end
+                        <!--<a href="javascript:void(0)" class="text-muted">-->
+                            <!--<i aria-hidden="true" class="fa fa-twitter"></i>-->
+                        <!--</a>-->
+                        <!--<a href="javascript:void(0)" class="text-muted">-->
+                            <!--<i aria-hidden="true" class="fa fa-facebook"></i>-->
+                        <!--</a>-->
+                    </div>
+                </div>
+            </div>
+        </li>
+        #end
+        $!paginator.html(null)
+    </ul>
+    #end
+</div> <!-- End results table -->

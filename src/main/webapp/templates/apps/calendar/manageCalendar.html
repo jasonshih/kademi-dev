@@ -1,19 +1,18 @@
 <html>
     <head>
         <title>Calendar</title>
-        <link href="/static/css/fullcalendar-1.6.4.css" rel="stylesheet" type="text/css" />
+        <link href="/static/fullcalendar/3.5.1/fullcalendar.min.css" rel="stylesheet" type="text/css" />
         <link href="manageCalendars.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="calendars.js">//</script>
         <script type="text/javascript" src="manageCalendars.js">//</script>
         <script type="text/javascript" src="cal-utils.js">//</script>
-        <script type="text/javascript" src="/static/js/fullcalendar-1.6.4.js">//</script>
+        <script type="text/javascript" src="/static/fullcalendar/3.5.1/fullcalendar.min.js">//</script>
         <script type="text/javascript" src="/static/js/jquery-ui-1.10.3.custom.min.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="/static/js/stupidtable.js">//</script>
         <script type="text/javascript" src="/static/chosen/1.1.0/chosen.jquery.js">//</script>
-        <link rel="stylesheet" href="/static/chosen/1.1.0/chosen.css"/>
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-chosen/1.0.1/bootstrap-chosen.css" />
-        
+
         <style>
             .group-list {
                 margin-bottom: 5px;
@@ -24,7 +23,7 @@
                 padding-right: 5px;
             }
         </style>
-        
+
     </head>
     <body class="directory">
         <!--<div class="input pull-right" id='myUploaded' style="width: 200px"></div>-->
@@ -98,10 +97,10 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <i class="clip-list"></i>Calendar group settings
+                        <i class="clip-list"></i>Group access
                     </div>
                     <div class="panel-body">
                         <p>
@@ -109,32 +108,32 @@
                         </p>
                         <div class="GroupList">
                             #foreach($g in $page.selectedGroups)
-                                #genGroup($g)
+                            #genGroup($g)
                             #end
                         </div>
-                     </div>
+                    </div>
                 </div>                        
-                  
+
                 #macro(genGroup $group)
-                    #set($gc = "")
-                    #set($gIcon = "")
-                    #if( $group.groupType == "P" || !$group.groupType)
-                        #set($gc = "alert alert-success")
-                        #set($gIcon = "clip-users")
-                    #elseif( $group.groupType == "S" )
-                        #set($gc = "alert alert-info")
-                        #set($gIcon = "fa fa-trophy")
-                    #elseif( $group.groupType == "M" )
-                        #set($gc = "alert alert-info")
-                        #set($gIcon = "fa fa-envelope")
-                    #end
-                    <span id="group_$group.name" class="group-list $gc">
-                        <i class="$gIcon"></i>
-                        <span class="block-name" title="$group.name">$group.name</span>
-                        <a href="$group.name" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group $group.name"><i href="$group.name" class="fa fa-times"></i></a>
-                    </span>
+                #set($gc = "")
+                #set($gIcon = "")
+                #if( $group.groupType == "P" || !$group.groupType)
+                #set($gc = "alert alert-success")
+                #set($gIcon = "clip-users")
+                #elseif( $group.groupType == "S" )
+                #set($gc = "alert alert-info")
+                #set($gIcon = "fa fa-trophy")
+                #elseif( $group.groupType == "M" )
+                #set($gc = "alert alert-info")
+                #set($gIcon = "fa fa-envelope")
                 #end
-                
+                <span id="group_$group.name" class="group-list $gc">
+                    <i class="$gIcon"></i>
+                    <span class="block-name" title="$group.name">$group.name</span>
+                    <a href="$group.name" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group $group.name"><i href="$group.name" class="fa fa-times"></i></a>
+                </span>
+                #end
+
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <i class="clip-list"></i>Calendar settings
@@ -166,8 +165,16 @@
                                     <i>If you would like to enable anonymous users to register to events, select a group to add their automatically created profiles to.</i>
                                 </div>
                             </div>
-                        
-                        <div class="form-group">
+                            
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-lg-2" for="color">Colour</label>
+                                <div class="col-md-8 col-lg-8">
+                                    <input type="text" name="color" value="$!page.calendar.color" />
+                                </div>
+                            </div>
+                            
+
+                            <div class="form-group">
                                 <div class="col-md-offset-3 col-lg-offset-2">
                                     <button class="btn btn-success" type="submit">Save details</button>
                                 </div>
@@ -187,7 +194,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div id="modalGroup" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -198,12 +205,12 @@
                     <div class="modal-body">
                         <div class="ListItem">
                             #foreach($g in $page.allGroups)
-                                <div class="panel panel-default">
-                                    <div class="panel-body membership">
-                                        <label for="$g.name">$g.name</label>
-                                        <label class="pull-right" data-groupType="$!g.groupType">$formatter.checkbox($g.name, $page.isSelected($g))</label>
-                                    </div>
+                            <div class="panel panel-default">
+                                <div class="panel-body membership">
+                                    <label for="$g.name">$g.name</label>
+                                    <label class="pull-right" data-groupType="$!g.groupType">$formatter.checkbox($g.name, $page.isSelected($g))</label>
                                 </div>
+                            </div>
                             #end
                         </div>
                     </div>
@@ -254,11 +261,11 @@
                     </div>
 
                     <i>Enter the full event content, reminders and other details after the event is created</i>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-sm btn-primary" type="submit">Save</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                </div>
             </form>
         </div>
 
@@ -268,7 +275,7 @@
                 initGroupEditing();
 
                 $(".calendarSettings").forms({
-                    onSuccess : function() {
+                    onSuccess: function () {
                         Msg.info("Saved");
                     }
                 });
@@ -287,11 +294,11 @@
                         timePicker12Hour: false
 
                     },
-                    function (start, end) {
-                        flog('onChange', start, end);
-                        $("#startDate").val(formatDateTime(start));
-                        $("#endDate").val(formatDateTime(end));
-                    }
+                            function (start, end) {
+                                flog('onChange', start, end);
+                                $("#startDate").val(formatDateTime(start));
+                                $("#endDate").val(formatDateTime(end));
+                            }
                     );
                 });
             });

@@ -1,0 +1,25 @@
+#if (!$style || $style == "")
+    #set($style = "circle-animated")
+#end
+<div class="$!align">
+    <ul class="socialLinks socialLinks-$style">
+        #if ($facebook != "false")
+        <li><a target="$!target" href="$!facebookUrl" class="icoFacebook" title="Facebook"><i class="fa fa-facebook"></i></a></li>
+        #end
+        #if ($twitter != "false")
+        <li><a target="$!target" href="$!twitterUrl" class="icoTwitter" title="Twitter"><i class="fa fa-twitter"></i></a></li>
+        #end
+        #if ($google != "false")
+        <li><a target="$!target" href="$!googleUrl" class="icoGoogle" title="Google+"><i class="fa fa-google-plus"></i></a></li>
+        #end
+        #if ($linkedin != "false")
+        <li><a target="$!target" href="$!linkedinUrl" class="icoLinkedin" title="Linkedin"><i class="fa fa-linkedin"></i></a></li>
+        #end
+        #if ($instagram != "false")
+        <li><a target="$!target" href="$!instagramUrl" class="icoInstagram" title="Instagram"><i class="fa fa-instagram"></i></a></li>
+        #end
+        #if ($youtube != "false")
+        <li><a target="$!target" href="$!youtubeUrl" class="icoYoutube" title="Youtube"><i class="fa fa-youtube-play"></i></a></li>
+        #end
+    </ul>
+</div>

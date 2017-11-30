@@ -12,19 +12,31 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-12">Show topic name</label>
+        <label class="col-sm-12">Show level name</label>
         <div class="col-sm-12">
-            <input type="checkbox" class="chk-show-topic-name" />
+            <input type="checkbox" class="chk-show-level-name" />
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-12">Display</label>
+        <label class="col-sm-12">Level name tag</label>
         <div class="col-sm-12">
-            <select class="form-control select-display-type">
-                <option value="text" selected="selected">Text</option>
-                <option value="text-icon">Text &amp; Icon</option>
-                <option value="icon">Icon</option>
+            <select class="form-control select-level-name-tag">
+                <option value="h1">Heading 1</option>
+                <option value="h2">Heading 2</option>
+                <option value="h3">Heading 3</option>
+                <option value="h4">Heading 4</option>
+                <option value="h5">Heading 5</option>
+                <option value="h6">Heading 6</option>
             </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Image for no level</label>
+        <div class="col-sm-12">
+            <p><img src="/static/images/photo_holder.png" class="img-responsive img-thumbnail img-no-level-previewer" /></p>
+            <button type="button" class="btn btn-block btn-primary btn-change-img-no-level">Change Image</button>
+            <button type="button" class="btn btn-block btn-sm btn-default btn-remove-img-no-level">Remove Image</button>
+            <small class="help-block">Shows an image when the user has no level</small>
         </div>
     </div>
 </form>

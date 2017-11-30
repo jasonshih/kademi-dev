@@ -6,7 +6,8 @@
         leadType: null,
         tags: [],
         assignedTo: [],
-        sources: []
+        sources: [],
+        journeys: []
     };
 
     var dataTable = null;
@@ -17,6 +18,7 @@
         if (dataTable !== null) {
             dataTable.clear(false);
         }
+        flog('leads hits', hits);
 
         $('#leadBody').empty();
 
@@ -26,19 +28,26 @@
             },
             table: '#leadTable',
             idSrc: 'leadId',
-            fields: [{
-                label: 'Deal Amount',
-                name: 'dealAmount'
-            },
+            fields: [
+                {
+                    label: 'Score',
+                    name: 'score'
+                },
+                {
+                    label: 'Deal Amount',
+                    name: 'dealAmount'
+                },
                 {
                     label: 'Stage',
                     name: 'stageName',
-                    type: 'select'
+                    type: 'select',
+                    placeholder: 'Choose stage'
                 },
                 {
                     label: 'Source',
                     name: 'source',
-                    type: 'select'
+                    type: 'select',
+                    placeholder: 'Choose source'
                 },
                 {
                     label: 'Assigned To',
@@ -65,6 +74,15 @@
                 [7, 'desc']
             ],
             columns: [
+                {
+                    data: 'score',
+                    name: 'score',
+                    defaultContent: ""
+                },
+                {
+                    data: 'title',
+                    defaultContent: ""
+                },
                 {
                     data: 'organisation.title',
                     name: 'orgTitle',
@@ -139,46 +157,106 @@
                     }
                 },
                 {
+                    data: 'funnelName',
+                    defaultContent: ""
+                },
+                {
                     data: 'leadId',
-                    "orderable": false,
+                    orderable: false,
                     render: function (data, type, full, meta) {
                         flog(data, type, full, meta);
-                        return '<a class="btn btn-info" href="' + data + '"><i class="fa fa-eye"></i></a>';
+                        return '<a class="btn btn-info btn-xs" href="' + data + '"><i class="fa fa-eye"></i></a>';
+                    }
+                },
+                {
+                    data: 'leadId',
+                    orderable: false,
+                    render: function (data, type, full, meta) {
+                        return '<input class="leadMan-del-lead" value="' + data + '" type="checkbox"/>';
                     }
                 }
             ]
         });
 
-        $('#leadTable').on('focus', 'tbody td select[id^=DTE_Field_]', function () {
-            var field = $(this);
-            var td = field.closest('td');
-            var fieldName = field.attr('id');
-
-            if (fieldName !== null && typeof fieldName !== 'undefined') {
-                fieldName = field.attr('id').replace('DTE_Field_', '');
-                var row = dataTable.row(td[0]);
-                var leadId = row.data().leadId;
-                switch (fieldName) {
-                    case "stageName":
-                        loadStageNames(leadId);
-                        break;
-                    case "source":
-                        loadSources(leadId);
-                        break;
-                }
-            }
+        $(document.body).on('click', '#leadsCheckAll', function (e) {
+            $('#leadTable').find('.leadMan-del-lead').prop('checked', this.checked);
         });
 
-        $('#leadTable').on('click', 'tbody td', function (e) {
+        $('body')
+                .off('click', '.btn-leadMan-del-lead')
+                .on('click', '.btn-leadMan-del-lead', function (e) {
+                    e.preventDefault();
 
-            editor.inline(this, {
-                submitOnBlur: true
-            });
-        });
+                    var chkbs = $('.leadMan-del-lead:checked');
+                    if (chkbs.length > 0) {
+                        if (confirm('Are you sure you want to delete ' + chkbs.length + ' lead' + (chkbs.length > 1 ? 's' : '') + '?')) {
+                            var ids = [];
+                            chkbs.each(function (i, item) {
+                                ids.push(item.value);
+                            });
+
+                            $.ajax({
+                                type: 'POST',
+                                dataType: 'JSON',
+                                url: '/leads/',
+                                data: {
+                                    deleteLeads: ids.join(',')
+                                },
+                                success: function (resp) {
+                                    if (resp.status) {
+                                        Msg.success(resp.messages);
+                                        setTimeout(function () {
+                                            doSearch();
+                                        }, 800);
+                                    } else {
+                                        Msg.warning(resp.messages);
+                                    }
+                                },
+                                error: function () {
+                                    Msg.error('Oh No! Something went wrong!');
+                                }
+                            });
+                        }
+                    }
+                });
+
+        $('#leadTable')
+                .off('focus', 'tbody td select[id^=DTE_Field_]')
+                .on('focus', 'tbody td select[id^=DTE_Field_]', function () {
+                    var field = $(this);
+                    var td = field.closest('td');
+                    var fieldName = field.attr('id');
+
+                    if (fieldName !== null && typeof fieldName !== 'undefined') {
+                        fieldName = field.attr('id').replace('DTE_Field_', '');
+                        var row = dataTable.row(td[0]);
+                        var cellData = dataTable.cell(td[0]).data();
+                        var leadId = row.data().leadId;
+                        switch (fieldName) {
+                            case "stageName":
+                                loadStageNames(leadId, cellData);
+                                break;
+                            case "source":
+                                loadSources(leadId, cellData);
+                                break;
+                        }
+                    }
+                });
+
+        $('#leadTable')
+                .off('click', 'tbody td.editable')
+                .on('click', 'tbody td.editable', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    editor.inline(this, {
+                        onBlur: 'submit'
+                    });
+                });
 
         for (var i = 0; i < hits.hits.length; i++) {
             var hit = hits.hits[i];
             var _source = hit._source;
+            _source.score = hit._score.toFixed(2);
             dataTable.row.add(_source);
         }
 
@@ -196,14 +274,14 @@
         });
 
         editor.on('submitComplete', function (e, json, data) {
-            doSearch();
+            // doSearch();
         });
 
         dataTable.draw();
     }
 
 
-    function loadStageNames(leadId) {
+    function loadStageNames(leadId, currentValue) {
         $.ajax({
             url: '/leads/?stageNames=' + leadId,
             dataType: 'json'
@@ -216,12 +294,12 @@
                     }
                 });
                 flog('Stages', stages);
-                editor.field('stageName').update(stages);
+                editor.field('stageName').update(stages).set(currentValue);
             }
         });
     }
 
-    function loadSources(leadId) {
+    function loadSources(leadId, currentValue) {
         $.ajax({
             url: '/leads/?sourceNames=' + leadId,
             dataType: 'json'
@@ -234,7 +312,7 @@
                     }
                 });
                 flog('Sources', sources);
-                editor.field('source').update(sources);
+                editor.field('source').update(sources).set(currentValue);
             }
         });
     }
@@ -263,6 +341,7 @@
             e.preventDefault();
             e.stopPropagation();
             var filterName = $(this).find('a').attr('data-filter');
+            flog("leadDropFilter > filterName: ", filterName);
             $(this).find('a').toggleClass('filterSelected');
             $(this).find('i').toggleClass('hide');
             var groupId = $(this).find('a').attr('href');
@@ -415,12 +494,12 @@
                     .labelType("value")   //Configure what type of data to show in the label. Can be "key", "value" or "percent"
                     .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
                     .donutRatio(0.35)     //Configure how big you want the donut hole size to be.
-                ;
+                    ;
 
             d3.select("#sourcesPie svg")
-                .datum(buckets)
-                .transition().duration(350)
-                .call(chart);
+                    .datum(buckets)
+                    .transition().duration(350)
+                    .call(chart);
 
             return chart;
         });
@@ -449,12 +528,12 @@
                     .labelType("value")   //Configure what type of data to show in the label. Can be "key", "value" or "percent"
                     .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
                     .donutRatio(0.35)     //Configure how big you want the donut hole size to be.
-                ;
+                    ;
 
             d3.select("#stagesPie svg")
-                .datum(buckets)
-                .transition().duration(350)
-                .call(chart);
+                    .datum(buckets)
+                    .transition().duration(350)
+                    .call(chart);
 
             return chart;
         });
@@ -485,7 +564,9 @@
 
     w.doSearchLeadmanPage = function () {
         searchOptions.query = '';
-        doSearch();
+        setTimeout(function () {
+            doSearch();
+        }, 800)
     };
 
 })(this);

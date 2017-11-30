@@ -3,7 +3,7 @@
         <title>Manage Reward</title>
         <!--<link rel="stylesheet" type="text/css" href="manageReward.css" />-->
         <link rel="stylesheet" type="text/css" href="/static/quiz/quiz.css" />
-        <script type="text/javascript" src="managePointsSystem.js">//</script>
+        <script type="text/javascript" src="managePointsSystem.js?v0003">//</script>
         <script type="text/javascript" src="/static/inline-edit/inline-edit.js">//</script>
         <script type="text/javascript" src="/templates/themes/admin2/prompt.js">//</script>
         <script type="text/javascript" src="/static/quiz/quiz.js">//</script>
@@ -25,7 +25,7 @@
             <div id="manageReward" class="tabbable">
                 <div class="clearfix">
                     <div class="btn-group pull-right">
-                        <a href="/rewards/points/" class="btn btn-sm btn-info">
+                        <a href="/points-buckets/points/" class="btn btn-sm btn-info">
                             <span class="glyphicon glyphicon-star"></span>
                             Points
                         </a>
@@ -131,7 +131,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-5">
                                                 <div class="input-group">
-                                                    <input type="text" name="expiryDate" placeholder="Expiry date" data-format="DD/MM/YYYY" value="$!page.expiryDate" class="form-control DateTime" />
+                                                    <input type="text" name="expiryDate" placeholder="Expiry date" data-format="DD/MM/YYYY" value="$formatter.formatDate($!page.expiryDate)" class="form-control DateTime" />
                                                     <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                                 </div>
                                             </div>
@@ -198,6 +198,7 @@
                                     Save Points CSV
                                 </a>
                                 <div class="btn-group">
+                                    #if( $page.processRunning == false )
                                     <button class="btnRemovePoints btn btn-danger btn-sm" type="button"><i class="fa fa-remove"></i> Remove</button>
                                     <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
                                         <span class="caret"></span>
@@ -206,10 +207,17 @@
                                         <li class="presentation" role="menuitem"><a href="#" class="btn-clear-history"><i class="fa fa-trash"></i> Delete All</a></li>
                                         <li class="presentation" role="menuitem"><a href="#" class="btnExpireAll"><i class="fa fa-clock-o"></i> Expire All</a></li>
                                     </ul>
+                                    #end
                                 </div>
                             </div>
                         </div>
                         <hr />
+                        #if( $page.processRunning == true )
+                        <div class="alert alert-info fade in alert-dismissable">
+                            We are deleting points, <a href="/tasks/">see the status</a>.
+                        </div>
+                        #end
+
 
                         <table class="table table-bordered table-striped pagination-container" id="tablePoints">
                             <colgroup>
@@ -235,8 +243,9 @@
                                 #foreach($points in $page.paginator.records)
                                 <tr>
                                     <td>$points.numPoints</td>
-                                    <td>$formatter.formatDateTime($points.issuedDate)</td>
-                                    <td>$formatter.formatDateTime($points.expiryDate)</td>
+                                    
+                                    <td>$formatter.formatDateTime($points.issuedDate, $rootFolder.organisation.timezone)</td>
+                                    <td>$!formatter.formatDateTime($points.expiryDate, $rootFolder.organisation.timezone)</td>
                                     <td>
                                         #if( $points.issuedTo )
                                         #if( $points.issuedTo.asProfile() )
@@ -321,7 +330,7 @@
                                     #foreach($debit in $paginator.records($page.debitPoints($paginator.start, $paginator.pageSize) ) )
                                     <tr>
                                         <td>$debit.numPoints</td>
-                                        <td>$formatter.formatDateTime($debit.issuedDate)</td>
+                                        <td>$formatter.formatDateTime($debit.issuedDate, $rootFolder.organisation.timezone)</td>
                                         <td>
                                             #if( $debit.issuedTo )
                                             #if( $debit.issuedTo.asProfile() )
@@ -336,14 +345,14 @@
                                         <td>$!debit.reason</td>
                                         <td>
                                             #if ($page.autoReconcile)
-                                                #set($linkCount = $page.getPointsDebitLinkCount($debit))
-                                                #if( $linkCount > 0 )
-                                                <i class="fa fa-check-circle fa-2x text-success"></i>
-                                                &nbsp;
-                                                <span>$linkCount</span>
-                                                #else
-                                                <i class="fa fa-exclamation-circle fa-2x text-warning"></i>
-                                                #end
+                                            #set($linkCount = $page.getPointsDebitLinkCount($debit))
+                                            #if( $linkCount > 0 )
+                                            <i class="fa fa-check-circle fa-2x text-success"></i>
+                                            &nbsp;
+                                            <span>$linkCount</span>
+                                            #else
+                                            <i class="fa fa-exclamation-circle fa-2x text-warning"></i>
+                                            #end
                                             #end
                                         </td>
                                         <td><input type="checkbox" name="removeDebitsId" value="$debit.id" /></td>
@@ -397,7 +406,7 @@
                                     <tr>
                                         <td>$foreach.count</td>
                                         <td>
-                                            <a href="/manageUsers/$point.memnber.id">$point.member.formattedName()</a>
+                                            <a href="/manageUsers/$point.member.userId">$point.member.formattedName()</a>
                                         </td>
                                         <td>$point.numPoints</td>
                                     </tr>

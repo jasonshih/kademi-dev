@@ -2,14 +2,12 @@
     "appDependencies": [        
         {
             "appId": "rewards-lib",
-            "branch": "1.0.7"
+            "branch": "1.1.2"
         },
         {
             "appId": "formBuilder",
             "branch": "1.24.5"
         }
         
-    ],    
-    "dependencies": [
     ]
 }

@@ -231,9 +231,13 @@
                                 $!page.body
                             </div>
                         #else
-                            <div class="editor-wrapper">
-                                <textarea class="#if ($isKEditor) contenteditor #else htmleditor #end" cols="100" name="body" rows="20" placeholder="">$!page.body</textarea>
-                            </div>
+                        #if ($applicationManager.isActive($applications.blogs, $page.parent.website.liveBranch()))
+                                <textarea autocomplete="off" class="#if ($isKEditor) contenteditor #else htmleditor #end" cols="100" name="body" rows="20" placeholder="" data-preview="?goto=">$!page.body</textarea>
+                        #else
+                        <p class="alert alert-warning lead"><i class="fa fa-warning"></i> Blogs app of
+                            <b>$page.parent.website.name</b> website is disabled. Please enable it at
+                            <a href="/websites/${page.parent.website.name}/${page.parent.website.liveBranch}/#panel_apps-tab" class="text-warning"><b>here</b></a>.</p>
+                        #end
                         #end
                     </div>
 
@@ -496,13 +500,13 @@
                             <div class="form-group">
                                 <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
                             </div>
-                            #if($page.availableServices)
+                            #if($page.availableServices && $page.availableServices.size() > 0)
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label" for="newTagName">Publish to social media</label>
                                     #foreach($sm in $page.availableServices)
                                         <div class="checkbox">
                                             <label>
-                                                <input name="publishTo_$sm" value="true" type="checkbox" /> $sm
+                                                <input name="publishTo_$sm.id" value="true" type="checkbox" /> $sm.title
                                             </label>
                                         </div>
                                     #end
@@ -513,7 +517,7 @@
 
                                 <div class="col-sm-8">
                                     <div class="input-group">
-                                        <input type="text" class="form-control datetimepicker" placeholder="Embargo date" value="" name="embargoDate" />
+                                        <input type="text" class="form-control DateTime" data-format="DD/MM/YYYY HH:mm" placeholder="Embargo date" value="" name="embargoDate" />
                                         <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                     </div>
                                     <br />
@@ -580,17 +584,7 @@
             </div>
         </div>
 
-        #if ($isKEditor)
-            <script type="text/javascript" src="/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js"></script>
-        #end
-
         <script type="text/javascript">
-            var allGroups = {
-                #foreach ($group in $page.find("/").allGroups)
-                '$group.name': #if ($group.title) '$group.title' #else '$group.name' #end,
-                #end
-            };
-
             $(function () {
                 initManageBlogArticle('/repositories/${page.article.blog.name}/${page.article.blog.liveBranch}/');
             });

@@ -53,6 +53,21 @@
             }
 
         });
+
+        modal.find('.btn-select-showRemoteFields').click(function (e) {
+            flog(e, this);
+
+            var btn = $(this);
+            var val = btn.find('input[name=showRemoteFields]').val();
+
+            if (val === 'true') {
+                modal.find('.backups-remote-server-field').find('input').addClass('required');
+                modal.find('.backups-remote-server-field').show();
+            } else {
+                modal.find('.backups-remote-server-field').find('input').removeClass('required');
+                modal.find('.backups-remote-server-field').hide();
+            }
+        });
     }
 
     // Backup Button

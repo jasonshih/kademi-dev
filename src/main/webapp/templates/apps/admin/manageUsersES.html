@@ -583,7 +583,7 @@
                         url: newHref,
                         whenComplete: function (response) {
                             flog('complete', response);
-                            Msg.info('Refreshed', 1500)
+                            Msg.info('Refreshed', 'filterUser');
                             var newDom = $(response);
                             $('#searchStats').replaceWith(newDom.find('#searchStats'));
                             var inner = $(response).find('#aggregationsContainer > *');

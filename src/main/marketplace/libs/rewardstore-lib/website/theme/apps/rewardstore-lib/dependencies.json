@@ -2,7 +2,7 @@
     "appDependencies": [
         {
             "appId": "search-lib",
-            "branch": "1.0.5"
+            "branch": "1.0.7"
         },
         {
             "appId": "nvd3-lib",
@@ -11,6 +11,14 @@
         {
             "appId": "moment-lib",
             "branch": "2.18.3"
+        },
+        {
+            "appId": "search",
+            "branch": ""
+        },
+        {
+            "appId": "Reporting",
+            "branch": ""
         }
     ],
     "dependencies": [

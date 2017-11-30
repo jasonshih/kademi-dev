@@ -1,0 +1,159 @@
+#set ($displayName = $formatter.toBool($displayName))
+#set ($displayPwd = $formatter.toBool($displayPwd))
+#set ($showOrgs = $formatter.toBool($showOrgs))
+#set ($showOptins = $formatter.toBool($showOptins))
+#set ($showXtraFields = $formatter.toBool($showXtraFields))
+#set ($successTitle = $formatter.toString($successTitle))
+#set ($successBody = $formatter.toString($successBody))
+#set ($formUrl = $page.href)
+#set ($pageOptins = $page.optins)
+#set ($pageExtraFields = $page.extraFields)
+
+#if ($formatter.isNotNull($group))
+#set ($formUrl = "/$group/signup")
+#set ($groupSignupPage = $page.find($formUrl))
+#set ($pageOptins = $groupSignupPage.optins)
+#set ($pageExtraFields = $groupSignupPage.extraFields)
+#set ($pageRelatedProduct = $groupSignupPage.relatedProduct)
+#set ($pagePaymentProvider = $groupSignupPage.paymentProvider)
+#end
+
+<form data-eway-encrypt-key="$!page.find('/eway').encryptionKey" style="display: none;"></form>
+<form method="post" id="registerForm" action="$formUrl" enctype="multipart/form-data" class="form-horizontal register-form-component" >
+    <div class="form-group">
+        <label class="control-label col-md-3" style="$!labelAlign" for="email">Email</label>
+        <div class="col-md-9">
+            <input class="required form-control" required="true" type="email" name="email" id="email" placeholder="Your email address" />
+        </div>
+    </div>
+
+    #if ($displayName)
+    <div class="form-group">
+        <label class="control-label col-md-3" style="$!labelAlign" for="nickName">Nickname</label>
+        <div class="col-md-9">
+            <input class="required form-control" type="text" name="nickName" id="nickName" placeholder="Your nickname for others to see" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3" style="$!labelAlign" for="firstName">First name</label>
+
+        <div class="col-md-9">
+            <input class="required form-control" name="firstName" placeholder="Your first name" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3" style="$!labelAlign" for="surName">Surname</label>
+
+        <div class="col-md-9">
+            <input class="required form-control" name="surName" placeholder="Your last name" />
+        </div>
+    </div>
+    #end
+
+    #if ($displayPwd)
+    <div class="form-group">
+        <label class="control-label col-md-3" style="$!labelAlign" for="password">Password</label>
+
+        <div class="col-md-9">
+            <input class="required form-control" type="password" name="password" id="password" placeholder="Your preferred password" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3" style="$!labelAlign" for="confirmPassword">Confirm</label>
+
+        <div class="col-md-9">
+            <input class="required form-control" type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password" />
+        </div>
+    </div>
+    #end
+
+    #if ($showXtraFields)
+    #foreach($field in $pageExtraFields)
+    <div class="form-group">
+        <label class="control-label col-md-3" style="$!labelAlign" for="confirmPassword">$field.text</label>
+
+        <div class="col-md-9">
+            $field.html
+        </div>
+    </div>
+    #end
+    #end
+
+    #if( ($page.hasOrgs || $groupSignupPage.hasOrgs) && $showOrgs)
+    #if( $groupRegoPage.regoOrgType )
+    #set($orgType = $groupRegoPage.regoOrgType)
+    #else
+    #set($orgType = "Organisation")
+    #end
+
+    <div class="form-group">
+        <label class="control-label col-md-3" style="$!labelAlign" for="orgName">$orgType</label>
+
+        <div class="col-md-9">
+            <input type="hidden" name="orgId" id="orgId" />
+            <input class="required form-control" type="text" name="orgName" id="orgName" autocomplete="off" placeholder="Choose your $orgType" />
+        </div>
+    </div>
+    #end
+
+    #if( ($page.hasOptins() || $groupSignupPage.hasOptins()) && $showOptins)
+    <div class="form-group">
+        <div class="col-md-9 col-md-offset-3">
+            #foreach($optin in $pageOptins)
+            <label for="optins_${optin.optinGroup.name}">
+                <input type="checkbox" name="optins" value="$optin.optinGroup.name" id="optins_${optin.optinGroup.name}" />
+                $optin.message
+            </label>
+            #end
+        </div>
+    </div>
+    #end
+
+    #set($product = $pageRelatedProduct)
+    #if( $product )
+    #if( $pagePaymentProvider )
+    <input type="hidden" name="paymentProvider" value="$page.paymentProvider.instanceId" />
+    <hr />
+    <h2>Payment details</h2>
+
+    <div class="payment-form">
+        $pagePaymentProvider.memberPaymentForm
+    </div>
+    #end
+    #end
+
+    <div class="form-group">
+        <div class="col-md-9 col-md-offset-3" >
+            <button type="submit" class="btn btn-primary">Register</button>
+            <a href="/index.html" class="btn">Cancel</a>
+        </div>
+    </div>
+
+    $!folder.find($path).body
+
+    <br class="clearfix" />
+
+    #if ($applicationManager.isActive($applicationManager.oauth, $website.branch))
+    <div class="socialLoginPortlet">
+        #portlets("socialLoginPage")
+    </div>
+    #end
+</form>
+<div id="pending" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>$!successTitle</h3>
+            </div>
+            <div class="modal-body">
+                $!successBody
+            </div>
+            <div class="modal-footer">
+                <a href="/" type="button" class="btn btn-primary">Close</a>
+            </div>
+        </div>
+    </div>
+</div>

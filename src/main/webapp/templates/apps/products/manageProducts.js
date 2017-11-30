@@ -1,18 +1,25 @@
- $(function () {
-	 initTable();
+$(function () {
+    initTable();
 
     $('#data-query').keyup(function () {
         typewatch(function () {
             flog('initSearchUser: do search');
             doHistorySearch();
         }, 500);
-    }); 
-	 
-	$('#supplier').on('change', function(e) {
-		doHistorySearch();
-	});
-	 
-	 
+    });
+
+    initSupplier();
+    $(document).on('click', '#btnClearSupplier', function (e) {
+        e.preventDefault();
+        $('#supplierWrap').reloadFragment({
+            url: window.location.pathname,
+            whenComplete: function () {
+                initSupplier();
+                doHistorySearch();
+            }
+        })
+    });
+
     $("#newProduct").click(function (event) {
         event.preventDefault();
 
@@ -48,7 +55,7 @@
                     var page = $(resp);
                     var table = page.find("#productsTableContainer table");
                     $("#productsTableContainer").html(table);
-                    
+
                     initTable();
                 },
                 error: function (resp) {
@@ -73,10 +80,11 @@
         });
         if (listToDelete.length > 0 && confirm("Are you sure you want to delete " + listToDelete.length + " products?")) {
             $('body').find('.check-all').check(false).change();
+            $("#data-query").val("");
             flog(listToDelete.join(','));
             deleteProducts(listToDelete.join(','));
         } else {
-            Msg.error('Please select the products you want to remove by clicking the checkboxes on the right');
+            Msg.error('Please select the products you want to remove by clicking the checkboxes on the right', 'deleteProduct');
         }
     });
 
@@ -90,9 +98,17 @@
     });
 });
 
+function initSupplier() {
+    $(document).find('#supplierFinder').entityFinder({
+        type: 'organisation',
+        onSelectSuggestion: function () {
+            doHistorySearch();
+        }
+    });
+}
 function initTable() {
-	$("#pointsFooter a").on('click', function (e) {
-		e.preventDefault();
+    $("#pointsFooter a").on('click', function (e) {
+        e.preventDefault();
         var uri = e.target.href;
 
         $.ajax({
@@ -113,9 +129,9 @@ function initTable() {
                 Msg.error('err');
             }
         });
-	});
-	
-	flog('initSort()');
+    });
+
+    flog('initSort()');
     $('.sort-field').on('click', function (e) {
         e.preventDefault();
         var a = $(e.target);
@@ -124,7 +140,7 @@ function initTable() {
 
         var dir = 'asc';
         if (field == getSearchValue(window.location.search, 'sortfield')
-            && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
+                && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
             dir = 'desc';
         }
         uri.setSearch('sortfield', field);
@@ -150,9 +166,9 @@ function initTable() {
         });
 
     });
-    
-} 
- 
+
+}
+
 function initProductsCsv() {
     var modalUploadCsv = $("#modal-upload-csv");
 
@@ -253,17 +269,17 @@ function getSearchValue(search, key) {
 
 function doHistorySearch() {
     flog('doHistorySearch');
-    
-    Msg.info("Doing search...", 2000);
-    
+
+    Msg.info("Doing search...", "manageProducts", 2000);
+
     var uri = URI(window.location);
 
     uri.setSearch('dataQuery', $("#data-query").val());
-    uri.setSearch('supplier', $("#supplier").val());
+    uri.setSearch('supplier', $("#supplierFinder").val());
 
     var data = {
         dataQuery: $("#data-query").val(),
-        supplier: $("#supplier").val()
+        supplier: $("#supplierFinder").val()
     };
     flog("data", data);
 
@@ -273,21 +289,21 @@ function doHistorySearch() {
     target.load();
 
     flog("new link", uri.toString());
-    
+
     $.ajax({
         type: "GET",
         url: uri.toString(),
         dataType: 'html',
         success: function (content) {
             flog('response', content);
-            
-            Msg.success("Search complete", 2000);
-            
+
+            Msg.info("Search complete", "manageProducts", 2000);
+
             var newBody = $(content).find("#productsTableContainer");
-            
+
             target.replaceWith(newBody);
             history.pushState(null, null, uri.toString());
-            
+
             $("abbr.timeago").timeago();
             initTable();
         }

@@ -39,18 +39,8 @@
                 </ul>
             </div>
 
-            #if($page.closest("repository").name)
-            <div class="dropdown pull-left">
-                <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                    <b>Change repository</b> $page.closest("repository").name <span class="caret"></span>
-                </a>
-                <ul role="menu" class="dropdown-menu list">
-                    #foreach($w in $page.closest("repository").parent.children.sortByName)
-                    <li class="list-item"><a href="${w.href}manageSearch">$w.name</a></li>
-                    #end
-                </ul>
-            </div>
-            #end
+            #parse("/theme/apps/admin/versionController.html")
+            #renderRepoSwitcher()
         </div> <!-- end repo and branch selection -->
 
         <br/><br/>

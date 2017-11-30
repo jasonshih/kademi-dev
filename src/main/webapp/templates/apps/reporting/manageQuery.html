@@ -9,76 +9,227 @@
         <link rel="stylesheet" type="text/css" href="/theme/apps/admin/textEditor.css" />
     </head>
     <body>
-        <div class="btn-group pull-right">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-pencil"></i>
-                Edit default page <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a href="#">Select a site</a></li>
-                <li role="separator" class="divider"></li>
-                #foreach( $website in $rootFolder.websites )
-                <li><a target="_blank" href="$page.href?contenteditor=&website=$website.name">$website.name</a></li>
-                #end
-            </ul>
-        </div>
+        <h4>Query: $page.name  - <b>Indexes: </b> #foreach( $index in $page.indexes)<a href="/manageSearch/$index" class="label label-primary">$index</a>#end</h4>
+        #set($qbbPage = $page.isQueryBuilderQuery())
+        <input name="fieldsSelected" id="fieldsSelected" vlaue="" type="hidden" />
 
-        <h2>Query: $page.name</h2>
-        <p class="">
-            <b>Indexes: </b>
-            #foreach( $index in $page.indexes)
-            <a href="/manageSearch/$index" class="label label-primary">$index</a>
-            #end
-        </p>
-        <p style="line-height: 30px">
-            <b>Fields: </b>
-            #foreach($field in $page.allFieldNames)
-            <span class="label label-info">$field</span>
-            #end
-        </p>
-        <div id="query">
-            #set( $resp = $page.records )
+        <div class="panel-body">
+            #if($qbbPage)
+            <div class="row clearfix" style="margin-bottom: 15px">
+                <small class="pull-right">Use <b>$startDate</b> and <b>$endDate</b> for standard date range parameters; <b>$orgs</b> and <b>reportingOrgs</b> for related organisations</small>
 
-            <div id="queryText" style="width: 100%; height: 200px" name="query">$page.queryJson</div>
-            <small class="pull-right">Use <b>$startDate</b> and <b>$endDate</b> for standard date range parameters; <b>$orgs</b> and <b>reportingOrgs</b> for related organisations</small>
-            <button class="btn btn-success runQuery">Run</button>
-            <button class="btn btn-primary saveQuery">Save</button>
-            <hr/>
-            <div id="queryResults">
-                #if( $page.queryError )
-                <div class="alert alert-warning">
-                    $page.queryError
-                </div>
-                #end
-
-                <table class="table table-responsive">
-                    <thead>
-                        <tr>
-                            <td>Item</td>
-                            <th>Type</th>
-                            #foreach( $field in $page.queryFieldNames )
-                            <th>$field</th>
-                            #end
-                        </tr>
-                    </thead>
-                    <tbody>
-                        #foreach($hit in $page.records.hits.hits)
-                        <tr>
-                            <td>$hit.id</td>
-                            <td>$hit.type</td>
-                            #foreach( $field in $page.queryFieldNames)
-                            <td>$!hit.fields.get($field).value</td>
-                            #end
-                        </tr>
-                        #end
-                    </tbody>
-                </table>
-
-                <h2>Raw output</h2>
-                <pre id="">
-                        $page.records
-                </pre>
+                <button class="btn btn-sm btn-info runQuery">Run</button>
+                <button class="btn btn-sm btn-success saveRules">Save</button>
             </div>
-        </div>
+            #end
+
+            <div class="tabbable clearfix" id="queryData">
+                <div class="clearfix">
+                    <ul class="nav nav-tabs tab-bricky">
+                        #if($qbbPage)<li class="active"><a data-toggle="tab" href="#queryBuilderTab">Query</a></li>#end
+                        <li><a data-toggle="tab" href="#queryResult">Results</a></li>
+                        #if($qbbPage)<li><a data-toggle="tab" href="#queryAggregation">Aggregation</a></li>#end
+                        <li><a data-toggle="tab" href="#queryRawResult">Raw Output</a></li>
+                        <li><a data-toggle="tab" href="#queryJSON">JSON</a></li>
+                    </ul>
+                </div>
+                <div class="tab-content">
+                    <div id="queryBuilderTab" class="tab-pane active">
+                        <div id="query-builder"></div>
+
+                    </div>
+                    <div id="queryResult" class="tab-pane">
+                        #if($qbbPage)
+                        <label><b>Size:</b></label>
+                        <input type="text" value="" id="qbbSize" placeholder=""/>
+                        #end
+
+                        <div id="query">
+                            #set( $resp = $page.records )
+                            <!--button class="btn btn-primary saveQuery">Save</button-->
+                            <hr/>
+                            <div id="queryResults">
+                                #if( $page.queryError )
+                                <div class="alert alert-warning">
+                                    $page.queryError
+                                </div>
+                                #end
+
+                                <table class="table table-responsive">
+                                    <thead>
+                                        <tr>
+                                            #if($qbbPage)<th><b><button class="btn btn-xs btn-info" data-toggle="modal" data-target="#modal-select-fields"><i class="fa fa-plus"></i> Select fields</button></b></th> #else <th>Type</th>#end
+                                            #foreach( $field in $page.queryFieldNames )
+                                            #set( $selected = $page.fieldSelected($field))
+                                            <th>#if($selected)
+                                                <a class="btn btn-xs  #if($selected)btn-remove-th btn-danger #end" data-text="$field">
+                                                    <i class="#if($selected) clip-minus-circle #end"></i> $field
+                                                </a>
+                                                #else
+                                                $field
+                                                #end
+                                            </th>
+                                            #end
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        #foreach($hit in $page.records.hits.hits)
+                                        <tr>
+                                            <td>$hit.type</td>
+                                            #foreach( $field in $page.queryFieldNames)
+                                            <td>$!hit.fields.get($field).value</td>
+                                            #end
+                                        </tr>
+                                        #end
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="queryRawResult" class="tab-pane">
+                        <pre id="">
+$page.records
+                        </pre>
+                    </div>
+
+                    <div id="queryJSON" class="tab-pane">
+                        <div id="queryText" style="width: 100%; height: 300px">$page.queryJson</div>
+                    </div>
+
+                    <div id="queryAggregation" class="tab-pane">
+                        <div class="row" style="min-height: 300px; clear: both;">
+                            <div id="query-builder" class="query-builder form-inline">
+                                <form id="aggregationForm">
+                                    <dl id="aggregation" class="rules-group-container">
+                                        <dd class="rules-group-body">
+                                            <ul class="rules-list" id="aggregations-ul">
+                                                <li class="rule-container">
+                                                    <div class="rule-filter-container">
+                                                        <select class="form-control aggregationType" name="aggType[]">
+                                                            <option value="-1">------</option>
+                                                            <option value="AVG">AVG</option>
+                                                            <option value="MAX">MAX</option>
+                                                            <option value="MIN">MIN</option>
+                                                            <option value="SUM">SUM</option>
+                                                            <option value="COUNT">COUNT</option>
+                                                            <option value="TERMS">TERMS</option>
+                                                            <option value="RANGE">RANGE</option>
+                                                            <option value="DATE_RANGE">DATE_RANGE</option>
+                                                            <option value="DATE_HISTOGRAM">DATE_HISTOGRAM</option>
+                                                            <option value="PERCENTILES">PERCENTILES</option>
+                                                            <option value="GEO_BOUND">GEO_BOUND</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="rule-operator-container">
+                                                        <select class="form-control aggFields" name="aggFields[]"></select>                    
+                                                    </div>
+                                                    <div class="rule-operator-container" style="display: none;">
+                                                        <label>Size</label>
+                                                        <input type="text" value="" class="form-control aggSize" name="aggSize[]"/>
+                                                    </div>
+                                                    <div class="rule-operator-container" style="display: none;">
+                                                        <label>Format</label>
+                                                        <input type="text" value="" class="form-control aggFormat" name="aggFormat[]"/>
+                                                    </div>
+                                                    <div class="rule-operator-container" style="display: none;">
+                                                        <label>Interval</label>
+                                                        <input type="text" value="" class="form-control aggInterval" name="aggInterval[]"/>
+                                                    </div>
+                                                    <div class="rule-operator-container" style="display: none;">
+                                                        <label>From</label>
+                                                        <input type="text" value="" class="form-control aggFrom" name="aggFrom[]"/>
+                                                        <label>To</label>
+                                                        <input type="text" value="" class="form-control aggTo" name="aggTo[]"/>
+                                                    </div>
+                                                    <div class="btn-group pull-right rule-actions">       
+                                                        <button type="button" class="btn btn-xs btn-danger clearAgg"><i class="glyphicon glyphicon-remove"></i> Delete</button>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </dd>
+                                        <dd>
+                                            <button type="button" class="btn btn-xs btn-success addAgg"><i class="glyphicon glyphicon-plus"></i> Add Aggregation</button>
+                                        </dd>
+                                    </dl>
+                                </form>
+                            </div>
+                        </div>
+
+                        #set ($map = $page.aggregations)
+                        #foreach ($mapAgg in $map.entrySet())
+                        #set ($map = $mapAgg.value)
+                        <h5>$mapAgg.key</h5>
+                        <table class="table table-condensed table-bordered" style="margin-bottom: 30px">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach ($mapEntry in $map.entrySet())
+                                <tr>
+                                    <td class="col-md-6">$mapEntry.key</td>
+                                    <td class="col-md-6">$mapEntry.value</td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                        #end
+                    </div>
+                </div>
+            </div>
+
+
+            #if($qbbPage == false)
+            <div class="row">
+                <!--div id="queryText" style="width: 100%; height: 300px" name="query">$page.queryJson</div-->
+                <small class="pull-right">Use <b>$startDate</b> and <b>$endDate</b> for standard date range parameters; <b>$orgs</b> and <b>reportingOrgs</b> for related organisations</small>
+                <br/>
+                <button class="btn btn-sm btn-info runQuery">Run</button>
+                <button class="btn btn-sm btn-success saveQuery">Save</button>
+            </div>
+            #end
+
+
+            #if($qbbPage)
+            <!-- START OF MODAL SELECT FIELDS -->
+            <div id="modal-select-fields" class="modal fade" aria-hidden="true" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">Select fields to show</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <div class="blocks-wrapper">
+                                        #foreach($field in $page.allFieldNames)
+                                        <span class="block" style="margin-right: 6px; margin-bottom: 6px;">
+                                            <span class="block-name">$field</span>
+                                            #set( $selected = $page.fieldSelected($field))
+                                            <a class="btn btn-xs btn-add-field #if($selected) btn-danger #else btn-success #end" data-text="$field"><i class="#if($selected) clip-minus-circle #else fa fa-plus #end"></i></a>
+                                        </span>
+                                        #end
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-success" id="saveRulesModal">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript" src="/static/query-builder/2.3.3/js/query-builder.standalone.min.js">//</script>
+            <script type="text/javascript" src="/static/jquery-querybuilder-elasticsearch/query-builder-elasticsearch.js">//</script>
+            <script type="text/javascript" src="/theme/apps/reporting/manageQueryQueryBuilder.js">//</script>
+            <script type="text/javascript">
+
+            </script>
+            #end
     </body>
 </html>

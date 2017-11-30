@@ -335,8 +335,8 @@
         return (
             '<div class="milton-file-select-container">' +
             '    <div class="row">' +
-            '        <div class="col-xs-4"><div class="milton-tree-wrapper"></div></div>' +
-            '        <div class="col-xs-8">' +
+            '        <div class="col-xs-3"><div class="milton-tree-wrapper"></div></div>' +
+            '        <div class="col-xs-9">' +
             '            <div class="milton-file-preview-wrapper">' +
             '                <div class="milton-btn-upload-file"></div>' + extraElement +
             '                <div class="milton-file-progress progress" style="display: none;">' +
@@ -353,30 +353,28 @@
     function getModal(config) {
         flog('[jquery.mselect] getModal', config);
         
-        var modal = $('#modal-milton-file-select');
-        if (modal.length === 0) {
-            $(document.body).append(
-                '<div id="modal-milton-file-select" class="modal fade" aria-hidden="true" tabindex="-1">' +
-                '   <div class="modal-dialog modal-md">' +
-                '       <div class="modal-content">' +
-                '           <div class="modal-header">' +
-                '               <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
-                '               <h4 class="modal-title">' + config.modalTitle + '</h4>' +
-                '           </div>' +
-                '           <div class="modal-body">' + getSelectContainer(config) + '</div>' +
-                '           <div class="modal-footer">' +
-                '               <button class="' + config.btnOkClass + ' btn-ok" type="button"> OK </button>' +
-                '           </div>' +
-                '       </div>' +
-                '   </div>' +
-                '</div>'
-            );
-            modal = $('#modal-milton-file-select');
-            
-            initSelectContainer(modal, config, function () {
-                modal.modal('hide');
-            });
-        }
+        var id = 'modal-milton-file-select-' + (new Date()).getTime();
+        $(document.body).append(
+            '<div id="' + id + '" class="modal fade" aria-hidden="true" tabindex="-1">' +
+            '   <div class="modal-dialog modal-lg">' +
+            '       <div class="modal-content">' +
+            '           <div class="modal-header">' +
+            '               <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
+            '               <h4 class="modal-title">' + config.modalTitle + '</h4>' +
+            '           </div>' +
+            '           <div class="modal-body">' + getSelectContainer(config) + '</div>' +
+            '           <div class="modal-footer">' +
+            '               <button class="' + config.btnOkClass + ' btn-ok" type="button"> OK </button>' +
+            '           </div>' +
+            '       </div>' +
+            '   </div>' +
+            '</div>'
+        );
+        var modal = $('#' + id);
+        
+        initSelectContainer(modal, config, function () {
+            modal.modal('hide');
+        });
         
         return modal;
     }

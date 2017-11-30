@@ -212,7 +212,7 @@
                         <div class="col-md-4">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <input type="text" name="email" id="newUserEmail" class="form-control required" placeholder="Email" />
+                                    <input type="text" name="email" id="newUserEmail" class="form-control" placeholder="Email" />
                                 </div>
                             </div>
 
@@ -510,6 +510,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">Mark deal as closed</h4>
             </div>
+            #set ($closinglead = $page.find($page.href))
             <form method="post" action="$page.href" class="form-horizontal">
                 <input type="hidden" name="closeDeal" />
                 <div class="modal-body">
@@ -521,13 +522,13 @@
                     <div class="form-group">
                         <label class="control-label col-md-3" for="closedDate">Closed Date</label>
                         <div class="col-md-9">
-                            <input type="text" name="closedDate" id="closedDate" class="required form-control date-time" placeholder="Closed date/time" />
+                            <input type="text" name="closedDate" value="$formatter.formatDateTime($formatter.now)" class="required form-control date-time" placeholder="Closed date/time" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="dealAmount">Sale amount</label>
                         <div class="col-md-9">
-                            <input type="text" name="dealAmount" id="dealAmount" class="required form-control" placeholder="Deal Amount" />
+                            <input type="number" name="dealAmount" id="dealAmount" value="$!closinglead.dealAmount" class="required form-control" placeholder="Deal Amount" />
                         </div>
                     </div>
 

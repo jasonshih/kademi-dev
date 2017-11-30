@@ -152,17 +152,45 @@
                                         <div class="col-sm-10">
                                             <select name="categoryName" class="category form-control input-sm">
                                                 <option id="">[Any category]</option>
-                                                #foreach($cat in $page.categories)
-                                                $formatter.option($cat.name, $cat.title, $request.params.categoryName)
-                                                #end
+                                                #genCategories($page.categoryBeans)
                                             </select>
                                         </div>
                                     </div>
                                 </div>
 
+                                #macro(genCategories $categories)
+                                    #foreach($cat in $categories)
+                                        #set( $size = $cat.childCategories.size())
+                                        $formatter.option($cat.name, "$formatter.padWith('-', '', $cat.level) $cat.title", $request.params.categoryName)
+                                        #if( $size > 0 )
+                                            #genCategories($cat.childCategories)
+                                        #end
+                                    #end
+                                #end
+
                                 <div class="col-md-6">
                                     <div class="pull-right">
-                                        <a href="$page.href?addProducts" class="btn btn-sm btn-success"><i class="fa fa-plus-circle"></i> Add</a>
+
+                                        <div class="btn-group" role="group">
+                                            <a href="$page.href?addProducts" class="btn btn-sm btn-success"><i class="fa fa-plus-circle"></i> Add</a>
+                                            <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                <span class="caret"></span>
+                                            </button>
+
+                                            <ul class="dropdown-menu pull-right" role="menu">
+                                                <li>
+                                                    <a href="productsInReward.csv" download="productsInReward.csv">
+                                                        <i class="glyphicon glyphicon-download"></i> Export
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="/tableUploaders/productsInRewardUploader?rewardStore=$page.name" >
+                                                        <i class="glyphicon glyphicon-upload"></i> Import
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
                                         <div class="btn-group" role="group">
                                             <button class="btn btn-sm btn-info" role="button" id="removeSelected"><i class="fa fa-minus-circle"></i> Remove selected</button>
                                             <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -197,13 +225,13 @@
                                     </colgroup>
                                     <thead>
                                         <tr>
-                                            <th>Code</th>
-                                            <th>Title</th>
-                                            <th>Margin</th>
-                                            <th>Pts Multiplier</th>
+                                            <th><a class="sort-field" id="p.name" href="#">Code</a></th>
+                                            <th><a class="sort-field" id="p.title" href="#">Title</a></th>
+                                            <th><a class="sort-field" id="p.baseCost" href="#">Base Cost</a></th>
+                                            <th><a class="sort-field" id="createdDate" href="#">Added Date</a></th>
                                             <th></th>
                                             <th class="text-center">
-                                                <input class="chk-all" type="checkbox" />
+                                                <input class="chk-all" type="checkbox" autocomplete="off"/>
                                             </th>
                                             <th></th>
                                         </tr>
@@ -219,11 +247,11 @@
                                         <tr class='in-reward-$p.inReward' id='product-$p.productId'>
                                             <td><a href='/products/$p.productId'>$p.name</a></td>
                                             <td>$formatter.htmlEncode($p.title)</td>
-                                            <td>$!p.margin</td>
-                                            <td>$!p.multiplier</td>
+                                            <td>$!p.baseCost</td>
+                                            <td>$!formatter.formatDateTime($p.addedDate, $rootFolder.organisation.timezone)</td>
                                             <td></td>
                                             <td class="text-center">
-                                                <input data-pid="$p.productId" class="product-toggle" type="checkbox" value="true" />
+                                                <input data-pid="$p.productId" class="product-toggle" type="checkbox" value="true" autocomplete="off"/>
                                             </td>
                                             <td>
                                                 <a href="$p.productId/" class="product-inreward-details">
@@ -263,7 +291,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                            <button class="btn btn-sm btn-primary" type="submit">Create product</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Save</button>
                         </div>
                     </form>
                 </div>
@@ -275,40 +303,34 @@
                 initSearchProduct();
                 initRemoveProducts();
                 initEdit();
+                initSortable();
             });
 
             function initEdit() {
                 $(".rewardStoreForm").forms({
                     onSuccess: function (resp) {
                         if (resp.status) {
-                            Msg.info("Saved ok");
+                            Msg.info("Saved ok", 'manageRewardStore');
                         } else {
-                            Msg.error("An error occured saving: " + resp);
+                            Msg.error("An error occured saving: " + resp, 'manageRewardStore');
                         }
                     }
                 });
 
 
                 var productInRewardModal = $("#editProductInRewardModal");
-                $("#table-products").on("click", ".product-inreward-details", function (e) {
+                $("body").on("click", ".product-inreward-details", function (e) {
                     e.preventDefault();
                     var target = $(e.target).closest("a");
                     loadProductInReward(target.prop("href"), productInRewardModal);
                 });
-                productInRewardModal.find("form").forms({
-                    onSuccess: function () {
-                        Msg.info("Saved");
-                        productInRewardModal.modal("hide");
-                    }
-                });
-
             }
 
             function initRemoveProducts() {
                 $('#removeSelected').click(function (e) {
                     flog("clic");
                     e.preventDefault();
-                    Msg.info('Adding selected');
+                    Msg.info('Removing selected', 'manageRewardStore');
                     var checks = $("#products-list").find('input:checked');
                     var ids = [];
                     checks.each(function (count, item) {
@@ -332,12 +354,49 @@
                                 window.location.reload();
                             },
                             error: function () {
-                                Msg.error('Oh No! Something went wrong!');
+                                Msg.error('Oh No! Something went wrong!', 'manageRewardStore');
                             }
                         });
                     });
 
                 });
+            }
+
+            function initSortable() {
+                $('body').on('click', '.sort-field', function (e) {
+                    e.preventDefault();
+                    var a = $(e.target);
+                    var uri = URI(window.location);
+                    var field = a.attr('id');
+
+                    var dir = 'asc';
+                    if (field == getSearchValue(window.location.search, 'sortfield')
+                            && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
+                        dir = 'desc';
+                    }
+                    uri.setSearch('sortfield', field);
+                    uri.setSearch('sortdir', dir);
+
+                    window.history.pushState('', '', uri.toString());
+
+                    doProductSearch();
+                });
+            }
+
+            function getSearchValue(search, key) {
+                if (search.charAt(0) == '?') {
+                    search = search.substr(1);
+                }
+                parts = search.split('&');
+                if (parts) {
+                    for (var i = 0; i < parts.length; i++) {
+                        entry = parts[i].split('=');
+                        if (entry && key == entry[0]) {
+                            return entry[1];
+                        }
+                    }
+                }
+                return '';
             }
 
             function loadProductInReward(href, productInRewardModal) {
@@ -346,16 +405,24 @@
                     url: href,
                     success: function (data) {
                         flog("success", data);
-                        var $fragment =
-                                $(data).find("#product-in-reward-fields");
+                        var $fragment = $(data).find("#product-in-reward-fields");
                         flog("frag", $fragment);
                         var form = productInRewardModal.find("form");
                         form.find('.form-content').html($fragment);
                         form.attr("action", href);
+
+                        productInRewardModal.find("form").forms({
+                            onSuccess: function (resp) {
+                                flog(resp);
+                                Msg.success(resp.messages, 'manageRewardStore');
+                                productInRewardModal.modal("hide");
+                            }
+                        });
+
                         productInRewardModal.modal("show");
                     },
                     error: function (resp) {
-                        Msg.error("An error occured doing the user search. Please check your internet connection and try again");
+                        Msg.error("An error occured doing the user search. Please check your internet connection and try again", 'manageRewardStore');
                     }
                 });
             }
@@ -378,7 +445,14 @@
                 var query = $("#product-query").val();
                 var categoryName = $(".category").val();
                 flog("doSearch", query, orgId);
+                var sortfield = getSearchValue(window.location.search, 'sortfield');
+                var sortdir = getSearchValue(window.location.search, 'sortdir');
+
                 var newUrl = window.location.pathname + "?q=" + query + "&categoryName=" + categoryName;
+                if (sortfield && sortdir) {
+                    newUrl += "&sortfield=" + sortfield + "&sortdir=" + sortdir;
+                }
+
                 window.history.replaceState("", "", newUrl);
                 $.ajax({
                     type: 'GET',
@@ -389,7 +463,7 @@
                         $("#searchResults").replaceWith(fragment);
                     },
                     error: function (resp) {
-                        Msg.error("An error occured doing the search. Please check your internet connection and try again");
+                        Msg.error("An error occured doing the search. Please check your internet connection and try again", 'manageRewardStore');
                     }
                 });
             }
@@ -407,15 +481,15 @@
                     success: function (response) {
                         flog("response", response, response.status);
                         if (response.status) {
-                            Msg.info(response.messages[0]);
+                            Msg.info(response.messages[0], 'manageRewardStore');
                             window.location.reload();
                         } else {
-                            Msg.error("There was an error changing the product status");
+                            Msg.error("There was an error changing the product status", 'manageRewardStore');
                         }
                     },
                     error: function (event, XMLHttpRequest, ajaxOptions, thrownError) {
                         flog('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
-                        Msg.error("There was an error changing the product inclusion status");
+                        Msg.error("There was an error changing the product inclusion status", 'manageRewardStore');
                     }
                 });
             }

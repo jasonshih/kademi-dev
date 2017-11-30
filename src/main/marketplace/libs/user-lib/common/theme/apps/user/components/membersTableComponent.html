@@ -1,0 +1,150 @@
+#if( !$height )
+#set( $height = 300 )
+#end
+
+#set ($rootOrg = $rootFolder.find("/").orgData)
+
+#if( !$title )
+#set( $title = "Members Table" )
+#end
+
+#set ($respPointsDebit = $queryManager.runQuery("membersSpentPoint"))
+#set ($pointsDebitBucket = $respPointsDebit.aggregations.get("byProfileIds").buckets)
+
+#if ($inactiveUsers == "true")
+#set ($resp = $queryManager.runQuery("membersTableAll"))
+#else
+#set ($resp = $queryManager.runQuery("membersTable"))
+#end
+
+#set ($fields = ["lastVisit", "firstName", "surName", "email", "phone", "groupNames", "orgName", "parentOrg", "orgAddress", "groupName", "createdDate", "pointsBalance", "pointsDebit"])
+#set ($fieldsNames = {"lastVisit": "Last active", "firstName": "First name", "surName": "Last name", "email": "Email", "phone": "Phone", "groupNames": "Primary groups", "orgName": "Organisation name", "orgAddress": "Organisation address", "groupName": "Group", "pointsBalance": "Points Balance", "pointsDebit": "Spent points", "createdDate": "Date registered", "parentOrg": "Parent Org"})
+
+<div class="panel panel-default" style="height: $!{height}px; min-height: 0; overflow-y: auto" data-items-per-page="$!itemsPerPage">
+    <div class="panel-heading">
+        <i class="fa fa-table"></i> $title
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            #if( $resp.hits.totalHits == 0 )
+            No current results
+            #else
+            <table class="table table-striped table-condensed">
+                <thead>
+                    #foreach( $f in $fields )
+                    #if ($columns && $columns.contains($f))
+                    <th>$!fieldsNames[$f]</th>
+                    #end
+                    #end
+                </thead>
+                <tbody>
+                    #foreach( $row in $resp.hits.hits )
+                    <tr>
+                        #foreach( $f in $fields )
+                        #if ($columns && $columns.contains($f))
+                        #if ($f == "pointsBalance")
+                            #set ($pb = "")
+                            #foreach ($p in $row.source.points)
+                                #if ($p.get($pointsBucket))
+                                #set ($pb = $p.get($pointsBucket))
+                                #break
+                                #end
+                            #end
+                            <td>$pb</td>
+                        #elseif ($f == "lastVisit")
+                        <td>$formatter.formatDate($formatter.toDate($row.source.get($f)))</td>
+                        #elseif ($f == "groupNames")
+                        <td>
+                            #foreach ($g in $row.source.groupNames)
+                            $g
+                            #if ($foreach.count < $row.source.groupNames.size())
+                            ,
+                            #end
+                            #end
+                        </td>
+                        #elseif ($f == "groupName")
+                            <td>
+                                <table>
+                                    <tbody>
+                                    #foreach ($m in $row.source.memberships)
+                                    <tr>
+                                        <td>$formatter.ifNull($m.get("groupName"), "-") </td>
+                                    </tr>
+                                    #end
+                                    </tbody>
+                                </table>
+                            </td>
+                        #elseif ($f == "orgName")
+                        <td>
+                            <table>
+                                <tbody>
+                                #foreach ($m in $row.source.memberships)
+                                <tr>
+                                    <td>$formatter.ifNull($m.get("orgTitle"), "-")</td>
+                                </tr>
+                                #end
+                                </tbody>
+                            </table>
+                        </td>
+                        #elseif ($f == "parentOrg")
+                        <td>
+                            <table>
+                                <tbody>
+                                #foreach ($m in $row.source.memberships)
+                                <tr>
+                                    <td>$formatter.ifNull($!rootOrg.childOrg($m.get("org")).parent.title, "-")</td>
+                                </tr>
+                                #end
+                                </tbody>
+                            </table>
+                        </td>
+                        #elseif ($f == "orgAddress")
+                        <td>
+                            <table>
+                                <tbody>
+                                #foreach ($m in $row.source.memberships)
+                                <tr>
+                                    <td>$formatter.ifNull($m.get("orgAddress"), "-")</td>
+                                </tr>
+                                #end
+                                </tbody>
+                            </table>
+                        </td>
+                        #elseif($f == "createdDate")
+                        <td>
+                            <table>
+                                <tbody>
+                                #foreach ($m in $row.source.memberships)
+                                <tr>
+                                    <td>$formatter.formatDate($formatter.toDate($m.get("createdDate")))</td>
+                                </tr>
+                                #end
+                                </tbody>
+                            </table>
+                        </td>
+                        #elseif($f == "pointsDebit")
+                        <td>
+                            #foreach($b in $pointsDebitBucket)
+                                #if ($b.key == $row.source.userId)
+                                    $formatter.formatCurrency($b.aggregations.get("totalPoints").value, false)
+                                #end
+                            #end
+                        </td>
+                        #else
+                        <td>$!row.source.get($f)</td>
+                        #end
+
+                        #end
+                        #end
+                    </tr>
+                    #end
+                </tbody>
+            </table>
+            #end
+        </div>
+    </div>
+    <div class="panel-footer">
+        <ul class="pagination">
+        </ul>
+    </div>
+</div>

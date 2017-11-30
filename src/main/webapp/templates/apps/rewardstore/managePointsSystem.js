@@ -5,7 +5,7 @@ var searchOptions = {
 
 function initManagePointsSystem() {
     flog("initManagePointsSystem");
-    
+
     showHidePointsOrgType();
     initGroupEditing();
     initFormPointsSystem();
@@ -18,11 +18,12 @@ function initManagePointsSystem() {
     initDebitsPjax();
     initExpireFields();
     initReconcile();
-    
+    initTabs();
+
     $("select.pointsType").click(function () {
         showHidePointsOrgType();
     });
-    
+
     $(document.body).on('click', '.btn-remove-group', function (e) {
         e.preventDefault();
         var btn = $(this);
@@ -31,20 +32,38 @@ function initManagePointsSystem() {
         btn.closest('span').remove();
         $("#modalGroup input[name=" + name + "]").check(false);
     });
-    
+
     $(document.body).on('keypress', '#data-query', function (e) {
         typewatch(function () {
             flog('initSearchPoints: do search');
             doHistorySearch();
         }, 500);
     });
-    
+
     $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
         searchOptions.startDate = startDate;
         searchOptions.endDate = endDate;
-        
-        doHistorySearch();
-        doLeaderboardSearch();
+        if (window.location.hash.indexOf('#points') != -1 || window.location.hash.indexOf('#debits') != -1) {
+            doHistorySearch();
+        } else if (window.location.hash.indexOf('#leaderboard') != -1) {
+            doLeaderboardSearch();
+        }
+    });
+}
+
+function initTabs() {
+    $('.TabNav a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var href = $(this).attr('href');
+        var clicked = $(this).hasClass('clicked');
+        if (!clicked) {
+            $(this).addClass('clicked');
+            if (href == "#points") {
+                doHistorySearch();
+            }
+            if (href == "#leaderboard") {
+                doLeaderboardSearch();
+            }
+        }
     });
 }
 
@@ -61,14 +80,14 @@ function initExpireAllPoints() {
     $(document.body).on('click', '.btnExpireAll', function (e) {
         e.preventDefault();
         var dataQuery = $('#data-query').val();
-        
+
         var uri = URI(location.search);
         uri.setSearch('startDate', searchOptions.startDate);
         uri.setSearch('finishDate', searchOptions.endDate);
         uri.setSearch('dataQuery', dataQuery);
         uri.setSearch('startPos', 0);
-        
-        
+
+
         if (confirm("Are you sure you want to expire all records? This can not be undone! All points records in this points system will be marked as expired and not available for redemptions.")) {
             $.ajax({
                 type: 'POST',
@@ -81,13 +100,13 @@ function initExpireAllPoints() {
                     flog("success", data);
                     if (data.status) {
                         $('#tablePointsBody').reloadFragment();
-                        Msg.success("All points have been expired");
+                        Msg.success("All points have been expired", "managePointsSystem");
                     } else {
-                        Msg.error("There was a problem expiring points. Please try again and contact the administrator if you still have problems");
+                        Msg.error("There was a problem expiring points. Please try again and contact the administrator if you still have problems", "managePointsSystem");
                     }
                 },
                 error: function (resp) {
-                    Msg.error("An error occurred removing points. You might not have permission to do this");
+                    Msg.error("An error occurred removing points. You might not have permission to do this", "managePointsSystem");
                 }
             });
         }
@@ -106,16 +125,16 @@ function initGroupEditing() {
 
 function initFormPointsSystem() {
     flog('initFormPointsSystem');
-    
+
     $("form.managePointsSystem").forms({
         onSuccess: function (resp) {
             flog("done");
             if (resp.status) {
-                Msg.info("Saved");
+                Msg.info("Saved", "managePointsSystem");
             } else {
-                Msg.error("Sorry, couldnt save");
+                Msg.error("Sorry, couldnt save", "managePointsSystem");
             }
-            
+
         }
     });
 }
@@ -135,20 +154,20 @@ function initReconcile() {
                     flog("success", data);
                     if (data.status) {
                         $('#tablePointsBody').reloadFragment();
-                        Msg.success(data.messages);
+                        Msg.success(data.messages, "managePointsSystem");
                     } else {
-                        Msg.error("There was a problem doing reconciliation. Please try again and contact the administrator if you still have problems");
+                        Msg.error("There was a problem doing reconciliation. Please try again and contact the administrator if you still have problems", "managePointsSystem");
                     }
                     updateReconcileStatus();
                 },
                 error: function (resp) {
-                    Msg.error("An error occurred removing points. You might not have permission to do this");
+                    Msg.error("An error occurred removing points. You might not have permission to do this", "managePointsSystem");
                     updateReconcileStatus();
                 }
             });
         }
     });
-    
+
     updateReconcileStatus();
 }
 
@@ -158,9 +177,9 @@ function updateReconcileStatus() {
         clearTimeout(reconcileCheckTimer);
         reconcileCheckTimer = null;
     }
-    
+
     var btn = $('.btnReconcile');
-    
+
     $.ajax({
         type: 'GET',
         url: window.location.pathname + "?pointsReconcileProcessor",
@@ -217,10 +236,10 @@ function setGroupRecipient(name, groupType, isRecip) {
                             groupIcon = "fa fa-envelope";
                         }
                         var newBtn = $('<span id="group_' + name + '" class="group-list ' + groupClass + '">'
-                            + '<i class="' + groupIcon + '"></i>'
-                            + '<span class="block-name" title="' + name + '"> ' + name + '</span>'
-                            + ' <a href="' + name + '" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group ' + name + '"><i class="fa fa-times"></i></a>'
-                            + '</span>');
+                                + '<i class="' + groupIcon + '"></i>'
+                                + '<span class="block-name" title="' + name + '"> ' + name + '</span>'
+                                + ' <a href="' + name + '" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group ' + name + '"><i class="fa fa-times"></i></a>'
+                                + '</span>');
                         $(".GroupList").append(newBtn);
                         flog("appended to", $(".GroupList"));
                     } else {
@@ -229,12 +248,12 @@ function setGroupRecipient(name, groupType, isRecip) {
                     }
                 } else {
                     flog("error", data);
-                    Msg.error("Sorry, couldnt save " + data);
+                    Msg.error("Sorry, couldnt save " + data, "managePointsSystem");
                 }
             },
             error: function (resp) {
                 flog("error", resp);
-                Msg.error("Sorry, couldnt save - " + resp);
+                Msg.error("Sorry, couldnt save - " + resp, "managePointsSystem");
             }
         });
     } catch (e) {
@@ -270,7 +289,7 @@ function initRemovePoints() {
         flog("initRemoveSalesData", node, node.is(":checked"));
         var checkBoxes = $('#tablePoints').find('tbody input[name=toRemoveId]:checked');
         if (checkBoxes.length === 0) {
-            Msg.error("Please select the points you want to remove by clicking the checkboxes on the right");
+            Msg.error("Please select the points you want to remove by clicking the checkboxes on the right", "managePointsSystem");
         } else {
             if (confirm("Are you sure you want to remove " + checkBoxes.length + " points?")) {
                 doRemovePoints(checkBoxes);
@@ -284,13 +303,13 @@ function initClearAllPoints() {
     $(document.body).on('click', '.btn-clear-history', function (e) {
         e.preventDefault();
         var dataQuery = $('#data-query').val();
-        
+
         var uri = URI(location.search);
         uri.setSearch('startDate', searchOptions.startDate);
         uri.setSearch('finishDate', searchOptions.endDate);
         uri.setSearch('dataQuery', dataQuery);
         uri.setSearch('startPos', 0);
-        
+
         if (confirm("Are you sure you want to clear all records? This can not be undone!")) {
             $.ajax({
                 type: 'POST',
@@ -302,14 +321,14 @@ function initClearAllPoints() {
                 success: function (data) {
                     flog("success", data);
                     if (data.status) {
-                        $('#tablePoints tbody').empty();
-                        Msg.success("Removed points ok");
+                        Msg.success("Submitted", "managePointsSystem");
+                        $("#points").reloadFragment();
                     } else {
-                        Msg.error("There was a problem removing points. Please try again and contact the administrator if you still have problems");
+                        Msg.error("There was a problem removing points. Please try again and contact the administrator if you still have problems.", "managePointsSystem");
                     }
                 },
                 error: function (resp) {
-                    Msg.error("An error occurred removing points. You might not have permission to do this");
+                    Msg.error("An error occurred removing points. You might not have permission to do this", "managePointsSystem");
                 }
             });
         }
@@ -318,7 +337,7 @@ function initClearAllPoints() {
 
 
 function doRemovePoints(checkBoxes) {
-    Msg.info("Deleting...", 2000);
+    Msg.info("Deleting...", "managePointsSystem", 2000);
     $.ajax({
         type: 'POST',
         data: checkBoxes,
@@ -327,45 +346,51 @@ function doRemovePoints(checkBoxes) {
         success: function (data) {
             flog("success", data);
             if (data.status) {
-                Msg.success("Removed points ok");
+                Msg.success("Removed points ok", "managePointsSystem");
                 $("#tablePointsBody").reloadFragment();
             } else {
-                Msg.error("There was a problem removing points. Please try again and contact the administrator if you still have problems");
+                Msg.error("There was a problem removing points. Please try again and contact the administrator if you still have problems", "managePointsSystem");
             }
         },
         error: function (resp) {
-            Msg.error("An error occurred removing points. You might not have permission to do this");
+            Msg.error("An error occurred removing points. You might not have permission to do this", "managePointsSystem");
         }
     });
 }
 
 function doHistorySearch() {
     flog('doHistorySearch');
-    Msg.info("Doing search debits...", 'searchHistory', 2000);
-    
+    Msg.info("Doing search...", 'managePointsSystem', 1000);
+
     var dataQuery = $('#data-query').val();
-    
+
     var uri = URI(location.search);
     uri.setSearch('startDate', searchOptions.startDate);
     uri.setSearch('finishDate', searchOptions.endDate);
     uri.setSearch('dataQuery', dataQuery);
     uri.setSearch('startPos', 0);
-    
+
     var target = $("#tablePointsBody");
     var pointsFooter = $("#pointsFooter");
-    target.load();
+    var debitTarget = $("#debitsTableBody");
+    var debitFooterTarget = $("#debitsPaginator");
     
+    target.load();
+
     $.ajax({
         type: "GET",
         url: window.location.pathname + uri.search(),
         dataType: 'html',
         success: function (content) {
             flog('response', content);
-            Msg.success("Search debits complete", 'searchHistory', 2000);
+            setTimeout(function () {
+                Msg.success("Search completed", 'managePointsSystem', 1000);
+            }, 1000);
+
+            history.pushState(null, null, window.location.pathname + uri.search() + window.location.hash);
+
             var newBody = $(content).find("#tablePointsBody");
             target.replaceWith(newBody);
-            history.pushState(null, null, window.location.pathname + uri.search() + window.location.hash);
-            $("abbr.timeago").timeago();
             var newFooter = $(content).find("#pointsFooter .pagination").html();
             var newRightFooter = $(content).find("#pointsFooter .pagination").parent().siblings().html();
             if (!newFooter)
@@ -374,6 +399,19 @@ function doHistorySearch() {
                 newRightFooter = '';
             pointsFooter.find('.pagination').html(newFooter);
             pointsFooter.find('.pagination').parent().siblings().html(newRightFooter);
+
+            var debitBody = $(content).find("#debitsTableBody");
+            debitTarget.replaceWith(debitBody);
+            var debitFooter = $(content).find("#debitsPaginator .pagination").html();
+            var newRightDebitFooter = $(content).find("#debitsPaginator .pagination").parent().siblings().html();
+            if (!newFooter)
+                newFooter = '';
+            if (!newRightFooter)
+                newRightFooter = '';
+            debitFooterTarget.find('.pagination').html(debitFooter);
+            debitFooterTarget.find('.pagination').parent().siblings().html(newRightDebitFooter);
+
+            $("abbr.timeago").timeago();
             flog("done insert and timeago", $("abbr.timeago"));
         }
     });
@@ -384,7 +422,7 @@ function initDeleteDebits() {
         e.preventDefault();
         var checkBoxes = $('#table-debits').find('tbody input[name=removeDebitsId]:checked');
         if (checkBoxes.length === 0) {
-            Msg.error("Please select the debits you want to remove by clicking the checkboxs to the right");
+            Msg.error("Please select the debits you want to remove by clicking the checkboxs to the right", "managePointsSystem");
         } else {
             if (confirm("Are you sure you want to remove " + checkBoxes.length + " debits?")) {
                 doRemoveDebits(checkBoxes);
@@ -394,7 +432,7 @@ function initDeleteDebits() {
 }
 
 function doRemoveDebits(checkBoxes) {
-    Msg.info("Deleting...", 'removeDebits', 2000);
+    Msg.info("Deleting...", "managePointsSystem", 2000);
     $.ajax({
         type: 'POST',
         data: checkBoxes,
@@ -402,14 +440,14 @@ function doRemoveDebits(checkBoxes) {
         success: function (data) {
             flog("success", data);
             if (data.status) {
-                Msg.success("Removed debits ok", 'removeDebits');
+                Msg.success("Removed debits ok", "managePointsSystem");
                 $("#table-debits").reloadFragment();
             } else {
-                Msg.error("There was a problem removing debits. Please try again and contact the administrator if you still have problems", 'removeDebits');
+                Msg.error("There was a problem removing debits. Please try again and contact the administrator if you still have problems", "managePointsSystem");
             }
         },
         error: function (resp) {
-            Msg.error("An error occurred removing debits. You might not have permission to do this", 'removeDebits');
+            Msg.error("An error occurred removing debits. You might not have permission to do this", "managePointsSystem");
         }
     });
 }
@@ -430,13 +468,13 @@ function initClearAllDebits() {
                     flog("success", data);
                     if (data.status) {
                         $('#table-debits tbody').empty();
-                        Msg.success("Removed points ok");
+                        Msg.success("Removed points ok", "managePointsSystem");
                     } else {
-                        Msg.error("There was a problem removing debits. Please try again and contact the administrator if you still have problems");
+                        Msg.error("There was a problem removing debits. Please try again and contact the administrator if you still have problems", "managePointsSystem");
                     }
                 },
                 error: function (resp) {
-                    Msg.error("An error occurred removing debits. You might not have permission to do this");
+                    Msg.error("An error occurred removing debits. You might not have permission to do this", "managePointsSystem");
                 }
             });
         }
@@ -449,39 +487,39 @@ function initLeaderboardSearch() {
         var code = e.keyCode || e.which;
         if (code === 13) {
             e.preventDefault();
-            
+
             doLeaderboardSearch();
-            
+
             return false;
         }
     });
-    
+
     $(document.body).on('change', '#leaderboard-limit', function (e) {
         e.preventDefault();
-        
+
         doLeaderboardSearch();
     });
 }
 
 function doLeaderboardSearch() {
     flog('doLeaderboardSearch');
-    Msg.info("Doing search leaderboard...", 'leaderboardSearch', 2000);
-    
+    Msg.info("Doing search...", "managePointsSystem", 1000);
+
     var leaderboardLimit = parseInt($('#leaderboard-limit').val(), 10);
     if (Number.isNaN(leaderboardLimit)) {
         leaderboardLimit = 20;
     }
-    
+
     var data = {
         lbStartDate: searchOptions.startDate,
         lbFinishDate: searchOptions.endDate,
         lbLimit: leaderboardLimit
     };
     flog("data", data);
-    
+
     var target = $("#table-leaderboard");
     target.load();
-    
+
     $.ajax({
         type: "GET",
         url: window.location.pathname,
@@ -489,7 +527,9 @@ function doLeaderboardSearch() {
         data: data,
         success: function (content) {
             flog('response', content);
-            Msg.success("Search leaderboard complete", 'leaderboardSearch', 2000);
+            setTimeout(function () {
+                Msg.success("Search completed", "managePointsSystem", 1000);
+            }, 1000);
             var newBody = $(content).find("#table-leaderboard");
             target.replaceWith(newBody);
             $("abbr.timeago").timeago();

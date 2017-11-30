@@ -81,22 +81,34 @@
         </div>
 
         <div class="panel panel-default">
-            <div class="panel-heading"><i class="clip-users"></i> Members</div>
+            <div class="panel-heading">
+                <a class="btn btn-info btn-sm pull-right" href="../">
+                    <span class="fa fa-cog"></span>
+                    Settings
+                </a>                
+                <i class="clip-users"></i> Members
+            </div>
             <div id="manageGroup" class="panel-body MainContent">
+                #if( $page.rulesGroup == false)
                 <button class="btn btn-sm btn-bricky removeUsers pull-right">Remove</button>
+                #end
                 <div class="btn-group pull-right" style="margin-right: 10px;">
                     <a role="button" href="members.csv" download="members.csv" class="btn btn-info btn-sm">Open CSV</a>
+                    #if( $page.rulesGroup == false)
                     <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
                     </button>
+                    
                     <ul class="dropdown-menu" role="menu">
                         <li class="presentation" role="menuitem"><a href="#" class="btn-upload-users-csv">Upload CSV</a></li>
                         <li class="presentation" role="menuitem"><a role="button" href="members.csv" download="members.csv">Open CSV</a></li>
                         <li class="divider" />
                         <li class="presentation" role="menuitem"><a role="button" href="unsubscribers.csv" download="unsubscribers.csv">Open Unsubscribers CSV</a></li>
                     </ul>
+                    #end    
                 </div>
-                <div class="col-md-2">
+                
+                <div class="col-md-3">
                     <h5>
                         <label class="label-control">Showing: </label>
                         <label class="label-control count">$page.paginator.records.size()</label>
@@ -108,9 +120,11 @@
                     </h5>
                 </div>
 
+                #if( $page.rulesGroup )
+                #else
                 <div class="col-md-3">
                     <select id="showUserSelect" class="form-control">
-                        <option>[Filter]</option>
+                        <option value="">[No Filter]</option>
                         <option value="withPassword" #if($request.params.password == true) selected="selected" #end>Only those with a password</option>
                         <option value="noPassword"   #if($request.params.password == false) selected="selected" #end>Those without a password</option>
                     </select>
@@ -126,10 +140,11 @@
                                     <i class="fa fa-times"></i>
                                 </button>
                             </span>
-                            <input type="hidden" id="filterOrgId" value="$request.params.orgId" />
+                            <input type="hidden" id="filterOrgId" value="$!request.params.orgId" />
                         </div>
                     </div>
                 </div>
+                #end                
 
                 <table class="Summary members table table-hover">
                     <thead>
@@ -137,7 +152,9 @@
                             <th>User ID</th>
                             <th>First name</th>
                             <th>Surname</th>
+                            #if( $page.rulesGroup == false)
                             <th>Organisation</th>
+                            #end
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Password set</th>
@@ -150,7 +167,7 @@
                         #foreach($gm in $page.paginator.records)
 
                         #set($pwdDate = false)
-                        #set($pwdDate = $gm.member.passwordCredentialDate)
+                        #set($pwdDate = $gm.passwordCredentialDate)
                         #set($rowClass = "")
                         #if( $pwdDate )
                         #set($rowClass = "withPassword")
@@ -159,12 +176,14 @@
                         #end
 
                         <tr class="$rowClass">
-                            <td>
-                                <a href="/manageUsers/$gm.member.id">$!gm.member.name</a>
+                            <td class="truncate">    
+                                <a href="/manageUsers/$gm.member.userId/">$!gm.member.name</a>
                             </td>
                             <td>$!gm.member.firstName</td>
                             <td>$!gm.member.surName</td>
-                            <td>$!gm.withinOrg.formattedName</td>
+                            #if( $page.rulesGroup == false)
+                            <td>$!gm.orgTitle</td>
+                            #end
                             <td>$!gm.member.phone</td>
                             <td>$!gm.member.email</td>
                             <td>
@@ -173,11 +192,15 @@
                                 #end
                             </td>
                             <td>
-                                <a href="/manageUsers/$gm.member.id" class="btn btn-info">
-                                    <span class="fa fa-pencil"></span>
+                                <a href="/manageUsers/$gm.member.userId/" class="btn btn-info">
+                                    <span class="fa fa-user"></span>
                                 </a>
                             </td>
-                            <td><input type="checkbox" name="toRemoveId" value="$gm.id" /></td>
+                            <td>
+                                #if( $gm.membershipId )
+                                <input type="checkbox" name="toRemoveId" value="$gm.membershipId" />
+                                #end
+                            </td>
                         </tr>
 
 

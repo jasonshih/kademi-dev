@@ -3,6 +3,30 @@
     <div class="col-sm-7">
         <input type="text" name="groupName" id="groupName" placeholder="" class="form-control" value="$!page.getAppSetting($app.instanceId, 'groupName')" />
     </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-4 control-label" for="showTC">Show T&C</label>
+    <div class="col-sm-7">
+        $formatter.checkbox("showTC", "showTC", $!page.getAppSetting($app.instanceId, 'showTC'))
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-4 control-label" for="tcURL">T&C URL</label>
+    <div class="col-sm-7">
+        <input type="text" name="tcURL" id="tcURL" placeholder="" class="form-control" value="$!page.getAppSetting($app.instanceId, 'tcURL')" />
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-4 control-label" for="tcURL">T&C Text</label>
+    <div class="col-sm-7">
+        <input type="text" name="tcText" id="tcText" placeholder="" class="form-control" value="$!page.getAppSetting($app.instanceId, 'tcText')" />
+    </div>
+</div>
+
+<div class="form-group">
     <label class="col-sm-4 control-label" for="showExtraFields">Show Extra Fields</label>
     <div class="col-sm-7">
         $formatter.checkbox("showExtraFields", "showExtraFields", $!page.getAppSetting($app.instanceId, 'showExtraFields'))

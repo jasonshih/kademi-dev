@@ -8,9 +8,23 @@ function initManageEmailHistory() {
         }, 500);
     });
 
+    $("#status").change(function () {
+        typewatch(function () {
+            flog("do search");
+            doSearch();
+        }, 100);
+    });
+
+    $("#job").change(function () {
+        typewatch(function () {
+            flog("do search");
+            doSearch();
+        }, 100);
+    });
+
+
     $(document).on('pageDateChanged', function (e, startDate, endDate) {
         flog("page date changed", startDate, endDate);
-
         doSearch();
     });
 
@@ -18,8 +32,10 @@ function initManageEmailHistory() {
     initSelectAll();
     initMarkIgnored();
 
-    initRowTemplate();
-    doSearch();
+    //initRowTemplate();
+    //doSearch();
+
+    initCharts();
 }
 
 function initMarkIgnored() {
@@ -106,47 +122,41 @@ function initMarkIgnored() {
 
 }
 
+function generateURL() {
+    var url = new URI(window.location.href);
+    url.setQuery("q", $("#email-query").val());
+    url.setQuery("status", $("#status").val());
+    url.setQuery("job", $("#job").val());
 
-function doSearch() {
-    flog("doSearch");
+    flog("URL ", url.toString());
+    return url;
+}
 
-    var query = $("#email-query").val();
-
+function initCharts() {
+    var url = generateURL();
     $.ajax({
         type: "GET",
-        url: "?emailStats&q=" + query,
+        url: url.toString() + "&emailStats",
         dataType: 'json',
         success: function (json) {
             flog('response', json);
-            renderRows(json);
             initHistogram(json.aggregations);
             initPies(json.aggregations);
         }
     });
+
 }
 
-var template;
-
-function initRowTemplate() {
-    var templateHtml = $("#email-row-template").html();
-    template = Handlebars.compile(templateHtml);
-    Handlebars.registerHelper('dateFromLong', function (millis) {
-        if (millis) {
-            var date = new Date(millis[0]);
-            return date.toISOString();
-        } else {
-            return "";
+function doSearch() {
+    flog("doSearch");
+    var url = generateURL();
+    window.history.pushState('', document.title, url.toString());
+    $("#table-emails").reloadFragment({
+        url: url.toString(),
+        whenComplete: function () {
+            $('abbr.timeago').timeago();
         }
     });
-}
-
-function renderRows(json) {
-    flog("renderRows", json, template);
-    var html = template(json);
-    var container = $("#history-table-body");
-    container.html(html);
-    flog("do timeago", $(".timeago", container));
-    container.find(".timeago").timeago();
 }
 
 function initPies(aggr) {

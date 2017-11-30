@@ -18,7 +18,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/shoppingcart/checkout.js?v=1"
+                "path": "/theme/apps/shoppingcart/checkout.js"
             }
         },
         {

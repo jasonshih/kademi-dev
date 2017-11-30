@@ -1,37 +1,25 @@
 <html lang="en" class="no-js">
-    <!-- start: HEAD -->
     <head>
         <title>Main admin template</title>
-
-        <!-- start: META -->
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
-        <!-- For Chrome for Android: -->
         <link sizes="192x192" rel="icon" href="/static/images/favicon-192.png" />
-        <!-- For iPhone 6 Plus with @3× display: -->
         <link sizes="180x180" rel="apple-touch-icon-precomposed" href="/static/images/favicon-180.png" />
-        <!-- For iPad with @2× display running iOS ≥ 7: -->
         <link sizes="152x152" rel="apple-touch-icon-precomposed" href="/static/images/favicon-152.png" />
-        <!-- For iPad with @2× display running iOS ≤ 6: -->
         <link sizes="144x144" rel="apple-touch-icon-precomposed" href="/static/images/favicon-144.png" />
-        <!-- For iPhone with @2× display running iOS ≥ 7: -->
         <link sizes="120x120" rel="apple-touch-icon-precomposed" href="/static/images/favicon-120.png" />
-        <!-- For the iPad mini and the first- and second-generation iPad (@1× display) on iOS ≤ 6: -->
         <link sizes="72x72" rel="apple-touch-icon-precomposed" href="/static/images/favicon-72.png" />
-        <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
         <link rel="apple-touch-icon-precomposed" href="/static/images/favicon-57.png" />
 
         <link rel="manifest" href="/theme/assets/images/favicon/manifest.json" />
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="msapplication-TileImage" content="/theme/assets/images/favicon/ms-icon-144x144.png" />
         <meta name="theme-color" content="#ffffff" />
-        <!-- end: META -->
 
-        <!-- start: MAIN CSS -->
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/static/font-awesome/4.7.0/css/font-awesome.min.css" />
         <link rel="stylesheet" href="/theme/assets/fonts/clip-font.min.css" />
@@ -42,7 +30,7 @@
         <link rel="stylesheet" href="/theme/assets/plugins/jquery-ui/1.12.1.custom/jquery-ui.min.css" />
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-fileupload/bootstrap-fileupload.min.css" />
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-switch/3.3.4/dist/css/bootstrap3/bootstrap-switch.min.css" />
-        <link rel="stylesheet" href="/static/bootstrap-datetimepicker/4.17.37/bootstrap-datetimepicker.min.css" />
+        <link rel="stylesheet" href="/static/bootstrap-datetimepicker/4.17.47/bootstrap-datetimepicker.min.css" />
         <link rel="stylesheet" href="/static/daterangepicker/2.0.11/daterangepicker.css" />
         <link rel="stylesheet" href="/static/bootstrap-datepicker/1.6.1/css/bootstrap-datepicker.min.css" />
         <link rel="stylesheet" href="/static/iCheck/1.0.2/skins/all.css" />
@@ -52,16 +40,15 @@
         <link rel="stylesheet" href="/static/bootstrap-tagsinput/1.0.0/bootstrap-tagsinput.css" />
         <link rel="stylesheet" href="/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.css" />
         <link rel="stylesheet" href="/static/perfect-scrollbar/0.6.7/css/perfect-scrollbar.min.css" />
-        <link rel="stylesheet" href="/theme/assets/css/kademi.css?v=21072017" />
+        <link rel="stylesheet" href="/theme/assets/css/kademi.css?v=20171009" />
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-sweetalert/1.0.1/dist/sweetalert.css" />
-        <!-- end: MAIN CSS -->
 
         <!-- start: MAIN JAVASCRIPTS -->
         <script type="text/javascript" src="/static/jquery/1.11.0/jquery-1.11.0.js">// TODO, should be 2.0.3</script>
 
         <!-- Fuse specific scripts. We might be able to remove some of these after admin2 integration -->
-        <script type="text/javascript" src="/static/js/common.js">//</script>
-        <script type="text/javascript" src="/static/jquery.forms/1.1.6/jquery.forms-1.1.6.js">//</script>
+        <script type="text/javascript" src="/static/js/common.js?v=2">//</script>
+        <script type="text/javascript" src="/static/jquery.forms/1.1.7/jquery.forms-1.1.7.js">//</script>
         <script type="text/javascript" src="/static/jquery.user/1.0.4/jquery.user-1.0.4.js">//</script>
         <script type="text/javascript" src="/static/js/file.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/js/toolbars.js" bottom="true">//</script>
@@ -89,7 +76,7 @@
         <script type="text/javascript" src="/static/jquery.cookie/1.4.0/jquery.cookie.min-1.4.0.js">//</script>
         <script type="text/javascript" src="/static/moment/2.18.1/moment-with-locales.js">//</script>
         <script type="text/javascript" src="/static/moment-timezone/0.5.13-2017b/moment-timezone-with-data.js">//</script>
-        <script type="text/javascript" src="/static/bootstrap-datetimepicker/4.17.37/bootstrap-datetimepicker.js">//</script>
+        <script type="text/javascript" src="/static/bootstrap-datetimepicker/4.17.47/bootstrap-datetimepicker.js">//</script>
         <script type="text/javascript" src="/theme/assets/plugins/bootstrap-fileupload/bootstrap-fileupload.min.js">//</script>
         <script type="text/javascript" src="/theme/assets/plugins/bootstrap-switch/3.3.4/dist/js/bootstrap-switch.min.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js">//</script>
@@ -102,8 +89,8 @@
         <script type="text/javascript" src="/static/jquery.domFinder/1.0.0/jquery.domFinder-1.0.0.js">//</script>
         <script type="text/javascript" src="/static/jquery.entityFinder/1.0.1/jquery.entityFinder-1.0.1.js">//</script>
         <script type="text/javascript" src="/static/jquery.omniSearch/1.0.0/jquery.omniSearch-1.0.0.js">//</script>
-        <script type="text/javascript" src="/theme/assets/js/main.js?v=20170815">//</script>
-        <script type="text/javascript" src="/theme/assets/js/kademi.js?v=20170815">//</script>
+        <script type="text/javascript" src="/theme/assets/js/main.js?v=20171009">//</script>
+        <script type="text/javascript" src="/theme/assets/js/kademi.js?v=20171009">//</script>
 
         <!-- end: MAIN JAVASCRIPTS -->
         <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
@@ -205,7 +192,9 @@
                             <li class="dropdown current-user">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                     #if( $profile.photoHash )
-                                        <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
+                                        <img src="/_hashes/files/$profile.photoHash" class="img-circle" alt="" />
+                                    #else
+                                        <img src="/templates/apps/user/profile.png" class="img-circle" alt="" />
                                     #end
                                     <span class="username hidden-xs hidden-sm">
                                         $!formatter.firstNotNull($user.thisProfile.nickName, $user.thisProfile.firstName, $user.thisProfile.email, $user.thisProfile.name)
@@ -397,6 +386,25 @@
                 }
             </script>
             <!--End of Zopim Live Chat Script-->
+            
+            <!-- Start of Rocket.Chat Livechat Script -->
+            <script type="text/javascript">
+                /* Comment out for now untill we can test it correctly
+                (function(w, d, s, u) {
+                        var ua = navigator.userAgent.toLowerCase();
+                        var platform = navigator.platform.toLowerCase();
+                        var platformName = ua.match(/ip(?:ad|od|hone)/) ? 'ios' : (ua.match(/(?:webos|android)/) || platform.match(/mac|win|linux/) || ['other'])[0];
+                        var isMobile = /ios|android|webos/.test(platformName);
+                        if (!isMobile) {
+                            w.RocketChat = function(c) { w.RocketChat._.push(c) }; w.RocketChat._ = []; w.RocketChat.url = u;
+                            var h = d.getElementsByTagName(s)[0], j = d.createElement(s);
+                            j.async = true; j.src = 'https://chat.kademi.co/packages/rocketchat_livechat/assets/rocketchat-livechat.min.js?_=201702160944';
+                            h.parentNode.insertBefore(j, h);
+                        }
+                })(window, document, 'script', 'https://chat.kademi.co/livechat');
+                */
+            </script>
+            <!-- End of Rocket.Chat Livechat Script -->
         #end
 
         <!-- start: NEW USER MODAL -->

@@ -1,0 +1,11 @@
+<div class="form-group">
+    <label class="col-sm-2 control-label">Calendar event</label>
+    <div class="col-sm-9">
+        <select class="form-control" name="relatedItemId">
+            <option value="">[No event selected]</option>
+            #foreach($event in $applications.calendar.allFutureEvents)
+            $formatter.option($event.id, $event.summary, $page.relatedItemId)
+            #end
+        </select>
+    </div>
+</div>

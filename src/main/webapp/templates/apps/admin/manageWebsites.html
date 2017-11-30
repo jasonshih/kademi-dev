@@ -62,11 +62,12 @@
                         </thead>
                         <tbody>
                             #foreach($w in $page.children)
+                            
                                 <tr>
                                     #set( $liveBranch = $w.current )
                                     <td style="min-width: 220px">
                                         <div class="btn-group btn-group-sm">
-                                            <a href="${page.websiteAddress($w)}" target="_blank" title="ID - $w.id" class="btn btn-sm btn-default repo" style="min-width: 140px; text-align: left"><i class="fa fa-globe"></i> $w.name
+                                            <a href="${page.websiteAddress($w)}" target="_blank" title="$w.title" class="btn btn-sm btn-default repo" style="min-width: 140px; text-align: left"><i class="fa fa-globe"></i> $w.name
                                             </a>
                                             <a href="$w.name/" class="btn btn-sm btn-info"><i class="glyphicon glyphicon-cog"></i></a>
                                             <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">

@@ -10,24 +10,61 @@
                         <div class="container-content-wrapper">
                             <div class="row">
                                 <div class="col-md-6" data-type="container-content">
-                                    <section data-type="component-dateRange" data-picker-align="left" data-picker-size="btn-md" data-picker-color="btn-primary">
-                                        <div data-dynamic-href="_components/dateRange"></div>
-                                    </section>
-                                    
+
                                     <section data-type="component-leadAnalyticsStats">
-                                        <div data-dynamic-href="_components/leadAnalyticsStats"></div>
+                                        <div data-dynamic-href="_components/leadAnalyticsStats" id="default-leadAnalyticsStats"></div>
                                     </section>
+
+                                    <div class="panel panel-default" style="padding: 20px 30px 0">
+                                        <div id="pies" class="row">
+                                            <section data-type="component-leadAnalyticsNewLeadsCreated">
+                                                <div data-dynamic-href="_components/leadAnalyticsNewLeadsCreated" id="default-leadAnalyticsNewLeadsCreated"></div>
+                                            </section>
+                                            <section data-type="component-leadAnalyticsLeadsLost">
+                                                <div data-dynamic-href="_components/leadAnalyticsLeadsLost" id="default-leadAnalyticsLeadsLost"></div>
+                                            </section>
+                                            <section data-type="component-leadAnalyticsLeadsLost">
+                                                <div data-dynamic-href="_components/leadAnalyticsLeadsClosed" id="default-leadAnalyticsLeadsClosed"></div>
+                                            </section>
+                                        </div>
+                                    </div>
+
+
                                 </div>
                                 <div class="col-md-6" data-type="container-content">
-                                    <section data-type="component-leadAnalyticsFunnel">
-                                        <div data-dynamic-href="_components/leadAnalyticsFunnel"></div>
+                                    <section data-type="component-dateRange" data-picker-align="right" data-picker-size="btn-md" data-picker-color="btn-primary">
+                                        <div data-dynamic-href="_components/dateRange" id="default-dateRange"></div>
                                     </section>
+                                    <section data-type="component-leadAnalyticsFunnel">
+                                        <div data-dynamic-href="_components/leadAnalyticsFunnel" id="default-leadAnalyticsFunnel"></div>
+                                    </section>
+
+                                    <div class="panel panel-default" style="padding: 20px 30px 0">
+                                        <div class="row">
+                                            <div class="col-md-4" data-type="container-content">
+                                                <section data-type="component-countNewQuotes">
+                                                    <div data-dynamic-href="_components/countNewQuotes"></div>
+                                                </section>
+                                            </div>
+                                            <div class="col-md-4" data-type="container-content">
+                                                <section data-type="component-countAcceptedQuotes">
+                                                    <div data-dynamic-href="_components/countAcceptedQuotes"></div>
+                                                </section>
+                                            </div>
+                                            <div class="col-md-4" data-type="container-content">
+                                                <section data-type="component-countNewProposals">
+                                                    <div data-dynamic-href="_components/countNewProposals"></div>
+                                                </section>
+                                            </div>
+
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12" data-type="container-content">
                                     <section data-type="component-leadAnalyticsTable">
-                                        <div data-dynamic-href="_components/leadAnalyticsTable"></div>
+                                        <div data-dynamic-href="_components/leadAnalyticsTable" id="default-leadAnalyticsTable"></div>
                                     </section>
                                 </div>
                             </div>

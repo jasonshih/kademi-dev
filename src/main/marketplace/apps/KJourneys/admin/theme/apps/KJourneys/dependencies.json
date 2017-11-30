@@ -1,0 +1,24 @@
+{
+  "appDependencies": [
+        {
+            "appId": "search",
+            "branch" : ""
+        },
+        {
+            "appId": "userDashboardApp",
+            "branch" : ""
+        },                
+        {
+            "appId": "alerts",
+            "branch" : ""
+        },
+        {
+            "appId": "funnels",
+            "branch" : ""
+        },
+        {
+            "appId": "leadMan",
+            "branch" : ""
+        }        
+  ]
+}

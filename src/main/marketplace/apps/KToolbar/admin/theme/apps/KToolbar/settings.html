@@ -1,0 +1,11 @@
+#set ($translationEnabled = $!page.getAppSetting($app.instanceId, 'translationEnabled'))
+<div class="form-group">
+    <label class="col-sm-4 control-label" for="ktoolbar-translationEnabled">Enable translation</label>
+    <div class="col-sm-7">
+        <div class="checkbox">
+            <label for="ktoolbar-translationEnabled">
+                $formatter.checkbox("ktoolbar-translationEnabled", "translationEnabled", $translationEnabled, "true" )
+            </label>
+        </div>
+    </div>
+</div>

@@ -9,6 +9,8 @@ function initManageShoppingCarts() {
     initButtons();
     $("abbr.timeago").timeago();
     initUploadOrdersCsv();
+
+    initAddNewOrder();
 }
 
 function initUploadOrdersCsv() {
@@ -115,11 +117,11 @@ function markFulfilled(listToFulfill) {
 
 function initHistorySearch() {
     $(document.body).on('pageDateChanged', function (e, startDate, endDate, text, trigger, initial) {
-        if( initial ) {
+        if (initial) {
             flog("Ignore initial");
             return;
         }
-        
+
         searchOptions.startDate = startDate;
         searchOptions.endDate = endDate;
 
@@ -146,8 +148,8 @@ function doSearch() {
 
 
 function doHistorySearch(startDate, endDate) {
-    var f = $("#searchFulfillmentState").val();    
-    
+    var f = $("#searchFulfillmentState").val();
+
     var data = {
         startDate: formatDate(startDate),
         finishDate: formatDate(endDate),
@@ -166,6 +168,61 @@ function doHistorySearch(startDate, endDate) {
             flog("newBody", newBody);
             target.replaceWith(newBody);
             jQuery("abbr.timeago").timeago();
+        }
+    });
+}
+
+function initAddNewOrder() {
+    var modal = $('#modalAddNewOrder');
+    var form = modal.find('form');
+
+    $('#shoppingCartFindProfile').entityFinder({
+        maxResults: 10,
+        type: 'profile',
+        renderSuggestions: function (data) {
+            var suggestionsHtml = '';
+
+            for (var i = 0; i < data.length; i++) {
+                var item = data[i];
+
+                var userName = item.fields.userName[0];
+                var userId = item.fields.userId[0];
+                var email;
+                if (item.fields.email) {
+                    email = item.fields.email[0];
+                } else {
+                    email = "";
+                }
+                var firstName = item.fields.firstName ? item.fields.firstName[0] : '';
+                var surName = item.fields.surName ? item.fields.surName[0] : '';
+                var displayText = (firstName || surName) ? firstName + ' ' + surName : '';
+                displayText = displayText.trim();
+
+                suggestionsHtml += '<li class="search-suggestion" data-id="' + userName + '" data-actual-id="' + userId + '" data-type="user" data-text="' + (displayText || userName) + '">';
+                suggestionsHtml += '    <a href="javascript:void(0);">';
+                suggestionsHtml += '        <span>' + userName + '</span> &ndash; <span class="text-info">' + email + '</span>';
+                if (displayText) {
+                    suggestionsHtml += '    <br /><small class="text-muted">' + displayText + '</small>';
+                }
+                suggestionsHtml += '    </a>';
+                suggestionsHtml += '</li>';
+            }
+
+            return suggestionsHtml;
+        },
+        onSelectSuggestion: function (suggestion, id, actualId, type) {
+            form.find('[name=profileId]').val(actualId);
+        }
+    });
+
+    modal.on('hidden.bs.modal', function (e) {
+        form.trigger('reset');
+    });
+
+    form.forms({
+        onSuccess: function (resp) {
+            modal.modal('hide');
+            Msg.success(resp.messages);
         }
     });
 }

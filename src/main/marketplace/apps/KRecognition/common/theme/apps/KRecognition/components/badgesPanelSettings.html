@@ -1,4 +1,4 @@
-<form class="form-horizontal">
+<div class="form-horizontal">
     #set( $topics = $applications.userApp.recognitionService.allTopics )
     <div class="form-group">
         <label class="col-sm-12">Topic</label>
@@ -11,4 +11,34 @@
             </select>
         </div>
     </div>
-</form>
+    <div class="form-group">
+        <label class="col-sm-12">Show badge title or not</label>
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <label><input type="checkbox" class="chk-show-badge-title" /></label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Show most recent awarded badge</label>
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <label><input type="checkbox" class="chk-most-recent-badge" /></label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group most-recent-badge-wrapper">
+        <label class="col-sm-12">Badges per row</label>
+        <div class="col-sm-12">
+            <select class="form-control select-badges-per-row">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="6">6</option>
+                <option value="12">12</option>
+            </select>
+        </div>
+    </div>
+</div>

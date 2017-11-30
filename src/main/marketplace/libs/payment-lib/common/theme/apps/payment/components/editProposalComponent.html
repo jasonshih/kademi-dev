@@ -1,0 +1,258 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">
+            #if( $page.newProposal )
+            #if( $page.lead )
+            <a class="btn btn-info btn-sm" href="/leads/$page.lead.id">
+                <span class="fa fa-arrow-left"></span>
+                Back
+            </a>
+            #end
+
+            Create new proposal
+            #if( $page.lead )
+            for <a href="/leads/$page.lead.id"><b>$page.lead.profile.formattedName</b> as part of <b>$page.lead.formattedTitle</b></a>
+            #end                               
+            #else
+            <div class="dropdown proposal-status pull-right">
+                <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                    Status: <span id="proposal-status">$page.proposal.status</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#CREATED"><i class="fa fa-fw text-success #if($page.proposal.status == 'CREATED') fa-check #end"></i> Created</a></li>
+                    <li><a href="#ACCEPTED"><i class="fa fa-fw text-success #if($page.proposal.status == 'ACCEPTED') fa-check #end"></i> Accepted</a></li>
+                </ul>
+            </div>
+
+            #if( $page.lead )
+            <a class="btn btn-info btn-sm" href="/leads/$page.lead.id">
+                <span class="fa fa-arrow-left"></span>
+                Back
+            </a>
+            #end
+
+            Edit proposal
+            #end
+        </div>
+    </div>
+    <div class="panel-body">
+        #if( $page.newProposal )
+        <div class="alert alert-info">
+            <p>
+                <span class="fa fa-exclamation-circle"></span>
+                Press <b>create</b> to create the proposal and begin adding quotes.
+            </p>
+        </div>
+        #else
+        #if( $page.lead )
+        <div class="alert alert-info">
+            Proposal prepared for <a href="/leads/$page.lead.id"><b>$page.lead.profile.formattedName as part of $page.lead.formattedTitle</b></a>
+        </div>
+        #end        
+        #end
+
+        <form method="post" action="$page.href" class="form-horizontal proposal-details-form">
+            #if( $page.newProposal )
+            <input type="hidden" name="leadId" value="$!request.params.leadId" />
+            #end
+
+            #if( $page.lead )
+            <!-- if there is a lead, dont allow to change customer -->
+            <input type="hidden" name="customer" value="$!page.customer.id" />
+            #else
+            <div class="form-group">
+                <label class="control-label col-sm-3">Customer</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control proposal-customer" name="customer" value="$!page.customer.id" data-text="$!page.customer.formattedName" />
+                </div>
+            </div>
+            #end
+
+            #if( $page.newProposal )
+            <div class="form-group">
+                <div class="col-sm-5">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <span class="fa fa-check"></span>
+                        #if( $page.newProposal )
+                        Create
+                        #else
+                        Save
+                        #end
+                    </button>
+                </div>
+            </div>
+            #end
+        </form>
+    </div>
+</div>
+
+
+#if( !$page.newProposal )
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">
+            <a class="btn btn-info btn-add-quote pull-right" href="#addQuoteInProposalModal" data-toggle="modal">
+                <span class="fa fa-plus"></span>
+                Add a new quote
+            </a>
+            Quotes
+        </div>
+    </div>
+    <div class="panel-body">
+        <table id="quotesTable" class="table table-hover table-striped table-condensed">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Number</th>
+                    <th>Title</th>
+                    <th>Vendor</th>
+                    <th>Customer</th>
+                    <th>Sub Total</th>
+                    <th>Tax</th>
+                    <th>Total</th>
+                    <th>Issue Date</th>
+                    <th>Expire Date</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+
+            <tbody id="quoteTableBody">
+                #foreach($v in $page.proposal.quotes)
+                <tr>
+                    <td title="$v.quoteStatus" class="text-center lead">
+                        #if($v.quoteStatus == "NEW")
+                        <i class="fa fa-pencil-square-o text-muted"></i>
+                        #elseif($v.quoteStatus == "ACCEPTED")
+                        <i class="fa fa-check-circle text-success"></i>
+                        #elseif($v.quoteStatus == "INVOICED")
+                        <i class="fa fa-check-circle text-success"></i>
+                        #else
+                        <i class="fa fa-exclamation-circle text-danger"></i>
+                        #end
+                    </td>
+                    <td><a href="#">$v.number</a></td>
+                    <td>$!v.title</td>
+                    <td>$formatter.ifNull($v.vendor.formattedName, '-')</td>
+                    <td>$formatter.ifNull($v.customer.formattedName, '-')</td>
+                    <td>$v.subTotal</td>
+                    <td>$v.tax</td>
+                    <td>$v.total</td>
+                    <td><abbr title="$formatter.formatDateISO8601($v.issuedDate)" class="timeago">$v.issuedDate</abbr></td>
+                    #if ($v.expiryDate)
+                    <td><abbr title="$formatter.formatDateISO8601($v.expiryDate)" class="timeago">$v.expiryDate</abbr></td>
+                    #else
+                    <td>-</td>
+                    #end
+                    <td class="action">
+                        <div class="btn-group btn-group-sm">
+                            <a href="/quotes/$v.id" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
+                        </div>
+                    </td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+    </div>
+</div>
+#end
+
+<div class="hide" id="quotesExpiryDates">
+    #set ($arr = $formatter.newArrayList())
+    #foreach($q in $page.proposal.quotes)
+    #if ($q.expiryDate)
+    #if ($arr.add($q.expiryDate)) #end
+    #end
+    #end
+
+    #set ($arr1 = $formatter.sortReverse($arr))
+    #if ($arr1.size() > 0)
+    $formatter.formatDateTime($arr1[0])
+    #end
+</div>
+
+<div class="modal fade no-redirect" id="addQuoteInProposalModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Add new Quote</h4>
+            </div>
+            <div>
+                <form id="add-quote-form" class="form-horizontal" method="POST" action="/quotes/" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="hidden" name="proposalId" value="$page.proposal.id" />
+                        <input type="hidden" name="createQuoteFolder" value="true" />
+
+                        <div class="form-group">
+                            <label for="quoteNumber" class="col-sm-3 control-label">Quote Number</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control required" id="quoteNumber" name="number" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quoteTitle" class="col-sm-3 control-label">Quote Title</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control required"id="quoteTitle" name="title" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="col-sm-3 control-label">Description</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control required" id="description" name="description" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="quoteExpiryDate" class="col-sm-3 control-label">Expiry Date</label>
+                            <div class="col-sm-9">
+
+                                <input type='text' class="form-control date" id="quoteExpiryDate" name="expiryDate" style="cursor:pointer;" />
+                            </div>
+                        </div>
+
+                        <hr />                    
+
+                        <button type="button" class="btn btn-info btn-quick-add-line-item btn-sm pull-right">
+                            <span class="fa fa-plus"></span>
+                            Add a line item
+                        </button>
+                        <div class="add-quote-line-item-wrapper" style="display: none;">
+                            <p class="lead">Quote Item</p>
+                            <div class="form-group">
+                                <label for="supplier" class="col-sm-3 control-label">Supplier</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control required-if-shown" id="supplier" name="lineitem.supplier" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="description" class="col-sm-3 control-label">Description</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="description" name="lineitem.description" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="quantity" class="col-sm-3 control-label">Quantity</label>
+                                <div class="col-sm-3">
+                                    <input type="number" class="form-control required-if-shown" id="quantity" name="lineitem.quantity" value="1" />
+                                </div>
+
+                                <label for="unitPrice" class="col-sm-3 control-label">Unit price</label>
+                                <div class="col-sm-3">
+                                    <input type="number" class="form-control required-if-shown" id="unitPrice" name="lineitem.unitPrice" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                        <button id="add-quote-button" type="submit" class="btn btn-sm btn-primary" data-type="form-submit">Create Quote</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+

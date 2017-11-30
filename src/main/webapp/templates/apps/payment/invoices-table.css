@@ -1,3 +1,7 @@
 .invoices-table .highlighted .search-wrapper {
     z-index: 3;
 }
+
+.template-row{
+    display:none;
+}

@@ -16,8 +16,8 @@ function getDB(page) {
     return db;
 }
 
-function updateMapping(page, prams) {
-    log.info('updateMapping > page={}, prams={}', prams);
+function updateMapping(page, params) {
+    log.info('updateMapping > page={}, prams={}', params);
     
     var result = {
         status: true

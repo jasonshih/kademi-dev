@@ -1,12 +1,18 @@
-<controllers>
+<controllers onAppEnabled="initApp">
     <source>/APP-INF/app.js</source>
-    <source>/APP-INF/utils.js</source>
-    <source>/APP-INF/config.js</source>
-    <source>/APP-INF/common.js</source>
-    <source>/APP-INF/managePoll.js</source>
-    <source>/APP-INF/managePolls.js</source>
-    <source>/APP-INF/portlet.js</source>
-    <source>/APP-INF/components.js</source>
+
+    <source>/APP-INF/common/mapping.js</source>
+    <source>/APP-INF/common/config.js</source>
+    <source>/APP-INF/common/utils.js</source>
+    <source>/APP-INF/common/dbUtils.js</source>
+    <source>/APP-INF/common/common.js</source>
+    <source>/APP-INF/common/components.js</source>
+
+    <source>/APP-INF/admin/managePoll.js</source>
+    <source>/APP-INF/admin/managePolls.js</source>
+    <source>/APP-INF/admin/adminPortlet.js</source>
+
+    <source>/APP-INF/website/websitePortlet.js</source>
 
     <menu parentId="menuContent" id="menuManagePolls" text="Polls" path="/kpoll/managePolls/" ordering="45"/>
 

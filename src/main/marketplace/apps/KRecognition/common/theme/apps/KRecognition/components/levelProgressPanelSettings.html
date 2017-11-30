@@ -1,0 +1,20 @@
+<div class="form-horizontal">
+    #set( $topics = $applications.userApp.recognitionService.allTopics )
+    <div class="form-group">
+        <label class="col-sm-12">Topic</label>
+        <div class="col-sm-12">
+            <select class="form-control select-topic">
+                <option value="" selected="selected">- Please select -</option>
+                #foreach($topic in $topics)
+                <option value="$topic.name">$topic.title</option>
+                #end
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Show topic name</label>
+        <div class="col-sm-12">
+            <input type="checkbox" class="chk-show-topic-name" />
+        </div>
+    </div>
+</div>

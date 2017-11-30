@@ -4,90 +4,82 @@
         <link type="text/css" rel="stylesheet" href="viewLogs.css" />
     </head>
     <body class="manageApplications appsContainer">
-        <article class="panel panel-default">
-            <div class="panel-heading">
-                <i class="clip-file-2"></i>
-                <h3 class="panel-title">Logs</h3>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-3 col-lg-2 col-xl-2">
-                        <div class="input-group search-user input-group-sm">
-                            <span class="input-group-addon">Level:</span>
-                            <select class="form-control" id="level-filter">
-                                <option value="">All levels</option>
-                                <option value="info-only">Info</option>
-                                <option value="danger-only">Error</option>
-                                <option value="warning-only">Warn</option>
-                                <option value="default-only">Trace</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-lg-3 col-xl-3">
-                        <div class="input-group search-user input-group-sm">
-                            <input type="text" id="user-query" class="form-control user-query" placeholder="Filter by User" value="" />
-                            <span class="input-group-btn">
-                                <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#user-query">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-lg-3 col-xl-3">
-                        <div class="input-group search-user input-group-sm">
-                            <input type="text" id="message-query" class="form-control message-query" placeholder="Filter message" value="" />
-                            <span class="input-group-btn">
-                                <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#message-query">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-lg-3 col-xl-3">
-                        <div class="input-group search-user input-group-sm">
-                            <input type="number" id="size-limit" class="form-control size-limit" min="0" max="5000" placeholder="Max number of records" value="500" />
-                            <span class="input-group-btn">
-                                <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#size-limit">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <br />
-                <div class="form-inline">
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" id="doTail" checked="true" /> Tail logs
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>&nbsp;</label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" id="autoScroll" checked="true" /> Auto scroll to end
-                        </label>
-                    </div>
-                </div>
-                <div class="panel panel-default" style="margin: 0">
-                    <div class="col-row row-header clearfix">
-                        <div class="col-lvl">Level</div>
-                        <div class="col-user">User</div>
-                        <div class="col-msg">Message</div>
-                        <div class="col-date">Date</div>
-                    </div>
-                    <div id="logsBody">
-                        <div class="col-row clearfix no-bordered">
-                            <div style="width: 100%">Beginning listening...</div>
-                        </div>
-                    </div>
-                    <div class="panel-footer">
-                        <button class="btn btn-info logs-clear">Clear</button>
-                    </div>
+        <div class="row">
+            <div class="col-md-3 col-lg-2 col-xl-2">
+                <div class="input-group search-user input-group-sm">
+                    <span class="input-group-addon">Level:</span>
+                    <select class="form-control" id="level-filter">
+                        <option value="">All levels</option>
+                        <option value="info-only">Info</option>
+                        <option value="danger-only">Error</option>
+                        <option value="warning-only">Warn</option>
+                        <option value="default-only">Trace</option>
+                    </select>
                 </div>
             </div>
-        </article>
+            <div class="col-md-4 col-lg-3 col-xl-3">
+                <div class="input-group search-user input-group-sm">
+                    <input type="text" id="user-query" class="form-control user-query" placeholder="Filter by User" value="" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#user-query">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3 col-xl-3">
+                <div class="input-group search-user input-group-sm">
+                    <input type="text" id="message-query" class="form-control message-query" placeholder="Filter message" value="" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#message-query">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3 col-xl-3">
+                <div class="input-group search-user input-group-sm">
+                    <input type="number" id="size-limit" class="form-control size-limit" min="0" max="5000" placeholder="Max number of records" value="500" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#size-limit">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="form-inline">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="doTail" checked="true" /> Tail logs
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>&nbsp;</label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="autoScroll" checked="true" /> Auto scroll to end
+                </label>
+            </div>
+        </div>
+        <div class="panel panel-default" style="margin: 0">
+            <div class="col-row row-header clearfix">
+                <div class="col-lvl">Level</div>
+                <div class="col-user">User</div>
+                <div class="col-msg">Message</div>
+                <div class="col-date">Date</div>
+            </div>
+            <div id="logsBody">
+                <div class="col-row clearfix no-bordered">
+                    <div style="width: 100%">Beginning listening...</div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-info logs-clear">Clear</button>
+            </div>
+        </div>
 
         <script type="text/javascript" src="/theme/apps/admin/viewLogs.js?v=1.2"></script>
         <script type="text/javascript">

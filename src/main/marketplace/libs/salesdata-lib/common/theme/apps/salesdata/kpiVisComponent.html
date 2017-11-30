@@ -1,0 +1,64 @@
+#if( !$height )
+    #set( $height = 200 )
+#end
+
+#set ($panelCls = "panel panel-default")
+#set ($panelBodyCls = "panel-body")
+#if ($bordered && $bordered != "true" && $bordered != "")
+#set ($panelCls = "")
+#set ($panelBodyCls = "")
+#end
+
+#if ($grid != "true")
+#set ($noGrid = "noGrid")
+#end
+
+#if ($inverted == "true")
+#set ($invertedPanel = "invertedPanel")
+#end
+
+#if (!$fillColor)
+#set ($fillColor = "bg-primary")
+#end
+#if (!$hasTitle || $hasTitle == "")
+#set ($hasTitle = "true")
+#end
+<div class="$!panelCls $!noGrid $!invertedPanel panel-kpi-visualisation">
+    <div class="fillColor hide $!fillColor"></div>
+    #if ($hasTitle == "true")
+    <div class="panel-heading">
+        <i class="fa fa-bar-chart"></i> 
+        #set( $kpiTitle = $rootFolder.find($href).title )
+        #if ($chartTitle && $chartTitle != "")
+        #set( $kpiTitle = $chartTitle)
+        #end
+        #if( $kpiTitle )
+        $kpiTitle
+        #else
+        Please select a KPI
+        #end
+    </div>
+    #end
+    <div class="$!panelBodyCls">
+        <div style="height: $!{height}px" data-href="$href" data-visualisation="$visualisation" class="kpiVis">
+            #if( $visualisation == "kpiLeaderboard" )
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Participant</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Loading..</td>
+                    </tr>
+                </tbody>
+            </table>
+            #else
+            <svg></svg>
+            #end
+        </div>
+    </div>
+</div>

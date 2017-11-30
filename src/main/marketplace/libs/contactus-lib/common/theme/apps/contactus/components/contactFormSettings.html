@@ -1,0 +1,117 @@
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12">Show Optins</label>
+        <div class="col-sm-12">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="showOptins" value="true" checked>
+                    Show
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="showOptins" value="false">
+                    Dont show
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        #set ($contactPage = $rootFolder.find("/contactus"))
+
+        <label class="col-sm-12">Optins group</label>
+        <div class="col-sm-12">
+            #foreach($optin in $contactPage.optins)
+            <div class="checkbox">
+                <label class="col-sm-9" for="settings_optins_${optin.optinGroup.name}">
+                    <input class="optins" type="checkbox" name="optins" value="$optin.optinGroup.name" id="settings_optins_${optin.optinGroup.name}" />
+                    $optin.optinGroup.title
+                </label>
+            </div>
+            #end
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Available fields</strong></label>
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="chkFirstName" /> First Name
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="chkSurname" /> Surname
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="chkEmail" /> Email
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="chkCompany" /> Company
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="chkPhone" /> Phone
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="chkMessage" /> Message
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Submit text</strong></label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control" id="txtSubmitText" value="Send message" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Submit size</strong></label>
+        <div class="col-sm-12">
+            <select class="form-control" id="cbbSubmitSize">
+                <option value="btn-xs">Extra Small</option>
+                <option value="btn-sm">Small</option>
+                <option value="btn-md" selected="selected">Medium</option>
+                <option value="btn-lg">Large</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Submit color</strong></label>
+        <div class="col-sm-12">
+            <select class="form-control" id="cbbSubmitColor">
+                <option value="btn-default">Default</option>
+                <option value="btn-primary" selected="selected">Primary</option>
+                <option value="btn-info">Info</option>
+                <option value="btn-success">Success</option>
+                <option value="btn-warning">Warning</option>
+                <option value="btn-danger">Danger</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Submit extra class</strong></label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control" id="txtSubmitClass" value="" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Thank you message</strong></label>
+        <div class="col-sm-12">
+            <textarea type="text" class="form-control" id="thankYou" value="" ></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Contact form path</strong></label>
+        <div class="col-sm-12">
+            <textarea type="text" class="form-control" id="path" value="" ></textarea>
+        </div>
+    </div>
+</form>

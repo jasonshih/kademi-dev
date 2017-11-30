@@ -124,7 +124,7 @@
                                         <div class="form-inline text-right">
                                             <div class="form-group" style="margin-right: 20px">
                                                 <label for="startRow" >Start row: </label>
-                                                <input style="width: 100px" type="number" min="1" name="startRow" id="startRow" class="form-control" value="1"/>
+                                                <input style="width: 100px" type="number" min="0" name="startRow" id="startRow" class="form-control" value="1"/>
                                             </div>
 
                                         </div>
@@ -181,13 +181,17 @@
                                             <td class="beforeImportNumExisting"></td>
                                         </tr>
                                         <tr>
+                                            <th>Existing Rows to be deleted</th>
+                                            <td class="beforeImportNumToDelete"></td>
+                                        </tr>
+                                        <tr>
                                             <th>Invalid rows</th>
                                             <td class="beforeImportNumInvalid"></td>
                                         </tr>
                                     </table>
 
                                     <i>Any invalid records are displayed below. If you proceed these will not be imported, but you can download a list at the end to correct and reupload</i>
-                                    <div class="" style="max-height: 300px">
+                                    <div class="" style="max-height: 300px; overflow-y: auto">
                                         <table class="table table-bordered table-striped">
                                             <tbody class="beforeImportInvalidRows">
 
@@ -208,6 +212,25 @@
                                         <strong>Process Status:</strong>
                                         <strong id='job-status'></strong>
                                     </p>
+
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>Number created</th>
+                                            <td class="createdCount"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Number updated:</th>
+                                            <td class="updatedCount"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Number deleted:</th>
+                                            <td class="deletedCount"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Number with errors</th>
+                                            <td class="errorCount"></td>
+                                        </tr>
+                                    </table>
 
                                     <button class="btn btn-danger" name="cancel" type="button" id="btn-cancel-import">Cancel Import</button>
                                 </div>
@@ -280,10 +303,10 @@
 
         <script type="text/javascript" src="/static/fuelux/3.13.0/js/fuelux.min.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
-        <script type="text/javascript" src="/theme/apps/admin/manageTableUploader.js">//</script>
+        <script type="text/javascript" src="/theme/apps/admin/manageTableUploader.js?_=0005">//</script>
+        #set($hcf = $page.customFormSupported || $page.hasDateField)
         <script type="text/javascript">
             $(function () {
-                #set($hcf = $page.customFormSupported || $page.hasDateField)
                 initManageTableUploader($hcf);
             });
         </script>

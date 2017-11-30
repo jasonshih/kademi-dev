@@ -10,6 +10,7 @@ function initManageCourse(programsUrl, programUrl, courseUrl) {
     initActive();
     initCourseModal();
     initCopyCutPaste();
+    initCourseModuleSearch();
 
     if ($('#manage-course').length > 0) {
         $('div.courses-list li > a').pjax('#manage-course', {
@@ -880,4 +881,27 @@ function getProgramPath(){
         }
     }
     return '';
+}
+
+function initCourseModuleSearch() {
+    $.expr[":"].contains = $.expr.createPseudo(function(arg) {
+        return function( elem ) {
+            return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+        };
+    });
+    $('.courseSearch input').on('input', function () {
+        var that = this;
+        typewatch(function () {
+            var panel = $(that).parents('.panel');
+            var list = panel.find('ul li').not('.splitter');
+            if (that.value){
+                list.addClass('hide');
+                list.filter(':contains("'+that.value+'")').removeClass('hide');
+            } else {
+                list.removeClass('hide');
+            }
+        },300);
+
+
+    })
 }

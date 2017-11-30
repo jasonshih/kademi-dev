@@ -1,131 +1,187 @@
 <html>
     <head>
         <title>Martket Place</title>
-        <link href="manageMarketPlace.css" rel="stylesheet" type="text/css"/>
+        <link href="manageMarketPlace.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
-
         #if( $request.params.websiteName )
-        <p>
-            <a class="btn btn-info" href="/websites/$request.params.websiteName/$request.params.websiteBranch/#panel_apps-tab">
-                <span class="fa fa-arrow-left"></span>
-                Back to website manager
-            </a>
-        </p>
+            <p>
+                <a class="btn btn-default" href="/websites/$request.params.websiteName/$request.params.websiteBranch/#panel_apps-tab">
+                    <span class="fa fa-arrow-left"></span>
+                    Back to website manager
+                </a>
+            </p>
         #end
-
+        
         <div class="tabbable">
             <ul id="myTab" class="nav nav-tabs tab-bricky">
                 <li class="active">
                     <a href="#browse" data-toggle="tab"><i class="fa fa-cart-plus"></i> Browse</a>
                 </li>
-                <li class="">
-                    <a href="#purchased" data-toggle="tab"><i class="fa fa-download"></i> Installed</a>
-                </li>
+                #if( $request.params.websiteName )
+                #else
+                    <li class="">
+                        <a href="#purchased" data-toggle="tab"><i class="fa fa-download"></i> Installed</a>
+                    </li>
+                #end
             </ul>
-
+            
             <div class="tab-content">
                 <div class="tab-pane active" id="browse">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                #foreach($app in $page.children.ofType("app"))
-                                #if( $app.appProvider || $app.themeProvider )
-                                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
-                                    <div class="thumbnail app">
-                                        <a href="$app.href?websiteBranch=$!request.params.websiteBranch&websiteName=$!request.params.websiteName">
-                                            #set($logo = "/theme/apps/marketplace/no_logo.png")
-                                            #if($app.logo)
-                                            #set($logo = $app.href + $app.logo.name + "/alt-320-150.png")
-                                            #end
-                                            <img src="$logo" alt="$app.title">
-                                        </a>
-                                        <div class="caption">
-                                            <h4 class="title">
-                                                <a href="$app.href?websiteBranch=$!request.params.websiteBranch&websiteName=$!request.params.websiteName">
-                                                    $app.title
-                                                    <span class="parag-end"></span>
-                                                </a>
-                                            </h4>
-                                            <p>
-                                                #if( $app.brief )
-                                                $app.brief
-                                                #else
-                                                No description.
-                                                #end
-                                            </p>
-                                        </div>
-                                        <div class="ratings">
-                                            <p class="pull-right">
-                                                #if(!$app.price || $app.price == 0)
-                                                Free
-                                                #else
-                                                $$app.price
-                                                #end
-                                            </p>
-                                            #genRatings(3.5, 14)
-                                        </div>
-                                    </div>
-                                </div>
-                                #end
-                                #end
+                    #set( $type = "app" )
+                    #set( $type = $request.params.type )
+                    
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Type: $type <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="$page.href?websiteBranch=$!request.params.websiteBranch&websiteName=$!request.params.websiteName&type=app">Apps</a></li>
+                                    <li><a href="$page.href?websiteBranch=$!request.params.websiteBranch&websiteName=$!request.params.websiteName&type=theme">Themes</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="$page.href?websiteBranch=$!request.params.websiteBranch&websiteName=$!request.params.websiteName&type=lib">Code libraries</a></li>
+                                </ul>
                             </div>
+                            <br />
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                <input type="text" class="form-control" placeholder="Type to search" id="txt-search-market-apps" />
+                            </div>
+                            <br />
                         </div>
                     </div>
+                    
+                    <div class="row" id="market-apps-list">
+                        #foreach($app in $page.children.ofType($type))
+                            #renderApp($app false)
+                        #end
+                    </div>
                 </div>
-                <div class="tab-pane" id="purchased">
-                    <div class="container">
+                #if( $request.params.websiteName )
+                #else
+                    <div class="tab-pane" id="purchased">
                         <div class="row">
-                            <div class="col-md-12">
-                                #foreach($app in $page.installed)
-                                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
-                                    <div class="thumbnail app">
-                                        <a href="$app.href?websiteName=$!request.params.websiteName&websiteBranch=$!request.params.websiteBranch">
-                                            #set($logo = "/theme/apps/marketplace/no_logo.png")
-                                            #if($app.logo)
-                                            #set($logo = $app.href + $app.logo.name + "/alt-320-150.png")
-                                            #end
-                                            <img src="$logo" alt="$app.title">
-                                        </a>
-                                        <div class="caption">
-                                            <h4 class="title">
-                                                <a href="$app.href?websiteName=$!request.params.websiteName&websiteBranch=$!request.params.websiteBranch">
-                                                    $app.title
-                                                    <span class="parag-end"></span>
-                                                </a>
-                                            </h4>
-                                            <p>
-                                                #if( $app.brief )
-                                                $app.brief
-                                                #else
-                                                No description.
-                                                #end
-                                            </p>
-                                        </div>
-                                    </div>
+                            <div class="col-sm-6"></div>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                    <input type="text" class="form-control" placeholder="Type to search" id="txt-search-installed-apps" />
                                 </div>
-                                #end
+                                <br />
                             </div>
                         </div>
+                        <div class="row" id="installed-apps-list">
+                            #foreach($app in $page.installed)
+                                #renderApp($app true)
+                            #end
+                        </div>
                     </div>
-
-                </div>
+                #end
             </div>
         </div>
-
-        #macro(genRatings $rating $reviewCount)
-        <p class="star-rating" title="$reviewCount reviews">
-            #foreach($i in [0..4])
-            #set($a = $rating - $i)
-            #if($a > 0.5)
-            <span class="fa fa-star"></span>
-            #elseif($a == 0.5)
-            <span class="fa fa-star-half-o"></span>
-            #else
-            <span class="fa fa-star-o"></span>
-            #end
-            #end
-        </p>
+        
+        #macro(renderApp $app $isInstalled)
+            #set ($appHref = $app.href)
+            #set ($appHref = $app.appId)
+            #set ($appHref = $appHref + "?websiteBranch=$!request.params.websiteBranch&websiteName=$!request.params.websiteName")
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4 col-xs-6 #if ($isInstalled) installed-app #else market-app #end">
+                <a href="$appHref">
+                    <div class="thumbnail app-inner">
+                        #set($logo = "/theme/apps/marketplace/no_logo.png")
+                        #set($logoClass = "no-logo")
+                        #if($app.logo)
+                            #set($logo = $app.href + $app.logo.name)
+                            #set($logoClass = "")
+                        #end
+                        <div class="embed-responsive embed-responsive-16by9 $!logoClass">
+                            <div class="embed-responsive-item" style="background-image: url('$logo');"></div>
+                        </div>
+                        <div class="caption">
+                            <h4 class="title">$app.title</h4>
+                            <p class="app-brief">
+                                #if( $app.brief )
+                                    $app.brief
+                                #else
+                                    - No description -
+                                #end
+                            </p>
+                            
+                            #if (!$isInstalled)
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        ## genRatings(3.5, 14)
+                                    </div>
+                                    <div class="col-xs-6 text-right app-price">
+                                        <span class="label label-success">
+                                            #if(!$app.price || $app.price == 0)
+                                                Free
+                                            #else
+                                                $$app.price
+                                            #end
+                                        </span>
+                                    </div>
+                                </div>
+                            #end
+                        </div>
+                    </div>
+                </a>
+            </div>
         #end
+        
+        #macro(genRatings $rating $reviewCount)
+            <p class="star-rating" title="$reviewCount reviews">
+                #foreach($i in [0..4])
+                    #set($a = $rating - $i)
+                    #if($a > 0.5)
+                        <span class="fa fa-star"></span>
+                    #elseif($a == 0.5)
+                        <span class="fa fa-star-half-o"></span>
+                    #else
+                        <span class="fa fa-star-o"></span>
+                    #end
+                #end
+            </p>
+        #end
+        
+        <script type="text/javascript" src="/static/dotdotdot/1.6.16/jquery.dotdotdot.min.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                $('.app-brief').dotdotdot({
+                    height: 54
+                });
+                
+                $('#txt-search-market-apps').domFinder({
+                    container: $('#market-apps-list'),
+                    items: '.market-app',
+                    filter: function (items, query) {
+                        query = query.toLowerCase();
+                        
+                        return items.filter(function () {
+                            var text = ($(this).find('h4.title').text() || '').toLowerCase();
+                            
+                            return text.indexOf(query) !== -1;
+                        });
+                    }
+                });
+                
+                $('#txt-search-installed-apps').domFinder({
+                    container: $('#installed-apps-list'),
+                    items: '.installed-app',
+                    filter: function (items, query) {
+                        query = query.toLowerCase();
+                        
+                        return items.filter(function () {
+                            var text = ($(this).find('h4.title').text() || '').toLowerCase();
+                            
+                            return text.indexOf(query) !== -1;
+                        });
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

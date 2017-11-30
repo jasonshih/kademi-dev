@@ -1,0 +1,43 @@
+#if( $page.is("calendarHome") )
+    #set ($calendars = $page)    
+#elseif( $page.is("calendar") )
+    #set ($calendars = $page.parent)    
+#else
+    #set ($calendars = $page.find('/Calendars/'))    
+#end
+    
+    
+#set($cals = $calendars.children.ofType.calendar)
+
+#if(!$page and (!$cals || $cals.size() == 0) )
+<!--<p class="lead">No calendars are currently available</p>-->
+
+<div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        No calendars <span class="caret"></span>
+    </button>
+</div>
+
+#else
+<div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        Select a calendar <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+        #foreach($cal in $cals)
+        <li><a href="$cal.href">$cal.title</a></li>
+        #end
+        #if($userResource)
+            #set($calPage = $userResource.href + "Calendars/")
+            #foreach($cal in $page.find($calPage).children.ofType.calendar)
+                #if($foreach.first)
+                    <li class="divider"></li>
+                    <li class="dropdown-header"><strong>Personal calendars</strong></li>
+                #end
+                <li><a href="$cal.href">$cal.title</a></li>
+            #end
+        #end
+    </ul>
+</div>
+#end
+<div class="clearfix"><br></div>

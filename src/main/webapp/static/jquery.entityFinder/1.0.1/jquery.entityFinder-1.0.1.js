@@ -6,7 +6,7 @@
         DOWN: 40
     };
     
-    $.getStyleOnce('/static/jquery.entityFinder/1.0.0/jquery.entityFinder-1.0.0.css');
+    $.getStyleOnce('/static/jquery.entityFinder/1.0.1/jquery.entityFinder-1.0.1.css');
     
     var EntityFinder = function (element, options) {
         flog('[EntityFinder]', element, options);
@@ -82,6 +82,7 @@
         var currentValue = $(this.element).val();
         
         this.element.wrap('<div class="search-wrapper"></div>');
+        this.wrapper = this.element.parent();
 
         self.fakeInput = $('<input data-current-value="' + currentValue + '" type="text" autocomplete="off" class="form-control search-input" value="' + (this.element.attr('data-text') || '') + '" placeholder="' + (this.element.attr('placeholder') || '') + '" />');
 
@@ -149,7 +150,11 @@
                     // Do nothing
                 }
             },
+            focus: function () {
+                self.wrapper.addClass('search-wrapper-focused');
+            },
             blur: function () {
+                self.wrapper.removeClass('search-wrapper-focused');
                 var result = self.element.val();
                 if(result === "") {
                     self.fakeInput.val(result);

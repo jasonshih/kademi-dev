@@ -35,7 +35,7 @@
         $templater.pushLess("/theme/less/bootstrap.less", "all", 0)
         $templater.pushLess("/theme/less/app.less", "all")
         $templater.pushLess("/theme/theme-params.less", "all")
-
+ 
         <link rel="stylesheet" href="/static/bootstrap-msg/0.3/bootstrap-msg.min.css" type="text/css" />
         <link rel="stylesheet" href="/static/font-awesome/4.4.0/css/font-awesome.min.css" />
         <link href="/theme/apps/leadman/quickLead.css" rel="stylesheet" type="text/css" />
@@ -52,10 +52,11 @@
         #end
         <!-- End injected CSS sources -->
 
-
         <!-- Injected JS sources -->
         #foreach($groupEntry in $templater.jsSources.entrySet())
-            <script src="/$templater.getCombinedJsPath($groupEntry.value)" type="text/javascript">//</script>
+            #foreach($path in $templater.getCombinedJsPaths($groupEntry.key))
+            <script src="$path" type="text/javascript">//</script>
+            #end
         #end
         <!-- End injected JS sources -->
 

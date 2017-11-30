@@ -1,6 +1,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Sales Data Series</title>
+
+        <style>
+            .expressionEditor {
+                height: 150px;
+                border: 1px solid #DDD;
+                border-radius: 4px;
+                border-bottom-right-radius: 0px;
+            }
+        </style>
     </head>
     <body class="">
 
@@ -65,7 +74,7 @@
                                 </select>                                
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="control-label col-md-3" for="pointsTag">
                                 Tag
@@ -81,16 +90,43 @@
                                 <p><small>To tag the allocated points, select a tag here</small></p>
                             </div>
                         </div>
+                        
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="allocationType">
+                                Allocation Type
+                                <small>How the points get awarded</small>
+                            </label>
+                            <div class="col-md-8">
+                                <select name="allocationType" id="allocationType" class="form-control" >
+                                    $formatter.option("INDIVIDUAL", "Individual", $page.source.allocationType)
+                                    $formatter.option("SUM", "Sum", $page.source.allocationType)
+                                </select>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label class="control-label col-md-3" for="mvelExpression">Points expression</label>
                             <div class="col-md-8">
-                                <input type="text" name="mvelExpression" id="mvelExpression" value="$!page.source.mvelExpression" placeholder="" class="required form-control"  required="true" />
+                                <textarea class="hide" id="mvelExpression" name="mvelExpression"></textarea>
+                                <div id="pointsMvelExpression" class="expressionEditor" style="display:none;">$!formatter.htmlEncode($page.source.mvelExpression)</div>
+
                                 <p>
                                     <small>Eg amount * 1000</small>
                                 </p>
                             </div>
-                        </div>                        
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="ignoreExpression">Ignore expression</label>
+                            <div class="col-md-8">
+                                <textarea class="hide" id="ignoreExpression" name="ignoreExpression"></textarea>
+                                <div id="ignoreMvelExpression" class="expressionEditor" style="display:none;">$!formatter.htmlEncode($page.source.ignoreExpression)</div>
+
+                                <p>
+                                    <small>Eg amount < 10 || amount > 100</small>
+                                </p>
+                            </div>
+                        </div>
 
 
                         <div class="form-group">
@@ -121,7 +157,7 @@
                             <tbody>
                                 #foreach($alloc in $page.history)
                                 <tr>
-                                    <td>$alloc.points.issuedTo.name</td>
+                                    <td>$alloc.points.issuedTo.formattedName</td>
                                     <td>$alloc.points.numPoints</td>
                                     <td>$alloc.createdDate</td>
                                 </tr>
@@ -133,46 +169,105 @@
             </div>
         </form>
 
-
+        <script type="text/javascript" src="/static/ace/1.2.0/src-noconflict/ace.js">//</script>
+        <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <script type="text/javascript">
-            $(function () {
-                $("form.kpi-form").forms({
-                    onSuccess: function (resp) {
-                        if (resp.status) {
-                            Msg.info("Saved ok");
-                        } else {
-                            Msg.error("An error occured saving: " + resp);
+            (function ($) {
+                var pointsExpressionEditor;
+                var ignoreExpressionEditor;
+
+                function initDetailsForm() {
+                    $("form.kpi-form").forms({
+                        validate: function (form) {
+                            var errorMessage = 'Please enter all required fields';
+                            var errors = {
+                                error: 0,
+                                errorFields: [],
+                                errorMessages: []
+                            };
+
+                            var pointsVal = pointsExpressionEditor.getValue();
+                            if (pointsVal == null | pointsVal.length < 1) {
+                                errors.error++;
+                                errors.errorFields.push($('#mvelExpression'));
+                                if (errors.errorMessages.indexOf(errorMessage) < 0) {
+                                    errors.errorMessages.push('Please enter all required fields');
+                                }
+                            } else {
+                                $('#mvelExpression').val(pointsVal);
+                            }
+
+                            var ignoreVal = ignoreExpressionEditor.getValue();
+                            $('#ignoreExpression').val(ignoreVal);
+
+                            return errors;
+                        },
+                        onSuccess: function (resp) {
+                            if (resp.status) {
+                                Msg.info("Saved ok");
+                            } else {
+                                Msg.error("An error occured saving: " + resp);
+                            }
                         }
-                    }
-                });
-                $(".kpi-rewards").click(function (e) {
-                    e.preventDefault();
-                    if (confirm("This will allocate rewards based on KPI achievements for results which have not already had rewards processing. Would you like to continue?")) {
-                        submitProcess("processRewards");
-                    }
-                });
-            });
-            function submitProcess(processName) {
-                flog("submitProcess", processName);
-                $.ajax({
-                    type: 'POST',
-                    data: {
-                        process: processName
-                    },
-                    dataType: "json",
-                    url: window.location.pathname,
-                    success: function (data) {
-                        if (data.status) {
-                            Msg.success("Submitted for processing");
-                        } else {
-                            Msg.error("Could not start processing: " + data.messages);
+                    });
+                }
+
+                function initPointsMvel() {
+                    pointsExpressionEditor = ace.edit('pointsMvelExpression');
+                    pointsExpressionEditor.getSession().setMode("ace/mode/javascript");
+                    pointsExpressionEditor.setOptions({
+                        minLines: pointsExpressionEditor.getSession().$rowLengthCache.length
+                    });
+                    $('#pointsMvelExpression').show();
+                }
+                
+                function initIgnoreMvel(){
+                    ignoreExpressionEditor = ace.edit('ignoreMvelExpression');
+                    ignoreExpressionEditor.getSession().setMode("ace/mode/javascript");
+                    ignoreExpressionEditor.setOptions({
+                        minLines: ignoreExpressionEditor.getSession().$rowLengthCache.length
+                    });
+                    $('#ignoreMvelExpression').show();
+                }
+
+                function initAllocateRewards() {
+                    $(".kpi-rewards").click(function (e) {
+                        e.preventDefault();
+                        if (confirm("This will allocate rewards based on KPI achievements for results which have not already had rewards processing. Would you like to continue?")) {
+                            submitProcess("processRewards");
                         }
-                    },
-                    error: function (resp) {
-                        Msg.error("There was a problem submitting the process. Please try again and contact the administrator if you still have problems");
-                    }
+                    });
+                }
+
+                function submitProcess(processName) {
+                    flog("submitProcess", processName);
+                    $.ajax({
+                        type: 'POST',
+                        data: {
+                            process: processName
+                        },
+                        dataType: "json",
+                        url: window.location.pathname,
+                        success: function (data) {
+                            if (data.status) {
+                                Msg.success("Submitted for processing");
+                            } else {
+                                Msg.error("Could not start processing: " + data.messages);
+                            }
+                        },
+                        error: function (resp) {
+                            Msg.error("There was a problem submitting the process. Please try again and contact the administrator if you still have problems");
+                        }
+                    });
+                }
+
+                $(function () {
+                    initAllocateRewards();
+                    initPointsMvel();
+                    initIgnoreMvel();
+                    initDetailsForm();
                 });
-            }
+            })(jQuery);
         </script>
     </body>
 </html>

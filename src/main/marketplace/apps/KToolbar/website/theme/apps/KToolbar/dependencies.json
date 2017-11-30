@@ -23,6 +23,12 @@
                 "group": "main",
                 "path": "/theme/apps/KToolbar/ktoolbar.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/KToolbar/translation.js"
+            }
         }
     ]
 }

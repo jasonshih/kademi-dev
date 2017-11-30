@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, window) {
     $(function () {
         var panel = $('.panel-coming-up-auction');
         
@@ -6,7 +6,7 @@
             var countdown = panel.find('.countdown');
             var WSUri = countdown.attr('data-WSUri');
             initWebsockets(WSUri, panel);
-            initCountDown(panel);
+            initAuctionCountDown(panel);
             initBidForm(panel);
         }
     });
@@ -22,28 +22,42 @@
         })
     }
     
-    function initCountDown(panel) {
-        flog('initCountDown', panel);
+    window.initAuctionCountDown = function (panel, timeOnly) {
+        flog('initAuctionCountDown', panel);
         
         var countdown = panel.find('.countdown');
         var finalDate = countdown.attr('data-end');
-        var c = moment(finalDate).format('YYYY/MM/DD HH:MM:ss');
         
-        countdown.countdown(c)
-            .on('update.countdown', function (event) {
-                var format = '%H:%M:<span>%S</span>';
-                if (event.offset.days > 0) {
-                    format = '%-d day%!d ' + format;
+        if (finalDate) {
+            var c = moment(finalDate).format('YYYY/MM/DD HH:MM:ss');
+            
+            countdown.countdown(c).on({
+                'update.countdown': function (event) {
+                    var format = '';
+                    
+                    if (timeOnly) {
+                        var totalTimes = event.offset.hours;
+                        totalTimes += event.offset.days * 24;
+                        totalTimes += event.offset.weeks * 7 * 24;
+                        
+                        format = totalTimes + ':%M:<span>%S</span>';
+                    } else {
+                        format = '%H:%M:<span>%S</span>';
+                        if (event.offset.days > 0) {
+                            format = '%-d day%!d ' + format;
+                        }
+                        if (event.offset.weeks > 0) {
+                            format = '%-w week%!w ' + format;
+                        }
+                    }
+                    
+                    $(this).html(event.strftime(format));
+                },
+                'finish.countdown': function () {
+                    $(this).html('This auction has expired!')
                 }
-                if (event.offset.weeks > 0) {
-                    format = '%-w week%!w ' + format;
-                }
-                $(this).html(event.strftime(format));
-            })
-            .on('finish.countdown', function (event) {
-                $(this).html('This auction has expired!')
-                
             });
+        }
     }
     
     function initWebsockets(WSUri, panel) {
@@ -78,4 +92,4 @@
         }
     }
     
-})(jQuery);
+})(jQuery, window);

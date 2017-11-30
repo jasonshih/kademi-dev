@@ -1,0 +1,125 @@
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Promotion</strong></label>
+        <div class="col-sm-12">
+            <select class="form-control select-promotion">
+                <option value=""> - None -</option>
+                #foreach ($reward in $applications.rewards.allRewards)
+                <option value="$reward.name">$reward.title</option>
+                #end
+            </select>
+            <small class="help-block">If you place this component in promotion page, just leave this field blank</small>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Available fields</strong></label>
+        <div class="col-sm-12">
+            <p class="alert alert-info"><i class="fa fa-info-circle"></i> These fields are available for only anonymous users</p>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="chkShowFirstName" /> First Name
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="chkShowSurname" /> Surname
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="chkShowEmail" /> Email
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="chkShowPhone" /> Phone
+                </label>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <p class="alert alert-info"><i class="fa fa-info-circle"></i> Selected promotion need to be enabled <code>User uploads image</code> to display <b>Photo Gallery</b></p>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Show others' photo</strong></label>
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="chk-show-others-photo" />
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Photos per row</strong></label>
+        <div class="col-sm-12">
+            <select class="form-control select-photos-per-row">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="6">6</option>
+            </select>
+        </div>
+    </div>
+    <hr />
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Submit text</strong></label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control" id="txtSubmitText" value="" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Submit Another text</strong></label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control" id="txtSubmitAnotherText" value="" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Button size</strong></label>
+        <div class="col-sm-12">
+            <select class="form-control" id="cbbButtonSize">
+                <option value="btn-xs">Extra Small</option>
+                <option value="btn-sm">Small</option>
+                <option value="btn-md" selected="selected">Medium</option>
+                <option value="btn-lg">Large</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Button color</strong></label>
+        <div class="col-sm-12">
+            <select class="form-control" id="cbbButtonColor">
+                <option value="btn-default">Default</option>
+                <option value="btn-primary" selected="selected">Primary</option>
+                <option value="btn-info">Info</option>
+                <option value="btn-success">Success</option>
+                <option value="btn-warning">Warning</option>
+                <option value="btn-danger">Danger</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Button extra class</strong></label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control" id="txtButtonClass" value="" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Thank you title</strong></label>
+        <div class="col-sm-12">
+            <textarea type="text" class="form-control" id="txtThanksTitle" value=""></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Thank you message</strong></label>
+        <div class="col-sm-12">
+            <textarea type="text" class="form-control" id="txtThanksMessage" value=""></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Contact form path</strong></label>
+        <div class="col-sm-12">
+            <textarea type="text" class="form-control" id="path" value=""></textarea>
+        </div>
+    </div>
+</form>

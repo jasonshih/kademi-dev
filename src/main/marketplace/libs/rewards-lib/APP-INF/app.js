@@ -1,1 +1,2 @@
 controllerMappings.addComponent("rewards/components", "rewardsPromotionDetails", "edm", "Shows details about a promotion", "Rewards and promotions");
+controllerMappings.addComponent("rewards-lib/components", "promotionTile", "html", "Shows promotion tiles", "Rewards and promotions");

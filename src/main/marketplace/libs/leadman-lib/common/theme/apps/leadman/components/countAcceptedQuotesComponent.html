@@ -1,0 +1,40 @@
+#if( !$height )
+#set( $height = 200 )
+#end
+
+#if( !$label )
+#set( $label = "Accepted Quotes" )
+#end
+
+#if (!$iconfont)
+#set ($iconfont = "fa-info-circle")
+#end
+
+#set( $detailHref = "javascript:void(0)" )
+#set( $detailHref = $link )
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <a class="c-white" href="$!detailHref">
+                <div class="col-xs-3">
+                    <i class="fa $iconfont fa-3x"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                    <h2>
+                        #set ($pApp = $applications.paymentApp)
+                        #set ($value = $pApp.countAcceptedQuotes($queryManager.commonStartDate, $queryManager.commonFinishDate))
+                        #if ($value)
+                        $value
+                        #else
+                        N/A
+                        #end
+                    </h2>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="panel-footer text-center">
+        <span class="">$!label</span>
+    </div>
+</div>

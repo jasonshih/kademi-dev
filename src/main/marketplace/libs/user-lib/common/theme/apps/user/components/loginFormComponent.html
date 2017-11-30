@@ -1,0 +1,91 @@
+#if (!$layout)
+    #set ($layout = "horizontal")
+#end
+
+#if (!$autoRedirect)
+    #set ($autoRedirect = false)
+#end
+
+#if (!$passwordPlaceholder)
+    #set ($passwordPlaceholder = "Enter your password")
+#end
+
+#if (!$usernamePlaceholder)
+    #set ($usernamePlaceholder = "Enter your email address or username")
+#end 
+
+<div class="panel panel-default panel-user-login" data-redirect-url="$!redirectUrl" data-auto-redirect="$autoRedirect">
+    <div class="panel-body">
+        #if ($page)
+            #if( $userResource )
+                <h1>Sorry, you don't have permission to view this page</h1>
+                <h4>You're currently logged in as <b>$userResource.title</b> with email <b>$userResource.email</b></h4>
+            #else
+                #renderLoginForm($layout)
+            #end
+        #else
+            #renderLoginForm($layout)
+        #end
+    </div>
+</div>
+
+#macro (renderLoginForm $layout)
+    #if ($layout != "horizontal")
+        #set ($colClass = "col-md-12")
+    #else
+        #if (!$applicationManager.isActive($applicationManager.oauth, $website.branch))
+            #set ($colClass = "col-md-12")
+        #else
+            #set ($colClass = "col-md-6")
+        #end
+    #end
+
+<div class="row">
+    <div class="$colClass">
+        <div class="login-container">
+            #if ($logo)
+                <p><img src="$logo" class="img-responsive" /></p>
+            #else
+                <h2>Please login to view this page</h2>
+                <br>
+            #end
+            <form class="login form-horizontal" method="POST" role="form">
+                <p class="login message" style="display: none">.</p>
+
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label for="email" class="sr-only">Email</label>
+                        <input type="text" autocapitalize="off" autocorrect="off" class="form-control input-lg" required="true" name="email" id="email" title="$!usernamePlaceholder" placeholder="$!usernamePlaceholder" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label for="password" class="sr-only">Password</label>
+                        <input type="password" class="form-control input-lg" required="true" name="password" id="password" title="$!passwordPlaceholder" placeholder="$!passwordPlaceholder" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>
+                            <label>
+                                <input type="checkbox" class="" name="keepLoggedIn" value="true" />
+                                Keep me logged in
+                            </label>
+                        </p>
+
+                        <p>
+                            <button type="submit" class="btn btn-block btn-lg btn-primary"><span>Login</span></button>
+                        </p>
+                        <div class="text-center small">
+                            <a class="small" title="Forgotten password" href="/password-reset">Forgotten password</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="$colClass">
+        #portlets("socialLoginPage")
+    </div>
+</div>
+#end

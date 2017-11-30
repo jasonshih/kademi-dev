@@ -5,12 +5,11 @@
         <script type="text/javascript" src="reports.js">//</script>
     </head>
     <body class="report reportsPage">
+        #set($liveBranch = $page.find('/repositories/queries').live.href)
 
-        <a href="/repositories/queries/version1/contenteditor?fileName=${page.filename}" class="btn btn-info pull-right" target="_blank">
+        <a href="${liveBranch}contenteditor?fileName=${page.filename}" class="btn btn-info pull-right" target="_blank">
             <i class="fa fa-pencil"></i>
         </a>
-
-
 
         <h2>$page.title</h2>
         <div>

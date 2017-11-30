@@ -1,0 +1,22 @@
+#if ($course && $course != "")
+    #set ($courseResource = $page.find($course))
+    #set ($courseResource = $rootFolder.find($course))
+#else
+    #set($programs = $page.find("/programs"))
+    #if($page.is("course"))
+        #set($courseResource = $page)
+    #else
+        #set($courseResource = $programs.bestCourse)
+        #if(!$courseResource )
+            #set($courseResource = $programs.bestProgram.children.ofType.course.first)
+        #end
+    #end
+#end
+
+<div class="lead">
+    $!courseResource.body
+    
+    #if (!$page && (!$courseResource.body || $courseResource.body == ""))
+        <p>No description for current course</p>
+    #end
+</div>

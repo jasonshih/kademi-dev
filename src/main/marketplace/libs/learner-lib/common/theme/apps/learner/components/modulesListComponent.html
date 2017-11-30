@@ -1,0 +1,97 @@
+#if (!$numberOfModules)
+    #set ($numberOfModules = 0)
+#end
+#set ($numberOfModules = $formatter.toInteger( $numberOfModules ))
+
+#if (!$layout)
+    #set ($layout = "list")
+#end
+
+#if (!$itemsPerRow)
+    #set ($itemsPerRow = 1)
+#end
+#set ($itemsPerRow = $formatter.toInteger( $itemsPerRow ))
+
+#if (!$gridItemHeight)
+    #set ($gridItemHeight = 200)
+#end
+#set ($gridItemHeight = $formatter.toInteger( $gridItemHeight ))
+
+#set ($showTime = $formatter.toBool( $showTime ))
+#set ($showCpd = $formatter.toBool( $showCpd ))
+#set ($showPoint = $formatter.toBool( $showPoint ))
+#set ($showButton = $formatter.toBool( $showButton ))
+#set ($fullHeightThumb = $formatter.toBool( $fullHeightThumb ))
+
+#parse("/theme/apps/learner/moduleMacros.html")
+
+#if ($course && $course != "")
+    #set ($modules = $page.find($course).children.ofType.module.sortByField("order"))
+    #set ($modules = $rootFolder.find($course).children.ofType.module.sortByField("order"))
+#else
+    #set($programs = $page.find("/programs"))
+    #if($page.is("course"))
+        #set($curCourse = $page)
+    #else
+        #set($curCourse = $programs.bestCourse)
+        #if(!$curCourse )
+            #set($curCourse = $programs.bestProgram.children.ofType.course.first)
+        #end
+    #end
+
+    #set ($modules = $curCourse.children.ofType.module.sortByField("order"))
+#end
+
+#if ($itemsPerRow == 1)
+    #set ($moduleClass = "col-sm-12")
+#elseif ($itemsPerRow == 2)
+    #set ($moduleClass = "col-sm-6")
+#elseif ($itemsPerRow == 3)
+    #set ($moduleClass = "col-sm-4")
+#elseif ($itemsPerRow == 4)
+    #set ($moduleClass = "col-sm-3")
+#end
+
+#if ($modules.size() > 0)
+    <div class="modules-list row modules-list-${itemsPerRow}">
+        #set ($count = 0)
+        #foreach($mod in $modules)
+            #set ($count = $count + 1)
+            <div class="$moduleClass module-wrapper module-wrapper-${layout}">
+                #if ($layout == "grid")
+                    #renderModuleGridItem($mod $showTime $showCpd $showPoint $showButton $gridItemHeight $fullHeightThumb)
+                #else
+                    #renderModuleListItem($mod)
+                #end
+            </div>
+        
+            #if ($numberOfModules == 0)
+            #elseif ($count >= $numberOfModules)
+                #break
+            #end
+        #end
+    </div>
+#else
+    #if ($page)
+        <p class="alert alert-warning">No module found</p>
+    #else
+    <div class="modules-list row modules-list-${itemsPerRow}">
+        #set ($count = 0)
+        #foreach($i in [1..12])
+            #set ($count = $count + 1)
+            <div class="$moduleClass module-wrapper module-wrapper-${layout}">
+                #if ($layout == "grid")
+                    #renderModuleGridItemExample($count $showTime $showCpd $showPoint $showButton $gridItemHeight $fullHeightThumb)
+                #else
+                    #renderModuleListItemExample($count)
+                #end
+            </div>
+        
+            #if ($numberOfModules == 0)
+            #elseif ($count >= $numberOfModules)
+                #break
+            #end
+        #end
+    </div>
+    #end
+#end

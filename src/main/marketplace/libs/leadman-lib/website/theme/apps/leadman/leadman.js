@@ -13,6 +13,7 @@ function initLeadManEvents() {
     initNewLeadFromEmail();
     initNewQuickLeadForm();
     initNewContactForm();
+    initDeleteCust();
     initNewTaskForm();
     initNewQuoteForm();
     initNewNoteForm();
@@ -23,6 +24,7 @@ function initLeadManEvents() {
     initDateTimePikersForModal();
     initTasks();
     initImmediateUpdate();
+    initExtraFieldFileUploads();
     initCloseDealModal();
     initCancelLeadModal();
     initCancelTaskModal();
@@ -153,32 +155,33 @@ function initLeadsDashLoading() {
 }
 
 function initNewLeadFromEmail() {
-    $('.menu-item-menuLeadFromEmail a').on('click', function () {
+    $('.menu-item-menuLeadFromEmail a, .nav-menuLeadFromEmail').on('click', function () {
         $('#modalLeadFromEmail').modal('show');
     });
 }
 
 function initCloseDealModal() {
     var closeDealModal = $("#closeDealModal");
-    closeDealModal.on('shown.bs.modal', function () {
-        closeDealModal.find("form").forms({
-            onSuccess: function (resp) {
-                Msg.info('Deal marked as closed');
-                if ($('#lead-cover').length) {
-                    $('#maincontentContainer').reloadFragment({
-                        whenComplete: function () {
-                            $('abbr.timeago').timeago();
-                            initLeadManEvents();
-                        }
-                    });
-                }
-                if ($('#all_contacts').length) {
-                    $('#all_contacts').html('');
-                    initLeadsDashLoading();
-                }
-                closeDealModal.modal('hide');
+    closeDealModal.find("form").forms({
+        onSuccess: function (resp) {
+            Msg.info('Deal marked as closed');
+            if ($('#lead-cover').length) {
+                $('#maincontentContainer').reloadFragment({
+                    whenComplete: function () {
+                        $('abbr.timeago').timeago();
+                        initLeadManEvents();
+                    }
+                });
             }
-        });
+            if ($('#all_contacts').length) {
+                $('#all_contacts').html('');
+                setTimeout(initLeadsDashLoading, 400);
+            }
+            // anh
+            setTimeout(reloadDashboard, 400);
+            closeDealModal.modal('hide');
+            $(document).trigger('leadClosed');
+        }
     });
 }
 
@@ -282,6 +285,73 @@ function initImmediateUpdate() {
     });
 }
 
+function initExtraFieldFileUploads() {
+    var modal = $('#uploadExtraFieldFileModal');
+    var form = modal.find('form');
+
+    $('body').on('click', '.btn-upload-file', function (e) {
+        e.preventDefault();
+        var name = $(this).data("name");
+        if (name === undefined) {
+            name = $(e.target).data("name");
+        }
+        flog("Extra field name: ", name);
+        if (name !== undefined) {
+            modal.find("#extraField").val(name);
+            modal.modal('show');
+        } else {
+            Msg.error('There was a problem. Please refresh the page.');
+        }
+    });
+
+    $('body').on('click', '.btn-delete-file', function (e) {
+        e.preventDefault();
+        var btn = $(this);
+        var name = btn.data('name');
+        var fname = btn.data('fname');
+        if (confirm("Are you sure you want to delete " + fname + "?")) {
+
+            var data = {
+                deleteExtraFieldFile: true,
+                extraField: name,
+                name: fname
+            };
+            flog(data);
+            $.ajax({
+                url: window.location.href,
+                method: "POST",
+                dataType: "json",
+                data: data,
+                success: function (data) {
+                    Msg.info('File deleted');
+                    reloadFileList();
+                    $(".extraFieldsUploadDetails").reloadFragment();
+                }
+            });
+        }
+    });
+
+    function reloadFileList() {
+        var body = $('#files-body');
+        if (body !== undefined) {
+            $('#files-body').reloadFragment({
+                whenComplete: function () {
+                    $('#files-body abbr.timeago').timeago();
+                }
+            });
+        }
+    }
+
+    form.forms({
+        onSuccess: function (resp) {
+            Msg.info('Files Uploaded');
+            reloadFileList();
+            $(".extraFieldsUploadDetails").reloadFragment();
+            modal.modal('hide');
+        }
+    });
+}
+
 function initTasks() {
     $(document.body).on("click", "#assignToMenu a", function (e) {
         e.preventDefault();
@@ -356,10 +426,19 @@ function initLeadActions() {
         e.preventDefault();
         var href = $(this).attr('href');
         var closeDealModal = $("#closeDealModal");
-        closeDealModal.find('form').attr('action', href);
+        closeDealModal.reloadFragment({
+            url: href,
+            whenComplete: function (resp) {
+                closeDealModal.html($(resp).find('#closeDealModal').html());
+                var pickers = closeDealModal.find('.date-time');
+                flog("pickers", pickers);
+                pickers.datetimepicker({
+                    format: 'DD/MM/YYYY HH:mm'
+                });
+                initCloseDealModal();
+            }
+        });
         closeDealModal.modal();
-        //var href = $(this).attr("href");
-        //closeLead(href);
     });
 
     $(document.body).on("click", ".updateCreatedDate", function (e) {
@@ -432,6 +511,7 @@ function initNewLeadForm() {
     modal.on('hidden.bs.modal', function () {
         form.trigger('reset');
         $('input[name=newOrgId]', form).val('');
+        $('#source-frm').val('').trigger("change");
     });
 
     $('#newOrgTitle', form).on('change', function () {
@@ -442,13 +522,13 @@ function initNewLeadForm() {
         }
     });
 
-    $('.dropdown-menu [class*="nav-menuAddLead"]').click(function (e) {
+    $('.dropdown-menu li:not(.nav-menuLeadFromEmail-wrapper) > [class*="nav-menuAddLead"]').click(function (e) {
         e.preventDefault();
         var funnelName = $(e.target).closest("a").attr("href");
         flog("initNewLeadForm - click. funnelName=", funnelName, e.target);
+        $('#source-frm').val('').trigger("change");
         form.find("select[name=funnel]").val(funnelName).change();
         modal.modal("show");
-
     });
 
     $('select[name=funnel]', form).on('change', function (e) {
@@ -478,6 +558,25 @@ function initNewLeadForm() {
     });
 
     form.forms({
+        validate: function (form, config) {
+            flog('validating ... ', form);
+            var ret = {
+                error: 0,
+                errorFields: [],
+                errorMessages: []
+            };
+            var taskDescription = form.find('textarea[name=taskDescription]').val();
+            if (taskDescription !== undefined && taskDescription !== "") {
+                var title = $("#title").val();
+                if (title === undefined || title === "") {
+                    ret.error = 1;
+                    ret.errorFields.push($("#title"));
+                    ret.errorMessages.push("Please complete the task title.");
+                }
+            }
+            flog("ret , ", ret);
+            return ret;
+        },
         beforePostForm: function (form, config, data) {
             flog('beforePost', data);
             data += '&assignedToOrgId=' + $.cookie('org');
@@ -492,6 +591,11 @@ function initNewLeadForm() {
             if (btn.hasClass("btnCreateAndClose")) {
                 Msg.info('Saved new lead');
                 modal.modal("hide");
+
+                $('#source-frm').val('').trigger("change");
+                $('#newLeadStage').val('').trigger("change");
+                form.trigger('reset');
+
                 if ($('#all_contacts').length) {
                     $('#all_contacts').html('');
                     initLeadsDashLoading();
@@ -522,6 +626,7 @@ function initNewLeadForm() {
                 }
                 modal.modal("hide");
             }
+
         }
     });
     form.find("button").click(function (e) {
@@ -728,6 +833,7 @@ function initNewContactForm() {
 
             Msg.info('Created contact');
             modal.modal("hide");
+            $(document).trigger('leadContactCreated');
         }
     });
 
@@ -736,6 +842,76 @@ function initNewContactForm() {
         $(this).addClass("clicked");
     });
 }
+
+function initDeleteCust() {
+    function showSweetAlert(option) {
+        swal({
+            title: option.title || 'Are you sure?',
+            text: option.message,
+            type: option.type || 'warning',
+            showCancelButton: true,
+            confirmButtonClass: option.btnClass,
+            confirmButtonText: option.btnText,
+            closeOnConfirm: true,
+            showLoaderOnConfirm: false
+        }, typeof option.callback === 'function' ? option.callback : null);
+    }
+
+    $(".select-all-cust").click(function (e) {
+        var node = $(e.target);
+        flog("selectall", node, node.is(":checked"));
+        $("#searchResults").find("input[type=checkbox][name=custId]").each(function (index) {
+            $(this).prop("checked", true);
+        });
+    });
+
+    function removeCustomers() {
+        var checkBoxes = $('#searchResults').find('input[type=checkbox][name=custId]:checked');
+        var ids = [];
+        checkBoxes.each(function (a, item) {
+            ids.push($(item).val());
+        });
+        flog("Going to remove: ", ids);
+        $.ajax({
+            url: "/custs",
+            method: "POST",
+            dataType: "json",
+            data: {
+                deleteContacts: ids.join(',')
+            },
+            success: function (data) {
+                if (data.status) {
+                    Msg.success('Customers removed successfully');
+                    $("#searchResults").reloadFragment();
+                } else {
+                    if (data.messages.length > 0) {
+                        Msg.error(data.messages[0]);
+                    } else {
+                        Msg.error('Could not remove customers');
+                    }
+                }
+            }
+        });
+    }
+
+    $(".deleteCust").click(function (e) {
+        var checkBoxes = $('#searchResults').find('input[type=checkbox][name=custId]:checked');
+        if (checkBoxes.length === 0) {
+            Msg.error("Please select the customers you want to remove by clicking the checkboxs to the right", 'no-cust-selected');
+        } else {
+            var option = {
+                title: "Are you sure you want to remove " + checkBoxes.length + " customers?",
+                message: "",
+                type: 'warning',
+                btnClass: 'btn-danger',
+                btnText: "Remove",
+                callback: removeCustomers
+            };
+            showSweetAlert(option);
+        }
+    });
+}
+
 
 function initNewTaskForm() {
     var modal = $('#quickTaskModal');
@@ -757,6 +933,7 @@ function initNewTaskForm() {
             }
 
             Msg.info('Created task');
+            reloadTasks()
             modal.modal("hide");
         }
     });
@@ -1061,6 +1238,13 @@ function reloadTasks() {
     if ($('#lead-tasks-page').length) {
         window.doReloadTasksPage();
     }
+
+    reloadTimeline();
+    reloadDashboard();
+}
+
+function reloadTimeline() {
+    $(document).trigger('onLeadTimelineUpdate');
 }
 
 function takeTask(href) {
@@ -1185,12 +1369,14 @@ function updateField(href, fieldName, fieldValue, form) {
         data: data,
         dataType: 'json',
         success: function (resp) {
-            var fieldLabel = fieldName;
-            var label = form.find('[name=' + fieldName + ']').parents('.form-group').find('label');
-            if (label.length) {
-                fieldLabel = label.text().replace(':', '');
-            }
-            Msg.info("Saved " + fieldLabel);
+            // var fieldLabel = fieldName;
+            // var label = form.find('[name=' + fieldName + ']').parents('.form-group').find('label');
+            // if (label.length) {
+            //     fieldLabel = label.text().replace(':', '');
+            // }
+            Msg.info("Saved");
+            // timeago
+            $('abbr.timeago').timeago();
             reloadTasks();
         },
         error: function (resp) {
@@ -1603,7 +1789,7 @@ function formatSecondsAsTime(secs, format) {
 }
 
 function initDeleteFile() {
-    $('#files').on('click', '.btn-delete-file', function (e) {
+    $('#files').on('click', '.btn-delete-lead-file', function (e) {
         e.preventDefault();
 
         var btn = $(this);
@@ -1611,6 +1797,7 @@ function initDeleteFile() {
         var fname = btn.data('fname');
         confirmDelete(fname, fname, function () {
             tr.remove();
+            Msg.info('File deleted');
         });
     });
 }
@@ -1679,6 +1866,14 @@ function initSearchFilter() {
     });
 }
 
+function reloadDashboard() {
+    $('#teamStats').reloadFragment({
+        whenComplete: function () {
+            $(document).trigger('onLeadDashUpdate');
+        }
+    });
+}
+
 $(document).on('pageDateChanged', function (e, startDate, endDate) {
     initStatsSummaryComponents();
 });
@@ -1702,7 +1897,7 @@ function initStatsSummaryComponents() {
             url: '/_leadManStatsSummary?funnelName=' + funnelName,
             dataType: 'JSON',
             success: function (resp) {
-                flog('initStatsSummaryComponents Resp', resp );
+                flog('initStatsSummaryComponents Resp', resp);
 
                 if (resp.status) {
                     var completedTasksCount = (resp.data.tasks != null ? resp.data.tasks.completedTasks.doc_count : 0) || 0;

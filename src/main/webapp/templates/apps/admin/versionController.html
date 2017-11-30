@@ -3,15 +3,31 @@
         <title>Repo And Version Controller</title>
     </head>
     <body>
+        #macro (renderRepoSwitcher)
+            #if($page.closest("repository").name)
+                <div class="repo-switcher pull-left">
+                    <a class="btn btn-sm btn-primary">
+                        <b>Change repository</b> $page.closest("repository").name <span class="caret"></span>
+                    </a>
+                    <select class="repo-switcher-selector">
+                        #foreach($w in $page.closest("repository").parent.children)
+                            $formatter.option( $w.href, $w.name, $page.closest("repository").href )
+                        #end
+                    </select>
+                </div>
+            #end
+        #end
+        
         #macro (renderVersionController $managePage)
             #set($currentBranch = $page.closest("branch"))
+            #set($currentWebsite = $page.closest("website"))
             <div class="btn-group publishing pull-right">
                 <a href="${currentBranch.href}commits" class="publish btn btn-sm btn-info">
                     <i class="fa fa-clock-o"></i>
                     History
                 </a>
                 #if( $currentBranch.live )
-                    <a href="../manageBranches" class="islive btn-sm btn btn-danger">
+                    <a href="${currentWebsite.href}manageBranches" class="islive btn-sm btn btn-danger">
                         <i class="fa fa-gear"></i>
                         LIVE
                     </a>
@@ -20,7 +36,7 @@
                         <i class="glyphicon glyphicon-ok-sign"></i>
                         PUBLISH
                     </a>
-                    <a href="../manageBranches" class="btn btn-sm btn-primary">
+                    <a href="${currentWebsite.href}manageBranches" class="btn btn-sm btn-primary">
                         <i class="fa fa-gear"></i>
                         Manage versions
                     </a>

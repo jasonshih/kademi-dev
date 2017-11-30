@@ -18,9 +18,38 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/jquery.countdown/2.2.0/jquery.countdown.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/auctions/viewAuction.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/auctions/viewAuctions.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/auctions/viewAuction.css"
+            }
+        },
+        {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/auctions/auctions.less"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/auctions/comingUpAuction.js"
+            }
         }
-
     ]
 }

@@ -1,0 +1,176 @@
+#if($page)
+    <div class="row">
+        #set( $rewards = $applications.rewards.rewardsHome )
+
+        #set( $activeRewards = $rewards.activeRewards )
+        #if( $activeRewards.isEmpty() )
+        #else
+        #foreach( $reward in $rewards.activeRewards )
+
+        #if( $reward.imageHash )
+        #set( $bg = "/_hashes/files/$reward.imageHash/alt-300-300.png" )
+        #else
+        #set($bg = "/theme/img/photo_holder.png")
+        #end
+
+        <div class="col-md-6 col-lg-4 product-item">
+            <div class="thumbnail product rewardItem">
+                <a href="$reward.href">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <span class="embed-responsive-item" style="background-image: url($bg);"></span>
+                    </div>
+                </a>
+
+                <div class="bg-primary rewardItemCaption">
+                    <h3 class="product-title rewardItemTitle" title="$reward.title"><a href="$reward.href"><strong>$reward.title</strong></a></h3>
+
+                    #if( $reward.endDate )
+                    <div class="product-content rewardItemDate text-italic">
+                        <i class="fa fa-calendar-o"></i>
+                        Closes
+                        <abbr title="$formatter.formatDateISO8601($reward.endDate)" class="timeago">$!reward.endDate</abbr>
+                    </div>
+                    #end
+
+                    <div class="product-actions rewardItemActions text-right">
+                        <a href="$reward.href" class="btn btn-default" role="button">View and enter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        #end
+        #end
+
+        #set( $closedRewards = $rewards.viewableRewards )
+        #if( $closedRewards.isEmpty() )
+        #else
+        #foreach( $reward in $rewards.viewableRewards )
+        #if ($reward.status == 'e')
+        #if( $reward.imageHash )
+        #set( $bg = "/_hashes/files/$reward.imageHash/alt-300-300.png" )
+        #else
+        #set($bg = "/theme/img/photo_holder.png")
+        #end
+
+        <div class="col-md-6 col-lg-4">
+            <div class="thumbnail product rewardItem">
+                <!--<div class="closedReward bg-info">-->
+                    <!--<strong><i class="fa fa-info-circle"></i> CLOSED</strong>-->
+                <!--</div>-->
+                <a href="$reward.href">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <span class="embed-responsive-item" style="background-image: url($bg);"></span>
+                    </div>
+                </a>
+                #if ($reward.winners)
+                    #set ($bgClass = "bg-success")
+                #else
+                    #set ($bgClass = "bg-warning")
+                #end
+                <div class="$!bgClass rewardItemCaption">
+                    <h3 class="product-title rewardItemTitle" title="$reward.title"><a href="$reward.href"><strong>$reward.title</strong></a></h3>
+                    #if ($reward.winners)
+                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> Winner announced.</div>
+                    #else
+                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> Closed. Winner pending.</div>
+                    #end
+                    <div class="rewardItemActions text-right">
+                        #if($reward.winners)
+                        <a href="$reward.href" class="btn btn-default" role="button">View the winner</a>
+                        #else
+                        <a style="visibility: hidden" href="$reward.href" class="btn btn-default" role="button">View the winner</a>
+                        #end
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        #end
+        #end
+        #end
+
+    </div>
+#else
+    <div class="row">
+
+        #set($bg = "/theme/img/photo_holder.png")
+
+        <div class="col-md-6 col-lg-4 product-item">
+            <div class="thumbnail product rewardItem">
+                <a href="#">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <span class="embed-responsive-item" style="background-image: url($bg);"></span>
+                    </div>
+                </a>
+
+                <div class="bg-primary rewardItemCaption">
+                    <h3 class="product-title rewardItemTitle" title="$reward.title"><a href="#"><strong>Example Reward Title</strong></a></h3>
+                    <div class="product-content rewardItemDate text-italic" style="word-wrap: break-word;">
+                        <i class="fa fa-calendar-o"></i>
+                        Closes
+                        <abbr title="2017-10-24" class="timeago">6 days from now</abbr>
+                    </div>
+                    <div class="product-actions rewardItemActions text-right">
+                        <a href="#" class="btn btn-default btn-add-to-cart" role="button"><strong><i class="fa fa-arrow-right"></i> View and enter</strong></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-6 col-lg-4 product-item">
+            <div class="thumbnail product rewardItem">
+                <a href="#">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <span class="embed-responsive-item" style="background-image: url($bg);"></span>
+                    </div>
+                </a>
+
+                <div class="bg-warning rewardItemCaption">
+                    <h3 class="product-title rewardItemTitle" title="$reward.title"><a href="#"><strong>Example Reward Title</strong></a></h3>
+                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> Closed. Winner pending.</div>
+                    <div class="rewardItemActions text-right">
+                        #if($reward.winners)
+                        <a href="$reward.href" class="btn btn-default" role="button">View the winner</a>
+                        #else
+                        <a style="visibility: hidden" href="$reward.href" class="btn btn-default" role="button">View the winner</a>
+                        #end
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 product-item">
+            <div class="thumbnail product rewardItem">
+                <a href="#">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <span class="embed-responsive-item" style="background-image: url($bg);"></span>
+                    </div>
+                </a>
+
+                <div class="bg-info rewardItemCaption">
+                    <h3 class="product-title rewardItemTitle" title="$reward.title"><a href="#"><strong>Example Reward Title</strong></a></h3>
+
+                    #if (!$reward.winners)
+                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> Winner announced.</div>
+                    #else
+                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> Closed. Winner pending.</div>
+                    #end
+                    <div class="rewardItemActions text-right">
+                        #if(!$reward.winners)
+                        <a href="$!reward.href" class="btn btn-default" role="button">View the winner</a>
+                        #else
+                        <a style="visibility: hidden" href="$reward.href" class="btn btn-default" role="button">View the winner</a>
+                        #end
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+#end
+
+
+
+

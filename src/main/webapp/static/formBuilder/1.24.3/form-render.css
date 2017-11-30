@@ -304,13 +304,13 @@ Author: Kevin Chappell <kevin.b.chappell@gmail.com>
 .rendered-form .pull-left {
   float: left !important; }
 
-.form-group .required {
+.rendered-form .form-group .required {
   color: #c10000; }
 
-*[tooltip] {
+.rendered-form *[tooltip] {
   position: relative; }
 
-*[tooltip]:hover::after {
+.rendered-form *[tooltip]:hover::after {
   background: rgba(0, 0, 0, 0.9);
   border-radius: 5px 5px 5px 0;
   bottom: 23px;
@@ -325,7 +325,7 @@ Author: Kevin Chappell <kevin.b.chappell@gmail.com>
   font-size: 12px;
   line-height: 1.5em; }
 
-*[tooltip]:hover::before {
+.rendered-form *[tooltip]:hover::before {
   border: solid;
   border-color: #222 transparent;
   border-width: 6px 6px 0;
@@ -335,7 +335,7 @@ Author: Kevin Chappell <kevin.b.chappell@gmail.com>
   position: absolute;
   z-index: 99; }
 
-.tooltip-element {
+.rendered-form .tooltip-element {
   color: #fff;
   background: #000;
   width: 16px;
@@ -347,13 +347,13 @@ Author: Kevin Chappell <kevin.b.chappell@gmail.com>
   margin: 0 5px;
   font-size: 12px; }
 
-.form-control.number {
+.rendered-form .form-control.number {
   width: auto; }
 
-.form-control[type='color'] {
+.rendered-form .form-control[type='color'] {
   width: 60px;
   padding: 2px;
   display: inline-block; }
 
-.form-control[multiple] {
+.rendered-form .form-control[multiple] {
   height: auto; }

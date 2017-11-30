@@ -49,13 +49,19 @@
                             onSelectFile: function (url, relativeUrl, fileType, hash) {
                                 flog('[CKEDITOR.fuse-image] onSelectFile', url, relativeUrl, fileType, hash);
                                 
-                                var imageUrl = '/_hashes/files/' + hash;
                                 var previewImg = previewContainer.find('img');
+                                hash = hash || previewImg.attr('data-hash');
+                                var imageUrl = (editor.config.fullUrl ? 'http://' + window.location.host : '') + '/_hashes/files/' + hash;
+                                var width = previewImg.width();
+                                var height = previewImg.height();
+                                
                                 that.element.setAttribute('src', imageUrl);
                                 that.element.setAttribute('data-hash', hash);
                                 that.element.setAttribute('align', previewImg.attr('align') || '');
-                                that.element.$.style.width = previewImg.width() + 'px';
-                                that.element.$.style.height = previewImg.height() + 'px';
+                                that.element.setAttribute('width', width);
+                                that.element.setAttribute('height', height);
+                                that.element.$.style.width = width + 'px';
+                                that.element.$.style.height = height + 'px';
                                 that.element.$.removeAttribute('data-cke-saved-src');
                                 that.element.addClass('img-responsive');
                                 
@@ -82,18 +88,15 @@
                                 
                                 // Extra textboxes for plugin
                                 modalBody.find('.milton-btn-upload-file').after(
-                                    '<div class="input-group" style="float: left; width: 170px; margin: 0 10px;">' +
-                                    '    <span class="input-group-addon">Width</span>' +
-                                    '    <input type="text" class="form-control txt-width" placeholder="Image width" />' +
+                                    '<div class="input-group" style="float: left; width: 120px; margin: 0 10px;">' +
+                                    '    <input type="text" class="form-control txt-width" placeholder="Image width" title="Image height" />' +
                                     '</div>' +
-                                    '<div class="input-group" style="float: left; width: 170px; margin: 0 10px 0 0">' +
-                                    '    <span class="input-group-addon">Height</span>' +
-                                    '    <input type="text" class="form-control txt-height" placeholder="Image width" />' +
+                                    '<div class="input-group" style="float: left; width: 120px; margin: 0 10px 0 0">' +
+                                    '    <input type="text" class="form-control txt-height" placeholder="Image height" title="Image height" />' +
                                     '</div>' +
-                                    '<div class="input-group" style="float: left; width: 170px; margin: 0 10px 0 0">' +
-                                    '    <span class="input-group-addon">Align</span>' +
-                                    '    <select class="form-control cbb-align">' +
-                                    '        <option value=""> - None - </option>' +
+                                    '<div class="input-group" style="float: left; width: 180px; margin: 0 10px 0 0">' +
+                                    '    <select class="form-control cbb-align" title="Image align">' +
+                                    '        <option value="">[No align selected]</option>' +
                                     '        <option value="left">Left</option>' +
                                     '        <option value="right">Right</option>' +
                                     '    </select>' +
@@ -105,6 +108,9 @@
                                 cbbAlign = modalBody.find('.cbb-align');
                                 var updateImageSize = function (width, height) {
                                     previewContainer.find('img').css({
+                                        width: width,
+                                        height: height
+                                    }).attr({
                                         width: width,
                                         height: height
                                     });

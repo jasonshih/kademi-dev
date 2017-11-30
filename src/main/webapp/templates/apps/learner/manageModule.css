@@ -1,74 +1,79 @@
+.program-course-module-mix {
+    margin-bottom: 15px;
+}
+
 .program-course-module-mix .dropdown-menu {
-	padding-left: 15px;
+    padding-left: 15px;
 }
 
 .program-course-module-mix .dropdown-menu li {
-	padding: 0 15px 0 0;
+    padding: 0 15px 0 0;
 }
 
 .program-course-module-mix .dropdown-menu li > div {
-	padding-bottom: 10px;
-	min-height: 130px;
+    padding-bottom: 10px;
+    min-height: 130px;
 }
 
 .program-course-module-mix .dropdown-menu li > div.loading {
-	background: url("/static/images/loading.gif") 50% 50% no-repeat;
+    background: url("/static/images/loading.gif") 50% 50% no-repeat;
 }
 
 .program-course-module-mix .dropdown-menu li > p {
-	border-bottom: 2px solid #ccc;
-	margin-bottom: 0;
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 0;
 }
+
 .program-course-module-mix .dropdown-menu li > p,
 .program-course-module-mix .dropdown-menu li a {
-	display: block;
-	padding: 5px;
-	text-decoration: none;
+    display: block;
+    padding: 5px;
+    text-decoration: none;
 }
 
 .program-course-module-mix .dropdown-menu li a:hover {
-	background: #f5f5f5;
+    background: #f5f5f5;
 }
-
 
 .program-course-module-mix .dropdown-menu li a.active {
-	background: #428BCA;
-	color: #fff;
+    background: #428BCA;
+    color: #fff;
 }
+
 .rewards-wrapper,
 .certificates-wrapper {
-	padding-top: 10px;
+    padding-top: 10px;
 }
 
 .rewards-wrapper .reward,
 .certificates-wrapper .certificate {
-	margin-top: 5px;
+    margin-top: 5px;
 }
 
 .rewards-wrapper .reward:first-child,
 .certificates-wrapper .certificate:first-child {
-	margin-top: 0;
+    margin-top: 0;
 }
 
 .rewards-wrapper .reward > *,
 .certificates-wrapper .certificate > * {
-	float: left;
-	margin-right: 10px;
+    float: left;
+    margin-right: 10px;
 }
 
 .rewards-wrapper .reward > .input-group,
 .certificates-wrapper .certificate > .input-group {
-	width: 220px;
+    width: 220px;
 }
 
 .rewards-wrapper .reward > .input-group + select,
 .certificates-wrapper .certificate > .input-group + select {
-	width: 200px;
+    width: 200px;
 }
 
 #details small {
-	font-style: italic;
-	color: #ccc;
+    font-style: italic;
+    color: #ccc;
 }
 
 .modulePages .article-wrapper > article span.article-name {

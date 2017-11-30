@@ -1,0 +1,27 @@
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "type": {
+                        "value": "profile"
+                    }
+                },
+                {
+                    "range": {
+                        "lastVisit": {
+                            "gte": "$startDate",
+                            "lte": "$endDate"
+                        }
+                    }
+                },
+                {
+                    "terms": {
+                        "parentOrgs": "$selectedOrgs"
+                    }
+                }
+            ]
+        }
+    },
+    "size": 10000
+}

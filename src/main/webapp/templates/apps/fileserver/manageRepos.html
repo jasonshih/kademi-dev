@@ -47,54 +47,80 @@
                         </thead>
                         <tbody>
                             #foreach($w in $page.repositories)
-                                <tr>
-                                    <td class="icon text-info">
-                                        #if( $w.repoType == "W" )
-                                            <i class="fa fa-globe"></i>
-                                        #elseif( $w.repoType == "B" )
-                                            <i class="fa fa-quote-right"></i>
-                                        #elseif( $w.repoType == "CA" )
-                                            <i class="fa fa-calendar-o"></i>
-                                        #elseif( $w.repoType == "AP" )
-                                            <i class="fa fa-code"></i>
-                                        #else
-                                            <i class="fa fa-folder-o"></i>
-                                        #end
-                                    </td>
-                                    <td>
-                                        <h5><a href="/repositories/$w.name" class="repo">$w.name</a></h5>
-                                    </td>
-                                    <td>$w.liveBranch</td>
-                                    <td class="public">
-                                        <div data-off="danger" data-on="success" class="make-switch switch-small btn-switch-public" data-link="../repositories/$w.nam">
-                                            $formatter.checkbox($w.name, $w.publicContent)
-                                        </div>
-                                    </td>
-                                    <td class="action">
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="../repositories/$w.name" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Files
-                                            </a>
-                                            <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu pull-right" role="menu">
-                                                <li><a name="$w.name" class="btn-update-repo">Rename</a></li>
-                                                <li><a href="../repositories/$w.name/$w.liveBranch/commits" class="">History (Live)</a></li>
-                                                <li><a href="../repositories/$w.name/manageBranches" class="">Branches and History</a></li>
-                                                <li><a class="transfer-ownership" href="../repositories/$w.name">Transfer ownership</a></li>
-                                                <li>
-                                                    <a class="btn-delete-repo" href="../repositories/$w.name"><span class="glyphicon glyphicon-remove"></span> Delete</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
+                                #if ($w.repoType == "W")
+                                    #renderRepo($w)
+                                #end
+                            #end
+                            #foreach($w in $page.repositories)
+                                #if ($w.repoType == "AP")
+                                    #renderRepo($w)
+                                #end
+                            #end
+                            #foreach($w in $page.repositories)
+                                #if ($w.repoType == "B")
+                                    #renderRepo($w)
+                                #end
+                            #end
+                            #foreach($w in $page.repositories)
+                                #if ($w.repoType == "CA")
+                                    #renderRepo($w)
+                                #end
+                            #end
+                            #foreach($w in $page.repositories)
+                                #if ($w.repoType != "W" && $w.repoType != "B" && $w.repoType != "CA" && $w.repoType != "AP")
+                                    #renderRepo($w)
+                                #end
                             #end
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
+        
+        #macro (renderRepo $w)
+            <tr>
+                <td class="icon text-info">
+                    #if( $w.repoType == "W" )
+                        <i class="fa fa-fw fa-globe"></i>
+                    #elseif( $w.repoType == "B" )
+                        <i class="fa fa-fw fa-quote-right"></i>
+                    #elseif( $w.repoType == "CA" )
+                        <i class="fa fa-fw fa-calendar-o"></i>
+                    #elseif( $w.repoType == "AP" )
+                        <i class="fa fa-fw fa-code"></i>
+                    #else
+                        <i class="fa fa-fw fa-folder-o"></i>
+                    #end
+                </td>
+                <td>
+                    <h5><a href="/repositories/$w.name" class="repo">$w.name</a></h5>
+                </td>
+                <td>$w.liveBranch</td>
+                <td class="public">
+                    <div data-off="danger" data-on="success" class="make-switch switch-small btn-switch-public" data-link="../repositories/$w.nam">
+                        $formatter.checkbox($w.name, $w.publicContent)
+                    </div>
+                </td>
+                <td class="action">
+                    <div class="btn-group btn-group-sm">
+                        <a href="../repositories/$w.name" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Files
+                        </a>
+                        <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right" role="menu">
+                            <li><a name="$w.name" class="btn-update-repo">Rename</a></li>
+                            <li><a href="../repositories/$w.name/$w.liveBranch/commits" class="">History (Live)</a></li>
+                            <li><a href="../repositories/$w.name/manageBranches" class="">Branches and History</a></li>
+                            <li><a class="transfer-ownership" href="../repositories/$w.name">Transfer ownership</a></li>
+                            <li>
+                                <a class="btn-delete-repo" href="../repositories/$w.name"><span class="glyphicon glyphicon-remove"></span> Delete</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        #end
 
         <div id="modal-new-repo" class="modal fade" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog modal-sm">

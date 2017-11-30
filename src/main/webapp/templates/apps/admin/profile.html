@@ -3,7 +3,7 @@
         <title>Profile</title>
         <link href="profile.css" rel="stylesheet" type="text/css" />
         <link href="manageUser.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="/theme/apps/admin/profile.js?v=1">//</script>
+        <script type="text/javascript" src="/theme/apps/admin/profile.js?v=3">//</script>
         <script type="text/javascript" src="manageUser.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
         <style>
@@ -44,7 +44,7 @@
         </style>
     </head>
     <body class="profile">
-        #set($groups = $page.find("/").groups)
+        #set($groups = $page.groups)
         <div class="pull-right">
             <button type="button" class="btn btn-default btn-login-as">
                 <span class="fa fa-user"></span>
@@ -59,22 +59,22 @@
         <div style="margin-left: 100px;">
             <h2>
                 #if( $page.profile.firstName )
-                    $page.profile.firstName
-                    #if( $page.profile.surName )
-                        $page.profile.surName
-                    #end
+                $page.profile.firstName
+                #if( $page.profile.surName )
+                $page.profile.surName
+                #end
                 #elseif( $page.profile.email )
-                    $page.profile.email
+                $page.profile.email
                 #elseif( $page.profile.phone )
-                    $page.profile.phone
+                $page.profile.phone
                 #else
-                    $page.profile.name
+                $page.profile.name
                 #end
 
                 #if( $page.profile.enabled )
-                    <a class="fa fa-check text-success profileDisable" title="Profile is enabled, click to disable"></a>
+                <a class="fa fa-check text-success profileDisable" title="Profile is enabled, click to disable"></a>
                 #else
-                    <a class="fa fa-times text-danger profileEnable" title="This account is disabled/removed. Click to enable"></a>
+                <a class="fa fa-times text-danger profileEnable" title="This account is disabled/removed. Click to enable"></a>
                 #end
             </h2>
 
@@ -88,13 +88,13 @@
                             <a href="#" class="btn-add-group">Add membership and organisation</a>
                         </li>
                         <li class="divider"></li>
-                        <li style="padding: 3px 15px"><strong>Quick add</strong></li>
+                        <li class="dropdown-header"><strong>Quick add</strong></li>
                         #foreach($group in $groups)
-                            <li class="addGroup">
-                                <a href="$group.name">
-                                    <i class="clip-users"></i> $formatter.firstNotNull($group.title, $group.name)
-                                </a>
-                            </li>
+                        <li class="addGroup">
+                            <a href="$group.name">
+                                <i class="clip-users"></i> $formatter.firstNotNull($group.title, $group.name)
+                            </a>
+                        </li>
                         #end
                     </ul>
                 </div>
@@ -114,31 +114,31 @@
                 <li><a data-toggle="tab" href="#summary">Summary</a></li>
                 <li><a data-toggle="tab" href="#general">Profile</a></li>
                 #foreach( $pair in $page.appTabs)
-                    <li><a data-toggle="tab" href="#${pair.portletId}">$pair.title</a></li>
+                <li><a data-toggle="tab" href="#${pair.portletId}">$pair.title</a></li>
                 #end
             </ul>
             <div class="tab-content">
                 <div id="summary" class="tab-pane">
                     <div class="row " id="profile-panels">
                         #foreach( $pair in $page.appPanels)
-                            <div class="col-lg-3 col-md-6">
-                                <div class="panel panel-info statCard">
-                                    <div class="panel-heading">
-                                        <div class="row">
-                                            #portlets( $pair.portletId )
-                                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="panel panel-info statCard">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        #portlets( $pair.portletId )
                                     </div>
-                                    #if($pair.profileTab)
-                                        <a href="#$pair.profileTab.portletId">
-                                            <div class="panel-footer">
-                                                <span class="pull-left">View Details</span>
-                                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                        </a>
-                                    #end
                                 </div>
+                                #if($pair.profileTab)
+                                <a href="#$pair.profileTab.portletId">
+                                    <div class="panel-footer">
+                                        <span class="pull-left">View Details</span>
+                                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </a>
+                                #end
                             </div>
+                        </div>
                         #end
                     </div>
                     <div class="row">
@@ -148,35 +148,37 @@
                                 #set( $month = "" )
                                 #set( $lastMonth = "" )
                                 #foreach( $action in $page.timelineItems )
-                                    #set( $month = $formatter.getMonthName($action.actionDate) )
-                                    #if( $month != $lastMonth )
-                                        <li class="tldateLi">
-                                            <div class="tldate"><span>$month $formatter.getYear($action.actionDate)</span></div>
-                                        </li>
-                                    #end
-                                    #set( $lastMonth = $month )
-                                    <li class="$formatter.ifTrue($action.inbound, '', 'timeline-inverted')">
-                                        <div class="timeline-badge $action.category"><i class="fa $action.itemType"></i></div>
-                                        <div class="timeline-panel">
-                                            <div class="timeline-heading">
-                                                #if( $action.actionDate)
-                                                    <small class="text-muted pull-right"><i class="glyphicon glyphicon-time"></i>
-                                                        <abbr title="$formatter.formatDateISO8601($action.actionDate)" class="info timeago">$action.actionDate</abbr></small>
-                                                #end
-                                                <h4 class="timeline-title">$action.itemTitle</h4>
-                                            </div>
-                                            <div class="timeline-body">
-                                                <p>$!action.actionDesc</p>
-                                                #if($action.path)
-                                                    <p>
-                                                        <a href="$action.path" class="btn btn-sm btn-info pull-right">
-                                                            View <i class="fa fa-arrow-circle-right"></i>
-                                                        </a>
-                                                    </p>
-                                                #end
-                                            </div>
+                                #set( $month = $formatter.getMonthName($action.actionDate) )
+                                #if( $month != $lastMonth )
+                                <li class="tldateLi">
+                                    <div class="tldate"><span>$month $formatter.getYear($action.actionDate)</span></div>
+                                </li>
+                                #end
+                                #set( $lastMonth = $month )
+                                <li class="$formatter.ifTrue($action.inbound, '', 'timeline-inverted')">
+                                    <div class="timeline-badge $action.category"><i class="fa $action.itemType"></i></div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            #if( $action.actionDate)
+                                            <small class="text-muted pull-right">
+                                                <i class="glyphicon glyphicon-time"></i>
+                                                <abbr title="$formatter.formatDateISO8601($action.actionDate)" class="info timeago">$action.actionDate</abbr>
+                                            </small>
+                                            #end
+                                            <h4 class="timeline-title">$action.itemTitle</h4>
                                         </div>
-                                    </li>
+                                        <div class="timeline-body">
+                                            <p>$!formatter.textFromHtml($action.actionDesc)</p>
+                                            #if($action.path)
+                                            <p>
+                                                <a href="$action.path" class="btn btn-sm btn-info pull-right">
+                                                    View <i class="fa fa-arrow-circle-right"></i>
+                                                </a>
+                                            </p>
+                                            #end
+                                        </div>
+                                    </div>
+                                </li>
                                 #end
 
                             </ul>
@@ -193,100 +195,100 @@
                                 </div>
                                 <div class="panel-body">
                                     #if( $page.inHomeOrg )
-                                        <fieldset class="name">
-                                            <div><b>Please update your details below then click the 'Save' button.</b></div>
-                                            <hr />
-                                            <form action="." method="POST" enctype="multipart/form-data" class="form-horizontal initProfileForm" charset="utf-8">
-                                                <div class="form-group">
-                                                    <label for="" class="control-label col-md-3">UserId:</label>
+                                    <fieldset class="name">
+                                        <div><b>Please update your details below then click the 'Save' button.</b></div>
+                                        <hr />
+                                        <form action="." method="POST" enctype="multipart/form-data" class="form-horizontal initProfileForm" charset="utf-8">
+                                            <div class="form-group">
+                                                <label for="" class="control-label col-md-3">UserId:</label>
 
-                                                    <div class="col-md-9">
-                                                        <div class="input-group">
-                                                            <span type="text" class="form-control">$page.profile.name</span>
-                                                            <span class="input-group-btn">
-                                                                <button class="btn btn-default change-userid" type="button">Change</button>
-                                                            </span>
-                                                        </div>
-                                                        <small>Kademi ID: $page.profile.id</small>
+                                                <div class="col-md-9">
+                                                    <div class="input-group">
+                                                        <span type="text" class="form-control">$page.profile.name</span>
+                                                        <span class="input-group-btn">
+                                                            <button class="btn btn-default change-userid" type="button">Change</button>
+                                                        </span>
+                                                    </div>
+                                                    <small>Kademi ID: $page.profile.id</small>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="nickName" class="control-label col-md-3">Nickname:</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" name="nickName" id="nickName" class="form-control" value="$!page.profile.nickName" />
+                                                    <small>Display name, used when the user's real name should be hidden</small>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email" class="control-label col-md-3">Email:</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" name="email" id="email" class="form-control" value="$!page.profile.email" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="phone" class="control-label col-md-3">Phone</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" class="form-control" name="phone" id="phone" value="$!page.profile.phone" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="firstName" class="control-label col-md-3">First name</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" name="firstName" id="firstName" class="form-control" value="$!page.profile.firstName" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="surName" class="control-label col-md-3">Surname</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" name="surName" id="surName" class="form-control" value="$!page.profile.surName" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="birthDate" class="control-label col-md-3">Birth Date</label>
+                                                <div class="col-md-9">
+                                                    <div class="input-group">
+                                                        <input type="text" name="birthDate" id="birthDate" placeholder="Birth Date" data-format="DD/MM/YYYY" value="$!formatter.formatDate($page.profile.birthDate)" class="form-control DateTime" />
+                                                        <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                                     </div>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label for="nickName" class="control-label col-md-3">Nickname:</label>
-                                                    <div class="col-md-9">
-                                                        <input type="text" name="nickName" id="nickName" class="form-control" value="$!page.profile.nickName" />
-                                                        <small>Display name, used when the user's real name should be hidden</small>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="languages" class="control-label col-md-3">Language</label>
+                                                <div class="col-md-9">
+                                                    <div class="input-group">
+                                                        <select class="form-control" name="language">
+                                                            <option value="">Select...</option>
+                                                            #foreach( $lang in $rootFolder.languages )
+                                                            $formatter.option($lang.code, $lang.title, $page.profile.language)
+                                                            #end
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label for="email" class="control-label col-md-3">Email:</label>
-                                                    <div class="col-md-9">
-                                                        <input type="text" name="email" id="email" class="form-control" value="$!page.profile.email" />
+                                            </div>
+                                            #set($fields = $page.extraFields)
+                                            #foreach($field in $fields.keySet())
+                                            <div class="form-group">
+                                                <label for="surName" title="From group $!field.group.name" class="control-label col-md-3">$!field.text</label>
+                                                <div class="col-md-9">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"> <i class="fa fa-star-o"></i> </span>
+                                                        $field.html( $fields[$field] )
                                                     </div>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label for="phone" class="control-label col-md-3">Phone</label>
-                                                    <div class="col-md-9">
-                                                        <input type="text" class="form-control" name="phone" id="phone" value="$!page.profile.phone" />
-                                                    </div>
+                                            </div>
+                                            #end
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <button class="btn btn-sm btn-success pull-right" type="submit">
+                                                        <i class="fa fa-check"></i>
+                                                        Save
+                                                    </button>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label for="firstName" class="control-label col-md-3">First name</label>
-                                                    <div class="col-md-9">
-                                                        <input type="text" name="firstName" id="firstName" class="form-control" value="$!page.profile.firstName" />
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="surName" class="control-label col-md-3">Surname</label>
-                                                    <div class="col-md-9">
-                                                        <input type="text" name="surName" id="surName" class="form-control" value="$!page.profile.surName" />
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="birthDate" class="control-label col-md-3">Birth Date</label>
-                                                    <div class="col-md-9">
-                                                        <div class="input-group">
-                                                            <input type="text" name="birthDate" id="birthDate" placeholder="Birth Date" data-format="DD/MM/YYYY" value="$!formatter.formatDate($page.profile.birthDate)" class="form-control DateTime" />
-                                                            <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="languages" class="control-label col-md-3">Language</label>
-                                                    <div class="col-md-9">
-                                                        <div class="input-group">
-                                                            <select class="form-control" name="language">
-                                                                <option value="">Select...</option>
-                                                                #foreach( $lang in $rootFolder.languages )
-                                                                    $formatter.option($lang.code, $lang.title, $page.profile.language)
-                                                                #end
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                #set($fields = $page.extraFields)
-                                                #foreach($field in $fields.keySet())
-                                                    <div class="form-group">
-                                                        <label for="surName" title="From group $!field.group.name" class="control-label col-md-3">$!field.text</label>
-                                                        <div class="col-md-9">
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon"> <i class="fa fa-star-o"></i> </span>
-                                                                $field.html( $fields[$field] )
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                #end
-                                                <div class="form-group">
-                                                    <div class="col-md-12">
-                                                        <button class="btn btn-sm btn-success pull-right" type="submit">
-                                                            <i class="fa fa-check"></i>
-                                                            Save
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </fieldset>
+                                            </div>
+                                        </form>
+                                    </fieldset>
                                     #else
-                                        <p>Cannot edit profile details outside of its home admin organisation</p>
+                                    <p>Cannot edit profile details outside of its home admin organisation</p>
                                     #end
                                 </div>
                             </div>
@@ -296,7 +298,7 @@
                                 </div>
                                 <div class="panel-body profile-photo">
                                     <div class="clearfix">
-                                        <img src="$page.photoHref" class="img-thumbnail profile-photo" />
+                                        <img src="$page.photoHref" class="img-circle profile-photo" />
                                         <div>
                                             <p>Update your profile image below. This must be less then 10Mb</p>
                                             <button id="btn-change-ava" class="btn btn-success">Change avatar</button>
@@ -310,140 +312,140 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     #if( $page.hasPassword )
-                                        <i class="clip-key"></i>Update password
+                                    <i class="clip-key"></i>Update password
                                     #else
-                                        <i class="clip-key"></i>Create password
+                                    <i class="clip-key"></i>Create password
                                     #end
                                 </div>
                                 <div class="panel-body">
                                     #if( $page.canEditPassword )
-                                        <div class="changePassword">
-                                            <fieldset>
-                                                <div>Enter a new and confirmed password below and click the 'Save' button.</div>
-                                                <hr />
-                                                <form action="." method="POST" class="form-horizontal initProfileForm">
-                                                    <div class="form-group">
-                                                        <label for="password" class="control-label col-md-3">New password:</label>
-                                                        <div class="col-md-9">
-                                                            <input type="password" name="password" id="password" class="form-control required allow-dodgy-password" value="" />
-                                                        </div>
+                                    <div class="changePassword">
+                                        <fieldset>
+                                            <div>Enter a new and confirmed password below and click the 'Save' button.</div>
+                                            <hr />
+                                            <form action="." method="POST" class="form-horizontal initProfileForm">
+                                                <div class="form-group">
+                                                    <label for="password" class="control-label col-md-3">New password:</label>
+                                                    <div class="col-md-9">
+                                                        <input type="password" name="password" id="password" class="form-control required" value="" />
                                                     </div>
-                                                    <div class="form-group">
-                                                        <label for="confirmPassword" class="control-label col-md-3">Confirm password:</label>
-                                                        <div class="col-md-9">
-                                                            <input type="password" name="confirmPassword" id="confirmPassword" class="form-control required allow-dodgy-password" value="" />
-                                                        </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="confirmPassword" class="control-label col-md-3">Confirm password:</label>
+                                                    <div class="col-md-9">
+                                                        <input type="password" name="confirmPassword" id="confirmPassword" class="form-control required" value="" />
                                                     </div>
-                                                    <div class="form-group">
-                                                        <div class="col-md-12">
-                                                            <button class="btn btn-sm btn-success pull-right" type="submit">
-                                                                <i class="fa fa-check"></i>
-                                                                Save
-                                                            </button>
-                                                        </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <button class="btn btn-sm btn-success pull-right" type="submit">
+                                                            <i class="fa fa-check"></i>
+                                                            Save
+                                                        </button>
                                                     </div>
-                                                </form>
-                                            </fieldset>
-                                            #if( $page.passwordSetDate )
-                                                <p id="pwdState">
-                                                    <span class='label label-default'>Password was set at: $formatter.formatDateTime($page.passwordSetDate, $page.organisation.timezone)</span>
-                                                </p>
-                                            #end
-                                        </div>
-                                    #else
-                                        #if( $page.inHomeOrg )
-                                            <p>You cannot edit this user's password</p>
-                                        #else
-                                            <p>This profile is being viewed outside of its home organisation, so the password cannot be edited</p>
+                                                </div>
+                                            </form>
+                                        </fieldset>
+                                        #if( $page.passwordSetDate )
+                                        <p id="pwdState">
+                                            <span class='label label-default'>Password was set at: $formatter.formatDateTime($page.passwordSetDate, $page.organisation.timezone)</span>
+                                        </p>
                                         #end
+                                    </div>
+                                    #else
+                                    #if( $page.inHomeOrg )
+                                    <p>You cannot edit this user's password</p>
+                                    #else
+                                    <p>This profile is being viewed outside of its home organisation, so the password cannot be edited</p>
+                                    #end
                                     #end
                                 </div>
                             </div>
 
                             #if($page.hasPassword && $page.canEditPassword )
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <i class="clip-key"></i>Remove password
-                                    </div>
-                                    <div class="panel-body">
-                                        <div class="changePassword">
-                                            <fieldset>
-                                                <div>Clear the user's password. This will completely and permanently remove all credentials.</div>
-                                                <hr />
-                                                <p class="clearfix">
-                                                    <button type="button" class="btn btn-sm btn-danger btn-remove-creds">
-                                                        <i class="fa fa-times"></i> Clear password
-                                                    </button>
-                                                </p>
-                                            </fieldset>
-                                        </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <i class="clip-key"></i>Remove password
+                                </div>
+                                <div class="panel-body">
+                                    <div class="changePassword">
+                                        <fieldset>
+                                            <div>Clear the user's password. This will completely and permanently remove all credentials.</div>
+                                            <hr />
+                                            <p class="clearfix">
+                                                <button type="button" class="btn btn-sm btn-danger btn-remove-creds">
+                                                    <i class="fa fa-times"></i> Clear password
+                                                </button>
+                                            </p>
+                                        </fieldset>
                                     </div>
                                 </div>
+                            </div>
 
 
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <i class="clip-key"></i>Two factor authentication
-                                    </div>
-                                    <div class="panel-body">
-                                        <div>
-                                            <form action="." method="POST" class="form-horizontal secondFactorForm">
-                                                #set($enabled2FA = $page.secondFactorAuthentificationEnabled)
-                                                <div id="secondFactorQR">
-                                                    <fieldset>
-                                                        #if($enabled2FA)
-                                                            <div>Disable 2FA and remove the 2FA credentials from your profile.</div>
-                                                        #else
-                                                            <div>Enable 2FA and connect your profile to a 2FA device to increase security. This will prompt you to enter
-                                                                a key generated by your device after logging in.
-                                                            </div>
-                                                        #end
-                                                        <hr />
-                                                        #if( $page.QRImageUrl )
-                                                            <img src="$page.QRImageUrl" alt="QR Image" />
-                                                            <br />
-                                                        #end
-                                                    </fieldset>
-                                                    <fieldset>
-                                                        #if($enabled2FA)
-                                                            <input type="hidden" name="enable2FA" value="0" />
-                                                            <button class="btn btn-sm btn-danger" type="submit"><i class="fa fa-check"></i>Disable</button>
-                                                        #else
-                                                            <input type="hidden" name="enable2FA" value="1" />
-                                                            <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-check"></i>Enable</button>
-                                                        #end
-                                                    </fieldset>
-                                                </div>
-                                            </form>
-                                        </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <i class="clip-key"></i>Two factor authentication
+                                </div>
+                                <div class="panel-body">
+                                    <div>
+                                        <form action="." method="POST" class="form-horizontal secondFactorForm">
+                                            #set($enabled2FA = $page.secondFactorAuthentificationEnabled)
+                                            <div id="secondFactorQR">
+                                                <fieldset>
+                                                    #if($enabled2FA)
+                                                    <div>Disable 2FA and remove the 2FA credentials from your profile.</div>
+                                                    #else
+                                                    <div>Enable 2FA and connect your profile to a 2FA device to increase security. This will prompt you to enter
+                                                        a key generated by your device after logging in.
+                                                    </div>
+                                                    #end
+                                                    <hr />
+                                                    #if( $page.QRImageUrl )
+                                                    <img src="$page.QRImageUrl" alt="QR Image" />
+                                                    <br />
+                                                    #end
+                                                </fieldset>
+                                                <fieldset>
+                                                    #if($enabled2FA)
+                                                    <input type="hidden" name="enable2FA" value="0" />
+                                                    <button class="btn btn-sm btn-danger" type="submit"><i class="fa fa-check"></i>Disable</button>
+                                                    #else
+                                                    <input type="hidden" name="enable2FA" value="1" />
+                                                    <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-check"></i>Enable</button>
+                                                    #end
+                                                </fieldset>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
+                            </div>
                             #end
 
                             #set($providers = $applications.oauth.loginProviders)
                             #if($providers && !$providers.isEmpty())
-                                <div class="panel panel-default" id="oauthLogins">
-                                    <div class="panel-heading">
-                                        <i class="clip-key"></i> Social media logins
-                                    </div>
-                                    <div class="panel-body">
-                                        #foreach($p in $providers)
-                                            #set( $connected = false)
-                                            #set( $connected = $applications.oauth.oAuthDetails.get( $p.providerId ) )
-                                            #if( $connected )
-                                                <div class="alert alert-info">
-                                                    <i class="fa fa-${p.providerId}"></i> Connected with $p.providerId as $formatter.propertyOfObject($connected.details, $connected.displayNamePath)
-                                                    <button class="btn btn-danger btn-sm btnDisconnect pull-right" data-provider="$p.providerId" type="button">
-                                                        <i class="fa fa-times"></i>
-                                                    </button>
-                                                </div>
-                                            #else
-                                                <a href="$applications.oauth.getAuthoriseHref($p)" class="btn btn-success btn-${p.providerId}"><i class="fa fa-${p.providerId}"></i> | Connect with $p.providerId
-                                                </a>
-                                            #end
-                                        #end
-                                    </div>
+                            <div class="panel panel-default" id="oauthLogins">
+                                <div class="panel-heading">
+                                    <i class="clip-key"></i> Social media logins
                                 </div>
+                                <div class="panel-body">
+                                    #foreach($p in $providers)
+                                    #set( $connected = false)
+                                    #set( $connected = $applications.oauth.oAuthDetails.get( $p.providerId ) )
+                                    #if( $connected )
+                                    <div class="alert alert-info">
+                                        <i class="fa fa-${p.providerId}"></i> Connected with $p.providerId as $formatter.propertyOfObject($connected.details, $connected.displayNamePath)
+                                        <button class="btn btn-danger btn-sm btnDisconnect pull-right" data-provider="$p.providerId" type="button">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                    #else
+                                    <a href="$applications.oauth.getAuthoriseHref($p)" class="btn btn-success btn-${p.providerId}"><i class="fa fa-${p.providerId}"></i> | Connect with $p.providerId
+                                    </a>
+                                    #end
+                                    #end
+                                </div>
+                            </div>
                             #end
 
                             <div class="well well-unsubscribe">
@@ -468,18 +470,18 @@
                 </div>
 
                 #foreach( $pair in $page.appTabs)
-                    <!-- start $pair.portletId -->
-                    <div id="$pair.portletId" class="tab-pane lazy-load">
+                <!-- start $pair.portletId -->
+                <div id="$pair.portletId" class="tab-pane lazy-load">
 
-                    </div>
-                    <!-- end $pair.portletId -->
+                </div>
+                <!-- end $pair.portletId -->
                 #end
             </div>
         </div>
 
 
         <div class="modal fade" id="modal-membership" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-md">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -488,39 +490,54 @@
                     <form method="POST" action="." class="form-horizontal">
                         <div class="modal-body">
                             #if($groups.isEmpty())
-                                <p class="alert alert-error">
-                                    <a class="close" data-dismiss="alert" role="button">&times;</a>
-                                    You must create at least one group in this or a parent organisation before you can add users.
-                                </p>
+                            <p class="alert alert-error">
+                                <a class="close" data-dismiss="alert" role="button">&times;</a>
+                                You must create at least one group in this or a parent organisation before you can add users.
+                            </p>
                             #else
-                                <div class="form-message alert alert-danger" style="display: none;"></div>
-                                <div class="groups">
-                                    <p>Please select a group and an organisation to make this user a member of</p>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <input type="text" class="form-control required" name="orgId" id="orgId" value="$page.organisation.id" data-text="$page.organisation.formattedName" />
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <div class="groups">
+                                <p>Please select a group and an organisation to make this user a member of</p>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <p>Select an org</p>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control required" name="orgId" id="orgId" value="$page.organisation.id" data-text="$page.organisation.formattedName" />
+                                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <div class="memberships-wrapper">
-                                        <div class="row blocks-wrapper memberships-list">
-                                            #foreach($group in $groups)
-                                                #set($id = "radGroup_" + $group.name)
-                                                <div class="col-md-3">
-                                                    <span class="block membership" title="$group.name">
-                                                        <label class="block-name" for="$id">$formatter.radio($id, "group", false, $group.name) $group.name</label>
-                                                    </span>
+                                    <div class="col-sm-6">
+                                        <p>Group filter</p>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="groupFilter" id="groupFilter" placeholder="Enter group name or title to filter" />
+                                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
                                                 </div>
-                                            #end
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <br>
+                                <div class="memberships-wrapper">
+                                    <div class="row blocks-wrapper memberships-list" id="groupCheckboxesWrap">
+                                        #foreach($group in $groups)
+                                        #showGroupTagCheckbox($group)
+                                        #end
+                                    </div>
+                                </div>
+                            </div>
                             #end
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
                             #if(!$groups.isEmpty())
-                                <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Save</button>
                             #end
                         </div>
                     </form>
@@ -557,22 +574,22 @@
                     </div>
                     <div class="modal-body">
                         #if ($params.membershipName)
-                            #set ($memHref = $page.path + "/" + $params.membershipName)
-                            #set ($m = $page.find($memHref))
-                            <div class="well">
-                                <h3 title="$m.groupName in $m.orgName, created $formatter.formatDateTime($m.createdDate)">
-                                    <a href="/groups/$m.groupName/">$m.groupName</a>
-                                    in
-                                    <a id="changeOrgFinder" href="/organisations/$m.withinOrgId/viewDetails">$m.orgName</a>
-                                    <input type="hidden" name="newOrgId" value="" class="newOrgId">
-                                    <br>
-                                    <br>
-                                    <a class="btn btn-info btn-change-org" title="Change organisation" href="#"><i class="fa fa-edit"></i> Change org</a>
-                                    <a class="btn btn-primary btn-update-membership hide" title="Change organisation" href="$m.href" data-group="$m.groupName"><i class="fa fa-save"></i> Change</a>
-                                    <a class="btn btn-default btn-change-org-cancel hide" title="Cancel" href="$m.href" data-group-href="?membershipName=$m.name">Cancel</a>
-                                    <a class="btn btn-danger btn-delete-membership" title="Delete this membership" href="$m.href"><i class="fa fa-trash"></i> Delete</a>
-                                </h3>
-                            </div>
+                        #set ($memHref = $page.path + "/" + $params.membershipName)
+                        #set ($m = $page.find($memHref))
+                        <div class="well">
+                            <h3 title="$m.groupName in $m.orgName, created $formatter.formatDateTime($m.createdDate)">
+                                <a href="/groups/$m.groupName/">$m.groupName</a>
+                                in
+                                <a id="changeOrgFinder" href="/organisations/$m.withinOrgId/viewDetails">$m.orgName</a>
+                                <input type="hidden" name="newOrgId" value="" class="newOrgId">
+                                <br>
+                                <br>
+                                <a class="btn btn-info btn-change-org" title="Change organisation" href="#"><i class="fa fa-edit"></i> Change org</a>
+                                <a class="btn btn-primary btn-update-membership hide" title="Change organisation" href="$m.href" data-group="$m.groupName"><i class="fa fa-save"></i> Change</a>
+                                <a class="btn btn-default btn-change-org-cancel hide" title="Cancel" href="$m.href" data-group-href="?membershipName=$m.name">Cancel</a>
+                                <a class="btn btn-danger btn-delete-membership" title="Delete this membership" href="$m.href"><i class="fa fa-trash"></i> Delete</a>
+                            </h3>
+                        </div>
                         #end
                     </div>
                     <div class="modal-footer">
@@ -596,30 +613,57 @@
         </script>
 
         #macro( showGroupTag $m)
-            #if( $m.groupType == "P" )
-                #set($icon = "clip-users" )
-                #set($type = "success" )
-            #elseif( $m.groupType == "S" )
-                #set($icon = "fa fa-trophy" )
-                #set($type = "info" )
-            #elseif( $m.groupType == "M" )
-                #set($icon = "fa fa-envelope" )
-                #set($type = "info" )
-            #else
-                #set($icon = "fa fa-envelope" )
-                #set($type = "info" )
-            #end
-            <span class="block membership alert alert-$type">
-                <i class="$icon"></i>
-                <span class="block-name" title="$m.groupName in $m.orgName, created $formatter.formatDateTime($m.createdDate)">
-                    <a href="/groups/$m.groupName/">$m.groupName</a>
-                    #if( !$m.rootOrg )
-                        in
-                        <a href="/organisations/$m.withinOrgId/viewDetails">$m.orgName</a>
-                    #end
-                </span>
-                <a href="#" class="btn btn-xs text-muted btn-edit-membership" data-group-href="?membershipName=$m.name" title="Edit membership"><i class="fa fa-ellipsis-v"></i></a>
+        #if( $m.groupType == "P" )
+        #set($icon = "clip-users" )
+        #set($type = "success" )
+        #elseif( $m.groupType == "S" )
+        #set($icon = "fa fa-trophy" )
+        #set($type = "info" )
+        #elseif( $m.groupType == "M" )
+        #set($icon = "fa fa-envelope" )
+        #set($type = "info" )
+        #else
+        #set($icon = "fa fa-envelope" )
+        #set($type = "info" )
+        #end
+        <span class="block membership alert alert-$type">
+            <i class="$icon"></i>
+            <span class="block-name" title="$m.groupName in $m.orgName, created $formatter.formatDateTime($m.createdDate)">
+                <a href="/groups/$m.groupName/">$m.groupName</a>
+                #if( !$m.rootOrg )
+                in
+                <a href="/organisations/$m.withinOrgId/viewDetails">$m.orgName</a>
+                #end
             </span>
+            <a href="#" class="btn btn-xs text-muted btn-edit-membership" data-group-href="?membershipName=$m.name" title="Edit membership"><i class="fa fa-ellipsis-v"></i></a>
+        </span>
+        #end
+
+        #macro( showGroupTagCheckbox $m)
+        #if( $m.groupType == "P" )
+        #set($icon = "clip-users" )
+        #set($type = "success" )
+        #elseif( $m.groupType == "S" )
+        #set($icon = "fa fa-trophy" )
+        #set($type = "info" )
+        #elseif( $m.groupType == "M" )
+        #set($icon = "fa fa-envelope" )
+        #set($type = "info" )
+        #else
+        #set($icon = "clip-users" )
+        #set($type = "success" )
+        #end
+
+        <div class="col-md-3">
+            <div class="block membership alert alert-$type">
+
+                <div class="radio">
+                    <label>
+                        <input style="top: 5px;" type="radio" name="group" value="$group.name"> <i class="$icon"></i> $formatter.ifNull($group.title, $group.name)
+                    </label>
+                </div>
+            </div>
+        </div>
         #end
     </body>
 </html>

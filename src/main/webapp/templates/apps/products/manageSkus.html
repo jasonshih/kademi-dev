@@ -1,48 +1,47 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>Inventory Management</title>
-
-        <style>
-            .upload-results {
-                display: none;
-            }
-            
-            #searchContainer {
-                width: 500px;
-                float: right;
-            }
-        </style>
-        
+        <title>Product SKU's</title>
         <script type="text/javascript" src="/static/paginator/1.0.0/jquery.paginator-1.0.0.js">//</script>
+        <link rel="stylesheet" type="text/css" href="/theme/apps/products/manageSkus.css" />
     </head>
     <body>
-        <p>
-        <div class="btn-group" role="group">
-            <a href="/product-images/" class="btn btn-sm btn-info" role="button"><i class="fa fa-picture-o"></i> Product images</a>
-            <button id="newProduct" type="button" class="btn btn-sm btn-success"><i class="fa fa-gear"></i> Import/Export</button>
-            <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu pull-right" role="menu">
-                <li>
-                    <a href="#" title="Import stock levels" id="uploadProductsCsv" data-toggle="modal" data-target="#modal-upload-csv">
-                        <i class="glyphicon glyphicon-upload"></i> Upload CSV
-                    </a>
-                </li>
-                <li><a href="skus.csv" title="Export products CSV" class="btn-export-points"><i class="glyphicon glyphicon-download"></i> Export CSV</a></li>
-            </ul>
+        #if( $request.params.reloadProductId )
+            #set( $product = $page.findProduct($request.params.reloadProductId) )
+            <table>
+            #renderProduct($product)
+            </table>
+        #else
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="btn-group" role="group">
+                    <a href="/product-images/" class="btn btn-sm btn-info" role="button"><i class="fa fa-picture-o"></i> Product images</a>
+                    <button id="newProduct" type="button" class="btn btn-sm btn-success"><i class="fa fa-gear"></i> Import/Export</button>
+                    <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                        <li>
+                            <a href="#" title="Import stock levels" id="uploadProductsCsv" data-toggle="modal" data-target="#modal-upload-csv">
+                                <i class="glyphicon glyphicon-upload"></i> Upload CSV
+                            </a>
+                        </li>
+                        <li><a href="skus.csv" title="Export products CSV" class="btn-export-points"><i class="glyphicon glyphicon-download"></i> Export CSV</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="input-group" id="searchContainer">
+                    <label for="data-query" class="input-group-addon">Search</label>
+                    <input type="text" id="data-query" placeholder="Search" value="" class="form-control" />
+                </div>
+            </div>
         </div>
-        <div class="input-group" id="searchContainer">
-            <label for="data-query" class="input-group-addon">Search</label>
-            <input type="text" id="data-query" placeholder="Search" value="" class="form-control" />
-        </div>
-        </p>
-        
+
         <div class="panel panel-default">
             <div id="productsTableContainer" class="panel-body">
                 <table id="pointsTable" class="table table-striped table-hover pagination-container">
                     <colgroup>
-                        <col width="100px" />
+                        <col width="100" />
                         <col />
                         <col />
                         <col />
@@ -67,52 +66,7 @@
                     </thead>
                     <tbody id="productsTableBody" class="pagination-results">
                         #foreach($product in $page.paginator.records)
-                            #foreach($variant in $page.variants($product))
-                                #set($foundSku = false)
-                                #if($variant.sku)
-                                    #set($foundSku = true)
-                                #end
-                                <tr id="product-row-$product.id" data-skuid="$!variant.productSku.id">
-                                    <td data-selectableimg="$!variant.selectableImageHashes" data-skuid="$!variant.productSku.id" data-product="$product.id" data-options="$variant.optionIds">
-                                        #if($variant.imageUrl)
-                                            <div class="col-md-12 product-image-thumb">
-                                                <a href="$variant.imageUrl" class="thumbnail image-change">
-                                                    <img src="$variant.imageUrl/alt-150-150.png" class="responsive" style="max-height: 80px; max-width: 80px;" />
-                                                </a>
-                                            </div>
-                                            <button class="btn btn-xs btn-warning btn-sku-img-del"><i class="fa fa-trash"></i> Remove Image</button>
-                                        #else
-                                            <div class="btn-group btn-group-sm">
-                                                <button type="button" title="Select Image" class="btn btn-success btn-option-img"><i class="fa fa-image"></i></button>
-                                                <button type="button" title="Upload Image" class="btn btn-success #if($foundSku) btn-option-img-upload #end"><i class="fa fa-upload"></i></button>
-                                            </div>
-                                        #end
-                                    </td>
-                                    <td><a href="/products/$product.id">$product.title</a></td>
-                                    <td>
-                                        #foreach($opt in $variant.options)
-                                            <strong>$opt.productParameter.title:</strong> $opt.title
-                                            #if(!$foreach.last)
-                                                &nbsp;-&nbsp;
-                                            #end
-                                        #end
-                                    </td>
-                                    <td>
-                                        <input class="input-sku form-control" type="text" value="$!variant.sku" />
-                                    </td>
-                                    <td>
-                                        <input class="input-sku-Title form-control" #if(!$foundSku)disabled="disabled" placeholder="Please enter a SKU code first"#end type="text" value="$!variant.skuTitle" />
-                                    </td>
-                                    <td>
-                                        <input class="input-sku-baseCost form-control" #if(!$foundSku)disabled="disabled" placeholder="Please enter a SKU code first"#end type="number" value="$!variant.baseCost" />
-                                    </td>
-                                    #foreach($loc in $page.allLocations)
-                                        <td>
-                                            <input data-locid="$loc.id" type="number" #if(!$foundSku)disabled="disabled" placeholder="Please enter a SKU code first"#end class="input-sku-stock form-control" value="" />
-                                        </td>
-                                    #end
-                                </tr>
-                            #end
+                            #renderProduct($product)
                         #end
                     </tbody>
                     <tfoot id="pointsFooter">
@@ -126,7 +80,7 @@
             </div>
         </div>
 
-        <div id="modal-option-img" class="modal fade" aria-hidden="true" tabindex="-1">
+        <div id="modal-change-img" class="modal fade" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -142,7 +96,8 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                            <button class="btn btn-sm btn-success" type="submit">Save</button>
+                            <button class="btn btn-sm btn-info btn-upload-img" type="button"><i class="fa fa-upload"></i> Upload image</button>
+                            <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-save"></i> Save</button>
                         </div>
                     </form>
                 </div>
@@ -160,14 +115,9 @@
                         <div class="upload">
                             <div class="btn-upload" id='do-upload-csv'></div>
                             <br />
-                            <!--
-                            <div class="allow-inserts">
-                                <input type="checkbox" id="allow-inserts" /> <label for="allow-inserts">Allow inserts</label>
-                            </div>
-                            -->
                         </div>
                         <br />
-                        <div class="upload-results">
+                        <div class="upload-results" style="display: none;">
                             <p>
                                 <strong>No. updated:</strong>
                                 <span class="badge badge-success num-updated">-</span>
@@ -191,9 +141,60 @@
                 </div>
             </div>
         </div>
+        <!-- End if reloadProductId -->
+        #end
+
+        #macro( renderProduct $product )
+            #foreach($variant in $page.variants($product))
+                #set($foundSku = false)
+                #if($variant.sku)
+                    #set($foundSku = true)
+                #end
+                <tr id="product-row-$variant.id">
+                    <td data-skuid="$!variant.productSku.id" data-productid="$product.id" data-selectableimg="$!variant.selectableImageHashes" data-options="$variant.optionIds">
+                        #set ($imageUrl = "/static/images/photo_holder_squared.png")
+                        #if($variant.imageUrl)
+                            #set ($imageUrl = $variant.imageUrl + "/alt-150-150.png")
+                        #end
+
+                        #if($foundSku)
+                            <img src="$imageUrl" data-select-image="$!variant.imageUrl" class="thumbnail" />
+                        #end
+
+                        <div class="btn-group btn-group-xs btn-group-justified">
+                            <a href="javascript:void(0)" title="Change Image" class="btn btn-success btn-change-img" #if(!$foundSku) disabled="disabled" #end data-image="$!variant.imageUrl"><i class="fa fa-image"></i></a>
+                            <a href="javascript:void(0)" title="Remove Image" class="btn btn-danger btn-remove-img" #if(!$foundSku) disabled="disabled" #end><i class="fa fa-times"></i></a>
+                        </div>
+                    </td>
+                    <td><a href="/products/$product.id">$product.title</a></td>
+                    <td>
+                        #foreach($opt in $variant.options)
+                            <strong>$opt.productParameter.title:</strong> $opt.title
+                            #if(!$foreach.last)
+                                &nbsp;-&nbsp;
+                            #end
+                        #end
+                    </td>
+                    <td>
+                        <input class="input-sku form-control" type="text" value="$!variant.sku" />
+                    </td>
+                    <td>
+                        <input class="input-sku-Title form-control" #if(!$foundSku)disabled="disabled" placeholder="Please enter a SKU code first"#end type="text" value="$!variant.skuTitle" />
+                    </td>
+                    <td>
+                        <input class="input-sku-baseCost form-control" #if(!$foundSku)disabled="disabled" placeholder="Please enter a SKU code first"#end type="number" value="$!variant.baseCost" />
+                    </td>
+                    #foreach($loc in $page.allLocations)
+                        <td>
+                            <input data-locid="$loc.id" type="number" #if(!$foundSku)disabled="disabled" placeholder="Please enter a SKU code first"#end class="input-sku-stock form-control" value="" />
+                        </td>
+                    #end
+                </tr>
+            #end
+        #end
 
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
-        <script src="/theme/apps/products/manageSkus.js?v100" type="text/javascript">// </script>
+        <script src="/theme/apps/products/manageSkus.js?v102" type="text/javascript">// </script>
     </body>
 </html>

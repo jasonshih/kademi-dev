@@ -16,30 +16,34 @@
             </div>
         </div>
         <br/>
-        <div id="experimentTableContainer" class="panel-body">
-            <table class="table table-striped" id="experimentTableContainer">
-                <thead>
-                    <tr>
-                        <th>Experiment</th>
-                        <th>Samples</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    #foreach($experiment in $page.children)
-                    <tr id="$experiment.id">
-                        <td>$experiment.title</td>
-                        <td>$!experiment.numSamples</td>
-                        <td>
-                            <a href="/experiments/$experiment.name" class="btn btn-info">
-                                <i class="fa fa-pencil"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    #end
-                </tbody>
-            </table>
-        </div>
+        
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Experiment</th>
+                    <th>Samples</th>
+                    <th width="100"></th>
+                    <th width="40"><input type="checkbox" class="check-all" ></th>
+                </tr>
+            </thead>
+            <tbody id="experimentTableContainer">
+                #foreach($experiment in $page.children)
+                <tr id="$experiment.id">
+                    <td>$experiment.title</td>
+                    <td>$!experiment.numSamples</td>
+                    <td>
+                        <a href="/experiments/$experiment.name" class="btn btn-info btn-sm">
+                            <i class="fa fa-pencil"></i> Edit
+                        </a>
+                    </td>
+                    <td>
+                        <input type="checkbox" data-id="$experiment.experiment.id" class="experiment-check" >
+                    </td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+        
         <div id="addExperimentModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">

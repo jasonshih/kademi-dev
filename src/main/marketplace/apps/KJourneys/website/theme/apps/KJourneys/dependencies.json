@@ -1,0 +1,12 @@
+{
+  "appDependencies": [
+        {
+            "appId": "funnels",
+            "branch" : ""
+        },
+        {
+            "appId": "tracking",
+            "branch" : ""
+        }         
+  ]
+}

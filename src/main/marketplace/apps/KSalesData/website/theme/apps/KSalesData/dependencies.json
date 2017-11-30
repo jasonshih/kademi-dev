@@ -1,0 +1,20 @@
+{
+  "appDependencies": [
+        {
+            "appId": "Reporting",
+            "branch" : ""
+        },
+        {
+            "appId": "salesData",
+            "branch" : ""
+        },
+        {
+            "appId": "search",
+            "branch" : ""
+        },
+        {
+            "appId": "salesdata-lib",
+            "branch": "1.1.9"
+        }    
+  ]
+}

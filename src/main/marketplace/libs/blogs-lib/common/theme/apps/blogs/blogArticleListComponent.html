@@ -1,0 +1,186 @@
+#if ($blog)
+    #set( $blogFolder = $rootFolder.find("/blogs").child($blog) )
+    #set( $articles = $blogFolder.articles )
+#else
+    #set ($articles = $page.articles)
+#end
+#set ($blogListId = $formatter.randomGuid)
+#if ($filter == "featured")
+    #set ($articles = $articles.featured)
+#elseif ($filter == "nonFeatured")
+    #set ($articles = $articles.notFeatured)
+#end
+#if ($formatter.isNotNull($categories))
+    #set ($articles = $articles.ofTypeOr($categories))
+#end
+#if ($formatter.isNotNull($tags))
+    #set ($articles = $articles.ofTypeOr($tags))
+#end
+
+#if(!$sortBy)
+    #set ($sortBy = "articleDate")
+#end
+
+#if(!$orderBy)
+    #set ($orderBy = "asc")
+#end
+
+#set ($articles = $formatter.sortByProperty($articles, $sortBy))
+
+#if ($orderBy == "desc")
+    #set ($articles = $formatter.sortReverse($articles))
+#end
+
+#if (!$gridHeight)
+    #set ($gridHeight = 200)
+#end
+
+#if( $articles && $articles.size() > 0 )
+    #set ($numberOfArticles = $formatter.toInteger($numberOfArticles))
+    #if ($numberOfArticles > 0 && $articles.size() > $numberOfArticles )
+        #set ($articles = $articles.subList(0, $numberOfArticles))
+    #end
+
+    #if ($layout == "grid")
+        #set ($clsName = "col-sm-4")
+        #if ($itemsPerRow == 1)
+            #set ($clsName = "col-sm-12")
+        #elseif ($itemsPerRow == 2)
+            #set ($clsName = "col-sm-6")
+        #elseif ($itemsPerRow == 3)
+            #set ($clsName = "col-sm-4")
+        #elseif ($itemsPerRow == 4)
+            #set ($clsName = "col-sm-3")
+        #end
+
+        <div class="blog-articles-grid row #if ($showFullHeightThumbnail == "true") blog-article-full-height-thumb #end">
+            #foreach($article in $articles)
+                <div class="blog-article-item $clsName">
+                    #set($bg = "/static/images/photo_holder.png")
+                    #if( $article.bestSquareImageHref )
+                        #set($bg = $article.bestSquareImageHref + "/alt-600-400.png")
+                    #end
+                    <a href="$article.href">
+                        <div class="blog-article-inner" style="height: ${gridHeight}px;">
+                            <div class="blog-article-thumb" style="background-image: url('$bg')"></div>
+                            <div class="blog-article-body">
+                                <h4>$article.title</h4>
+                                <div class="clearfix">
+                                #if ($showTime == "true")
+                                    <small class="blog-article-time"><i class="fa fa-clock-o"></i> <abbr class="timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr>
+                                    </small>
+                                #end
+                                #if ($showCateTag == "true")
+                                    <span>
+                                        #if($article.featured)
+                                            <span class="label label-info">Featured</span>
+                                        #end
+                                        #if( $article.category )
+                                            <span class="label label-info">$article.category</span>
+                                        #end
+                                        #foreach($tag in $article.tags)
+                                            #if( $article.isSelectedTag( $tag ) )
+                                                <span class="label label-info">$tag</span>
+                                            #end
+                                        #end
+                                    </span>
+                                #end
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            #end
+        </div>
+    #elseif ($layout == "list")
+        <div class="blog-articles-list">
+            #foreach($article in $articles)
+                <div class="media blog-article">
+                    <div class="media-left">
+                        #set($bg = "/static/images/photo_holder.png")
+                        #if( $article.bestSquareImageHref )
+                            #set($bg = $article.bestSquareImageHref + "/alt-600-400.png")
+                        #end
+                        <a href="$article.href" class="media-object" title="$article.title" style="background-image: url('$bg');">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            <a href="$article.href">$article.title</a>
+                        </h4>
+                        <p class="media-content clearfix">
+                            $!formatter.toPlain( $!article.brief )
+                        </p>
+                        <p class="small"><i class="fa fa-clock-o fa-fw"></i> <abbr class="timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr></p>
+                        <div>
+                            #if($article.featured)
+                                <span class="label label-success">Featured</span>
+                            #end
+                            #if( $article.category )
+                                <span class="label label-primary">$article.category</span>
+                            #end
+                            #foreach($tag in $article.tags)
+                                #if( $article.isSelectedTag( $tag ) )
+                                    <span class="label label-primary">$tag</span>
+                                #end
+                            #end
+                        </div>
+                    </div>
+                </div>
+            #end
+        </div>
+    #elseif ($layout == "accordion")
+        <div class="blog-articles-accordion panel-group">
+            #foreach($article in $articles)
+                <div class="panel panel-default">
+                    <div class="panel-heading" id="headingOne">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#blog-article-list-${blogListId}" href="#blog-article-list-${blogListId}-${foreach.index}">
+                                $article.title
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="blog-article-list-${blogListId}-${foreach.index}" class="panel-collapse panel-body collapse in">
+                        <div class="media blog-article">
+                            <div class="media-left hidden-sm hidden-xs">
+                                #set($bg = "/static/images/photo_holder.png")
+                                #if( $article.bestSquareImageHref )
+                                    #set($bg = $article.bestSquareImageHref + "/alt-600-400.png")
+                                #end
+                                <a href="$article.href">
+                                    <img class="media-object" alt="$article.title" src="$bg" width="200" height="" />
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <div class="media-content clearfix">
+                                    $!formatter.toPlain( $!article.brief )
+                                </div>
+                                <p>
+                                    <i class="fa fa-clock-o"></i> <abbr class="timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr>
+                                </p>
+    
+                                <p>
+                                    #if( $article.category )
+                                        <span class="label label-primary">$article.category</span>
+                                    #end
+                                    #foreach($tag in $article.tags)
+                                        #if( $article.isSelectedTag( $tag ) )
+                                            <span class="label label-primary">$tag</span>
+                                        #end
+                                    #end
+                                    #if($article.featured)
+                                        <span class="label label-success">Featured</span>
+                                    #end
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            #end
+        </div>
+    #end
+#else
+    #if(!$page)
+        <p class="alert alert-warning">No blog articles found</p>
+    #end
+#end

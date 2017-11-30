@@ -14,7 +14,6 @@
     <body class="">
         #set($fname = $params.fileName)
         #set($file = $folder.child($fname))
-        #set($useHash = $params.useHash)
 
         <div id="editor-wrapper">
             <div class="clearfix editor-toolbar">
@@ -38,9 +37,8 @@
 
 
         <script type="text/javascript">
-            var useHash = "$!useHash";
             $(function () {
-                initHtmlEditorPage('$fname');
+                initHtmlEditorPage('$fname', '$!params.fullUrl');
             });
         </script>
     </body>

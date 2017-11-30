@@ -1,13 +1,9 @@
 <html>
-    #parse("/theme/masterTemplate.html")
-    <head>
-        #@themeHeader( "New Comment" )
-        #end
-    </head>
-    <body>
-        #@themeBody()
-        <p>a New comment has been posted by $post.poster.formattedName</p>
-        <p>$post.notes</p>
-        #end
-    </body>
+<head>
+    <title>New Comment</title>
+</head>
+<body>
+    <p>A new comment has been posted by $post.poster.formattedName</p>
+    <p>$post.notes</p>
+</body>
 </html>

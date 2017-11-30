@@ -95,7 +95,7 @@
                         basePath: keditor.options.basePath,
                         onSelectFile: function (url, relativeUrl, fileType, hash) {
                             var img = keditor.getSettingComponent().find('img');
-                            img.attr('src', "http://" + window.location.host + "/_hashes/files/" + hash);
+                            img.attr('src', 'http://' + window.location.host + '/_hashes/files/' + hash);
                             self.adjustWidthForImg(img, true);
                         }
                     });

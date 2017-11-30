@@ -1,0 +1,13 @@
+<div class="form-group" >
+    <label class="control-label col-md-2" for="websiteName">Default Website: </label>
+    <div class="col-md-10">
+        <select id="websiteName" name="websiteName" class="form-control">
+            <option value="">[No Website Selected]</option>
+            #foreach( $w in $rootFolder.websites )
+            #if(!$w.deleted())
+            $formatter.option($w.name, $formatter.firstNotNull($w.title, $w.name), null)
+            #end
+            #end
+        </select>
+    </div>
+</div>

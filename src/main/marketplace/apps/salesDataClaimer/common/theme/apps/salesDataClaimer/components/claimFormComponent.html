@@ -1,0 +1,150 @@
+#if ($bgTransparent == "true")
+    #set ($formBgColor = "transparent")
+#end
+
+#if ($page)
+    #set($app = $applications.salesDataClaimer )
+    #set($isAnonymousAllowed = $app.call("isAnonymousAllowed", $page))
+
+    #if ($user || $isAnonymousAllowed)
+        <form class="form-horizontal form-new-claim #if ($bgTransparent == "true") #else well #end" action="/salesDataClaims/" method="post" enctype="multipart/form-data" style="background-color: $formBgColor;">
+            #if ($formTitle && $formTitle != "")
+                <h3>$formTitle</h3>
+            #end
+            #if ($formDescription && $formDescription != "")
+                <p>$formDescription</p>
+            #end
+            <div class="form-message alert alert-danger" style="display: none;"></div>
+            <input type="hidden" name="createClaim" value="true" class="modal-action" />
+            
+            #if ($user)
+                <input type="hidden" name="soldBy" value="$!userResource.name" />
+                <input type="hidden" name="soldById" value="$!userResource.userId" />
+            #else
+                <div class="form-group">
+                    <label for="salesDataClaimer-firstName" class="control-label sr-only">First name</label>
+                    
+                    <div class="col-sm-12">
+                        <input type="text" id="salesDataClaimer-firstName" class="form-control required" name="firstName" placeholder="First name" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="salesDataClaimer-email" class="control-label sr-only">First name</label>
+                    
+                    <div class="col-sm-12">
+                        <input type="text" id="salesDataClaimer-email" class="form-control required" name="email" placeholder="Email Address" />
+                    </div>
+                </div>
+            #end
+            
+            <div class="form-group">
+                <label for="amount" class="control-label sr-only">Amount</label>
+                
+                <div class="col-sm-12">
+                    <input type="number" id="amount" class="form-control required" name="amount" placeholder="Sale amount" />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="soldDate" class="control-label sr-only">Date</label>
+                
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <input type="text" name="soldDate" id="soldDate" placeholder="Purchase date" data-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker required" />
+                        <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="productSku" class="control-label sr-only">Product SKU</label>
+                
+                <div class="col-sm-12">
+                    <input name="productSku" id="productSku" class="form-control" placeholder="Product name" value="" />
+                </div>
+            </div>
+            
+            #foreach($xf in $app.call("getSalesDataExtreFields", $page))
+            <div class="form-group">
+                <label for="field_${xf.name}" class="control-label sr-only">$formatter.firstNotNull($xf.title, $xf.name)</label>
+                
+                <div class="col-sm-12">
+                    $xf.html
+                </div>
+            </div>
+            #end
+            
+            <div class="form-group">
+                <label class="control-label sr-only">Receipt</label>
+                
+                <div class="col-sm-12">
+                    #if ($hidePreviewReceipt != "true")
+                        <p class="thumbnail">
+                            <img src="/static/images/photo_holder.png" class="img-responsive" />
+                        </p>
+                    #end
+                    <button type="button" class="btn btn-sm btn-info btn-upload-receipt btn-block"><i class="fa fa-file-picture-o"></i> <span>Upload receipt</span></button>
+                    <span class="text-danger img-error" style="display: none;">Selected file is not image!</span>
+                    <input type="file" name="receiptImage" class="form-control" style="display: none !important;" />
+                </div>
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">Save claim</button>
+        </form>
+        <div class="sale-claim-success" style="display: none">
+            <p><i class="fa fa-thumbs-up"></i></p>
+            <h2>Congratulations!</h2>
+            <p class="lead">You've just submitted a claim</p>
+            <button type="button" class="btn btn-info btn-submit-other-claim">Submit another</button>
+        </div>
+    #end
+#else
+    <div class="form-horizontal form-new-claim #if ($bgTransparent == "true") #else well #end" style="background-color: $formBgColor;">
+        #if ($formTitle && $formTitle != "")
+            <h3>$formTitle</h3>
+        #end
+        #if ($formDescription && $formDescription != "")
+            <p>$formDescription</p>
+        #end
+        <div class="form-group">
+            <label for="amount" class="control-label sr-only">Amount</label>
+            
+            <div class="col-sm-12">
+                <input type="number" id="amount" class="form-control required" name="amount" placeholder="Sale amount" />
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="soldDate" class="control-label sr-only">Date</label>
+            
+            <div class="col-sm-12">
+                <div class="input-group">
+                    <input type="text" name="soldDate" id="soldDate" placeholder="Purchase date" data-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker required" />
+                    <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="productSku" class="control-label sr-only">Product SKU</label>
+            
+            <div class="col-sm-12">
+                <input name="productSku" id="productSku" class="form-control" placeholder="Product name" value="" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label sr-only">Receipt</label>
+            
+            <div class="col-sm-12">
+                #if ($hidePreviewReceipt != "true")
+                    <p class="thumbnail">
+                        <img src="/static/images/photo_holder.png" class="img-responsive" />
+                    </p>
+                #end
+                <button type="button" class="btn btn-sm btn-info btn-upload-receipt btn-block"><i class="fa fa-file-picture-o"></i> <span>Upload receipt</span></button>
+                <span class="text-danger img-error" style="display: none;">Selected file is not image!</span>
+                <input type="file" name="receiptImage" class="form-control" style="display: none !important;" />
+            </div>
+        </div>
+        <button class="btn btn-primary btn-block" type="button">Save claim</button>
+    </div>
+#end

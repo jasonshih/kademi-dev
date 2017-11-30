@@ -1,0 +1,134 @@
+h3 {
+    margin: 0;
+    line-height: 30px;
+}
+
+#editor .ace_content {
+    min-height: 400px;
+}
+
+#editor-wrapper {
+    background: #fff;
+}
+
+#editor-loading {
+    float: left;
+    position: relative;
+    top: -4px;
+}
+
+#editor-menu {
+    float: right;
+}
+
+.btn.disabled {
+    opacity: .5;
+    pointer-events: auto !important;
+}
+
+.editor-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 10px;
+}
+
+.btn-toolbar-toggle {
+    position: relative;
+    top: -8px;
+}
+
+.revision-switcher-wrapper {
+    width: 220px;
+}
+
+.shortcut-switcher-wrapper {
+    width: 185px;
+}
+
+.font-size-switcher-wrapper {
+    width: 165px;
+}
+
+.theme-switcher-wrapper {
+    width: 245px;
+}
+
+.file-type-wrapper {
+    width: 180px;
+}
+
+#editor-wrapper .editor-toolbar {
+    padding: 15px 15px 0;
+    box-shadow: 0 0 2px rgba(0, 0, 0, .2);
+    position: relative;
+    z-index: 2;
+    height: 60px;
+}
+
+#editor-wrapper .editor-toolbar .fa,
+#editor-wrapper .editor-toolbar [class*="clip-"] {
+    line-height: inherit;
+}
+
+#editor-wrapper .editor-toolbar .btn-toolbar {
+    margin-left: 20px;
+}
+
+#editor-wrapper #editor {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    top: 60px;
+    height: auto !important;
+    z-index: 1;
+}
+
+@media (min-width: 992px) {
+    #editor-menu {
+        display: block !important;
+    }
+}
+
+@media (max-width: 991px) {
+    #editor-menu {
+        position: absolute;
+        top: 59px;
+        left: 0;
+        right: 0;
+        background: #fff;
+        padding: 10px 5px;
+        border-top: 1px solid #f0f0f0;
+        border-bottom: 1px solid #ccc;
+        margin-left: 0 !important;
+    }
+
+    .shortcut-switcher-wrapper,
+    .font-size-switcher-wrapper,
+    .theme-switcher-wrapper,
+    .file-type-wrapper {
+        width: auto;
+        margin-top: 10px;
+        margin-left: 0 !important;;
+    }
+
+    .shortcut-switcher-wrapper .input-group-addon,
+    .font-size-switcher-wrapper .input-group-addon,
+    .theme-switcher-wrapper .input-group-addon,
+    .file-type-wrapper .input-group-addon {
+        min-width: 100px;
+        text-align: left;
+    }
+}
+
+/* =========================================================== */
+/* HTML Editor page */
+/* =========================================================== */
+.html-editor-page #editor-wrapper .cke_chrome {
+    border: 0;
+}
+
+.html-editor-page #editor-wrapper .editor-toolbar {
+    box-shadow: none;
+}

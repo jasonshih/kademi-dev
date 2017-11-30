@@ -1,14 +1,6 @@
-body {
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-abbr[title],
-acronym[title] {
-    text-decoration: none;
-}
-
-// Mixin for form field states
+// ==================================================
+// Mixins
+// ==================================================
 .formFieldState(@textColor: #555, @borderColor: #ccc, @backgroundColor: #f5f5f5) {
     // Set the text color
     .control-label,
@@ -16,6 +8,7 @@ acronym[title] {
     .help-inline {
         color: @textColor;
     }
+    
     // Style inputs accordingly
     .checkbox,
     .radio,
@@ -44,25 +37,48 @@ acronym[title] {
     }
 }
 
-table.list-view {
-    .table;
-    tbody {
-        tr {
-            td {
-                border-bottom: 1px solid darken(@wellBackground, 7%);
-                vertical-align: middle;
-            }
-        }
-        tr:nth-child(even) {
-            td {
-                // background-color: @wellBackground;  // looks rubbish on my learning
-            }
-        }
+// ==================================================
+// Global
+// ==================================================
+body {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+abbr[title],
+acronym[title] {
+    text-decoration: none;
+}
+
+.main-content {
+    padding-top: @content-padding-top;
+}
+
+.thumbnail {
+    position: relative;
+}
+
+// Kill the top margin on headings inside wells to avoid excessive space at top
+.well {
+    h1,
+    h2,
+    h3,
+    h4 {
+        margin-top: 0;
     }
 }
 
-.clr {
-    clear: both;
+.dropdown-btn.collapsed {
+    display: inline-block; // fit to width of text when collapsed
+}
+
+.navbar-inner .navbar-form {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.page-body {
+    min-height: 300px
 }
 
 .navbar-fixed-top ul.nav-tabs {
@@ -70,159 +86,8 @@ table.list-view {
     margin-top: 40px;
 }
 
-.banner {
-    position: relative;
-}
-
-.banner .btn-group {
-    position: absolute;
-    right: 0;
-    top: 10px
-}
-
-.main-content {
-    padding-top: @content-padding-top;
-}
-
-.content-header {
-    border-bottom-width: 0;
-}
-
-.content-header, .content-no-header {
-    background-clip: padding-box;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 6px 6px 0 0;
-}
-
-.content-header .header-inner, .content-no-header .no-header-inner {
-    background-color: #FFFFFF;
-    border-bottom: 1px solid #E8E8E8;
-    border-radius: 5px 5px 0 0;
-    min-height: 20px;
-    padding: 12px;
-}
-
-.content-header h3 {
-    font-size: 18px;
-    font-weight: bold;
-    line-height: 20px;
-    margin: 0;
-    padding: 0;
-}
-
-.banner {
-    form.form-horizontal {
-        margin: 20px 20px 20px 0;
-        .control-group {
-            margin-bottom: 0;
-        }
-        .control-label {
-            //width: 80px;
-        }
-        .controls {
-            //margin-left: 100px;
-        }
-    }
-    a p {
-        margin: 0;
-        padding: 0;
-    }
-}
-
-.comment {
-    .clearfix;
-    border-bottom: solid @input-border 1px;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    
-    .comment-user {
-        float: left;
-        margin-right: 8px;
-        width: 52px;
-    }
-    
-    .comment-user-pic {
-        img {
-            display: block;
-            height: 52px;
-        }
-    }
-    
-    .comment-user-name {
-        text-align: center;
-        display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-align: center;
-    }
-    
-    .comment-detail {
-        margin: 0 0 0 60px;
-    }
-    
-    .comment-content {
-        margin: 0 0 10px;
-    }
-    
-    .comment-reply {
-        margin-right: 5px;
-    }
-    
-    .comment-replies-wrapper {
-        margin-top: 10px;
-    }
-}
-
-.stream-items {
-    list-style-type: none;
-    padding: 0;
-    li {
-        margin-bottom: 15px;
-        padding-bottom: 15px;
-        border-bottom: solid @input-border 1px;
-    }
-    p {
-        font-size: 85%;
-        margin-left: 60px;
-        margin-top: 5px;
-        margin-bottom: 0;
-    }
-    abbr {
-        margin-left: 60px;
-        border: medium none;
-        font-size: 80%;
-    }
-    .profilePic {
-        float: left;
-        margin-right: 8px;
-        height: 52px;
-        width: 52px;
-        img {
-            height: 100%;
-            width: 100%;
-        }
-        
-    }
-}
-
-ul.tools {
-    list-style-type: none;
-    margin: 0;
-    li {
-        display: block;
-    }
-    li.modPerc {
-        float: left;
-        font-size: 200%;
-    }
-}
-
 .thumbnails li {
     list-style-type: none;
-}
-
-.dash-primary {
-
 }
 
 .table.vcenter {
@@ -231,105 +96,88 @@ ul.tools {
     }
 }
 
-.form-horizontal.form-horizontal-narrow {
-    .control-label {
-    
-    }
-    .controls {
-    
-    }
-}
-
-.form-horizontal.form-horizontal-narrower {
-    .control-label {
-    
-    }
-    .controls {
-    }
-}
-
-.form-tight.form-horizontal .control-group {
-    margin-bottom: 5px;
-}
-
-.muploadBtn {
-    .btn;
-    .btn-success;
-    overflow: hidden;
-    span {
-        line-height: 25px;
-    }
-}
-
-.hideBtn {
-    margin: 0 auto;
-    text-align: center;
-    width: 150px;
-    font-size: 85%;
-}
-
-.commentContainer {
-    textarea {
-        width: 460px;
-        resize: none;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-        min-height: 30px;
-    }
-    .commentControls {
-        display: none;
-    }
-    button {
-        float: right;
-    }
-}
-
-// Provides a convenient way to hide comments, just add the hideComments class to the body
-.hideComments .commentArea {
-    display: none;
-}
-
-.centerOuter {
-    float: right;
-    left: -50%;
-    text-align: left;
-    position: relative;
-    
-    .centerInner {
-        left: 50%;
-        position: relative;
-    }
+.dropdown-menu {
+    color: @text-color;
 }
 
 .contentForm {
     min-height: 300px;
 }
 
+.bs-avatar {
+    margin: 0px 15px 15px 0;
+    
+    img {
+        width: 52px;
+        height: 52px;
+    }
+}
+
 .pageMessage {
     display: none;
 }
 
-.modal form {
-    margin: 0;
+// ==================================================
+// Tile
+// ==================================================
+.tile {
+    padding: 0;
+    overflow: hidden;
+    margin-bottom: 20px;
+    min-height: 300px;
+    border: 1px solid @panel-inner-border;
+    .border-top-radius((@panel-border-radius - 1));
+    .border-bottom-radius((@panel-border-radius - 1));
+    
+    .tile-content {
+        margin: 15px;
+        
+        p {
+            font-size: 85%;
+        }
+        
+        > div {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 100%;
+        }
+    }
 }
 
-.downloadIcon {
-    background-image: url(/static/common/download.png);
-    display: block;
-    width: 34px;
-    height: 31px;
-    span {
-        visibility: hidden;
+.tile-image {
+    width: 100%;
+    height: 150px;
+    background-size: 100% auto;
+    background-position: center;
+    
+    a {
+        display: block;
+        height: 100%;
+        width: 100%;
+        
+        span {
+            visibility: hidden;
+        }
     }
+}
+
+// ==================================================
+// Modal
+// ==================================================
+.modal form {
+    margin: 0;
 }
 
 .modal-overflow {
     overflow-y: visible;
 }
 
-.pagination-centered {
-    text-align: center;
+// ==================================================
+// Typeahead
+// ==================================================
+.twitter-typeahead {
+    background: #fff;
 }
 
 .tt-dropdown-menu {
@@ -340,12 +188,8 @@ ul.tools {
     background-color: @dropdown-bg;
     border: 1px solid #ccc;
     border: 1px solid @dropdown-border;
-    *border-right-width: 2px;
-    *border-bottom-width: 2px;
     border-radius: 6px;
     .box-shadow(0 5px 10px rgba(0, 0, 0, .2));
-    -webkit-background-clip: padding-box;
-    -moz-background-clip: padding;
     background-clip: padding-box;
 }
 
@@ -370,7 +214,9 @@ ul.tools {
     display: none !important;
 }
 
+// ================================================================
 // http://stackoverflow.com/questions/18432577/stacked-tabs-in-bootstrap-3
+// ================================================================
 .tabs-below, .tabs-right, .tabs-left {
     .nav-tabs {
         border-bottom: 0;
@@ -407,6 +253,7 @@ ul.tools {
                 }
             }
         }
+        
         > .active a {
             &, &:hover, &:focus {
                 border-color: transparent #ddd #ddd #ddd;
@@ -475,251 +322,19 @@ ul.tools {
     }
 }
 
-.module-container {
-    margin-bottom: @padding-large-vertical;
-}
-
-// My learning page modules
-.modules {
-    h3 {
-        margin-top: 0; // make the heading flush top with the row
+// ==================================================
+// JWPlayer
+// ==================================================
+.video-wrapper {
+    .clearfix;
+    
+    .jw_container_outer {
+        .clearfix;
     }
-    .media {
-        a {
-            width: 150px;
-            height: 100px;
-            background-size: cover;
-            background-position: center center;
-        }
-    }
-}
-
-.hero {
-    display: table;
-    overflow: hidden;
-    border-radius: 5px;
-    padding: 0;
-    width: 100%;
-    .hero-body {
-        margin: 30px;
-    }
-    .hero-image {
+    
+    .jwplayer-wrapper {
         float: left;
-        margin-right: 30px;
-        display: table-cell;
-        min-height: 200px;
-        height: 100%;
-        width: 200px;
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center center;
     }
-}
-
-.with-image {
-    .hero-body {
-        margin-left: 30%; // as above
-    }
-}
-
-.thumbnail {
-    position: relative;
-}
-
-.tile {
-    padding: 0;
-    overflow: hidden;
-    margin-bottom: 20px;
-    min-height: 300px;
-    border: 1px solid @panel-inner-border;
-    .border-top-radius((@panel-border-radius - 1));
-    .border-bottom-radius((@panel-border-radius - 1));
-    
-    .tile-content {
-        margin: 15px;
-        p {
-            font-size: 85%;
-        }
-        > div {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            width: 100%;
-        }
-    }
-}
-
-.tile-image {
-    width: 100%;
-    height: 150px;
-    background-size: 100% auto;
-    background-position: center;
-    a {
-        display: block;
-        height: 100%;
-        width: 100%;
-        span {
-            visibility: hidden;
-        }
-    }
-}
-
-.tile-horiz .tile-image {
-    width: 300px;
-}
-
-// For truncating text, see learningDashboardPortlet.html
-span.read-more {
-    cursor: pointer;
-    color: gray;
-}
-
-span.more {
-    display: none;
-}
-
-// Kill the top margin on headings inside wells to avoid excessive space at top
-.well h1, .well h2, .well h3, .well h4 {
-    margin-top: 0;
-}
-
-.user-nickname {
-
-}
-
-// For dropdown hidden panels in editor content
-.cke_widget_element.dropdown-btn {
-    border-style: dashed;
-}
-
-.dropdown-btn.collapsed {
-    display: inline-block; // fit to width of text when collapsed
-}
-
-#editor {
-    .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11 {
-        border: dashed grey 1px;
-        min-height: 200px;
-    }
-    .btn {
-        -moz-user-select: text;
-    }
-}
-
-.bs-avatar {
-    margin: 0px 15px 15px 0;
-    img {
-        width: 52px;
-        height: 52px;
-    }
-}
-
-// Learning styles, for My Learning and dashboard
-
-h2.course-selector {
-    box-shadow: none !important;
-}
-
-.program-course-module-mix {
-    .dropdown-menu li > div {
-        padding-bottom: 10px;
-        min-height: 130px;
-    }
-    
-    .dropdown-menu li > div.loading {
-        background: url("/static/images/loading.gif") 50% 50% no-repeat;
-    }
-    
-    .dropdown-menu li > p {
-        border-bottom: 2px solid #ccc;
-        margin-bottom: 0;
-    }
-    .dropdown-menu li > p, .dropdown-menu li a {
-        display: block;
-        padding: 5px;
-        text-decoration: none;
-    }
-    
-    .dropdown-menu li a.active {
-        background: #428BCA;
-        color: #fff;
-    }
-}
-
-.module-inner {
-    border: 1px solid @panel-inner-border;
-    .border-top-radius((@panel-border-radius - 1));
-    .border-bottom-radius((@panel-border-radius - 1));
-    position: relative;
-}
-
-.module-status {
-    padding: 0 10px 10px 10px;
-    .progress {
-        margin-bottom: 0;
-    }
-    .module-progress {
-        width: 50%;
-    }
-    .module-labels {
-        width: 50%;
-    }
-}
-
-.module-image {
-    height: 170px;
-    width: 170px;
-    float: left;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-    .border-top-radius((@panel-border-radius - 1));
-    .border-bottom-radius((@panel-border-radius - 1));
-    position: relative;
-    
-    .module-image-time {
-        position: absolute;
-        bottom: 5px;
-        right: 5px;
-    }
-}
-
-.hero {
-    .module-image {
-        height: 200px;
-        width: 250px;
-    }
-    .module-info {
-        min-height: 170px;
-    }
-}
-
-.module-info-container {
-    min-height: 100px;
-    overflow: hidden;
-}
-
-.module-info {
-    min-height: 140px;
-    padding: 15px 15px 0 15px;
-    overflow: hidden;
-}
-
-.module-status {
-    height: 30px;
-}
-
-.module-inner {
-    margin-bottom: 30px;
-}
-
-.hero .module-inner {
-    margin-bottom: 0;
-}
-
-.navbar-inner .navbar-form {
-    margin-top: 0;
-    margin-bottom: 0;
 }
 
 .jw_container_outer {
@@ -728,10 +343,28 @@ h2.course-selector {
     max-width: 720px;
 }
 
-.page-body {
-    min-height: 300px
+// ==================================================
+// CKEditor
+// ==================================================
+#editor {
+    [class*="col-"] {
+        border: 1px dashed grey;
+        min-height: 200px;
+    }
+    
+    .btn {
+        -moz-user-select: text;
+    }
 }
 
+// For dropdown hidden panels in editor content
+.cke_widget_element.dropdown-btn {
+    border-style: dashed;
+}
+
+// ==================================================
+// Content editor
+// ==================================================
 .content-editor-page .page-body {
     border: dashed gray 1px;
 }
@@ -763,6 +396,49 @@ h2.course-selector {
 }
 
 // ==================================================
+// Navbar transparent
+// ==================================================
+.navbar-transparent {
+    .navbar-nav {
+        > li {
+            > a {
+                color: #fff;
+                text-shadow: 0 0 1px rgba(0, 0, 0, .4);
+                position: relative;
+                background: none !important;
+                
+                &:before {
+                    position: absolute;
+                    left: 15px;
+                    right: 15px;
+                    bottom: 0;
+                    height: 2px;
+                    background: #fff;
+                    box-shadow: 0 0 1px rgba(0, 0, 0, .4);
+                    content: '';
+                    display: none;
+                }
+                
+                &:hover {
+                    &:before {
+                        display: block;
+                    }
+                }
+            }
+            
+            &.active,
+            &.open {
+                a {
+                    &:before {
+                        display: block;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ==================================================
 // Navbrand
 // ==================================================
 .navbar-brand {
@@ -789,38 +465,54 @@ h2.course-selector {
 .container-inverse {
     background: @container-inverse-bg;
     color: @container-inverse-color;
+    
+    a {
+        color: @container-inverse-color;
+    }
 }
 
 .col-inverse {
     background: @col-inverse-bg;
     color: @col-inverse-color;
+    
+    a {
+        color: @col-inverse-color;
+    }
 }
 
 .jumbotron-inverse {
     background: @jumbotron-inverse-bg;
     color: @jumbotron-inverse-color;
+    
+    a {
+        color: @jumbotron-inverse-color;
+    }
 }
 
 .breadcrumb-inverse {
     background: @breadcrumb-inverse-bg;
     color: @breadcrumb-inverse-color;
+    
     li a {
         color: @breadcrumb-inverse-color;
     }
+    
     li.active a {
         color: lighten(@gray-light, 55%);
     }
 }
 
-.video-wrapper {
-    .clearfix;
-    
-    .jw_container_outer {
-        .clearfix;
-    }
-    
-    .jwplayer-wrapper {
-        float: left;
+.modal {
+    .container-inverse &,
+    .col-inverse &,
+    .jumbotron-inverse & {
+        color: @text-color;
+        
+        .modal-body {
+            a {
+                color: @link-color;
+            }
+        }
     }
 }
 
@@ -892,13 +584,6 @@ h2.course-selector {
 }
 
 // ==================================================
-// Typeahead
-// ==================================================
-.twitter-typeahead {
-    background: #fff;
-}
-
-// ==================================================
 // Nested list group
 // ==================================================
 .list-group.list-group-root {
@@ -932,9 +617,59 @@ h2.course-selector {
 }
 
 // ==================================================
+// Media object
+// ==================================================
+.media-body {
+    h1, .h1,
+    h2, .h2,
+    h3, .h3,
+    h4, .h4,
+    h5, .h5,
+    h6, .h6 {
+        .media-heading;
+    }
+}
+
+.media {
+    .media-left,
+    .media-right {
+        a {
+            display: block;
+        }
+    }
+    
+    .media-object {
+        height: auto;
+    }
+}
+
+@media (max-width: @screen-xs-max) {
+    .media,
+    .media-left,
+    .media-right,
+    .media-body {
+        display: block;
+        float: none;
+        width: auto !important;
+        padding: 0;
+    }
+    
+    .media-left-inner {
+        width: auto !important;
+    }
+    
+    .media {
+        > * + * {
+            margin-top: 15px;
+        }
+    }
+}
+
+// ==================================================
 // Print
 // ==================================================
 @media print {
+    .module-labels,
     .kcommentArea,
     [data-type="component-comments"],
     #ktoolbar {

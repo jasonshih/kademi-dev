@@ -128,7 +128,7 @@
                                     <td>$org.parentPath</td>
                                     <td>$!org.phone</td>
                                     <td>$!org.address</td>
-                                    <td class="org-members">$!org.memberCount</td>
+                                    <td class="org-members">$!org.profileCount</td>
                                     <td class="action">
                                         <div class="btn-group btn-group-sm">
                                             <a href="${org.href}edit" class="btn btn-sm btn-primary btn-sm">
@@ -139,7 +139,7 @@
                                             </button>
                                             <ul class="dropdown-menu pull-right" role="menu">
                                                 <li><a class="btn-edit-org" role="button" href="${org.href}edit">Edit details</a></li>
-                                                <li><a class="btn-edit-path" role="button" data-path="$org.orgPath" data-orgid="$org.actualId" href="#">Edit Path</a></li>
+                                                <li><a class="btn-edit-path" role="button" data-path="$org.orgPathToEdit" data-orgid="$org.actualId" href="#">Edit Path</a></li>
                                                 <li><a class="btn-edit-parent" role="button" data-parent="$!org.parent" data-orgid="$org.actualId" data-parent-title="$!org.parentTitle" href="#">Edit parent</a></li>
                                                 <li><a href="${org.href}viewDetails">View users and details</a></li>
                                                 <li><a href="${org.href}organisations">Manage child orgs</a></li>

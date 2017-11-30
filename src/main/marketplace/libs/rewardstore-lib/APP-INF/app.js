@@ -1,10 +1,11 @@
-/**
- * Created by Anh on 10/04/2017.
- */
+/* HTML Components */
 controllerMappings.addComponent("rewardstore/components", "rewardProduct", "html", "Shows reward product with image, points and add to card button", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "recentlyViewedProducts", "html", "Shows products sliders which are recently viewed by current user", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "pointsRangeList", "html", "Shows points ranges list", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "productSort", "html", "Shows products sorting dropdown list", "Reward Store");
+controllerMappings.addComponent("rewardstore/components", "pointsEarned", "html", "Shows points earned for the current participant, for a selected points bucket and optionally filtered by a points tag", "Reward Store");
+
+/* EDM Components */
 controllerMappings.addComponent("rewardstore/components", "singleProductEDM", "edm", "Show single product for EDM Editor", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "rewardCategoriesListEDM", "edm", "Show reward store categories list for EDM Editor", "Reward Store");
 
@@ -19,99 +20,68 @@ controllerMappings
 function getPointsBalance() {
     log.info('getPointsBalance');
 }
-function findProducts(query, category, rewardStoreId, from, max, priceStart, priceEnd, sort, asc) {
-    log.info('findProducts | query {} | category {} | rewardStoreId {} | from {} | max {} | priceStart {} | priceEnd {} | sort {} | asc {}', query, category, rewardStoreId, from, max, priceStart, priceEnd, sort, asc);
-    if (category == false) {
-        category = null;
-    }
-    if (isBlank(sort)) {
-        sort = 'finalPoints';
-    }
 
-    if (isBlank(asc)) {
-        asc = 'true';
-    }
+function findProducts(page, params, rewardName, numberOfProducts, sort, asc) {
+    log.info('findProducts > page={}, params={}, rewardName={}, numberOfProducts={}, sort={}, asc={}', page, params, rewardName, numberOfProducts, sort, asc);
 
-    if (asc == 'true') {
-        asc = "asc";
+    if (!numberOfProducts) {
+        numberOfProducts = 12;
     } else {
-        asc = "desc";
+        numberOfProducts = +numberOfProducts;
     }
 
-    var searchConfig = {
-        "from": parseInt(from),
-        "size": max,
-        "query": {
-            "bool": {
-                "must": [],
-                "should": []
-            }
-        },
-        "min_score": 0.05,
-        "stored_fields": ["title", "title_raw", "content", "product", "productCode", "tags", "itemType", "primaryImageId", "finalPoints", "path", "images.hash"],
-        "sort": {},
-        "highlight": {
-            "fields": {
-                "content": {
-                    "fragment_size": 100,
-                    "number_of_fragments": 3
-                }
-            }
-        }
-    };
-    if (rewardStoreId && !isNaN(rewardStoreId)) {
-        searchConfig.query.bool.must.push({
-            "term": {
-                "rewardStoreId": rewardStoreId
-            }
-        });
+    var rewardStoreFolder = page;
+    if (rewardName) {
+        rewardStoreFolder = page.find("/" + rewardName);
     }
-    if (!isBlank(category)) {
-        var catQ = {
-            "terms": {
-                "tags": [category]
-            }
-        };
+    if (rewardStoreFolder == null) {
+        log.warn("Could not find reward store: " + rewardName);
+        return null;
+    }
+    
+    if (rewardStoreFolder.rewardStore == null) {
+        log.warn("Could not find reward store for reward store folder " + rewardStoreFolder);
+        return null;
+    }
+    
+    var rewardStoreName = rewardStoreFolder.rewardStore.name;
 
-        searchConfig.query.bool.must.push(catQ);
+
+    var fromRange = 0;
+    if (params.fromRange) {
+        fromRange = +params.fromRange;
     }
 
-    searchConfig.sort[sort] = asc;
-
-    if (query !== null && typeof query !== 'undefined' && query.trim().length > 0) {
-        var searchFields = ["title.text", "content.text"];
-        for (var i in searchFields) {
-            var q = '{'
-                    + '    "prefix": {'
-                    + '        "' + searchFields[i] + '": "' + query + '"'
-                    + '    }'
-                    + '}';
-            searchConfig.query.bool.should.push(JSON.parse(q));
-            searchConfig.query.bool.minimum_should_match = 1;
-        }
+    var startPrice = null;
+    if (params.startPrice) {
+        startPrice = +params.startPrice;
     }
 
-    if (isNotBlank(priceStart) && isNotNull(priceStart) && +priceStart > 0) {
-        priceStart = +priceStart;
-        priceEnd = +priceEnd;
-
-        var pq = {
-            "range": {
-                "finalPoints": {
-                    "gte": priceStart,
-                    "lte": priceEnd
-                }
-            }
-        };
-        searchConfig.query.bool.must.push(pq);
+    var endPrice = null;
+    if (params.endPrice) {
+        endPrice = +params.endPrice;
     }
 
-    log.info("search query: \n {}", JSON.stringify(searchConfig));
+    var sortParam = 'title';
+    if (params.sort) {
+        sortParam = params.sort;
+    } else if (sort) {
+        sortParam = sort;
+    }
 
-    var sm = applications.search.searchManager;
-    var result = sm.search(JSON.stringify(searchConfig), 'rewardstore');
+    var ascParam = true;
+    if (params.asc) {
+        ascParam = params.asc === 'true';
+    } else if (asc) {
+        ascParam = sort;
+    }
 
-    return result;
+    var category = null;
+    if (page.is('category')) {
+        category = page.name;
+    }
+
+    return applications.rewardStore.productSearch(rewardStoreName, params.q, category, startPrice, endPrice, fromRange, numberOfProducts, sortParam, ascParam);
 }
 
 function getRecentlyViewedRewardProducts(page, size) {

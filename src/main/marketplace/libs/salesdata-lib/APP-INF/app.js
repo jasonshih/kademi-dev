@@ -30,7 +30,7 @@ function getTopSkusData(page, params) {
     var dataSerialName = params.dataSerialName;
     
     var queryJson = {
-        "fields": ["productSku", "amount", "qty"],
+        "stored_fields": ["productSku", "amount", "qty"],
         "size": 10,
         "aggregations": {
             "skuCodeShare": {

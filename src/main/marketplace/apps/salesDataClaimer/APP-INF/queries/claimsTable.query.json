@@ -1,0 +1,17 @@
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "range": {
+                        "soldDate": {
+                            "gte": "$startDate",
+                            "lte": "$endDate"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "size": 1000
+}

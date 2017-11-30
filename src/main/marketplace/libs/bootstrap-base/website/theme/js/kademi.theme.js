@@ -119,37 +119,50 @@ function initLogin() {
  *
  * See /static/js/toolbars.js
  */
-function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
-    flog("initHtmlEditors: height=", height, "removePlugins", removePlugins);
+var ADDED_EXTRA_CSS = false;
+function initHtmlEditors(elements, height, width, extraPlugins, removePlugins, callback) {
+    var fullUrl = false;
+    if ($.isPlainObject(height)) {
+        var options = $.extend({}, height);
+        height = options.height;
+        width = options.width;
+        extraPlugins = options.extraPlugins;
+        removePlugins = options.removePlugins;
+        callback = options.callback;
+        fullUrl = options.fullUrl;
+    }
+    
+    flog('initHtmlEditors', elements, height, width, extraPlugins, removePlugins);
     
     $.getScriptOnce('/static/ckeditor456/ckeditor.js', function () {
         $.getScriptOnce('/static/ckeditor456/adapters/jquery.js', function () {
             $.getScriptOnce('/theme/js/toolbars.js', function () {
                 if (!elements) {
-                    elements = $(".htmleditor");
+                    elements = $('.htmleditor');
                 }
                 if (!extraPlugins) {
-                    extraPlugins = standardExtraPlugins; // see toolbars.js
+                    extraPlugins = standardExtraPlugins;
                 }
-                flog("extraPlugins", extraPlugins);
                 if (!removePlugins) {
                     removePlugins = standardRemovePlugins;
                 }
-                flog("removePlugins", removePlugins);
-                flog("prepare html editors", elements);
                 
-                elements.each(function (i, n) {
-                    var inp = $(n);
+                flog('Prepare html editors using templates=' + templatesPath + ' and styles=' + stylesPath); // see toolbars.js for templatesPath
+                elements.each(function () {
+                    var element = $(this);
                     
-                    var inputClasses = inp.attr("class");
-                    var id = inp.attr("id");
-                    var toolbar = "Default";
+                    // Add id for editor if dont have id
+                    if (!element.attr('id')) {
+                        element.attr('id', 'editor-' + Math.round(Math.random() * 123456789));
+                    }
                     
+                    var inputClasses = element.attr('class');
+                    var toolbar = 'Default';
                     if (inputClasses) {
-                        c = inputClasses.split(" ");
-                        for (i = 0; i < c.length; i++) {
-                            var s = c[i];
-                            if (s.startsWith("toolbar-")) {
+                        inputClasses = inputClasses.split(' ');
+                        for (var i = 0; i < inputClasses.length; i++) {
+                            var s = inputClasses[i];
+                            if (s.startsWith('toolbar-')) {
                                 s = s.substring(8);
                                 toolbar = s;
                                 break;
@@ -157,52 +170,65 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
                         }
                     }
                     
-                    toolbar = "Default"; // HACK!!
-                    flog("using toolbar", toolbar, "=>", toolbarSets[toolbar]);
+                    flog('Using toolbar=' + toolbar + ' => ', toolbarSets[toolbar]);
                     
-                    flog("themeCssFiles", themeCssFiles);
-                    flog("editorSkin", editorSkin);
-                    var currentFolder = getFolderPath(window.location.pathname);
+                    themeCssFiles.push('/static/bootstrap/3.3.7/css/bootstrap.min.css');
+                    themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap-ckeditor.css');
+                    
                     var config = {
                         skin: editorSkin,
                         allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
                         contentsCss: themeCssFiles, // mainCssFile,
-                        bodyId: "editor",
+                        bodyId: 'editor',
                         templates_files: [templatesPath],
                         templates_replaceContent: false,
                         toolbarGroups: toolbarSets[toolbar],
                         extraPlugins: extraPlugins,
                         removePlugins: removePlugins,
-                        enterMode: "P",
+                        enterMode: 'P',
                         forceEnterMode: true,
                         filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
-                        // filebrowserBrowseUrl: currentFolder + '/_ckbrowser.html?Type=Image&Connector=/fck_connector.html', // TODO
-                        filebrowserUploadUrl: '/fck_connector.html?CurrentFolder=' + currentFolder,
+                        filebrowserUploadUrl: '/uploader/upload',
                         format_tags: 'p;h1;h2;h3;h4;h5;h6', // removed p2
                         format_p2: {
                             element: 'p',
                             attributes: {
                                 'class': 'lessSpace'
                             }
-                        }
+                        },
+                        minimumChangeMilliseconds: 100,
+                        fullUrl: fullUrl
                     };
                     
                     if (height) {
-                        config.height = height;
+                        if (height !== 'auto') {
+                            config.height = height;
+                        }
                     } else {
-                        config.height = "300";
+                        config.height = '300';
                     }
                     if (width) {
                         config.width = width;
                     }
                     
-                    //config.stylesSet = 'myStyles:/theme/styles.js'; // TODO: needs to be configurable, based on theme
-                    config.stylesSet = "myStyles:" + stylesPath;
-                    flog("create editor", inp, config);
-                    var editor = inp.ckeditor(config).editor;
-                    //var editor = CKEDITOR.instances["body"];
-                    flog("editor instances", CKEDITOR.instances);
+                    config.stylesSet = 'myStyles:' + stylesPath; // See toolbars.js, or overridden elsewhere
                     
+                    flog('Create editor', element, config);
+                    var editor = element.ckeditor(config).editor;
+                    
+                    editor.on('instanceReady', function () {
+                        if (!ADDED_EXTRA_CSS) {
+                            var cssCkeditorExtra = '/static/ckeditor456/skins/bootstrapck/editor_extra.css';
+                            flog('Loading ckeditor extra css');
+                            $('<link href="' + cssCkeditorExtra + '" rel="stylesheet">').appendTo('head');
+                            
+                            ADDED_EXTRA_CSS = true;
+                        }
+                        
+                        if (typeof callback === 'function') {
+                            callback.call(this, editor);
+                        }
+                    });
                 });
                 
                 CKEDITOR.dtd.$removeEmpty['i'] = false;
@@ -394,13 +420,15 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
     var div = buildJWPlayerContainer(count);
     flog("buildJWPlayer", src, "size=", h, w);
     itemToReplace.replaceWith(div);
+    
     var innerId = div.find(".jw-video").attr("id");
     var isHash = src.indexOf('/_hashes/files/') === 0;
-    flog("HACK using src");
+    var webmUrl = src + (isHash ? '/alt-640-360.webm' : '/../alt-640-360.webm');
+    var m4vUrl = src + (isHash ? '/alt-640-360.m4v' : '/../alt-640-360.m4v');
+    
+    flog('Url: ' + src + ', webmUrl: ' + webmUrl + ', m4vUrl: ' + m4vUrl);
+    
     jwplayer(innerId).setup({
-//        file: src,
-//        height: h,
-//        image: posterHref,
         flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
         html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
         width: "100%",
@@ -413,21 +441,20 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
             image: posterHref,
             sources: [{
                 file: src
-            }
-                , {
-                    file: src + isHash ? '/alt-640-360.webm' : '/../alt-640-360.webm'
-                }, {
-                    file: src + isHash ? '/alt-640-360.m4v' : '/../alt-640-360.m4v'
-                }]
+            }, {
+                file: webmUrl
+            }, {
+                file: m4vUrl
+            }]
         }]
         , primary: "flash"
     });
+    
     jwplayer(innerId).onReady(function () {
         var wrapperId = innerId + "_wrapper";
         var wrapper = $("#" + wrapperId);
         wrapper.addClass("jwplayer-wrapper");
     });
-    
 }
 
 function buildJWPlayerContainer(count) {
@@ -512,6 +539,7 @@ function initTablesForCkeditor() {
  * Provided by each theme to integrate modals
  */
 var lastOpenedModal;
+
 function showModal(modal, title) {
     flog("showModal-bootstrap3", modal);
     modal.find(".close-modal").remove(); // added by old fuse theme, need to remove

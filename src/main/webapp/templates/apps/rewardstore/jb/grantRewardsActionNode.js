@@ -33,6 +33,17 @@ JBNodes['grantRewards'] = {
             form.attr('action', href);
 
             JBApp.showSettingPanel(node);
+
+            form.find('.numPointsType').on('click', function () {
+                form.find('.numPointsType').each(function () {
+                    if (this.checked){
+                        form.find('.pointsGroup.'+this.value).removeClass('hide').find('input').trigger('focus');
+                    } else {
+                        form.find('.pointsGroup.'+this.value).addClass('hide').find('input').val('');
+                    }
+                })
+
+            });
         });
     }
 };

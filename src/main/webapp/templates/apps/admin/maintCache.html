@@ -26,6 +26,9 @@
                 max-height: 200px;
                 overflow-y: scroll;
             }
+            .duration {
+                vertical-align: top !important;
+            }
         </style>
     </head>
     <body class="manageApplications appsContainer">
@@ -33,9 +36,12 @@
             <ul class="nav nav-tabs tab-bricky">
                 <li><a data-toggle="tab" href="#hibernate">Hibernate cache</a></li>
                 <li><a data-toggle="tab" href="#cache">Provider caches</a></li>
+                <li><a data-toggle="tab" href="#sql">SQL</a></li>
+                <li><a data-toggle="tab" href="#perRequestSql">Per request SQL</a></li>
+                <li><a data-toggle="tab" href="#sqlStats">SQL Stats</a></li>
             </ul>
             <div class="tab-content">
-                
+
                 <div id="hibernate" class="tab-pane">
                     <table class="table table-striped">
                         <tbody>
@@ -103,7 +109,7 @@
                                 <th>SessionCloseCount</th>
                                 <td>$page.cacheStats.SessionCloseCount</td>
                             </tr>
-                            
+
                             <tr>
                                 <th>SessionOpenCount</th>
                                 <td>$page.cacheStats.SessionOpenCount</td>
@@ -120,24 +126,24 @@
                                 <th>PrepareStatementCount</th>
                                 <td>$page.cacheStats.PrepareStatementCount</td>
                             </tr>
-                            
-                            
-                            
+
+
+
                         </tbody>
                     </table>
-                    
+
                     <h2>Entities</h2>
                     <table class="table table-striped">
                         <tr>
                             <th>Entity</th>
-                            <th>Loads</th>                            
+                            <th>Loads</th>
                             <th>Fetches</th>
-                            
+
                             <th>Deletes</th>
                             <th>Inserts</th>
                             <th>Updates</th>
                             <th>OptimisticFailures</th>
-                            
+
                             <th>Hits</th>
                             <th>Misses</th>
                             <th>Puts</th>
@@ -145,9 +151,9 @@
                         </tr>
                         <tr>
                             <th  colspan="7">High volume query cache</th>
-                            #set( $secondLevelStats = false )                            
-                            #set( $secondLevelStats = $page.cacheStats.getSecondLevelCacheStatistics("hibernate.query.highvolume") )                            
-                            
+                            #set( $secondLevelStats = false )
+                            #set( $secondLevelStats = $page.cacheStats.getSecondLevelCacheStatistics("hibernate.query.highvolume") )
+
                             #if( $secondLevelStats )
                             <td>$secondLevelStats.HitCount</td>
                             <td>$secondLevelStats.MissCount</td>
@@ -155,13 +161,13 @@
                             <td>$secondLevelStats.ElementCountInMemory</td>
                             #else
                             <td colspan="4">No second level cache</td>
-                            #end                            
+                            #end
                         </tr>
                         <tr>
                             <th  colspan="7">Standard query cache</th>
-                            #set( $secondLevelStats = false )                            
-                            #set( $secondLevelStats = $page.cacheStats.getSecondLevelCacheStatistics("hibernate.org.hibernate.cache.internal.StandardQueryCache") )                            
-                            
+                            #set( $secondLevelStats = false )
+                            #set( $secondLevelStats = $page.cacheStats.getSecondLevelCacheStatistics("hibernate.org.hibernate.cache.internal.StandardQueryCache") )
+
                             #if( $secondLevelStats )
                             <td>$secondLevelStats.HitCount</td>
                             <td>$secondLevelStats.MissCount</td>
@@ -169,22 +175,22 @@
                             <td>$secondLevelStats.ElementCountInMemory</td>
                             #else
                             <td colspan="4">No second level cache</td>
-                            #end                            
-                        </tr>                        
+                            #end
+                        </tr>
                         #foreach($entityName in $page.cacheStats.EntityNames)
                         #set( $entityStats =  $page.cacheStats.getEntityStatistics($entityName) )
-                                                
+
                         #set( $secondLevelStats = $page.cacheStats.getSecondLevelCacheStatistics("hibernate.$entityName") )
                         <tr>
                             <th>$entityName</th>
-                            <td>$entityStats.LoadCount</td>                            
+                            <td>$entityStats.LoadCount</td>
                             <td>$entityStats.FetchCount</td>
-                            
+
                             <td>$entityStats.DeleteCount</td>
                             <td>$entityStats.InsertCount</td>
                             <td>$entityStats.UpdateCount</td>
                             <td>$entityStats.OptimisticFailureCount</td>
-                            
+
                             #if( $secondLevelStats )
                             <td>$secondLevelStats.HitCount</td>
                             <td>$secondLevelStats.MissCount</td>
@@ -196,24 +202,26 @@
                         </tr>
                         #end
 
-                        
+
                     </table>
                 </div>
                 <div id="cache" class="tab-pane">
                     #set( $caches = $page.caches )
-                    
+
                     <div class="alert alert-info">
-                        <h3>Cluster members: $page.clusterMembers.size()</h3>
-                        #foreach($m in $page.clusterMembers)
-                        <span class="label label-info" >$m</span>
-                        #end
+                        <h3>Cluster state</h3>
+                        <ul class="list">
+                            #foreach($m in $page.clusterMembers)
+                            <li>$m</li>
+                            #end
+                        </ul>
                     </div>
-                    
+
                     <form action="$page.href" method="POST">
                         <input type="hidden" name="flushCache" value="true"/>
                         <button class="btn btn-danger">Flush cache</button>
                     </form>
-                    
+
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -232,7 +240,109 @@
                             #end
                         </tbody>
                     </table>
-                </div>                
+                </div>
+                <div id="sql" class="tab-pane">
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Duration (ms)</th>
+                                <th>SQL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($sql in $page.slowQueries )
+                            <tr>
+                                <td class="duration">$sql.duration</td>
+                                <td>$sql.markedUpSql</td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+                <div id="perRequestSql" class="tab-pane">
+                    <div class="container">
+
+                        #foreach($requestLogs in $page.perRequestLogs )
+                        <div class="row" data-toggle="collapse" data-target="#details-$requestLogs.id">
+                            <div class="col-md-6">
+                                <h2>$requestLogs.method | $requestLogs.url</h2>
+                            </div>
+                            <div class="col-md-2">
+                                <b>$formatter.formatNumericNoDecimal($requestLogs.requestSqlDuration) ms</b>
+                                <br/>
+                                <small class="muted">Total duration</small>
+                            </div>
+                            <div class="col-md-2">$formatter.formatDateTime($requestLogs.createdDate)</div>
+                            <div class="col-md-2">$requestLogs.queries.size() queries</div>
+                        </div>
+                        <div id="details-$requestLogs.id" class="collapse out">
+                            #foreach($sql in $requestLogs.queries )
+                            <div class="row">
+                                <div class="col-md-1">$formatter.formatNumericNoDecimal( $sql.duration) ms</div>
+                                <div class="col-md-11">$sql.markedUpSql</div>
+                            </div>
+                            #end
+                        </div>
+                        #end
+                        <hr/>
+                    </div>
+                </div>
+
+                <div id="sqlStats" class="tab-pane">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Unique from clauses</th>
+                            <td>$page.mapOfStatsByFrom.size()</td>
+                        </tr>
+                        <tr>
+                            <th>Total duration</th>
+                            <td>$page.totalDuration</td>
+                        </tr>
+                        <tr>
+                            <th>Executions:</th>
+                            <td>$page.executions</td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Duration</th>
+                                <th>Count</th>
+                                <th>Avg</th>
+                                <th>From</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach( $stat in $page.mapOfStatsByFrom )
+                            <tr>
+                                <td>$stat.stats.totalDuration</td>
+                                <td>$stat.stats.count</td>
+                                <td>$stat.stats.averageDuration</td>
+                                <td>$stat.stats.from(100)</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td colspan="3">
+                                    $stat.sqlInfo.markedUpSql
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td colspan="3">
+                                    <ul class="list">
+                                    #foreach($stackItem in $stat.stats.callStack)
+                                    <li>$stackItem</li>
+                                    #end
+                                    </ul>
+                                </td>
+                            </tr>
+
+                            #end
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </body>

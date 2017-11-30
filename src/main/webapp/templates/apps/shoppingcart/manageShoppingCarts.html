@@ -30,18 +30,36 @@
                         </div>
                     </div>
                     <div class="col-md-6 text-right">
-                        <div class="btn-group" role="group">
-                        <a href="#" data-toggle="modal" data-target="#modalUploadCsv" class="btn btn-sm btn-info"><i class="fa fa-upload"></i> Upload CSV</a>
-                        <a href="carts.csv" download="carts.csv" id="cartCSV" class="btn btn-sm btn-info"><i class="fa fa-download"></i> Download CSV</a>
-                        <div class="btn-group">
-                            <a role="button" href="#" class="btn btn-success btn-sm markFulfilled"><i class="fa fa-check"></i> Fulfilled</a>
-                            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li class="presentation" role="menuitem"><a href="#" class="deleteCart"><i class="glyphicon glyphicon-trash"></i> Delete</a></li>
-                            </ul>
-                        </div>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-list"></i> Tools&nbsp;<span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" role="menu">
+                                    <li class="presentation" role="menuitem">
+                                        <a href="#" data-toggle="modal" data-target="#modalUploadCsv"><i class="fa fa-upload"></i> Upload CSV</a>        
+                                    </li>
+                                    <li class="presentation" role="menuitem">
+                                        <a href="carts.csv" download="carts.csv" id="cartCSV"><i class="fa fa-download"></i> Download CSV</a>        
+                                    </li>
+                                    <!--
+                                    <li role="separator" class="divider"></li>
+                                    <li class="presentation" role="menuitem">
+                                        <a href="#" data-toggle="modal" data-target="#modalAddNewOrder"><i class="fa fa-plus"></i> Add order</a>
+                                    </li>
+                                    -->
+                                </ul>
+                            </div>
+
+                            <div class="btn-group btn-group-sm">
+                                <a role="button" href="#" class="btn btn-success markFulfilled"><i class="fa fa-check"></i> Fulfilled</a>
+                                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" role="menu">
+                                    <li class="presentation" role="menuitem"><a href="#" class="deleteCart"><i class="glyphicon glyphicon-trash"></i> Delete</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -73,7 +91,7 @@
                             <tr>
                                 #genStatus($v)
                                 <td><a href="/manageUsers/$v.cart.profile.id" target="_blank">$v.cart.profile.formattedName</a></td>
-                                <td><abbr class="timeago" title="$formatter.formatDateISO8601($v.cart.orderedDate)">$v.cart.orderedDate</abbr></td>
+                                <td><abbr class="timeago" title="$formatter.formatDateISO8601($v.cart.orderedDate, $rootFolder.organisation.timezone)">$!formatter.formatDateTime($v.cart.orderedDate, $rootFolder.organisation.timezone)</abbr></td>
                                 <td class="clickable" data-href="$v.href">$v.description</td>
                                 <td class="text-center">$formatter.toDecimal($v.totalItems, 0)</td>
                                 <td class="text-center">$formatter.formatCurrency($v.totalCost)</td>
@@ -140,6 +158,106 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+        <div id="modalAddNewOrder" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Add a new order</h4>
+                    </div>
+                    <form class="form-horizontal" method="POST" action=".">
+                        <input type="hidden" name="addOrder" value="true"/>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="addressLine1" class="col-sm-3 control-label">Profile</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control required" id="shoppingCartFindProfile" placeholder="Type to search..." />
+                                            <input type="hidden" name="profileId"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="website" class="col-sm-3 control-label">Website</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control required" name="website">
+                                                <option value="">[ NONE ]</option>
+                                                #foreach($w in $rootFolder.websites)
+                                                #if(!$w.deleted())
+                                                <option value="$w.name">$formatter.firstNotNull($w.title, $w.name)</option>
+                                                #end
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="addressLine1" class="col-sm-3 control-label">Address Line 1</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="addressLine1" placeholder="Address Line 1">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="addressLine2" class="col-sm-3 control-label">Address Line 2</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="addressLine2" placeholder="Address Line 2">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="city" class="col-sm-3 control-label">City</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="city" placeholder="City">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="addressState" class="col-sm-3 control-label">State</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="addressState" placeholder="State">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="country" class="col-sm-3 control-label">Country</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="country" placeholder="Country">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="postcode" class="col-sm-3 control-label">Postcode</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="postcode" placeholder="Postcode">
+                                        </div>
+                                    </div>  
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="postcode" class="col-sm-3 control-label">Store Type</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control required" name="storeType">
+                                                <option value="">[ NONE ]</option>
+                                                <option value="rewardStore">Reward Store</option>
+                                                <option value="ecommerceStore">eCommerce Store</option>
+                                            </select>
+                                        </div>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i>&nbsp;Create</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 

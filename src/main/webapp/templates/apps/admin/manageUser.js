@@ -1,8 +1,6 @@
 function initManageUsers() {
-    flog("initManageUsers.2");
     initSettingPanel();
     initSearchBusiness();
-    flog("initSearchUser.0");
     initSearchUser();
     initSelectAll();
     initRemoveUsers();
@@ -17,10 +15,10 @@ function initManageUsers() {
 }
 
 function initSaveAsDynamicGroup() {
-    $("body").on("click", "#btnSaveDynaGroup", function(e) {
+    $("body").on("click", "#btnSaveDynaGroup", function (e) {
         e.preventDefault();
         var newTitle = prompt("Please enter the name for the new dynamic group");
-        if( newTitle ) {
+        if (newTitle) {
             
             var uri = URI(window.location);
             
@@ -36,16 +34,16 @@ function initSaveAsDynamicGroup() {
                 success: function (data) {
                     flog('success', data)
                     if (data.status) {
-                        Msg.info("Created group, redirecting..")
+                        Msg.info("Created group, redirecting..", 'saveDynamicGroup')
                         window.location = data.nextHref;
                     } else {
-                        Msg.error('Oh No! Something went wrong! ' + data.messages);
+                        Msg.error('Oh No! Something went wrong! ' + data.messages, 'saveDynamicGroup');
                     }
                 },
                 error: function (resp) {
-                    Msg.error('An error occured attempting to remove the oauth signature. Please check your internet connection');
+                    Msg.error('An error occured attempting to remove the oauth signature. Please check your internet connection', 'saveDynamicGroup');
                 }
-            });            
+            });
         }
     });
 }
@@ -90,11 +88,11 @@ function initRemoveOAuthCred() {
                     if (data.status) {
                         $('#oauthLogins').reloadFragment();
                     } else {
-                        Msg.error('Oh No! Something went wrong! ' + data.messages);
+                        Msg.error('Oh No! Something went wrong! ' + data.messages, 'removeOAuthCred');
                     }
                 },
                 error: function (resp) {
-                    Msg.error('An error occured attempting to remove the oauth signature. Please check your internet connection');
+                    Msg.error('An error occured attempting to remove the oauth signature. Please check your internet connection', 'removeOAuthCred');
                 }
             });
         });
@@ -103,13 +101,8 @@ function initRemoveOAuthCred() {
 
 function initUploadUsers() {
     var modalUploadCsv = $('#modal-upload-csv');
-    //$('.btn-upload-users-csv').click(function (e) {
-    //    e.preventDefault();
-    //
-    //    modalUploadCsv.modal('show');
-    //});
-    
     var modalMatchOrgsCsv = $('#modal-match-orgs-csv');
+    
     $('.btn-match-orgs').click(function (e) {
         e.preventDefault();
         
@@ -128,7 +121,7 @@ function initUploadUsers() {
             resultUploadCsv.find('.num-unmatched').text(data.result.data.unmatched.length);
             showUnmatched(resultUploadCsv, data.result.data.unmatched);
             resultUploadCsv.show();
-            Msg.success('Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of members');
+            Msg.success('Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of members', 'uploadUsers');
         }
     });
     
@@ -287,7 +280,7 @@ function doSearch() {
             $('#searchStats').replaceWith(newDom.find('#searchStats'));
             
             initSort();
-            initLoginAs();            
+            initLoginAs();
         },
         error: function (resp) {
             Msg.error('An error occured doing the user search. Please check your internet connection and try again', 'search');
@@ -308,11 +301,11 @@ function doUpdateUserId(newUserId) {
             if (data.status) {
                 window.location.reload();
             } else {
-                Msg.error('Could not change the user\'s ID: ' + data.messages);
+                Msg.error('Could not change the user\'s ID: ' + data.messages, 'updateUserId');
             }
         },
         error: function (resp) {
-            Msg.error('An error occured attempting to update the userID. Please check your internet connection');
+            Msg.error('An error occured attempting to update the userID. Please check your internet connection', 'updateUserId');
         }
     });
 }
@@ -330,11 +323,11 @@ function doRemoveCreds() {
             if (data.status) {
                 window.location.reload();
             } else {
-                Msg.error('Could not change the user\'s ID: ' + data.messages);
+                Msg.error('Could not change the user\'s ID: ' + data.messages, 'removeCreds');
             }
         },
         error: function (resp) {
-            Msg.error('An error occured attempting to update the userID. Please check your internet connection');
+            Msg.error('An error occured attempting to update the userID. Please check your internet connection', 'removeCreds');
         }
     });
 }
@@ -428,7 +421,7 @@ function initRemoveUsers() {
         flog('removeUsers', node, node.is(':checked'));
         var checkBoxes = $('#table-users').find('tbody input[name=toRemoveId]:checked');
         if (checkBoxes.length == 0) {
-            Msg.error('Please select the users you want to remove by clicking the checkboxs to the right');
+            Msg.error('Please select the users you want to remove by clicking the checkboxs to the right', 'disableUsers');
         } else {
             Kalert.confirm('Are you sure you want to remove ' + checkBoxes.length + ' users?', function () {
                 doRemoveUsers(checkBoxes, "remove");
@@ -444,7 +437,7 @@ function initUnsubscribeUsers() {
         flog('unsubscribeUsers', node, node.is(':checked'));
         var checkBoxes = $('#table-users').find('tbody input[name=toRemoveId]:checked');
         if (checkBoxes.length == 0) {
-            Msg.error('Please select the users you want to unsubscribe by clicking the checkboxs to the right');
+            Msg.error('Please select the users you want to unsubscribe by clicking the checkboxs to the right', 'disableUsers');
         } else {
             Kalert.confirm('Are you sure you want to unsubscribe ' + checkBoxes.length + ' users?', function () {
                 doRemoveUsers(checkBoxes, "unsubscribe");
@@ -461,7 +454,7 @@ function initAddToGroup() {
         flog('addToGroup', node, node.is(':checked'));
         var checkBoxes = $('#table-users').find('tbody input[name=toRemoveId]').filter(':checked');
         if (checkBoxes.length === 0) {
-            Msg.error('Please select the users you want to add by clicking the checkboxs to the right');
+            Msg.error('Please select the users you want to add by clicking the checkboxs to the right', 'addToGroup');
         } else {
             modal.modal('show');
         }
@@ -481,7 +474,7 @@ function initAddToGroup() {
             });
             doAddUsersToGroup(checkBoxes);
         } else {
-            Msg.error('Please select group(s) to add users to');
+            Msg.error('Please select group(s) to add users to', 'addToGroup');
         }
     });
     
@@ -501,13 +494,13 @@ function doAddUsersToGroup(data) {
             $('#modal-add-to-group').modal('hide');
             if (data.status) {
                 doSearch();
-                Msg.success('Added users ok');
+                Msg.success('Added users ok', 'addToGroup');
             } else {
-                Msg.error('There was a problem adding users. Please try again and contact the administrator if you still have problems');
+                Msg.error('There was a problem adding users. Please try again and contact the administrator if you still have problems', 'addToGroup');
             }
         },
         error: function (resp) {
-            Msg.error('An error occurred adding users. You might not have permission to do this');
+            Msg.error('An error occurred adding users. You might not have permission to do this', 'addToGroup');
         }
     });
 }
@@ -530,25 +523,27 @@ function doRemoveUsers(checkBoxes, action) {
         success: function (data) {
             flog('success', data);
             if (data.status) {
-                doSearch();
                 if (action == "remove") {
-                    Msg.success('Removed users ok');
+                    Msg.success('Removed users ok', 'disableUsers');
                 } else {
-                    Msg.success('Unsubscribe users ok');
+                    Msg.success('Unsubscribe users ok', 'disableUsers');
                 }
+                setTimeout(function () {
+                    doSearch();
+                }, 1000);
             } else {
                 if (action == "remove") {
-                    Msg.error('There was a problem removing users. Please try again and contact the adm	strator if you still have problems');
+                    Msg.error('There was a problem removing users. Please try again and contact the adm	strator if you still have problems', 'disableUsers');
                 } else {
-                    Msg.error('There was a problem unsubscribing users. Please try again and contact the adm strator if you still have problems');
+                    Msg.error('There was a problem unsubscribing users. Please try again and contact the adm strator if you still have problems', 'disableUsers');
                 }
             }
         },
         error: function (resp) {
             if (action == "remove") {
-                Msg.error('An error occurred removing users. You might not have permission to do this');
+                Msg.error('An error occurred removing users. You might not have permission to do this', 'disableUsers');
             } else {
-                Msg.error('An error occurred unsubcribing users. You might not have permission to do this');
+                Msg.error('An error occurred unsubcribing users. You might not have permission to do this', 'disableUsers');
             }
         }
     });

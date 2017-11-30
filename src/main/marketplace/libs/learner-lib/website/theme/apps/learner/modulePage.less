@@ -4,9 +4,11 @@
             width: 100%;
         }
     }
+    
     iframe {
         width: 100% !important;
     }
+    
     .module-container {
         position: relative;
         min-height: 300px;
@@ -14,6 +16,62 @@
         .navbar {
             margin-bottom: 0;
         }
+    }
+}
+
+.panel.panel-module-page-toolbar {
+    box-shadow: none;
+    
+    .panel-heading {
+        border-bottom: 0 !important;
+    }
+    
+    .btn {
+        color: @text-color;
+        
+        > * {
+            display: inline-block;
+            vertical-align: middle;
+            
+            + * {
+                margin-left: 5px;
+            }
+        }
+    }
+}
+
+.module-pages {
+    .modPage {
+        i {
+            font-size: 1.4em;
+            vertical-align: text-bottom;
+        }
+        
+        .fa-check-circle {
+            display: none;
+        }
+    }
+    
+    .modPage.completed {
+        .fa-circle-o {
+            display: none;
+        }
+        
+        .fa-check-circle {
+            display: inline-block;
+        }
+    }
+}
+
+ul.tools {
+    list-style-type: none;
+    margin: 0;
+    li {
+        display: block;
+    }
+    li.modPerc {
+        float: left;
+        font-size: 200%;
     }
 }
 
@@ -91,10 +149,10 @@ ol.quiz {
 input.error,
 textarea.error,
 select.error {
-  color: #b94a48;
-  border-color: #ee5f5b;
-  &:focus {
-    border-color: darken(#ee5f5b, 10%);
-    .box-shadow(0 0 6px lighten(#ee5f5b, 20%));    
-  }
+    color: #b94a48;
+    border-color: #ee5f5b;
+    &:focus {
+        border-color: darken(#ee5f5b, 10%);
+        .box-shadow(0 0 6px lighten(#ee5f5b, 20%));
+    }
 }

@@ -1,0 +1,16 @@
+#if($page)
+    #if ($orientation == 'horizontal')
+        #set($image = $page.horizontalImageHref)
+    #elseif ($orientation == 'vertical')
+        #set($image = $page.verticalImageHref)
+    #end
+    #if($image)
+        <div class="blog-article-image">
+            <img src="$image" class="img-responsive horiz-image" />
+        </div>
+    #end
+#else
+    <div class="blog-article-image">
+        <img src="/static/images/photo_holder.png" class="img-responsive horiz-image" />
+    </div>
+#end

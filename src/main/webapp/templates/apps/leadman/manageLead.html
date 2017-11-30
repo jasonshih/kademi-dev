@@ -5,7 +5,7 @@
         <script type="text/javascript" src="/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.min.js"></script>
         <script type="text/javascript" src="/static/bootstrap-tagsinput/0.6.1/bootstrap3-typeahead.min.js"></script>
         <script type="text/javascript" src="/static/dotdotdot/1.7.4/jquery.dotdotdot.min.js"></script>
-        <script type="text/javascript" src="/theme/apps/leadman/manageLead.js?v=1"></script>
+        <script type="text/javascript" src="/theme/apps/leadman/manageLead.js?v=0002"></script>
         <link rel="stylesheet" type="text/css" href="/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.css" />
         <link rel="stylesheet" type="text/css" href="/theme/apps/leadman/manageLead.css" />
     </head>
@@ -66,12 +66,13 @@
                     <h2>
                         #if($page.leadOrg)
                         #if($page.profile)
-                        $page.customerDescription ($page.leadOrg.formattedName)
+                        <a href="/manageUsers/$page.profile.id/">$page.customerDescription</a>
+                        ($page.leadOrg.formattedName)
                         #else
-                        <$page.leadOrg.formattedName
+                        $page.leadOrg.formattedName
                         #end
                         #elseif( $page.profile )
-                        $page.customerDescription
+                        <a href="/manageUsers/$page.profile.id/">$page.customerDescription</a>
                         #else
                         $page.customerDescription
                         #end
@@ -83,9 +84,7 @@
                                 <i class="fa fa-plus-circle"></i> Tags
                             </a>
                             <ul class="dropdown-menu">
-                                <li style="padding: 3px 15px">
-                                    <strong>Quick add</strong>
-                                </li>
+                                <li class="dropdown-header"><strong>Quick add</strong></li>
                                 #foreach($group in $page.tags)
                                 <li class="addTag">
                                     <a href="$group.name">
@@ -131,8 +130,14 @@
             #end
 
             <p class="lead">
-                Journey: <a href="/funnels/$page.funnel.name">$page.funnel.title</a>
-                , started 
+                Journey: <a href="/funnels/$page.funnel.name">
+                    #if( $page.funnel.title )
+                    $page.funnel.title
+                    #else
+                    $page.funnel.name
+                    #end
+                </a>
+                , started
                 <abbr title="$formatter.formatDateISO8601($page.createDate)" class="info timeago">$page.createDate</abbr>
             </p>
 
@@ -210,8 +215,8 @@
                                             </select>
                                         </div>
                                     </div>
-
                                     #foreach($field in $page.extraFields)
+                                    #if($field.fileUpload == false)
                                     <div class="form-group">
                                         <label class="control-label col-sm-3">$field.title</label>
                                         <div class="col-sm-8">
@@ -219,7 +224,21 @@
                                         </div>
                                     </div>
                                     #end
+                                    #end
                                 </form>
+
+                                <div class="form-horizontal">
+                                    #foreach($field in $page.extraFields)
+                                    #if($field.fileUpload == true)
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">$field.title</label>
+                                        <div class="col-sm-8">
+                                            $field.html($field.value, ' immediateUpdate form-control', 'extraField_')
+                                        </div>
+                                    </div>
+                                    #end
+                                    #end
+                                </div>
 
                             </div>
                             <div class="col-sm-4">
@@ -498,7 +517,7 @@
                                 </li>
                                 #end
 
-                            </ul>                        
+                            </ul>
                         </div>
                     </div>
 
@@ -1247,6 +1266,34 @@
     #end
     <span title="$file.contentType"><i class="fa fa-2x $fIcon"></i></span>
     #end
+
+    <div class="modal fade" id="uploadExtraFieldFileModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Upload Files</h4>
+                </div>
+                <form method="post" action="$page.href" class="form-horizontal" enctype="multipart/form-data">
+                    <input type="hidden" name="uploadExtraFieldFileModal" value="uploadExtraFieldFileModal" />
+                    <input type="hidden" id="extraField" name="extraField" value="" />
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-md-9">
+                                <label for="exampleInputFile"></label>
+                                <input name="files" type="file" multiple="true" class="required" id="exampleInputFile" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                        <button class="btn btn-primary" type="submit">Upload</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
 
 </body>
 </html>

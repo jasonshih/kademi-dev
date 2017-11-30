@@ -12,8 +12,12 @@
         <title>Edit: $!fileTitle</title>
         <link href="/theme/apps/admin/contentEditor.css" rel="stylesheet" type="text/css" />
 
+
+        
+        
+        
         <script type="text/javascript">
-            // Templates should push page init function into this array. It will then be run after outer template init functions.
+            // Templates should push page init function into this array. It will then be run after outer template init functions. X2
             var pageInitFunctions = new Array();
         </script>
 
@@ -34,7 +38,6 @@
         <script type="text/javascript" src="/static/ckeditor456/ckeditor.js">//</script>
         <script type="text/javascript" src="/static/ckeditor456/adapters/jquery.js">//</script>
         <script type="text/javascript" src="/static/jquery-ui/1.12.1-noui/jquery-ui.min.js">//</script>
-        <script type="text/javascript" src="/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js?v=1"></script>
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <script type="text/javascript" src="/theme/apps/admin/contentEditor.js">//</script>
 
@@ -157,15 +160,6 @@
                                                     <button type="button" class="btn btn-sm btn-warning btn-add-meta">Add new meta</button>
                                                 </p>
                                                 <div class="meta-wrapper">
-                                                    #foreach($metaName in $file.metaNames)
-                                                        <div class="input-group meta">
-                                                            <input type="text" class="form-control input-sm required" required="required" name="metaName.$foreach.index" placeholder="Meta name" value="$metaName" />
-                                                            <input type="text" class="form-control input-sm required" required="required" name="metaContent.$foreach.index" placeholder="Meta content" value="$file.getMeta($metaName)" />
-                                                            <span class="input-group-btn">
-                                                                <button class="btn btn-sm btn-danger btn-remove-meta" type="button"><i class="fa fa-remove"></i></button>
-                                                            </span>
-                                                        </div>
-                                                    #end
                                                 </div>
                                             </div>
                                         </div>
@@ -177,18 +171,6 @@
                                                     <button type="button" class="btn btn-sm btn-warning btn-add-param">Add new data/parameter</button>
                                                 </p>
                                                 <div class="param-wrapper">
-                                                    #foreach($paramName in $file.paramNames)
-                                                        #if ($paramName != 'title' && $paramName != 'itemType' && $paramName != 'category' && $paramName != 'tags' && $paramName !=
-                                                            'metas' && $paramName != 'body' && $paramName != 'cssFiles' && $paramName != 'template')
-                                                            <div class="input-group param">
-                                                                <input type="text" class="form-control input-sm required" required="required" name="paramTitle.$foreach.index" placeholder="Data/parameter title" value="$paramName" />
-                                                                <input type="text" class="form-control input-sm required" required="required" name="paramValue.$foreach.index" placeholder="Data/parameter value" value="$file.getParam($paramName)" />
-                                                                <span class="input-group-btn">
-                                                                    <button class="btn btn-sm btn-danger btn-remove-param" type="button"><i class="fa fa-remove"></i></button>
-                                                                </span>
-                                                            </div>
-                                                        #end
-                                                    #end
                                                 </div>
                                             </div>
                                         </div>
@@ -239,10 +221,6 @@
 
         #set($snippetsUrl = "_components?fileName=$!fname")
         #set($snippetsHandlersUrl = "${page.parent.href}_components?handlers&fileName=$!fname")
-        #if($isCustomApp)
-            #set($snippetsUrl = "/" + $snippetsUrl)
-            #set($snippetsHandlersUrl = "/_components?handlers&fileName=$!{fname}")
-        #end
         
         <script type="text/javascript">
             var useHash = "$!useHash";
@@ -251,6 +229,19 @@
                     '$group.name': '$formatter.firstNotNull($group.title, $group.name)',
                 #end}
             ;
+            
+            var metas = [];
+            #foreach($metaName in $file.metaNames)
+                metas.push({
+                    'name': '$metaName',
+                    'content': '$!file.getMeta($metaName)'
+                });
+            #end
+            
+            var params = {};
+            #foreach($paramName in $file.paramNames)
+                params['$paramName'] = '$!file.getParam($paramName)';
+            #end
 
             $(function () {
                 initContentEditorPage({
@@ -258,7 +249,8 @@
                     snippetsUrl: '$snippetsUrl',
                     snippetsHandlersUrl: '$snippetsHandlersUrl',
                     allGroups: allGroups,
-                    pagePath: '$!pagePath'
+                    pagePath: '$!pagePath',
+                    isCustomApp: $isCustomApp
                 });
             });
         </script>

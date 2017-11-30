@@ -201,10 +201,15 @@ function initIframeContentEditor(target, allGroups, snippetsUrl) {
             editor.before(loading);
             editor.hide();
             
+            var pagePath = editor.attr('data-page-path');
+            var basePath = editor.attr('data-base-path');
+            
             editor.contentEditor({
                 iframeMode: true,
                 allGroups: allGroups,
                 snippetsUrl: snippetsUrl || '_components',
+                basePath: basePath,
+                pagePath: pagePath,
                 onReady: function () {
                     loading.remove();
                 }
@@ -312,16 +317,8 @@ function initTabbable() {
 function initChkAll() {
     flog('initChkAll');
     
-    $('.chk-all').exist(function () {
-        this.each(function () {
-            var chkAll = $(this);
-            
-            chkAll.on('click', function () {
-                var table = chkAll.parents('table');
-                var chks = table.find('tbody input:checkbox');
-                chks.prop('checked', chkAll.is(':checked'));
-            });
-        });
+    $(document.body).on('click', '.chk-all', function () {
+        $(this).closest('table').find('tbody input:checkbox').prop('checked', this.checked);
     });
 }
 
@@ -795,11 +792,45 @@ $(function () {
     initEntityFinder();
     initCreateAccount();
     initAddWebsite();
+    initRepoSwitcher();
     
     $('.main-navigation-menu').children('li').children('a[href=#]').on('click', function (e) {
         e.preventDefault();
     });
 });
+
+function initRepoSwitcher() {
+    flog('initRepoSwitcher');
+    
+    var switchers = $('.repo-switcher');
+    
+    if (switchers.length > 0) {
+        $.getStyleOnce('/theme/assets/plugins/bootstrap-chosen/1.0.1/bootstrap-chosen.css');
+        $.getScriptOnce('/static/chosen/1.1.0/chosen.jquery.js', function () {
+            switchers.each(function () {
+                var switcher = $(this);
+                var btn = switcher.find('.btn');
+                var selector = switcher.find('.repo-switcher-selector');
+                
+                selector.chosen({
+                    search_contains: true
+                });
+                
+                btn.on('click', function (e) {
+                    e.preventDefault();
+                    
+                    setTimeout(function () {
+                        switcher.find('.chosen-container-single').trigger('mousedown');
+                    }, 50);
+                });
+                
+                selector.trigger('chosen:updated').on('change', function () {
+                    window.location.href = this.value;
+                });
+            });
+        });
+    }
+}
 
 function initEmailEventSimulator() {
     $(document.body).on('click', '.simulateEvent a', function (e) {
@@ -1408,3 +1439,154 @@ Kalert.confirmWait = function (title, message, type, btnClass, btnText, callback
 Kalert.close = function () {
     swal.close();
 };
+
+(function ($, window) {
+    var allGroups = null;
+    window.initFullscreenEditor = function (target) {
+        var isContentEditor = target.hasClass('contenteditor');
+        var isEdmEditor = target.hasClass('edmeditor');
+        var previewLink = target.attr('data-preview');
+        target.addClass('fullscreen-editor').removeClass('contenteditor htmleditor edmeditor').hide();
+        
+        if (isContentEditor || isEdmEditor) {
+            if (allGroups === null) {
+                $.ajax({
+                    url: '/groups/_DAV/PROPFIND?fields=name,milton:groupTitle',
+                    dataType: 'json',
+                    type: 'get',
+                    success: function (resp) {
+                        allGroups = {};
+                        $.each(resp, function (i, group) {
+                            allGroups[group.name] = group.groupTitle || group.name;
+                        });
+                    }, complete: function () {
+                        initKeditor(target, isContentEditor, isEdmEditor, allGroups);
+                    }
+                });
+            } else {
+                initKeditor(target, isContentEditor, isEdmEditor, allGroups);
+            }
+        } else {
+            initFullscreenEditorModal(target, isContentEditor, isEdmEditor);
+            initFullscreenEditorPreview(target, previewLink);
+        }
+    };
+    
+    function initKeditor(target, isContentEditor, isEdmEditor, allGroups) {
+        var previewLink = target.attr('data-preview');
+        if (isContentEditor) {
+            $.getScriptOnce('/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js', function () {
+                initFullscreenEditorModal(target, isContentEditor, isEdmEditor, allGroups);
+                initFullscreenEditorPreview(target, previewLink);
+            });
+        } else {
+            $.getScriptOnce('/static/jquery.edmEditor/1.0.0/jquery.edmEditor-1.0.0.js', function () {
+                initFullscreenEditorModal(target, isContentEditor, isEdmEditor, allGroups);
+                initFullscreenEditorPreview(target, previewLink);
+            });
+        }
+    }
+    
+    function initFullscreenEditorPreview(target, previewLink) {
+        var iframe = $('<iframe border="0" class="fullscreen-editor-preview"></iframe>');
+        
+        target.after(iframe);
+        iframe.attr('src', previewLink);
+    }
+    
+    function initFullscreenEditorModal(target, isContentEditor, isEdmEditor, allGroups) {
+        var content = target.html() || '';
+        var id = target.attr('id');
+        if (!id) {
+            id = 'editor-' + (new Date()).getTime();
+            target.attr('id', id);
+        }
+        var modalId = 'modal-fullscreen-' + id;
+        var modal = $(
+            '<div id="' + modalId + '" class="modal ' + (isContentEditor || isEdmEditor ? 'modal-full' : '') + ' fullscreen-editor-modal fade" tabindex="-1">' +
+            '    <div class="modal-dialog modal-lg">' +
+            '        <div class="modal-content">' +
+            '            <div class="modal-body">' +
+            '                <div class="editor-wrapper">' +
+            '                    <div class="editor-loading">' +
+            '                        <span>' +
+            '                            <span class="loading-icon">' +
+            '                                <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i>' +
+            '                            </span>' +
+            '                            <span class="loading-text">Initializing editor...</span>' +
+            '                        </span>' +
+            '                    </div>' +
+            '                    <textarea autocomplete="off" class="form-control">' + content + '</textarea>' +
+            '                </div>' +
+            '            </div>' +
+            '            <div class="modal-footer">' +
+            '                <button type="button" data-dismiss="modal" class="btn btn-sm btn-default">Close</button>' +
+            '                <button type="button" class="btn btn-sm btn-info fullscreen-editor-save">Save</button>' +
+            '            </div>' +
+            '        </div>' +
+            '    </div>' +
+            '</div>'
+        );
+        modal.appendTo(document.body);
+        
+        var textarea = modal.find('textarea');
+        var textareaId = 'modal-fullscreen-textarea-' + id;
+        textarea.attr('id', textareaId);
+        
+        var ckeditor;
+        var editorLoading = modal.find('.editor-loading');
+        if (isContentEditor || isEdmEditor) {
+            var pageName = getFileName(window.location.href);
+            var pagePath = target.attr('data-page-path') || '';
+            var basePath = target.attr('data-base-path') || '';
+            
+            textarea[isContentEditor ? 'contentEditor' : 'edmEditor']({
+                iframeMode: true,
+                snippetsUrl: './_components?fileName=' + pageName,
+                snippetsHandlersUrl: './_components?handlers&fileName=' + pageName,
+                basePath: basePath,
+                pagePath: pagePath,
+                allGroups: allGroups,
+                onReady: function () {
+                    editorLoading.hide();
+                }
+            });
+        } else {
+            initHtmlEditors(textarea, 500, null, null, null, function (editor) {
+                ckeditor = editor;
+                editorLoading.hide();
+            });
+        }
+        
+        var btnEdit = $('<button type="button" class="btn btn-sm btn-info fullscreen-editor-edit">Edit content</button>');
+        target.before(btnEdit);
+        btnEdit.wrap('<p class="fullscreen-editor-actions"></p>');
+        
+        btnEdit.on('click', function (e) {
+            e.preventDefault();
+            
+            modal.modal('show');
+        });
+        
+        modal.find('.fullscreen-editor-save').on('click', function (e) {
+            e.preventDefault();
+            
+            var content;
+            if (isContentEditor || isEdmEditor) {
+                content = textarea[isContentEditor ? 'contentEditor' : 'edmEditor']('getContent');
+            } else {
+                content = ckeditor.getData();
+            }
+            
+            target.val(content);
+            target.closest('form').trigger('submit');
+            modal.modal('hide');
+        });
+    }
+    
+    window.reloadFullscreenEditorPreview = function (target) {
+        var preview = target.attr('data-preview');
+        target.siblings('.fullscreen-editor-preview').attr('src', preview);
+    };
+    
+})(jQuery, window);

@@ -389,7 +389,7 @@
                 x: 0,
                 y: 60
             },
-            onClosed: function () {
+            onClose: function () {
                 if (category) {
                     Msg.instances[category] = null;
                 }
@@ -463,6 +463,12 @@
     
     // Main method
     Msg.show = function (message, type, category, timeout) {
+        if (!category) {
+            if (console && console.log) {
+                console.log('%cHey! You\'re using "Msg.' + type + '()" without specific any category \n%c- url="' + window.location.href + '"\n- templateName="' + $('meta[name=templateName]').attr('value') + '" \n%cMessage from duc@kademi.co', 'font-size: 24px; color: blue;', 'font-size: 16px; color: #000;', 'font-size: 11px; color: #aaa;');
+            }
+        }
+        
         if (Msg.singletonForCategory && typeof category === 'string' && Msg.instances[category]) {
             Msg.instances[category].update(message, type, timeout || Msg.timeout[type]);
             

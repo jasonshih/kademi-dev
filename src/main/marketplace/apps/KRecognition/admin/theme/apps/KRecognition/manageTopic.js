@@ -279,12 +279,14 @@
             var name = tr.data('levelname');
             var title = tr.data('leveltitle');
             var amount = tr.data('levelamount');
+            var colour =  tr.data('colour');
 
             modal.find('[name=updateLevel]').val(true);
             modal.find('[name=levelid]').val(levelid);
             modal.find('[name=newName]').val(name);
             modal.find('[name=title]').val(title);
             modal.find('[name=levelAmount]').val(amount);
+            modal.find('[name=colour]').val(colour);
 
             var display = title || name;
 

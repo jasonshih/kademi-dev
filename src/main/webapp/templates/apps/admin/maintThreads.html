@@ -66,7 +66,7 @@
                             #if( $entry.requestData )
                             <tr class="state-$entry.key.state">
                                 <td>
-                                    $entry.thread.name
+                                    $entry.threadName 
 
                                     <p>
                                         <br/>
@@ -80,7 +80,7 @@
                                     </p>
                                 </td>
                                 <td>
-                                    $entry.thread.state
+                                    $entry.threadName
                                     <br/>
                                     $entry.threadCpuTimeSecs secs cpu
                                 </td>
@@ -96,16 +96,22 @@
                             </tr>
                             #end
                             #end
+                            
+                            <tr>
+                                <td colspan="3">
+                                    <p class="text-center"><i>Non-request threads</i></p>                                    
+                                </td>
+                            </tr>
 
                             #foreach($entry in $list)
                             #if( !$entry.requestData )
+                            #if( $entry.threadState != "WAITING" )
                             <tr class="state-$entry.key.state">
                                 <td>
-                                    $entry.thread.name
-
+                                    $entry.threadName
                                 </td>
                                 <td>
-                                    $entry.thread.state
+                                    $entry.threadState
                                     <br/>
                                     $entry.threadCpuTimeSecs secs cpu
                                 </td>
@@ -119,6 +125,7 @@
                                     </div>
                                 </td>
                             </tr>
+                            #end
                             #end
                             #end
                         </tbody>

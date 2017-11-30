@@ -1,0 +1,116 @@
+#if ($page)
+    <div class="kcomments-area">
+        <div class="text-center small"><a href="#" class="btnShowHideComment">Hide comments</a></div>
+        <div class="kcomments-wrapper">
+            <div class="kcomments-stream">
+                <div class="text-center panel-body">
+                    <img src="/static/common/ajax-loader.gif" />
+                </div>
+            </div>
+            <form action="#" method="post" class="kcomment-form">
+                #if (!$profile)
+                <div class="form-group">
+                    <input type="text" placeholder="Email" name="email" class="form-control required email">
+                </div>
+                <div class="form-group">
+                    <input type="text" placeholder="First name" name="firstName" class="form-control">
+                </div>
+                <div class="form-group">
+                    <input type="text" placeholder="Last name" name="surName" class="form-control">
+                </div>
+                #end
+                <div class="form-group">
+                    <textarea class="form-control kcomment-textarea required" name="newComment" rows="2" placeholder="Ask a question, or offer an answer"></textarea>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" name="follow" value="true"> Notify me of follow-up comments by email.</label>
+                </div>
+                <div class="form-group text-right">
+                    <button type="submit" class="btn btn-info">Post</button>
+                </div>
+            </form>
+        </div>
+        <div class="hide kcommentsReplyWrap">
+            <p>&nbsp;</p>
+            <div class="clearfix">
+                <div class="col-sm-offset-1">
+                    <form method="post" class="kcomment-replyForm">
+                        #if (!$profile)
+                        <div class="form-group">
+                            <input type="text" placeholder="Email" name="email" class="form-control required email input-sm">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" placeholder="First name" name="firstName" class="form-control input-sm">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" placeholder="Last name" name="surName" class="form-control input-sm">
+                        </div>
+                        #end
+                        <input type="hidden" class="parentComment" name="parentComment" value="">
+                        <div class="form-group">
+                            <textarea class="form-control input-sm comment-reply-text required" rows="1" name="newComment" placeholder="Write a reply..."></textarea>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="follow" value="true"> Notify me of follow-up comments by email.</label>
+                        </div>
+                        <div class="form-group text-right">
+                            <button type="submit" class="btn btn-xs btn-info comment-reply-send">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+#else
+    <div class="kcomments-area">
+        <div class="text-center small"><a href="#" class="btnShowHideComment">Hide comments</a></div>
+        <div class="kcomments-wrapper" style="display: block;">
+            <div class="kcomments-stream">
+                <div class="comment" id="c1">
+                    <div class="comment-user">
+                        <a class="comment-user-pic" href="#"><img src="/static/images/avatar_holder.png" alt=""></a>
+                    </div>
+                    <div class="comment-detail">
+                        <p class="comment-content cmt">
+                        <a class="user comment-user-name" href="#">admin</a> Example Comment</p>
+                        <a class="comment-reply small" href="#">Reply</a>
+                        <abbr title="2017-05-16T02:54:00.585Z" class="comment-time auxText small text-muted">16/5/2017 9:54</abbr>
+                        <div class="comment-replies-wrapper" style="display: none;">
+                            <div class="comment-replies"></div>
+                            #if (!$profile)
+                            <div class="form-group">
+                                <input type="text" placeholder="Email" name="email" class="form-control required email input-sm">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" placeholder="First name" name="firstName" class="form-control input-sm">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" placeholder="Last name" name="surName" class="form-control input-sm">
+                            </div>
+                            #end
+                            <div class="form-group">
+                                <textarea class="form-control input-sm comment-reply-text" rows="1" data-parentid="c1" placeholder="Write a reply..."></textarea>
+                            </div>
+                            <div class="checkbox">
+                                <label><input type="checkbox" name="follow" value="true"> Notify me of follow-up comments by email.</label>
+                            </div>
+                            <div class="form-group text-right">
+                                <button type="button" class="btn btn-xs btn-info comment-reply-send">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+            
+            <form action="#" method="post" class="kcomment-form">
+                <div class="form-group">
+                    <p><textarea class="form-control kcomment-textarea" rows="1" placeholder="Ask a question, or offer an answer"></textarea></p>
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-success">Post</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+#end

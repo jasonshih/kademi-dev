@@ -1,12 +1,6 @@
-controllerMappings.addComponent("content/components", "menu", "html", "Displays a menu, usually at the top of a page", "Content App component;Menu");
-controllerMappings.addComponent("content/components", "toggleMenu", "html", "Displays a toggle menu which will toggled by a button", "Content App component;Menu");
-controllerMappings.addComponent("content/components", "button", "html", "Displays a Bootstrap button", "Content App component;Bootstrap component");
-controllerMappings.addComponent("content/components", "pageBody", "html", "Displays the page body in a template", "Content App component;Template");
-controllerMappings.addComponent("content/components", "templateBody", "html", "Displays the page template body in a theme template", "Content App component;Template");
-controllerMappings.addComponent("content/components", "portlet", "html", "Portlet section, which allows apps to inject content", "Content App component;Template;Portlet");
-controllerMappings.addComponent("content/components", "directoryIndex", "html", "Display directory list", "Content App component");
-controllerMappings.addComponent("content/components", "pageTitle", "html", "Displays the page title in a template", "Content App component");
-controllerMappings.addComponent("content/components", "breadcrumb", "html", "Displays the page breadcrumb", "Content App component;Bootstrap component");
 controllerMappings.addComponent("content/components", "socialLinks", "html", "Displays the social links", "Content App component");
 controllerMappings.addComponent("content/components", "errorDetails", "html", "Displays detailed error page", "Content App component");
 controllerMappings.addComponent("content/components", "htmlPanel", "html", "Displays panel with text and icon", "Content App component");
+controllerMappings.addComponent("content/components", "showHideButton", "html", "A button which causes all following content to be initially hidden, and is only shown when clicked", "Content App component");
+controllerMappings.addComponent("content/components", "rating", "html", "Shows a rating stars which is predefined by admin", "Content App component");
+controllerMappings.addComponent("content/components", "tile", "html", "Shows a tile which contains image, text and link", "Content App component");

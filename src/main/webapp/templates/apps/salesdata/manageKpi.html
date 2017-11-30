@@ -603,7 +603,7 @@
                             </div>
                             <div class="col-md-3">
                                 <h3>Assessment periods</h3>
-                                <button class="btn btn-sm btn-success kpiRewards" type="button" data-periodId="$selPeriod.id">
+                                <button class="btn btn-sm btn-success kpiRewards" type="button" data-period-id="$selPeriod.id">
                                     <span class="fa fa-dollar"></span>
                                     Allocate rewards for selected period
                                 </button>
@@ -1026,7 +1026,7 @@
                 });
                 $(".kpiRewards").click(function (e) {
                     e.preventDefault();
-                    var periodId = $(e.target).data("periodId");
+                    var periodId = $(e.target).data("period-id");
                     if (confirm("This will allocate rewards based on KPI achievements for results which have not already had rewards processing. Would you like to continue?")) {
                         submitProcess("processRewards", periodId);
                     }

@@ -1,12 +1,12 @@
 (function($){
-    $(document).ready(function(){
+    $(function(){
         if($('.password-do-reset-component').length > 0) {
             $("#passwordResetForm").forms({
                 onSuccess: function (resp) {
                     log("done", resp);
                     $(".presend").fhide();
                     $(".postsend").fshow();
-                    window.location = "/profile/";
+                    window.location = "/dashboard";
                 }
             });
             if ($("#token").val()) {
@@ -14,4 +14,5 @@
             }
         }
     });
+
 })(jQuery);

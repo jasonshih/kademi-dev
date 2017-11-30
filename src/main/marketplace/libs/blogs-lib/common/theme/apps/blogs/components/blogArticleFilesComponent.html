@@ -1,0 +1,15 @@
+#if ($page)
+    <div class="blog-article-files">
+        #foreach($f in $page.blogFiles)
+            <a class="btn btn-default blog-article-file" target="_blank" href="/_hashes/files/${f.fileHash}"><i class="fa fa-fw fa-file-o"></i> $f.fileName</a>
+        #end
+    </div>
+#else
+    <div class="blog-article-files">
+        <a class="btn btn-default blog-article-file"><i class="fa fa-fw fa-file-o"></i> File #1</a>
+        <a class="btn btn-default blog-article-file"><i class="fa fa-fw fa-file-o"></i> File #2</a>
+        <a class="btn btn-default blog-article-file"><i class="fa fa-fw fa-file-o"></i> File #3</a>
+        <a class="btn btn-default blog-article-file"><i class="fa fa-fw fa-file-o"></i> File #4</a>
+        <a class="btn btn-default blog-article-file"><i class="fa fa-fw fa-file-o"></i> File #5</a>
+    </div>
+#end

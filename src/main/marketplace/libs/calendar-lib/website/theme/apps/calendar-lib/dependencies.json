@@ -7,27 +7,9 @@
     ],
     "dependencies": [
         {
-            "css": {
-                "cssMedia": "all",
-                "path": "/theme/apps/calendar/calendars.css"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/calendar/calendars.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/calendar/dashboardUpcomingEvents.js"
-            }
-        },
-        {
           "css": {
               "cssMedia": "all",
-              "path": "/static/css/fullcalendar-1.6.4.css"
+              "path": "/static/fullcalendar/3.5.1/fullcalendar.min.css"
           }
         },
         {
@@ -45,13 +27,55 @@
         {
             "js": {
                 "group": "main",
-                "path": "/static/js/fullcalendar-1.6.4.js"
+                "path": "/static/fullcalendar/3.5.1/fullcalendar.min.js"
             }
         },
         {
             "js": {
                 "group": "main",
                 "path": "/static/daterangepicker/1.3.3/daterangepicker.js"
+            }
+        },
+        {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/calendar/calendars.less"
+            }
+        },
+        {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/calendar/multiCalendars.less"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/calendar/calendars.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/calendar/calendar.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/calendar/dashboardUpcomingEvents.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/calendar/multiCalendars.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/calendar/eventManager.js"
             }
         }
     ]

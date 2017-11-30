@@ -1,0 +1,14 @@
+{
+    "appDependencies": [
+        {
+            "appId": "contentEditor-lib",
+            "branch": "1.0.1"
+        },
+        {
+            "appId": "edmEditor-lib",
+            "branch": "1.0.1"
+        }
+    ],
+    "dependencies": [
+    ]
+}

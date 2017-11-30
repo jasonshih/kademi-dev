@@ -2,15 +2,7 @@
     "appDependencies": [
         {
             "appId": "blogs-lib",
-            "branch": "1.0.4"
-        }
-    ],
-    "dependencies": [
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/js/jquery.timeago.js"
-            }
+            "branch": "1.0.5"
         }
     ]
 }

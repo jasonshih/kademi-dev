@@ -1,6 +1,10 @@
 {
     "appDependencies": [
         {
+            "appId": "reporting-lib",
+            "branch": "1.1.7"
+        },
+        {
             "appId": "moment-lib",
             "branch": "2.18.3"
         },
@@ -30,7 +34,11 @@
         },
         {
             "appId": "googlemap-lib",
-            "branch": "1.0.2"
+            "branch": "1.0.3"
+        },
+        {
+            "appId": "paymentApp",
+            "branch": ""
         }
     ],
 
@@ -104,6 +112,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/milton-upload/1.0.1/jquery.milton-upload.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/leadman/jquery.kfunnel.js"
             }
         },
@@ -146,7 +160,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/leadman/leadProfileCoverComponent.js"
+                "path": "/theme/apps/leadman/leadProfileCover.js"
             }
         },
         {
@@ -158,7 +172,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/leadman/leadQuotesComponent.js"
+                "path": "/theme/apps/leadman/leadQuotes.js"
             }
         },
         {
@@ -265,6 +279,18 @@
         {
             "less": {
                 "path": "/theme/apps/leadman/leadsDash.less"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/bootstrap-sweetalert/1.0.1/dist/sweetalert.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/bootstrap-sweetalert/1.0.1/dist/sweetalert.css"
             }
         }
     ]

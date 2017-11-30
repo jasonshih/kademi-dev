@@ -5,6 +5,13 @@
  * @version: 0.0.0
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap (optional), FontAwesome (optional)
  */
+/**!
+ * KEditor - Kademi content editor
+ * @copyright: Kademi (http://kademi.co)
+ * @author: Kademi (http://kademi.co)
+ * @version: 0.0.0
+ * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap (optional), FontAwesome (optional)
+ */
 /**
  * KEditor accordion Component
  * @copyright: Kademi (http://kademi.co)
@@ -35,19 +42,15 @@
                 var panelCollapseId = keditor.generateId('collapse' + index);
                 p.find('.panel-heading').attr('id', itemId);
                 p.find('.panel-collapse').attr('aria-labelledby', itemId).attr('id', panelCollapseId);
-                var title = p.find('a[data-toggle]').html();
                 p.find('a[data-toggle]').attr('href', '#' + panelCollapseId).attr('aria-controls', '#' + panelCollapseId);
-                if (title.indexOf('<div>') === -1) {
-                    p.find('a[data-toggle]').html('<div>' + title + '</div>');
-                }
             });
 
             componentContent.find('.accordionWrap .panel-collapse').collapse('show');
             componentContent.find('.panel-footer, .btnAddAccordionItem').removeClass('hide');
-            componentContent.find('.panel-title a div').prop('contenteditable', true);
+            componentContent.find('.panel-title a .accHeadingText').prop('contenteditable', true);
             componentContent.find('.panel-collapse .panel-body').prop('contenteditable', true);
 
-            componentContent.find('.panel-title a div, .panel-collapse .panel-body').on('input', function (e) {
+            componentContent.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').on('input', function (e) {
                 if (typeof options.onComponentChanged === 'function') {
                     options.onComponentChanged.call(contentArea, e, component);
                 }
@@ -57,11 +60,11 @@
                 }
 
                 if (typeof options.onContentChanged === 'function') {
-                    options.onContentChanged.call(contentArea, e);
+                    // options.onContentChanged.call(contentArea, e);
                 }
             });
 
-            var editor = componentContent.find('.panel-title a div, .panel-collapse .panel-body').ckeditor(options.ckeditorOptions).editor;
+            var editor = componentContent.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').ckeditor(options.ckeditorOptions).editor;
             editor.on('instanceReady', function () {
                 flog('CKEditor is ready', component);
 
@@ -92,7 +95,7 @@
                 clone.find('.panel-collapse').attr('aria-labelledby', itemId).attr('id', panelCollapseId);
                 clone.find('a[data-toggle]').attr('href', '#' + panelCollapseId);
                 componentContent.find('.accordionWrap .panel-group').append(clone);
-                var editor = clone.find('.panel-title a div, .panel-collapse .panel-body').ckeditor(options.ckeditorOptions).editor;
+                var editor = clone.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').ckeditor(options.ckeditorOptions).editor;
                 editor.on('instanceReady', function () {
                     flog('CKEditor is ready', component);
 
@@ -105,10 +108,6 @@
 
         getContent: function (component, keditor) {
             var componentContent = component.children('.keditor-component-content');
-            componentContent.find('.panel-title a div').each(function () {
-                var h = $(this).html();
-                $(this).parent('a').html(h);
-            });
             componentContent.find('.panel-collapse .panel-body').each(function () {
                 var h = $(this).html();
                 $(this).replaceWith('<div class="panel-body">' + h + '</div>');
@@ -122,7 +121,10 @@
                 });
             }
             componentContent.find('.panel-footer, .btnAddAccordionItem').addClass('hide');
-
+            componentContent.find('[contenteditable]').removeAttr('contenteditable');
+            componentContent.find('.accHeadingText').each(function () {
+               $(this).css('outline', 'none').text($(this).text());
+            });
             return componentContent.html();
         },
 
@@ -156,13 +158,54 @@
                         comp.attr('data-panel-style', this.value);
                         comp.find('.panel').removeClass(old).addClass(this.value);
                     });
+                    
+                    $.getStyleOnce('/static/bootstrap-iconpicker/1.7.0/css/bootstrap-iconpicker.min.css');
+                    $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/iconset/iconset-fontawesome-4.2.0.min.js', function () {
+                        $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/bootstrap-iconpicker.min.js', function () {
+                            form.find('.btn-collapsed-icon, .btn-expanded-icon').iconpicker({
+                                iconset: 'fontawesome',
+                                cols: 10,
+                                rows: 4,
+                                placement: 'left'
+                            });
+                            
+                            form.find('.btn-collapsed-icon').on('change', function (e) {
+                                var component = keditor.getSettingComponent();
+                                component.attr('data-collapsed-icon', e.icon);
+                                component.find('.panelIconCollapsed').each(function () {
+                                    this.className = "panelIconCollapsed fa "+ e.icon;
+                                })
+                            });
+                            
+                            form.find('.btn-expanded-icon').on('change', function (e) {
+                                var component = keditor.getSettingComponent();
+                                component.attr('data-expanded-icon', e.icon);
+                                component.find('.panelIconExpanded').each(function () {
+                                    this.className = "panelIconExpanded fa "+ e.icon;
+                                })
+                            });
+                        });
+                    });
+                            
                 }
             });
         },
 
         showSettingForm: function (form, component, keditor) {
+            flog('showSettingForm "Accordion" component');
+            var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
+            
             form.find('.collapsedAll').prop('checked', component.attr('data-initial-collapsed') == 'true');
             form.find('.panelStyle').val(component.attr('data-panel-style'));
+            
+            $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/iconset/iconset-fontawesome-4.2.0.min.js', function () {
+                $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/bootstrap-iconpicker.min.js', function () {
+                    var iconCollapsed = dataAttributes['data-collapsed-icon'] || 'fa-caret-up';
+                    form.find('.btn-collapsed-icon').find('i').attr('class', 'fa ' + iconCollapsed).end().find('input').val(iconCollapsed);
+                    var iconExpanded = dataAttributes['data-expanded-icon'] || 'fa-caret-down';
+                    form.find('.btn-expanded-icon').find('i').attr('class', 'fa ' + iconExpanded).end().find('input').val(iconExpanded);
+                });
+            });
         }
     };
 })(jQuery);
@@ -241,7 +284,8 @@
             btnAudioFileInput.mselect({
                 contentTypes: ['audio'],
                 bs3Modal: true,
-                pagePath: window.location.pathname.replace('contenteditor', ''),
+                pagePath: keditor.options.pagePath,
+                basePath: keditor.options.basePath,
                 onSelectFile: function (url) {
                     instance.src = url;
                     instance.refreshAudioPlayerPreview();
@@ -308,9 +352,6 @@
     
 })(jQuery);
 
-/**
- * Created by Anh on 7/27/2016.
- */
 /**
  * KEditor Carousel Component
  * @copyright: Kademi (http://kademi.co)
@@ -382,15 +423,36 @@
                 success: function (resp) {
                     form.html(resp);
                     
-                    var basePath = window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1);
+                    $.getStyleOnce('/static/bootstrap-iconpicker/1.7.0/css/bootstrap-iconpicker.min.css');
+                    $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/iconset/iconset-fontawesome-4.2.0.min.js', function () {
+                        $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/bootstrap-iconpicker.min.js', function () {
+                            form.find('.btn-prev-icon, .btn-next-icon').iconpicker({
+                                iconset: 'fontawesome',
+                                cols: 10,
+                                rows: 4,
+                                placement: 'left'
+                            });
+                            
+                            form.find('.btn-prev-icon').on('change', function (e) {
+                                var carousel = keditor.getSettingComponent().find('.carousel');
+                                carousel.find('.glyphicon-chevron-left').attr('class', 'fa glyphicon-chevron-left ' + e.icon);
+                            });
+                            
+                            form.find('.btn-next-icon').on('change', function (e) {
+                                var carousel = keditor.getSettingComponent().find('.carousel');
+                                carousel.find('.glyphicon-chevron-right').attr('class', 'fa glyphicon-chevron-right ' + e.icon);
+                            });
+                        });
+                    });
+                    
                     var carouselAddImage = form.find('.carouselAddImage');
                     var carouselItemsWrap = form.find('.carouselItemsWrap');
                     
                     carouselAddImage.mselect({
                         contentTypes: ['image'],
                         bs3Modal: true,
-                        pagePath: basePath,
-                        basePath: basePath,
+                        pagePath: keditor.options.pagePath,
+                        basePath: keditor.options.basePath,
                         onSelectFile: function (url, relUrl, type, hash) {
                             flog('Keditor carousel selected a file', url, hash);
                             self.addItemToList(form, {
@@ -434,19 +496,22 @@
                         modalContent.modal('show');
                     });
                     
-                    $(document.body).on('click', '.carouselItem a.btn-remove-item', function (e) {
+                    form.on('click', '.carouselItem a.btn-remove-item', function (e) {
                         e.preventDefault();
                         
                         if (confirm('Are you sure that you want to delete this image?')) {
                             var btn = $(this);
                             var hash = btn.closest('.btn-group').siblings('[data-hash]').attr('data-hash');
                             
-                            self.refreshCarousel(keditor.getSettingComponent(), hash);
+                            var carousel = keditor.getSettingComponent().find('.carousel');
+                            carousel.find('[data-hash=' + hash + ']').remove();
                             btn.closest('.carouselItem').remove();
+                            
+                            self.refreshCarousel(keditor.getSettingComponent(), form);
                         }
                     });
                     
-                    $(document.body).on('click', '.carouselItem a.btn-edit-item', function (e) {
+                    form.on('click', '.carouselItem a.btn-edit-item', function (e) {
                         e.preventDefault();
                         
                         var carouselItem = $(this).closest('.carouselItem');
@@ -462,7 +527,7 @@
                     });
                     
                     
-                    $(document.body).on('click', '.carouselItem a.btn-edit-caption-item', function (e) {
+                    form.on('click', '.carouselItem a.btn-edit-caption-item', function (e) {
                         e.preventDefault();
                         
                         var carouselItem = $(this).closest('.carouselItem');
@@ -505,6 +570,14 @@
                         } else {
                             comp.attr('data-wrap', 'false');
                         }
+                    });
+                    
+                    form.find('.select-image-size').on('change', function () {
+                        var carousel = keditor.getSettingComponent().find('.carousel');
+                        
+                        carousel.attr('data-image-size', this.value);
+                        
+                        carousel.find('.carousel-img').css('background-size', this.value === 'centered' ? 'unset' : '');
                     });
                 }
             });
@@ -641,15 +714,29 @@
                 }
             });
             
-            var isWrap = component.find('.carousel').attr('data-wrap');
-            var pause = component.find('.carousel').attr('data-pause');
-            var interval = component.find('.carousel').attr('data-interval');
-            var height = component.find('.carousel').attr('data-height');
+            var carousel = component.find('.carousel');
+            var isWrap = carousel.attr('data-wrap');
+            var pause = carousel.attr('data-pause');
+            var interval = carousel.attr('data-interval');
+            var height = carousel.attr('data-height');
             
             form.find('.carouselPause').val(pause);
             form.find('.carouselInterval').val(interval);
             form.find('.carouselWrap').prop('checked', isWrap === 'true');
             form.find('.carouselHeight').val(height);
+            form.find('.select-image-size').val(carousel.attr('data-image-size') || 'stretched');
+            
+            $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/iconset/iconset-fontawesome-4.2.0.min.js', function () {
+                $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/bootstrap-iconpicker.min.js', function () {
+                    var iconPrev = carousel.find('.glyphicon-chevron-left').attr('class') || '';
+                    iconPrev = iconPrev.replace('glyphicon-chevron-left', '').replace('fa', '').trim();
+                    form.find('.btn-prev-icon').find('i').attr('class', 'fa ' + iconPrev).end().find('input').val(iconPrev);
+                    
+                    var iconNext = carousel.find('.glyphicon-chevron-right').attr('class') || '';
+                    iconNext = iconNext.replace('glyphicon-chevron-right', '').replace('fa', '').trim();
+                    form.find('.btn-next-icon').find('i').attr('class', 'fa ' + iconNext).end().find('input').val(iconNext);
+                });
+            });
         },
         
         addItemToCarousel: function (component, data) {
@@ -661,6 +748,7 @@
             var index = carouselInner.children().length;
             var cls = index === 0 ? 'active' : '';
             var backgroundUrl = "background-image: url('" + data.src + "')";
+            var backgroundSize = carousel.attr('data-image-size') === 'centered' ? ';background-size: unset' : '';
             
             carousel.find('.carousel-indicators').append(
                 '<li data-target="#' + id + '" data-slide-to="' + index + '" class="' + cls + '"></li>'
@@ -674,7 +762,7 @@
                 itemStr += '</div>';
             } else {
                 itemStr += '<div data-hash="' + data.hash + '" class="item ' + cls + '">';
-                itemStr += '   <div class="carousel-img" style="' + backgroundUrl + '"></div>';
+                itemStr += '   <div class="carousel-img" style="' + backgroundUrl + backgroundSize + '"></div>';
                 itemStr += '   <div class="carousel-caption">' + data.caption + '</div>';
                 itemStr += '</div>';
             }
@@ -991,34 +1079,26 @@
  * @version: @{version}
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
  */
-(function ($) {
+(function ($, window) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
     
     KEditor.components['googlemap'] = {
         init: function (contentArea, container, component, keditor) {
-            var script = component.find('script');
-            if (script.length) {
-                script.remove();
-            }
-            component.removeAttr('data-firstLoad');
-            var place = component.attr('data-place');
-            var maptype = component.attr('data-maptype');
-            if (place && maptype === 'manually') {
-                $(window).on('load', function () {
-                    component.find('.btn-component-setting').trigger('click');
-                });
-            }
+            flog('init "googlemap" component', component);
+            
+            this.callWhenGoogleMapReady(function () {
+                initKGoogleMap(component);
+            });
         },
+        
         getContent: function (component, keditor) {
             flog('getContent "googlemap" component', component);
+            
             var componentContent = component.children('.keditor-component-content');
             componentContent.find('.googlemap-cover').remove();
-            var place = component.attr('data-place');
-            var maptype = component.attr('data-maptype');
             component.find('.kgooglemap').html('');
-            var script = '<script>$(function(){if(!$(document.body).hasClass("content-editor-page")){var apiKey="AIzaSyBUcuZxwpBXCPztG7ot-rITXJbycPuS7gs";var s=document.createElement("script");s.type="text/javascript";s.async=true;s.defer=true;s.src="https://maps.googleapis.com/maps/api/js?key="+apiKey+"&callback=kgooglemapInit&libraries=places";$("head").append(s);window.kgooglemapInit=function(){var mapdiv=$(".kgooglemap").not(".hide");mapdiv.each(function(){var parent=$(this).parents("[data-type=component-googlemap]");if(parent.attr("data-maptype")!=="manually")return;var map=new google.maps.Map(this,{zoom:13,mapTypeId:"roadmap"});var place=parent.attr("data-place");var input=parent.find("input")[0];input.value=place;var searchBox=new google.maps.places.SearchBox(input);map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);setTimeout(function(){google.maps.event.trigger(input,"focus");google.maps.event.trigger(input,"keydown",{keyCode:13});},500);map.addListener("bounds_changed",function(){searchBox.setBounds(map.getBounds());});var markers=[];searchBox.addListener("places_changed",function(){var places=searchBox.getPlaces();if(places.length==0){return;}markers.forEach(function(marker){marker.setMap(null);});markers=[];var bounds=new google.maps.LatLngBounds();places.forEach(function(place){if(!place.geometry){console.log("Returned place contains no geometry");return;}var icon={url:place.icon,size:new google.maps.Size(71,71),origin:new google.maps.Point(0,0),anchor:new google.maps.Point(17,34),scaledSize:new google.maps.Size(25,25)};markers.push(new google.maps.Marker({map:map,icon:icon,title:place.name,position:place.geometry.location}));if(place.geometry.viewport){bounds.union(place.geometry.viewport);}else{bounds.extend(place.geometry.location);}});map.fitBounds(bounds);});})}}});</script>';
-            component.find('.embed-responsive').append(script);
+            
             return componentContent.html();
         },
         
@@ -1035,45 +1115,27 @@
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
-                    var apiKey = 'AIzaSyBUcuZxwpBXCPztG7ot-rITXJbycPuS7gs';
-                    var mapjs = '<script src="https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&callback=initKeditorMapSetting&libraries=places" async defer></script>';
-                    if (window.google && window.google.maps && google.maps.places) {
-                        mapjs = '';
-                    }
+                    form.html(resp);
                     
-                    form.append(
-                        mapjs + resp
-                    );
+                    self.callWhenGoogleMapReady(function () {
+                        var component = keditor.getSettingComponent();
+                        self.initAutocomplete(component, form);
+                    });
                     
-                    form.find('.mapType').on('click', function (e) {
-                        if (this.checked) {
-                            $('.' + this.value).removeClass('hide');
-                            var cls = form.find('.mapType').not(this).val();
-                            $('.' + cls).addClass('hide');
-                            var comp = keditor.getSettingComponent();
-                            comp.attr('data-maptype', this.value);
-                            if (this.value === 'manually') {
-                                comp.find('iframe').addClass('hide');
-                                comp.find('.kgooglemap').removeClass('hide');
-                                if (comp.find('.kgooglemap').data('map')) {
-                                    google.maps.event.trigger(comp.find('.kgooglemap').data('map'), "resize");
-                                } else {
-                                    self.initAutocomplete(comp, form);
-                                    var input = form.find('[name=mapAddress]')[0];
-                                    var i = setInterval(function () {
-                                        if (comp.find('.kgooglemap').data('map')) {
-                                            clearInterval(i);
-                                            google.maps.event.trigger(input, 'focus')
-                                            google.maps.event.trigger(input, 'keydown', {
-                                                keyCode: 13
-                                            });
-                                        }
-                                    }, 100);
-                                }
-                            } else {
-                                comp.find('iframe').removeClass('hide');
-                                comp.find('.kgooglemap').addClass('hide');
-                            }
+                    var mapTypes = form.find('.map-type');
+                    form.find('.mapType').on('click', function () {
+                        mapTypes.hide().filter('.' + this.value).show();
+                        
+                        var component = keditor.getSettingComponent();
+                        var iframe = component.find('iframe');
+                        var kgooglemap = component.find('.kgooglemap');
+                        component.attr('data-maptype', this.value);
+                        
+                        iframe[this.value === 'manually' ? 'hide' : 'show']();
+                        kgooglemap[this.value === 'manually' ? 'show' : 'hide']();
+                        
+                        if (this.value === 'manually') {
+                            self.makeGoogleMapFresh(form, component);
                         }
                     });
                     
@@ -1087,161 +1149,154 @@
                         }
                     });
                     
-                    var btn169 = form.find('.btn-googlemap-169');
-                    var btn43 = form.find('.btn-googlemap-43');
-                    
-                    btn169.on('click', function (e) {
-                        e.preventDefault();
-                        $(this).addClass('btn-primary').removeClass('btn-default');
-                        btn43.removeClass('btn-primary').addClass('btn-default');
-                        keditor.getSettingComponent().find('.embed-responsive').removeClass('embed-responsive-4by3').addClass('embed-responsive-16by9');
-                        var comp = keditor.getSettingComponent();
-                        if (comp.attr('maptype') === 'manually') {
-                            if (comp.find('.kgooglemap').data('map')) {
-                                google.maps.event.trigger(comp.find('.kgooglemap').data('map'), "resize");
-                            }
-                        }
-                    });
-                    
-                    btn43.on('click', function (e) {
-                        e.preventDefault();
-                        $(this).addClass('btn-primary').removeClass('btn-default');
-                        btn169.removeClass('btn-primary').addClass('btn-default');
-                        keditor.getSettingComponent().find('.embed-responsive').removeClass('embed-responsive-16by9').addClass('embed-responsive-4by3');
-                        var comp = keditor.getSettingComponent();
-                        if (comp.attr('maptype') === 'manually') {
-                            if (comp.find('.kgooglemap').data('map')) {
-                                google.maps.event.trigger(comp.find('.kgooglemap').data('map'), "resize");
-                            }
-                        }
+                    form.find('[name=mapRatio]').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        
+                        component.find('.embed-responsive').removeClass('embed-responsive-4by3 embed-responsive-16by9').addClass('embed-responsive-' + this.value);
                     });
                 }
             });
         },
-        showSettingForm: function (form, component, keditor) {
+        
+        callWhenGoogleMapReady: function (callback) {
             var self = this;
-            var maptype = component.attr('data-maptype');
-            var place = component.attr('data-place');
-            var ratio169 = component.find('.embed-responsive').hasClass('embed-responsive-16by9');
-            var ratio43 = component.find('.embed-responsive').hasClass('embed-responsive-4by3');
-            if (ratio43) {
-                form.find('.btn-googlemap-43').addClass('btn-primary').removeClass('btn-default');
-            }
-            if (ratio169) {
-                form.find('.btn-googlemap-169').addClass('btn-primary').removeClass('btn-default');
-            }
-            form.find('.mapType[value=' + maptype + ']').prop('checked', true);
-            var src = component.find('iframe').attr('src');
-            var iframe = '<iframe class="embed-responsive-item" src="' + src + '"></iframe>';
-            if (!place) {
-                place = 'Hanoi, Vietnam';
-            }
-            form.find('[name=mapAddress]').val(place);
-            form.find('[name=mapEmbedCode]').val(iframe);
-            var firstLoad = component.attr('data-firstLoad');
-            if (maptype === 'manually') {
-                form.find('.manually').removeClass('hide').siblings('.embed').addClass('hide');
-                
-                if (!firstLoad && place) {
-                    var i = setInterval(function () {
-                        if (window.googleMapInitialized) {
-                            clearInterval(i);
-                            self.initAutocomplete(component, form);
-                            setTimeout(function () {
-                                var input = form.find('[name=mapAddress]')[0];
-                                google.maps.event.trigger(input, 'focus')
-                                google.maps.event.trigger(input, 'keydown', {
-                                    keyCode: 13
-                                });
-                                component.attr('data-firstLoad', 'false');
-                            }, 1000);
-                        }
-                    }, 100);
-                }
+            var apiKey = 'AIzaSyBUcuZxwpBXCPztG7ot-rITXJbycPuS7gs';
+            var url = 'https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&libraries=places';
+            
+            if (window.google && window.google.maps && google.maps.places) {
+                callback.call(self);
             } else {
-                form.find('.manually').addClass('hide').siblings('.embed').removeClass('hide');
+                $.getScriptOnce(url, function () {
+                    callback.call(self);
+                });
             }
         },
         
-        initAutocomplete: function (component, form) {
-            if (!window.googleMapInitialized) {
-                alert('google map is not initialized');
-                return;
-            }
-            var mapdiv = component.find('.kgooglemap')[0];
-            var map = new google.maps.Map(mapdiv, {
-                zoom: 13,
-                mapTypeId: 'roadmap'
-            });
-            // Create the search box and link it to the UI element.
+        makeGoogleMapFresh: function (form, component) {
             var input = form.find('[name=mapAddress]')[0];
-            var searchBox = new google.maps.places.SearchBox(input);
-            //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
             
-            // Bias the SearchBox results towards current map's viewport.
-            map.addListener('bounds_changed', function () {
-                searchBox.setBounds(map.getBounds());
-            });
-            
-            var markers = [];
-            // Listen for the event fired when the user selects a prediction and retrieve
-            // more details for that place.
-            
-            searchBox.addListener('places_changed', function () {
-                var places = searchBox.getPlaces();
-                
-                if (places.length == 0) {
-                    return;
-                }
-                
-                // Clear out the old markers.
-                markers.forEach(function (marker) {
-                    marker.setMap(null);
+            setTimeout(function () {
+                google.maps.event.trigger(input, 'focus');
+                google.maps.event.trigger(input, 'keydown', {
+                    keyCode: 13
                 });
-                markers = [];
-                // For each place, get the icon, name and location.
-                var bounds = new google.maps.LatLngBounds();
-                places.forEach(function (place) {
-                    if (!place.geometry) {
-                        console.log("Returned place contains no geometry");
+            }, 1000);
+            
+            var map = component.find('.kgooglemap').data('map');
+            setTimeout(function () {
+                google.maps.event.trigger(map, "resize");
+            }, 100);
+        },
+        
+        showSettingForm: function (form, component, keditor) {
+            var self = this;
+            
+            self.callWhenGoogleMapReady(function () {
+                var maptype = component.attr('data-maptype') || 'embed';
+                var place = component.attr('data-place');
+                
+                var ratio = component.find('.embed-responsive').hasClass('embed-responsive-16by9') ? '16by9' : '4by3';
+                form.find('.mapRatio[value=' + ratio + ']').prop('checked', true);
+                form.find('.mapType[value=' + maptype + ']').prop('checked', true);
+                
+                var src = component.find('iframe').attr('src');
+                var iframe = '<iframe class="embed-responsive-item" src="' + src + '"></iframe>';
+                if (!place) {
+                    place = 'Hanoi, Vietnam';
+                }
+                form.find('[name=mapAddress]').val(place);
+                form.find('[name=mapEmbedCode]').val(iframe);
+                
+                form.find('.map-type').hide().filter('.' + maptype).show();
+                
+                if (!component.find('.kgooglemap').data('map')) {
+                    self.initAutocomplete(component, form);
+                    
+                    if (maptype === 'manually') {
+                        self.makeGoogleMapFresh(form, component);
+                    }
+                } else {
+                    if (maptype === 'manually') {
+                        self.makeGoogleMapFresh(form, component);
+                    }
+                }
+            });
+        },
+        
+        initAutocomplete: function (component, form) {
+            if (component.find('.kgooglemap').data('map')) {
+                this.makeGoogleMapFresh(form, component);
+            } else {
+                var mapDiv = component.find('.kgooglemap')[0];
+                var map = new google.maps.Map(mapDiv, {
+                    zoom: 13,
+                    mapTypeId: 'roadmap'
+                });
+                
+                // Create the search box and link it to the UI element.
+                var input = form.find('[name=mapAddress]')[0];
+                var searchBox = new google.maps.places.SearchBox(input);
+                
+                // Bias the SearchBox results towards current map's viewport.
+                map.addListener('bounds_changed', function () {
+                    searchBox.setBounds(map.getBounds());
+                });
+                
+                var markers = [];
+                searchBox.addListener('places_changed', function () {
+                    var places = searchBox.getPlaces();
+                    
+                    if (places.length == 0) {
                         return;
                     }
                     
-                    var icon = {
-                        url: place.icon,
-                        size: new google.maps.Size(71, 71),
-                        origin: new google.maps.Point(0, 0),
-                        anchor: new google.maps.Point(17, 34),
-                        scaledSize: new google.maps.Size(25, 25)
-                    };
+                    // Clear out the old markers.
+                    markers.forEach(function (marker) {
+                        marker.setMap(null);
+                    });
+                    markers = [];
                     
-                    // Create a marker for each place.
-                    markers.push(new google.maps.Marker({
-                        map: map,
-                        icon: icon,
-                        title: place.name,
-                        position: place.geometry.location
-                    }));
-                    
-                    if (place.geometry.viewport) {
-                        // Only geocodes have viewport.
-                        bounds.union(place.geometry.viewport);
-                    } else {
-                        bounds.extend(place.geometry.location);
-                    }
+                    // For each place, get the icon, name and location.
+                    var bounds = new google.maps.LatLngBounds();
+                    places.forEach(function (place) {
+                        if (!place.geometry) {
+                            console.log("Returned place contains no geometry");
+                            return;
+                        }
+                        
+                        var icon = {
+                            url: place.icon,
+                            size: new google.maps.Size(71, 71),
+                            origin: new google.maps.Point(0, 0),
+                            anchor: new google.maps.Point(17, 34),
+                            scaledSize: new google.maps.Size(25, 25)
+                        };
+                        
+                        // Create a marker for each place.
+                        markers.push(new google.maps.Marker({
+                            map: map,
+                            icon: icon,
+                            title: place.name,
+                            position: place.geometry.location
+                        }));
+                        
+                        if (place.geometry.viewport) {
+                            // Only geocodes have viewport.
+                            bounds.union(place.geometry.viewport);
+                        } else {
+                            bounds.extend(place.geometry.location);
+                        }
+                    });
+                    map.fitBounds(bounds);
+                    component.attr('data-place', input.value);
                 });
-                map.fitBounds(bounds);
-                component.attr('data-place', input.value);
-            });
-            
-            component.find('.kgooglemap').data('map', map);
+                
+                component.find('.kgooglemap').data('map', map);
+            }
         }
     };
     
-    window.initKeditorMapSetting = function () {
-        window.googleMapInitialized = true;
-    }
-})(jQuery);
+})(jQuery, window);
 
 /**
  * KEditor Jumbotron Component
@@ -1318,15 +1373,6 @@
                         comp.find('.jumbotron')[this.checked ? 'addClass' : 'removeClass']('jumbotron-inverse');
                     });
                     
-                    form.find('[name=rounded]').on('click', function (e) {
-                        var comp = keditor.getSettingComponent();
-                        if (this.value == 'false') {
-                            comp.find('.jumbotron').css('border-radius', '0');
-                        } else {
-                            comp.find('.jumbotron').css('border-radius', '');
-                        }
-                    });
-                    
                     var buttonColorPicker = form.find('.button-color-picker');
                     contentEditor.initSimpleColorPicker(buttonColorPicker, function (color) {
                         var comp = keditor.getSettingComponent();
@@ -1379,7 +1425,6 @@
                 $(this).val(component.find('.jumbotron').css($(this).attr('name')).replace('px', ''));
             });
             form.find('[name=showButton][value=false]').prop('checked', component.find('a').hasClass('hide'));
-            form.find('[name=rounded][value=false]').prop('checked', component.find('.jumbotron').css('border-radius').replace('px', '') === '0');
             form.find('.chk-inverse').prop('checked', component.find('.jumbotron').hasClass('jumbotron-inverse'));
         },
         
@@ -1560,7 +1605,7 @@
                     var txtLink = form.find('#photo-link');
                     txtLink.on('change', function () {
                         var link = this.value.trim();
-                        var pattern = new RegExp('^[a-zA-Z0-9_/%:/./-]+$');
+                        var pattern =  /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9]\.[^\s]{2,})/;
                         var span = txtLink.next();
                         var formGroup = txtLink.closest('.form-group');
                         
@@ -1591,19 +1636,6 @@
                             txtLink.prop('disabled', true);
                             cbbTarget.prop('disabled', true);
                             img.unwrap('a');
-                        }
-                    });
-                    
-                    var photoEdit = form.find('#photo-edit');
-                    photoEdit.mselect({
-                        contentTypes: ['image'],
-                        bs3Modal: true,
-                        pagePath: options.pagePath,
-                        basePath: options.basePath,
-                        onSelectFile: function (url, relativeUrl, fileType, hash) {
-                            var img = keditor.getSettingComponent().find('img');
-                            img.attr('src', "/_hashes/files/" + hash);
-                            self.showSettingForm(form, keditor.getSettingComponent(), options);
                         }
                     });
                     
@@ -1670,6 +1702,30 @@
                             'width': newWidth
                         });
                         inputWidth.val(newWidth);
+                    });
+                    
+                    var photoEdit = form.find('#photo-edit');
+                    photoEdit.mselect({
+                        contentTypes: ['image'],
+                        bs3Modal: true,
+                        pagePath: keditor.options.pagePath,
+                        basePath: keditor.options.basePath,
+                        onSelectFile: function (url, relativeUrl, fileType, hash) {
+                            var img = keditor.getSettingComponent().find('img');
+                            var src = '/_hashes/files/' + hash;
+                            
+                            $('<img />').attr('src', src).load(function () {
+                                img.attr('src', src).css({
+                                    width: this.width,
+                                    height: this.height
+                                })
+                                self.ratio = this.width / this.height;
+                                self.width = this.width;
+                                self.height = this.height;
+                                inputWidth.val(this.width);
+                                inputHeight.val(this.height);
+                            });
+                        }
                     });
                 }
             });
@@ -1843,15 +1899,11 @@
                     // =================================================================================
                     // Backgrounds
                     // =================================================================================
-                    var basePath = window.location.pathname.replace('contenteditor', '');
-                    if (keditor.options.basePath) {
-                        basePath = keditor.options.basePath;
-                    }
                     form.find('.background-image-edit').mselect({
                         contentTypes: ['image'],
                         bs3Modal: true,
-                        pagePath: basePath,
-                        basePath: basePath,
+                        pagePath: keditor.options.pagePath,
+                        basePath: keditor.options.basePath,
                         onSelectFile: function (url, relativeUrl, fileType, hash) {
                             var target = keditor.getSettingComponent().find('.keditor-component-text-content');
                             var imageUrl = 'http://' + window.location.host + '/_hashes/files/' + hash;
@@ -2091,7 +2143,7 @@
                     form.html(resp);
                     
                     var selectPicker = form.find('.select-border-style');
-                    selectPicker.selectpicker().on('changed.bs.select', function () {
+                    selectPicker.on('change', function () {
                         self.borderStyle = this.value;
                         keditor.getSettingComponent().find('.video-wrapper').css('border-style', this.value);
                     });
@@ -2108,39 +2160,22 @@
                         keditor.getSettingComponent().find('.video-wrapper').css('border-width', width);
                     });
                     
-                    var colorPicker = form.find('.color-picker');
-                    var input = colorPicker.find('input');
-                    var previewer = colorPicker.find('.input-group-addon i');
-                    colorPicker.colorpicker({
-                        format: 'hex',
-                        container: colorPicker.parent(),
-                        component: '.input-group-addon',
-                        align: 'left',
-                        colorSelectors: {
-                            'transparent': 'transparent'
-                        }
-                    }).on('changeColor.colorpicker', function (e) {
-                        var colorHex = e.color.toHex();
-                        
-                        if (!input.val() || input.val().trim().length === 0) {
-                            colorHex = '';
-                            previewer.css('background-color', '');
-                        }
-                        
-                        self.borderColor = colorHex;
-                        keditor.getSettingComponent().find('.video-wrapper').css('border-color', colorHex);
+                    var colorPicker = form.find('.borderColor');
+                    $.contentEditor.initColorPicker(colorPicker, function (color) {
+                        self.borderColor = color;
+                        keditor.getSettingComponent().find('.video-wrapper').css('border-color', color);
                     });
                     
                     form.find('.chk-border').on('click', function () {
-                        selectPicker.prop('disabled', !this.checked).selectpicker('refresh');
+                        selectPicker.prop('disabled', !this.checked);
                         txtBorderWidth.prop('disabled', !this.checked);
-                        colorPicker.colorpicker(this.checked ? 'enable' : 'disable');
+                        colorPicker.prop('disabled', !this.checked);
                         
                         if (!this.checked) {
                             keditor.getSettingComponent().find('.video-wrapper').css('border', '');
-                            selectPicker.selectpicker('val', '');
+                            selectPicker.val('');
                             txtBorderWidth.val('');
-                            colorPicker.colorpicker('setValue', 'transparent');
+                            colorPicker.val('');
                         }
                     });
                     
@@ -2148,7 +2183,8 @@
                     btnVideoFileInput.mselect({
                         contentTypes: ['video'],
                         bs3Modal: true,
-                        pagePath: window.location.pathname.replace('contenteditor', ''),
+                        pagePath: keditor.options.pagePath,
+                        basePath: keditor.options.basePath,
                         onSelectFile: function (url) {
                             keditor.getSettingComponent().find('.video-wrapper').attr('data-video-src', url);
                             self.refreshVideoPlayerPreview(keditor);
@@ -2197,7 +2233,7 @@
             var selectPicker = form.find('.select-border-style');
             
             chkBorder.prop('checked', isBorderEnabled);
-            selectPicker.prop('disabled', !isBorderEnabled).selectpicker('refresh').selectpicker('val', wrapper.css('border-style'));
+            selectPicker.prop('disabled', !isBorderEnabled).val(wrapper.css('border-style'));
             txtBorderWidth.prop('disabled', !isBorderEnabled).val(isBorderEnabled ? borderWidth.replace('px', '') : '');
             colorPicker.colorpicker(isBorderEnabled ? 'enable' : 'disable').colorpicker('setValue', isBorderEnabled ? wrapper.css('border-color') : '');
             

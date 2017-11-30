@@ -153,7 +153,7 @@
                                 <th class="center">
                                     <div class="checkbox-table">
                                         <label>
-                                            <input type="checkbox" name="removeAnswer" class="grey answers selectAll"/>
+                                            <input type="checkbox" name="removeAnswer" class="grey answers selectAll" autocomplete="off"/>
                                         </label>
                                     </div>
                                 </th>
@@ -169,7 +169,7 @@
                                 <td class="center">
                                     <div class="checkbox-table">
                                         <label>
-                                            <input type="checkbox" class="removeAnswer" name="removeAnswer" value="$sub.id"/>
+                                            <input type="checkbox" class="removeAnswer" name="removeAnswer" value="$sub.id" autocomplete="off"/>
                                         </label>
                                     </div>
                                 </td>
@@ -230,6 +230,7 @@
                             success: function (resp) {
                                 if (resp.status) {
                                     Kalert.success(resp.messages);
+                                    refreshEntriesStatus();
                                 } else {
                                     Kalert.warning(resp.messages);
                                 }
@@ -262,6 +263,7 @@
                             success: function (resp) {
                                 if (resp.status) {
                                     Kalert.success(resp.messages);
+                                    refreshEntriesStatus();
                                 } else {
                                     Kalert.warning(resp.messages);
                                 }
@@ -305,14 +307,22 @@
 
                     query.status = sel.val();
 
-                    $('#rewardentries-resultsbody').reloadFragment({
-                        url: window.location.pathname + '?' + URI.buildQuery(query),
-                        whenComplete: function () {
-                            var csv = $('.rewardentries-csv');
-                            var href = csv.data('href');
-                            csv.attr('href', href + '?' + URI.buildQuery(query));
-                        }
-                    });
+                    refreshEntriesStatus(query);
+                });
+            }
+
+            function refreshEntriesStatus(query) {
+                if (!query) {
+                    query = URI.parseQuery(location.search);
+                }
+
+                $('#rewardentries-resultsbody').reloadFragment({
+                    url: window.location.pathname + '?' + URI.buildQuery(query),
+                    whenComplete: function () {
+                        var csv = $('.rewardentries-csv');
+                        var href = csv.data('href');
+                        csv.attr('href', href + '?' + URI.buildQuery(query));
+                    }
                 });
             }
 

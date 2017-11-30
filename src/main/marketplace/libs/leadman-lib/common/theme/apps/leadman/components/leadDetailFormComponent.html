@@ -1,0 +1,126 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="details">
+            <h4 class="page-header">Details - $page.funnelTitle</h4>
+
+            <div class="form-horizontal">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">Lead Title:</label>
+                            <div class="col-sm-10">
+                                <input type="text" value="$!page.leadTitle" name="leadTitle" class="form-control immediateUpdate"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <textarea id="description" class="form-control immediateUpdate" placeholder="Description" name="description" style="height: 100px">$!page.description</textarea>
+
+            <hr/>
+
+            <div class="form-horizontal">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Deal value:</label>
+                            <div class="col-sm-8">
+                                <input type="number" value="$!page.dealAmount" name="dealAmount" class="form-control immediateUpdate"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Stage:</label>
+                            <div class="col-sm-8">
+                                <select name="stageName" class="form-control immediateUpdate">
+                                    <option value="">[None]</option>
+                                    #foreach( $stage in $page.allStages )
+                                    #set($a = $formatter.ifNull($stage.desc, $stage.name))
+                                    $formatter.option($stage.name, $a, $page.stageName)
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="createDate">Created</label>
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input type="text" name="createDate" id="createDate" class="form-control date-time immediateUpdate" value=" $formatter.formatDateTime( $!page.createDate )" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Source</label>
+                            <div class="col-sm-8">
+                                <select id="" data-placeholder="Select a source" name="source" class="form-control immediateUpdate" style="width: 100%">
+                                    <option value="">[None]</option>
+                                    #set($foundSource = false)
+                                    #foreach( $source in $page.allSources )
+                                    #if($source == $page.source)
+                                    #set($foundSource = true)
+                                    #end
+                                    $formatter.option($source, $source, $page.source)
+                                    #end
+                                    #if(!$foundSource && $page.source)
+                                    $formatter.option($page.source, $page.source, $page.source)
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="" style="padding: 15px">
+                        #foreach($field in $page.extraFields)
+                        <div class="col-sm-12 col-md-12 col-lg-6">
+                            <div class="form-group" style="padding-right: 15px">
+                                <label class="control-label col-sm-4">$field.title:</label>
+                                $field.html($field.value, ' immediateUpdate', 'extraField_')
+                                <!--<input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required, 'required', '')"/>-->
+                            </div>
+                        </div>
+                        #end
+                    </div>
+                </div>
+
+            </div>            
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="uploadExtraFieldFileModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Upload Files</h4>
+            </div>
+            <form method="post" action="$page.href" class="form-horizontal" enctype="multipart/form-data">
+                <input type="hidden" name="uploadExtraFieldFileModal" value="uploadExtraFieldFileModal" />
+                <input type="hidden" id="extraField" name="extraField" value="" />
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="col-md-9">
+                            <label for="exampleInputFile"></label>
+                            <input name="files" type="file" multiple="true" class="required" id="exampleInputFile" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                    <button class="btn btn-primary" type="submit">Upload</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>

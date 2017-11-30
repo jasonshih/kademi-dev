@@ -2,6 +2,10 @@
     position: relative;
 }
 
+.search-wrapper.search-wrapper-focused {
+    z-index: 3;
+}
+
 .search-wrapper:before, .search-wrapper:after {
     content: " ";
     display: table;

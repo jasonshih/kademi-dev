@@ -1,0 +1,431 @@
+#if (!$page)
+    <div class="event-manager">
+        <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Add Event</button>
+        <button type="button" class="btn btn-info"><i class="fa fa-edit"></i> Edit Event</button>
+    </div>
+#end
+
+#if ($user and $page.isWritable())
+    #set ($editType = "")
+    #set ($pageClassName = $templater.getClassName($page))
+    #if ($pageClassName == "CalendarFolder")
+        #set ($editType = "calendar")
+    #end
+    #if ($pageClassName == "CalEventResource")
+        #set ($editType = "event")
+    #end
+    
+    <div class="event-manager" data-editable="true" data-type="$!editType">
+        #if ($editType == "calendar")
+            <button type="button" class="btn btn-primary btn-add-event" data-toggle="modal" data-target="#modal-add-event"><i class="fa fa-plus"></i> Add Event</button>
+        #end
+        #if ($editType == "event")
+            <button type="button" class="btn btn-info btn-edit-event"><i class="fa fa-edit"></i> Edit</button>
+            <button type="button" class="btn btn-primary btn-save-edit-event" style="display: none;"><i class="fa fa-save"></i> Save</button>
+            <button type="button" class="btn btn-default btn-cancel-edit-event" style="display: none;"><i class="fa fa-times"></i> Close</button>
+        #end
+    </div>
+    
+    #if ($editType == "event")
+        <div id="event-manager-form" style="display: none">
+            <form action="" method="POST" class="manageEventForm form-horizontal">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs tab-bricky">
+                        <li class="active">
+                            <a data-toggle="tab" href="#details">Details</a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#confirmation">Confirmation</a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#reminders">Reminders</a>
+                        </li>
+    
+                    </ul>
+                    <div class="tab-content form-horizontal">
+                        <!-- Start content of Details tab -->
+                        <div id="details" class="tab-pane panel-body active">
+                            <input type="hidden" id="backgroundImageHash" name="backgroundImageHash" value="$!page.backgroundImageHash" />
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-lg-2" for="title">Event title</label>
+                                <div class="col-md-8 col-lg-4">
+                                    <input type="text" id="title" name="summary" placeholder="Enter a name here" value="$page.title" class="required form-control" />
+                                </div>
+                            </div>
+    
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-lg-2" for="location">Timezone</label>
+                                <div class="col-md-8 col-lg-4">
+                                    <select name="timezone" class="chosen-select required form-control">
+                                        <option value="">[Please select]</option>
+                                        #foreach($tzId in $page.timezoneIdList)
+                                            $formatter.option( $tzId, $tzId, $page.timezone )
+                                        #end
+                                    </select>
+                                    <small>Timezone offset: <b>$page.timeZoneOffsetStr</b> (save and refresh to update)</small>
+                                </div>
+                            </div>
+    
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-lg-2">Dates & times</label>
+                                <div class="col-md-8 col-lg-4">
+                                    <input type="text" placeholder="Choose start and end dates" value="$formatter.formatDateTime(  $page.startDate, $page.timezone ) - $formatter.formatDateTime( $page.endDate, $page.timezone )" class="form-control event-range" />
+                                    <input type="hidden" name="startDate" value="$formatter.formatDateTime(  $page.startDate, $page.timezone )" />
+                                    <input type="hidden" name="endDate" value="$formatter.formatDateTime( $page.endDate, $page.timezone )" />
+                                </div>
+                            </div>
+    
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-lg-2" for="location">Location</label>
+                                <div class="col-md-8 col-lg-4">
+                                    <input type="text" id="location" name="location" placeholder="38 Boulevarde Ave" value="$!page.location" class="form-control" /></div>
+                            </div>
+    
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-lg-2" for="Organisor">Organisor</label>
+                                <div class="col-md-8 col-lg-4">
+                                    <input type="text" name="organisor" id="Organisor" placeholder="Email address or user id" value="$!page.organisor.email" class="required form-control" />
+                                </div>
+                            </div>
+    
+                            <hr />
+    
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-lg-2" for="shortPath">Short path</label>
+                                <div class="col-md-8 col-lg-4">
+                                    <input type="text" name="shortPath" id="shortPath" placeholder="Eg the-big-day" value="$!page.shortPath" class="form-control" />
+                                    <i>If you would like your event to have a short, clean, path that is easy to type in, enter the path here</i>
+                                </div>
+                            </div>
+    
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-lg-2" for="externalUrl">External URL</label>
+                                <div class="col-md-8 col-lg-4">
+                                    <input type="text" name="externalUrl" id="externalUrl" placeholder="http://otherevents.com/my-event" value="$!page.externalUrl" class="form-control" />
+                                    <i>If this event is managed by an external event service, provide the link to the external page here</i>
+                                </div>
+                            </div>
+    
+                            <hr />
+    
+                            <p class="lead">Create your calendar event content below</p>
+    
+                            #if($page.calendar.website)
+                                #if ($applicationManager.isActive($applications.calendar, $page.calendar.website.liveBranch()))
+                                    <textarea autocomplete="off" cols="100" name="description" rows="10" class="#if($isKEditor) contenteditor #else htmleditor #end" data-preview="?goto=">$!page.description</textarea>
+                                #else
+                                    <p class="alert alert-warning lead"><i class="fa fa-warning"></i> Calendar App of
+                                        <b>$page.calendar.website.name</b> website is disabled. Please enable it at
+                                        <a href="/websites/${page.calendar.website.name}/${page.calendar.website.liveBranch}/#panel_apps-tab" class="text-warning"><b>here</b></a>.</p>
+                                #end
+                            #else
+                                <p class="alert alert-warning lead"><i class="fa fa-warning"></i> Please specify a website on the calendar at
+                                    <a href="./" class="text-warning"><b>here</b></a> before creating event content</p>
+                            #end
+    
+                        </div>
+                        <!-- End content of Details tab -->
+    
+                        <!-- Start content of Confirmation tab -->
+                        <div id="confirmation" class="tab-pane panel-body">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-lg-2">Allow registration</label>
+                                    <div class="col-md-8 col-lg-6">
+                                        <div class="checkbox">
+                                            <label>
+                                                $formatter.checkbox("allowRegistration", "allowRegistration", $page.allowRegistration)
+                                                <small>Allow users to register their attendance.</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group allowReg">
+                                    <label class="control-label col-md-3 col-lg-2">Allow guests</label>
+                                    <div class="col-md-8 col-lg-6">
+                                         <div class="checkbox">
+                                            <label>
+                                                $formatter.checkbox("allowGuests", "allowGuests", $page.allowGuests)
+                                                <small>Allow users to register guests.</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group allowReg">
+                                    <label class="control-label col-md-3 col-lg-2" for="maxAttendees">Maximum attendees</label>
+                                    <div class="col-md-8 col-lg-6">
+                                        <input type="text" id="maxAttendees" name="maxAttendees" placeholder="Leave empty if there's no limit" value="$!page.maxAttendees" class="numeric form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group allowReg">
+                                    <label class="control-label col-md-3 col-lg-2">Email confirmation</label>
+                                    <div class="col-md-8 col-lg-6">
+                                         <div class="checkbox">
+                                            <label>
+                                                $formatter.checkbox("emailConfirm", "emailConfirm", $page.emailConfirm)
+                                                <small>Send an email confirmation to the user when they've registered.</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group allowReg emailReg">
+                                    <label class="control-label col-md-3 col-lg-2" for="maxAttendees">Confirmation subject</label>
+                                    <div class="col-md-8 col-lg-6">
+                                        <input type="text" id="emailConfirmSubject" name="emailConfirmSubject" placeholder="Subject line for the confirm email" value="$!page.emailConfirmSubject" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group allowReg allowGuests emailReg">
+                                    <label class="control-label col-md-3 col-lg-2">No guest emails</label>
+                                    <div class="col-md-8 col-lg-6">
+                                         <div class="checkbox">
+                                            <label>
+                                                $formatter.checkbox("suppressGuestEmails", "suppressGuestEmails", $page.suppressGuestEmails)
+                                                <small>Tick this to prevent guests from receiving confirmation and reminder emails</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="allowReg emailReg">
+                                    <hr />
+                                </div>
+        
+                                <div class="form-group allowReg emailReg">
+                                    <div class="col-md-12">
+                                        <p class="lead">The message to send when a user registers.</p>
+                                        <textarea cols="100" name="emailConfirmTemplate" rows="10" class="htmleditor" placeholder="Enter the details here">$!page.emailConfirmTemplate</textarea>
+                                        <pre style="display: none;">$!page.emailConfirmTemplate</pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End content of Confirmation tab -->
+            
+                        <!-- Start content of Reminders tab -->
+                        <div id="reminders" class="tab-pane panel-body">
+                            <header class="clearfix">
+                                <a class="btn btn-sm btn-success add-reminder" href="#reminderDetails" data-toggle="modal"><i class="fa fa-plus"></i> Create a reminder</a>
+                            </header>
+                            <br />
+    
+                            <input type="hidden" name="hasReminders" value="true" />
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <colgroup>
+                                        <col style='width: 40px'>
+                                        <col>
+                                        <col>
+                                        <col style="width: 100px">
+                                    </colgroup>
+                                    <thead>
+                                        <tr class="odd">
+                                            <th class="icon">Status</th>
+                                            <th>When</th>
+                                            <th>Email subject</th>
+                                            <th>Website</th>
+                                            <th>Processed</th>
+                                            <th class="action"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="reminders">
+                                        #foreach($reminder in $page.reminders)
+                                            #set($count = $foreach.count - 1)
+                                            <tr class="emailStatusDraft odd">
+                                                <td class="">
+                                                    $formatter.bsswitch("", "reminder.${count}.enabled", $reminder.enabled, "true")
+                                                    <input type="hidden" name="reminder.${count}.timerMultiple" class="timerMultiple" value='$!reminder.timerMultiple' />
+                                                    <input type="hidden" name="reminder.${count}.timerUnit" class="timerUnit" value='$!reminder.timerUnit' />
+                                                    <input type="hidden" name="reminder.${count}.subject" class="subject" value='$!reminder.subject' />
+                                                    <input type="hidden" name="reminder.${count}.themeSite" class="themeSite" value='$!reminder.themeSite.id' />
+                                                    <textarea style="display: none" class="html" name="reminder.${count}.html">$!reminder.html</textarea>
+                                                </td>
+                                                <td>
+                                                    <span class="timerMultiple">$reminder.timerMultiple</span> <span class="timerUnit">$reminder.timerUnit</span>
+                                                </td>
+                                                <td class="subject">$reminder.subject</td>
+                                                <td class="themeSite">$!reminder.themeSite.name</td>
+                                                <td>$!reminder.processedDate</td>
+                                                <td class="action last">
+                                                    <div class="btn-group btn-group-sm">
+                                                        <a class="btn btn-sm btn-info btn-sm edit" href="#">
+                                                            <i class="fa fa-edit"></i> Edit
+                                                        </a>
+                                                        <button data-toggle="dropdown" class="btn btn-sm btn-info btn-sm dropdown-toggle">
+                                                            <span class="caret"></span>
+                                                        </button>
+                                                        <ul role="menu" class="dropdown-menu pull-right">
+                                                            <li class="odd"><a title="Edit" class="edit" href="#"><i class="fa fa-edit"></i> Edit</a></li>
+                                                            <li class="divider even"></li>
+                                                            <li class="odd"><a title="Delete" class="delete" href="#"><i class="fa fa-times"></i> Delete</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        #end
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- End content of Reminders tab -->
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div id="reminderDetails" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <form class="form-horizontal">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Reminder</h4>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="reminderId" />
+                                <div class="form-message alert alert-danger" style="display: none;"></div>
+    
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="subject">Send reminder</label>
+                                    <div class="col-md-4">
+                                        <div class="input-group">
+                                            <input type="text" class="text-center form-control" required="true" value="$!page.job.timerMultiple" name="timerMultiple" />
+                                            <div class="input-group-btn">
+                                                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle timer-unit" type="button">DAYS <span class="caret"></span>
+                                                </button>
+                                                <ul role="menu" class="dropdown-menu pull-right timer-units">
+                                                    #foreach($unit in $page.timerUnits)
+                                                        <li><a href="#">$unit</a></li>
+                                                    #end
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <label class="control-label col-md-2" for="themeSiteId">Choose a template</label>
+                                    <div class="col-md-4">
+                                        <select name="themeSite" class="form-control" required="true">
+                                            #foreach($website in $page.organisation.websites)
+                                                $formatter.option($website.id, $website.name, "")
+                                            #end
+                                        </select>
+                                    </div>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="subject">Email subject</label>
+                                    <div class="col-md-10">
+                                        <input type="text" id="subject" name="subject" value="" placeholder="" required="true" class="form-control" />
+                                    </div>
+                                </div>
+                                <i>Enter the message content as HTML below</i>
+    
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <textarea class="reminder-content inline-editor form-control" rows="15"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer BtnBar">
+                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-sm btn-primary" type="submit">OK</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        <!-- Template for adding reminder rows, just a copy of above -->
+        <table class="hide">
+            <tbody id="reminder-row-template">
+                <tr class="emailStatusDraft odd">
+                    <td class="">
+                        <input type="checkbox" name="reminder.${foreach.count}.enabled" class="enabled" data-on-color='success' data-off-color='danger' value='true' />
+                        <input type="hidden" name="reminder.${foreach.count}.timerMultiple" class="timerMultiple" value='$!reminder.timerMultiple' />
+                        <input type="hidden" name="reminder.${foreach.count}.timerUnit" class="timerUnit" value='$!reminder.timerUnit' />
+                        <input type="hidden" name="reminder.${foreach.count}.subject" class="subject" value='$!reminder.subject' />
+                        <input type="hidden" name="reminder.${foreach.count}.themeSite" class="themeSite" value='$!reminder.themeSite' />
+                        <textarea style="display: none" class="html" name="reminder.${foreach.count}.html">$!reminder.html</textarea>
+                    </td>
+                    <td>
+                        <span class="timerMultiple">$reminder.timerMultiple</span> <span class="timerUnit">$reminder.timerUnit</span>
+                    </td>
+                    <td class="subject">$reminder.subject</td>
+                    <td class="themeSite">$reminder.themeSite.name</td>
+                    <td></td>
+                    <td class="action last">
+                        <div class="btn-group btn-group-sm">
+                            <a class="btn btn-sm btn-info btn-sm edit" href="#">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+                            <button data-toggle="dropdown" class="btn btn-sm btn-info btn-sm dropdown-toggle">
+                                <span class="caret"></span>
+                            </button>
+                            <ul role="menu" class="dropdown-menu pull-right">
+                                <li class="odd"><a title="Edit" class="edit" href="#"><i class="fa fa-edit"></i> Edit</a></li>
+                                <li class="divider even"></li>
+                                <li class="odd"><a title="Delete" class="delete" href="#"><i class="fa fa-times"></i> Delete</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    #end
+
+    #if ($editType == "calendar")
+        <div id="modal-add-event" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Create a calendar event</h4>
+                    </div>
+                    <form method="post" action="$request.absolutePath" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <input type="hidden" name="action" value="create" />
+                
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Start/Finish dates</label>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        #set ($startDate = $formatter.formatDateTime(  $formatter.now, $page.timezone ))
+                                        #set ($endDate = $formatter.formatDateTime(  $formatter.now, $page.timezone ))
+                                        <input type="text" placeholder="Choose start and end dates" value="$startDate - $endDate" class="form-control required event-range" required="true" />
+                                        <input type="hidden" name="startDate" value="$startDate" />
+                                        <input type="hidden" name="endDate" value="$endDate" />
+                                        <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Timezone</label>
+                                <div class="col-md-8">
+                                    <select name="timezone" class="chosen-select required form-control">
+                                        <option value="">[Please select]</option>
+                                        #foreach($tzId in $page.timezoneIdList)
+                                        $formatter.option( $tzId, $tzId, $page.timezone )
+                                        #end
+                                    </select>
+                                    <small>Change the default in your <a target="_blank" href="http://$!page.closest('website').adminDomainName/edit">organisation settings</a></small>
+                                </div>
+                            </div>
+                
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="summary">Short summary</label>
+                                <div class="col-md-8">
+                                    <textarea name="summary" id="summary" class="form-control required" required="true" rows="3"></textarea>
+                                </div>
+                            </div>
+                
+                            <i>Enter the full event content, reminders and other details after the event is created</i>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    #end
+#end

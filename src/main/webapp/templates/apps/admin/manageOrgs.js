@@ -54,8 +54,8 @@
             self.$form.forms({
                 onSuccess: function (resp) {
                     log('done', resp);
-                    Msg.success($('#orgTitle').val() + ' is saved!');
-                    $('#search-results').reloadFragment();
+                    Msg.success('Created organisation');
+                    $('.search-results').reloadFragment();
                     self.hide();
                 }
             });

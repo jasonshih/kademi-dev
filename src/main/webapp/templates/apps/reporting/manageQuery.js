@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    Msg.singletonForCategory = true;
+
     var editor = ace.edit("queryText");
     editor.setTheme("ace/theme/monokai");
     editor.getSession().setMode("ace/mode/javascript");
@@ -15,17 +17,16 @@ $(document).ready(function () {
             url: "",
             success: function (data) {
                 flog("done save");
-                Msg.info("Saved");
+                Msg.info("Saved", "runningQuery");
                 if (callback) {
                     callback();
                 }
             },
             error: function (resp) {
-                Msg.error("An error occured while saving");
+                Msg.error("An error occured while saving", "runningQuery");
             }
         });
     }
-
 
     var heightUpdateFunction = function () {
 
@@ -35,7 +36,14 @@ $(document).ready(function () {
                 * editor.renderer.lineHeight
                 + editor.renderer.scrollBar.getWidth();
 
-        $('#queryText').height(newHeight.toString() + "px");
+        if (newHeight.toString() === undefined || newHeight.toString() === "" || newHeight.toString() === "0") {
+            flog("Default Height: 360px");
+            $('#queryText').height("360px");
+        } else {
+            flog("New Height", newHeight.toString());
+            $('#queryText').height(newHeight.toString() + "px");
+        }
+
 
         // This call is required for the editor to fix all of
         // its inner structure for adapting to a change in size
@@ -55,16 +63,16 @@ $(document).ready(function () {
             var dateOptions = getPageDateRange();
             flog("Saved, now run", dateOptions);
             var newHref = window.location.pathname;
-            if( dateOptions ) {
+            if (dateOptions) {
                 newHref += "?" + $.param(dateOptions); // from queryComponents.js, injected by ReportingApp
             }
             flog("Saved, now run2", newHref);
-            Msg.info("Running..", newHref);
+            Msg.info("Running..", "runningQuery", newHref);
             $("#queryResults").reloadFragment({
                 url: newHref,
                 whenComplete: function () {
                     flog("Finished");
-                    Msg.info("Query executed");
+                    Msg.info("Query executed", "runningQuery");
                 }
             });
         });
@@ -77,20 +85,16 @@ $(document).ready(function () {
             endDate: endDate
         };
         var newHref = window.location.pathname + "?" + $.param(dateOptions); // from queryComponents.js, injected by ReportingApp
-        Msg.info("Running..", newHref);
+        Msg.info("Running...", "runningQuery", newHref);
         $("#queryResults").reloadFragment({
             url: newHref,
             whenComplete: function () {
-                Msg.info("Query executed");
+                Msg.info("Query executed", "runningQuery");
             }
         });
     });
 
-
-
     $("body").on("click", ".saveQuery", function (e) {
         save();
     });
-
-
 });

@@ -12,3 +12,23 @@
     background: no-repeat 50% 50%;
     background-size: cover;
 }
+
+.form-new-claim .thumbnail img {
+    max-height: 300px;
+}
+
+.sale-claim-success {
+    text-align: center;
+}
+
+.sale-claim-success i {
+    font-size: 150px;
+}
+
+.sale-claim-success h2 {
+    margin: 0;
+}
+
+.sale-claim-success p.lead {
+    margin-bottom: 10px;
+}

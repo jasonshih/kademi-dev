@@ -28,20 +28,16 @@ function doTranslationSearch() {
     var lang = $("#search-language").val();
 
     flog("doSearch", query, lang);
-    var newUrl = window.location.pathname + "?q=" + query + "&lang=" + lang;
+    var url = new URL(window.location.href);
+    url.searchParams.set('q', query);
+    url.searchParams.set('lang', lang);
+
+
+    //var newUrl = window.location.href + "?q=" + query + "&lang=" + lang;
+    var newUrl = url.toString();
     window.history.replaceState("", "", newUrl);
-    $.ajax({
-        type: 'GET',
-        url: newUrl,
-        success: function (data) {
-            //flog("success", data);
-            var fragment = $(data).find("#translations-list");
-            //flog("frag", fragment, $("#translations-list"));
-            $("#translations-list").replaceWith(fragment);
-        },
-        error: function (resp) {
-            Msg.error("An error occured doing the search. Please check your internet connection and try again");
-        }
+    $('#translationTableContainer').reloadFragment({
+        url: newUrl
     });
 }
 
@@ -49,13 +45,12 @@ function initCreateTranslation() {
     jQuery("form.createTranslation").forms({
         onSuccess: function (resp) {
             flog("The operation was successfully", resp);
-            Msg.success("The operation was successfully");
+            Msg.success(resp.messages[0]);
             $('#translationTableContainer').reloadFragment();
             $("#addTranslationModal").modal('hide');
         },
         error: function (resp) {
             flog('Error: ', resp);
-            $("#addTranslationModal").modal('hide');
         }
     });
 }

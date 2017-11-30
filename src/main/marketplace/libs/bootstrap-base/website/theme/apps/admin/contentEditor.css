@@ -87,6 +87,12 @@
 .content-editor-nav .content-editor-file {
     float: left;
     padding-left: 40px;
+    max-width: 80%;
+    display: inline-block;
+    -ms-text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .content-editor-nav .content-editor-navbar {
@@ -122,9 +128,18 @@
 /* ================================================================== */
 /* Tiled components */
 /* ================================================================== */
-.content-editor-page [data-dynamic-href*="_components/"][data-dynamic-href*="Tile"] [class*="col-"],
-.content-editor-page [data-dynamic-href*="_components/"][data-dynamic-href*="tile"] [class*="col-"] {
-    float: none !important;
+.content-editor-page [data-dynamic-href*="_components/"][data-dynamic-href*="Tile"]:after,
+.content-editor-page [data-dynamic-href*="_components/"][data-dynamic-href*="tile"]:after {
+    content: " " !important;
+    display: table !important;
+    clear: both !important;
+}
+
+/* ================================================================== */
+/* Google auto-complete */
+/* ================================================================== */
+.content-editor-page .pac-container {
+    z-index: 2000;
 }
 
 /* ================================================================== */

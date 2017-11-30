@@ -97,7 +97,8 @@ function initPropertiesForm() {
                     name: extraField.find('[name=extraFieldName]').val().trim(),
                     title: extraField.find('[name=extraFieldTitle]').val().trim(),
                     required: extraField.find('[name=extraFieldRequired]').is(':checked'),
-                    aggregate: extraField.find('[name=extraFieldAggregate]').is(':checked')
+                    aggregate: extraField.find('[name=extraFieldAggregate]').is(':checked'),
+                    fileUpload: extraField.find('[name=extraFieldFileUpload]').is(':checked')
                 });
             });
 
@@ -131,6 +132,24 @@ function initPropertiesForm() {
                 });
             });
 
+            var scoringFactors = [];
+            $('.scoringFactorsWrapper').find('.scoringFactor').each(function () {
+                var panel = $(this);
+                var leadScoringFactorTypeId = panel.find('.leadScoringFactorTypeId').val();
+                var boost = panel.find('.boost').val();
+                if (leadScoringFactorTypeId){
+                    var props = {};
+                    panel.find('.scoringTypeProp').each(function () {
+                        props[this.name] = this.value;
+                    });
+                    scoringFactors.push({
+                        leadScoringFactorTypeId: leadScoringFactorTypeId,
+                        boost: +boost,
+                        properties: props
+                    });
+                }
+            });
+
             JBApp.funnel.title = form.find('[name=title]').val().trim();
             JBApp.funnel.hiddenToSales = form.find('[name=hiddenToSales]').prop("checked");
             JBApp.funnel.leadsGroup = form.find('[name=leadsGroup]').val();
@@ -140,7 +159,7 @@ function initPropertiesForm() {
             JBApp.funnel.lostReasons = lostReasons;
             JBApp.funnel.customerActivities = customerActivities;
             JBApp.funnel.funnelTesters = funnelTesters;
-
+            JBApp.funnel.scoringFactors = scoringFactors;
             JBApp.saveFunnel('', function () {
                 Msg.success('Properties are saved!');
 
@@ -184,5 +203,25 @@ function initStageColor() {
         if (!container.is(e.target) && container.has(e.target).length === 0) {
             container.hide();
         }
+    });
+}
+
+function initEngagementScoring() {
+    $(document).on('click', '.deleteScoringFactor', function (e) {
+        e.preventDefault();
+        var panel = $(this).parents('.scoringFactor');
+        panel.remove();
+    });
+
+    $(document).on('click', '.addEngagement', function (e) {
+        e.preventDefault();
+        var typeId = $(this).attr('href');
+        $('#addNewScoringFactorWrap').reloadFragment({
+            url: window.location.pathname + "?addNewScoringFactor="+typeId,
+            whenComplete: function (resp) {
+                $('.scoringFactorsWrapper').append($(resp).find('#addNewScoringFactorWrap').html());
+                $('html,body').animate({scrollTop: $('#scoringFactorEnd').offset().top-100},500);
+            }
+        })
     });
 }

@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, window) {
     $(function () {
         var panels = $('.panel-circle-sales');
         
@@ -23,7 +23,7 @@
         }
     });
     
-    function initCircleSales(target) {
+    window.initCircleSales = function(target) {
         var colours = target.find('.circle-sales-colors');
         
         target.find('.circle-sales-knob').each(function () {
@@ -40,13 +40,15 @@
                 fgColor = colours.find('.btn-warning').css('background-color');
             } else if (knob.hasClass('circle-sales-danger')) {
                 fgColor = colours.find('.btn-danger').css('background-color');
+            } else {
+                fgColor = knob.attr('data-color');
             }
             
             knob.attr({
                 'data-width': '100%',
                 'data-displayinput': 'false',
-                'data-thickness': '.15',
-                'data-bgColor': 'rgba(255, 255, 255, .2)',
+                'data-thickness': '.09',
+                'data-bgColor': 'rgba(0, 0, 0, .2)',
                 'data-fgColor': fgColor
             }).knob({
                 readOnly: true
@@ -54,4 +56,4 @@
         });
     }
     
-})(jQuery);
+})(jQuery, window);

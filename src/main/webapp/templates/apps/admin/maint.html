@@ -122,7 +122,7 @@
                             Aborted requests: $page.totalIdpAborts
                         </div>
                     </article>
-                    
+
                     <article class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title">Recent errors</h3>
@@ -136,7 +136,9 @@
                                 #end
                             </h4>
 
-                            <p class="lead">$event.logEvent.userName - $event.logEvent.userHref</p>
+                            #if( $event.logEvent.userName )
+                            <p class="lead">$!event.logEvent.userName - $!event.logEvent.userHref</p>
+                            #end
 
                             #if( $event.request.headers.size() > 0 )
                             <h5>Headers</h5>
@@ -185,7 +187,7 @@
                                 Profiles to move
                                 <br/>
                                 <textarea name="profiles"></textarea>
-                                
+
                                 <button class="btn-sm btn btn-warning">Update profiles</button>
                             </form>
                         </div>
@@ -230,19 +232,19 @@
                             <p>Or enter a date time in the format dd/MM/yyyy hh:mm</p>
                             <br/>
                             <form method="POST" action="maint" class="maintForm" >
-                                
+
                                 <input type="text" name="dateOffsetMinutes" value="$!{page.dateOffsetMinutes}" />
-                                
+
                                 <button class="btn-sm btn btn-warning">Submit</button>
                             </form>
 
                             <form method="POST" action="maint" class="maintForm" >
-                                
+
                                 <input type="text" name="dateTimeVal" value="" placeholder="enter a date/time" />
-                                
+
                                 <button class="btn-sm btn btn-warning">Submit</button>
                             </form>
-                            
+
                             <p>Current date/time: <span class="now">$page.currentDateService.now</span> <i>adjusted by offset</i> <small>($page.currentDateService.now.time)</small> </p>
                         </div>
                     </article>
@@ -259,7 +261,7 @@
                             </form>
                         </div>
                     </article>
-                    
+
                     <article class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title">Run module expiry process</h3>
@@ -271,7 +273,7 @@
                                 <button class="btn-sm btn btn-warning">Run now</button>
                             </form>
                         </div>
-                    </article>                    
+                    </article>
 
                     <article class="panel panel-default">
                         <div class="panel-heading">

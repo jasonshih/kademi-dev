@@ -6,7 +6,7 @@
         <link href="/theme/apps/admin/contentEditor.css" rel="stylesheet" type="text/css" />
 
         <script type="text/javascript">
-            // Templates should push page init function into this array. It will then be run after outer template init functions.
+            // Templates should push page init function into this array. It will then be run after outer template init functions. X3
             var pageInitFunctions = new Array();
         </script>
 
@@ -84,17 +84,7 @@
                                             <p>
                                                 <button type="button" class="btn btn-sm btn-warning btn-add-meta">Add new meta</button>
                                             </p>
-                                            <div class="meta-wrapper">
-                                                #foreach($metaName in $file.metaNames)
-                                                    <div class="input-group meta">
-                                                        <input type="text" class="form-control input-sm required" required="required" name="metaName.$foreach.index" placeholder="Meta name" value="$metaName" />
-                                                        <input type="text" class="form-control input-sm required" required="required" name="metaContent.$foreach.index" placeholder="Meta content" value="$file.getMeta($metaName)" />
-                                                        <span class="input-group-btn">
-                                                            <button class="btn btn-sm btn-danger btn-remove-meta" type="button"><i class="fa fa-remove"></i></button>
-                                                        </span>
-                                                    </div>
-                                                #end
-                                            </div>
+                                            <div class="meta-wrapper"></div>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -104,20 +94,7 @@
                                             <p>
                                                 <button type="button" class="btn btn-sm btn-warning btn-add-param">Add new data/parameter</button>
                                             </p>
-                                            <div class="param-wrapper">
-                                                #foreach($paramName in $file.paramNames)
-                                                    #if ($paramName != 'title' && $paramName != 'itemType' && $paramName != 'category' && $paramName != 'tags' && $paramName !=
-                                                        'metas' && $paramName != 'body' && $paramName != 'cssFiles' && $paramName != 'template')
-                                                        <div class="input-group param">
-                                                            <input type="text" class="form-control input-sm required" required="required" name="paramTitle.$foreach.index" placeholder="Data/parameter title" value="$paramName" />
-                                                            <input type="text" class="form-control input-sm required" required="required" name="paramValue.$foreach.index" placeholder="Data/parameter value" value="$file.getParam($paramName)" />
-                                                            <span class="input-group-btn">
-                                                                <button class="btn btn-sm btn-danger btn-remove-param" type="button"><i class="fa fa-remove"></i></button>
-                                                            </span>
-                                                        </div>
-                                                    #end
-                                                #end
-                                            </div>
+                                            <div class="param-wrapper"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -170,6 +147,19 @@
                 #foreach ($group in $page.find("/").allGroups)
                 '$group.name': #if ($group.title) '$group.title' #else '$group.name' #end,
                 #end};
+            
+            var metas = [];
+            #foreach($metaName in $file.metaNames)
+                metas.push({
+                    'name': '$metaName',
+                    'content': '$!file.getMeta($metaName)'
+                });
+            #end
+            
+            var params = {};
+            #foreach($paramName in $file.paramNames)
+                params['$paramName'] = '$!file.getParam($paramName)';
+            #end
 
             $(function () {
                 initContentEditorPage({

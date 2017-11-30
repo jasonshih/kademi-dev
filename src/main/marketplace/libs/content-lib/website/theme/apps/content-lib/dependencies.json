@@ -1,9 +1,9 @@
 {
     "dependencies": [
         {
-            "css": {
-                "cssMedia": "all",
-                "path": "/theme/apps/content/socialLinks.css"
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/content/socialLinks.less"
             }
         },
         {
@@ -52,6 +52,36 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/content/container.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/showHideButton.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/content/jquery.rateyo.min.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/jquery.rateyo.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/rating.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/cktemplates.js"
             }
         }
     ]

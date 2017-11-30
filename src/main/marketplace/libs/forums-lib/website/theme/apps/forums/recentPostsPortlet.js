@@ -1,57 +1,59 @@
-
-(function(){
-    function initPosts(basePath) {
-        $.getJSON(basePath + "_postSearch?a", function(response) {
-            log("got posts response", response);
+(function ($, window) {
+    window.initPosts = function (basePath) {
+        flog('initPosts', basePath);
+        
+        $.getJSON(basePath + '_postSearch?a', function (response) {
             processPosts(response);
         });
     }
-
+    
     function processPosts(comments) {
-        $(".barList").html("");
-        if( comments ) {
-            if( comments.length > 0 ) {
-                comments.sort( dateOrd );
-                var cookieAuth = "?miltonUserUrl=" + $.cookie("miltonUserUrl");
-                cookieAuth += "&miltonUserUrlHash=" + $.cookie("miltonUserUrlHash");
-                for( i=0; i<comments.length; i++ ) {
-                    var comment = comments[i];
-                    var dt = new Date(comment.date);
-                    //var url = "http://" + comment.contentDomain + comment.contentHref + cookieAuth;
-                    var url = comment.contentHref;
-                    displayPost(comment.user, dt, comment.notes, comment.contentTitle, url); // pageTitle and pagePath are only present for aggregated results
-                }
-                jQuery(".barList abbr").timeago();
+        flog('processPosts', comments);
+        
+        if (comments) {
+            var commentsStream = $('.panel-recent-posts .kcomments-stream');
+            
+            if (comments.length > 0) {
+                commentsStream.html('');
+                $.each(comments.sort(dateOrd), function (i, comment) {
+                    // pageTitle and pagePath are only present for aggregated results
+                    displayPost(comment.user, new Date(comment.date), comment.notes, comment.contentTitle, comment.contentHref);
+                });
+                
+                commentsStream.find('.comment-time').timeago();
             } else {
-                $(".barList").html("<li>No recent posts</li>");
+                commentsStream.html('<p>No recent posts</p>');
             }
         }
     }
-
+    
     function displayPost(user, date, comment, pageTitle, pagePath) {
-        if( user == null ) {
-            log("missing user, ignore");
+        flog('displayPost', user, date, comment, pageTitle, pagePath);
+        
+        if (!user) {
             return;
         }
-        log("user", user);
-        var li = $("<li>");
-        var manageUserHref = "manageUsers/" + user.userId;
-        if( user.photoHash ) {
-            li.append("<a class='profilePic' href='" + manageUserHref + "'><img src='/_hashes/files/" + user.photoHash + "' alt='' /></a>");
-        } else {
-            li.append("<a class='profilePic' href='" + manageUserHref + "'><img src='/templates/apps/user/profile.png' alt='' /></a>");
-        }
-        li.append(user.name + " posted in <a target='_blank' class='module' href='" + pagePath + "'><span>" + pageTitle + "</span></a>");
+        
+        var userPublicLink = '/users/' +  user.userName+ '/public';
+        var userPhoto = user.photoHash ? '/_hashes/files/' + user.photoHash : '/templates/apps/user/profile.png';
         var formattedDate = date.toISOString();
-        var commentHtml = "<div class='post'>";
-        commentHtml += "<p>" + comment + "</p>";
-        commentHtml += "<em><abbr class='timeago' title='" + formattedDate + "'>" + formattedDate + "</abbr></em>";
-        commentHtml += "</div>";
-        li.append(commentHtml);
-
-        li.append();
-        $(".barList").append(li);
+        
+        $('.panel-recent-posts .kcomments-stream').append(
+            '<div class="comment">' +
+            '    <div class="comment-user">' +
+            '        <a class=" comment-user-pic" href="' + userPublicLink + '">' +
+            '            <img src="' + userPhoto + '" alt="' + user.name + '" />' +
+            '        </a>' +
+            '    </div>' +
+            '    <div class="comment-detail">' +
+            '        <p class="comment-content">' +
+            '            <a class="comment-user-name" href="' + userPublicLink + '">' + user.name + '</a>' +
+            '            posted in <a href="' + pagePath + '" target="_blank">' + pageTitle + '</a>' +
+            '        </p>' +
+            '        <abbr title="' + formattedDate + '" class="comment-time small text-muted">' + formattedDate + '</abbr>' +
+            '    </div>' +
+            '</div>'
+        );
     }
-
-    window.initPosts = initPosts;
-})(jQuery);
+    
+})(jQuery, window);

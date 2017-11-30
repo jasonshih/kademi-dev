@@ -5,6 +5,13 @@
  * @version: 0.0.0
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap (optional), FontAwesome (optional)
  */
+/**!
+ * KEditor - Kademi content editor
+ * @copyright: Kademi (http://kademi.co)
+ * @author: Kademi (http://kademi.co)
+ * @version: 0.0.0
+ * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap (optional), FontAwesome (optional)
+ */
 /**
  * KEditor accordion Component
  * @copyright: Kademi (http://kademi.co)
@@ -35,19 +42,15 @@
                 var panelCollapseId = keditor.generateId('collapse' + index);
                 p.find('.panel-heading').attr('id', itemId);
                 p.find('.panel-collapse').attr('aria-labelledby', itemId).attr('id', panelCollapseId);
-                var title = p.find('a[data-toggle]').html();
                 p.find('a[data-toggle]').attr('href', '#' + panelCollapseId).attr('aria-controls', '#' + panelCollapseId);
-                if (title.indexOf('<div>') === -1) {
-                    p.find('a[data-toggle]').html('<div>' + title + '</div>');
-                }
             });
 
             componentContent.find('.accordionWrap .panel-collapse').collapse('show');
             componentContent.find('.panel-footer, .btnAddAccordionItem').removeClass('hide');
-            componentContent.find('.panel-title a div').prop('contenteditable', true);
+            componentContent.find('.panel-title a .accHeadingText').prop('contenteditable', true);
             componentContent.find('.panel-collapse .panel-body').prop('contenteditable', true);
 
-            componentContent.find('.panel-title a div, .panel-collapse .panel-body').on('input', function (e) {
+            componentContent.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').on('input', function (e) {
                 if (typeof options.onComponentChanged === 'function') {
                     options.onComponentChanged.call(contentArea, e, component);
                 }
@@ -57,11 +60,11 @@
                 }
 
                 if (typeof options.onContentChanged === 'function') {
-                    options.onContentChanged.call(contentArea, e);
+                    // options.onContentChanged.call(contentArea, e);
                 }
             });
 
-            var editor = componentContent.find('.panel-title a div, .panel-collapse .panel-body').ckeditor(options.ckeditorOptions).editor;
+            var editor = componentContent.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').ckeditor(options.ckeditorOptions).editor;
             editor.on('instanceReady', function () {
                 flog('CKEditor is ready', component);
 
@@ -92,7 +95,7 @@
                 clone.find('.panel-collapse').attr('aria-labelledby', itemId).attr('id', panelCollapseId);
                 clone.find('a[data-toggle]').attr('href', '#' + panelCollapseId);
                 componentContent.find('.accordionWrap .panel-group').append(clone);
-                var editor = clone.find('.panel-title a div, .panel-collapse .panel-body').ckeditor(options.ckeditorOptions).editor;
+                var editor = clone.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').ckeditor(options.ckeditorOptions).editor;
                 editor.on('instanceReady', function () {
                     flog('CKEditor is ready', component);
 
@@ -105,10 +108,6 @@
 
         getContent: function (component, keditor) {
             var componentContent = component.children('.keditor-component-content');
-            componentContent.find('.panel-title a div').each(function () {
-                var h = $(this).html();
-                $(this).parent('a').html(h);
-            });
             componentContent.find('.panel-collapse .panel-body').each(function () {
                 var h = $(this).html();
                 $(this).replaceWith('<div class="panel-body">' + h + '</div>');
@@ -122,7 +121,10 @@
                 });
             }
             componentContent.find('.panel-footer, .btnAddAccordionItem').addClass('hide');
-
+            componentContent.find('[contenteditable]').removeAttr('contenteditable');
+            componentContent.find('.accHeadingText').each(function () {
+               $(this).css('outline', 'none').text($(this).text());
+            });
             return componentContent.html();
         },
 
@@ -156,13 +158,54 @@
                         comp.attr('data-panel-style', this.value);
                         comp.find('.panel').removeClass(old).addClass(this.value);
                     });
+                    
+                    $.getStyleOnce('/static/bootstrap-iconpicker/1.7.0/css/bootstrap-iconpicker.min.css');
+                    $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/iconset/iconset-fontawesome-4.2.0.min.js', function () {
+                        $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/bootstrap-iconpicker.min.js', function () {
+                            form.find('.btn-collapsed-icon, .btn-expanded-icon').iconpicker({
+                                iconset: 'fontawesome',
+                                cols: 10,
+                                rows: 4,
+                                placement: 'left'
+                            });
+                            
+                            form.find('.btn-collapsed-icon').on('change', function (e) {
+                                var component = keditor.getSettingComponent();
+                                component.attr('data-collapsed-icon', e.icon);
+                                component.find('.panelIconCollapsed').each(function () {
+                                    this.className = "panelIconCollapsed fa "+ e.icon;
+                                })
+                            });
+                            
+                            form.find('.btn-expanded-icon').on('change', function (e) {
+                                var component = keditor.getSettingComponent();
+                                component.attr('data-expanded-icon', e.icon);
+                                component.find('.panelIconExpanded').each(function () {
+                                    this.className = "panelIconExpanded fa "+ e.icon;
+                                })
+                            });
+                        });
+                    });
+                            
                 }
             });
         },
 
         showSettingForm: function (form, component, keditor) {
+            flog('showSettingForm "Accordion" component');
+            var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
+            
             form.find('.collapsedAll').prop('checked', component.attr('data-initial-collapsed') == 'true');
             form.find('.panelStyle').val(component.attr('data-panel-style'));
+            
+            $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/iconset/iconset-fontawesome-4.2.0.min.js', function () {
+                $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/bootstrap-iconpicker.min.js', function () {
+                    var iconCollapsed = dataAttributes['data-collapsed-icon'] || 'fa-caret-up';
+                    form.find('.btn-collapsed-icon').find('i').attr('class', 'fa ' + iconCollapsed).end().find('input').val(iconCollapsed);
+                    var iconExpanded = dataAttributes['data-expanded-icon'] || 'fa-caret-down';
+                    form.find('.btn-expanded-icon').find('i').attr('class', 'fa ' + iconExpanded).end().find('input').val(iconExpanded);
+                });
+            });
         }
     };
 })(jQuery);

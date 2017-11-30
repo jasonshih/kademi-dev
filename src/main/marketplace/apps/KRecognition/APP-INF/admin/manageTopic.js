@@ -314,7 +314,8 @@
         var m = {
             name: Utils.safeString(params.newName),
             title: Utils.safeString(params.title),
-            levelAmount: formatter.toBigDecimal(params.levelAmount, 2)
+            levelAmount: formatter.toBigDecimal(params.levelAmount, 2),
+            colour: Utils.safeString(params.colour)
         };
 
         // Check for an existing level

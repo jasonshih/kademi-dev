@@ -1,23 +1,38 @@
-/**
- * Created by Anh on 08/03/2017.
- */
-$(function () {
-    $(document).on('click', '.kpiPeriodPicker .dropdown-menu a', function (e) {
-        e.preventDefault();
-        var startDate = $(this).attr('data-start');
-        var endDate = $(this).attr('data-end');
-        $.cookie('pageDatePicker-startDate', startDate);
-        $.cookie('pageDatePicker-endDate', endDate);
-        $.cookie('kpiPeriodPicker-text', $(this).text());
-        $(this).parents('.kpiPeriodPicker').find('button span.txt').text($(this).text())
-        $(this).parent().addClass('active').siblings('li').removeClass('active');
-        $(document.body).trigger('pageDateChanged');
+(function ($) {
+    $(function () {
+        $(document).on('click', '.kpiPeriodPicker .dropdown-menu a', function (e) {
+            e.preventDefault();
+            
+            var a = $(this);
+            var startDate = a.attr('data-start');
+            var endDate = a.attr('data-end');
+            var selectedPeriod = a.text();
+            var kpiPeriodPicker = a.closest('.kpiPeriodPicker');
+            
+            flog('KPI period is selected: ' + selectedPeriod + ' (' + startDate + ' - ' + endDate + ')');
+            
+            $.cookie('pageDatePicker-startDate', startDate);
+            $.cookie('pageDatePicker-endDate', endDate);
+            $.cookie('kpiPeriodPicker-text', selectedPeriod);
+            
+            kpiPeriodPicker.find('button span.txt').text(selectedPeriod)
+            kpiPeriodPicker.find('a.active').removeClass('active');
+            a.addClass('active');
+            
+            $(document.body).trigger('pageDateChanged', startDate, endDate);
+        });
+        
+        var kpiPeriodPicker = $('.kpiPeriodPicker');
+        var cookiePeriod = $.cookie('kpiPeriodPicker-text');
+        if (!cookiePeriod) {
+            flog('No cookie for kpiPeriodPicker');
+            
+            setTimeout(function () {
+                kpiPeriodPicker.find('ul li a.current').trigger('click');
+            }, 250);
+        } else {
+            kpiPeriodPicker.find('ul li a:contains("' + cookiePeriod + '")').trigger('click');
+        }
     });
     
-    var kpiPeriodPicker = $('.kpiPeriodPicker');
-    if (!$.cookie('kpiPeriodPicker-text')) {
-        kpiPeriodPicker.find('ul li a.current').trigger('click');
-    } else {
-        kpiPeriodPicker.find('ul li a:contains("' + $.cookie('kpiPeriodPicker-text') + '")').trigger('click');
-    }
-});
+})(jQuery);

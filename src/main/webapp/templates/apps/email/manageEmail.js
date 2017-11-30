@@ -1,11 +1,22 @@
 function initManageEmail() {
     initModalAddEmail();
+    initModalAddTemplate();
     initDeleteEmail();
     flog("init dups");
     $("#email-trigger-wrapper").on("click", ".btn-dup-email", function (e) {
         e.preventDefault();
         var name = $(e.target).attr("href");
         duplicate(name);
+    });
+    $("#email-trigger-wrapper").on("click", ".btn-dup-temp-email", function (e) {
+        e.preventDefault();
+        var name = $(e.target).attr("href");
+        duplicate(name, true);
+    });
+    $('body').on('click', '.btn-dup-template', function (e) {
+        e.preventDefault();
+        var name = $(e.target).attr("href");
+        duplicate(name, true);
     });
 }
 
@@ -104,7 +115,7 @@ function loadEmailItemDetails(target, id) {
 }
 
 function doSendTest() {
-    flog("doSendTest");
+    flog("doSendTest", window.location.pathname);
     $.ajax({
         type: 'POST',
         url: window.location.pathname,
@@ -164,21 +175,39 @@ function initModalAddEmail() {
     });
 }
 
+function initModalAddTemplate() {
+    flog("initModalAddTemplate");
+    var modal = $('#modal-add-template');
+    var form = modal.find('form');
+
+    form.forms({
+        onSuccess: function (data) {
+            flog('saved ok', data);
+            Msg.success(form.find('#templateName').val() + ' is created!');
+            modal.modal('hide');
+            form.trigger('reset');
+            $('#email-template-table').reloadFragment();
+            $('#modal-add-email-templates').reloadFragment();
+        }
+    });
+}
+
 function initDeleteEmail() {
     //Bind event for Delete email
     $('body').on('click', 'a.btn-delete-email', function (e) {
         e.preventDefault();
 
-        var btn = $(e.target);
+        var btn = $(this);
         flog('do it', btn);
 
         var href = btn.attr('href');
-        var name = getFileName(href);
+        var name = btn.attr('data-title');
 
         confirmDelete(href, name, function () {
             flog('remove', btn);
             btn.closest('tr').remove();
-            Msg.success(href + ' is deleted!');
+            Msg.success(name + ' is deleted!');
+            $('#modal-add-email-templates').reloadFragment();
         });
     });
 }
@@ -275,26 +304,41 @@ function initChooseGroupModal() {
 }
 
 
-function duplicate(href) {
+function duplicate(href, createTemplate) {
     flog("duplicate", href);
     try {
+
+        var data = {};
+        if (createTemplate) {
+            data.createTemplate = true;
+        } else {
+            data.duplicate = true;
+        }
+
         $.ajax({
             type: 'POST',
             url: href,
-            data: {
-                duplicate: "true"
-            },
+            data: data,
             success: function (data) {
                 if (data.status) {
                     flog("saved ok", data);
-                    $("#email-trigger-wrapper").reloadFragment();
+                    if (createTemplate) {
+                        if (data.nextHref) {
+                            window.location.href = data.nextHref;
+                        } else {
+                            $("#email-template-table").reloadFragment();
+                            $('#modal-add-email-templates').reloadFragment();
+                        }
+                    } else {
+                        $("#email-trigger-wrapper").reloadFragment();
+                    }
                 } else {
-                    Msg.error('An error occured duplicating the email. Please try again and contact support if its still broke.');
+                    Msg.error('An error occurred duplicating the email. Please try again and contact support if its still broke.');
                 }
             },
             error: function (resp) {
                 flog("error", resp);
-                Msg.error('An error occured duplicating the email. Please try again and contact support if its still broke.');
+                Msg.error('An error occurred duplicating the email. Please try again and contact support if its still broke.');
             }
         });
     } catch (e) {

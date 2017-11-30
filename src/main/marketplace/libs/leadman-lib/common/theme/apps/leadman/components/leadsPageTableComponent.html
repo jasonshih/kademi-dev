@@ -1,0 +1,74 @@
+<style>
+    .editable{
+        text-decoration: none;
+        border-bottom: 1px black dotted;
+    }
+    #lead-query-container{
+        margin-bottom: 10px;
+    }
+    .pv-xxxxl{
+        padding-bottom: 60px !important;
+        padding-top: 60px !important;
+    }
+    @media (max-width: 767px) {
+        .pv-xxxxl{
+            padding-bottom: 15px !important;
+            padding-top: 15px !important;
+        }
+    }
+    .checkIcon{
+        width: 15px;
+        display: inline-block;
+    }
+    .leadDropFilter .dropdown-menu > li > a{
+        padding-left: 10px;
+    }
+</style>
+<div class="fw-boxed leads-page-table-component" data-team="$!params.team" data-query="$!params.query"
+     data-lead-type="$!params.leadType" data-tags="$!params.tags"
+     data-assigned-to="$!params.assignedTo"
+     data-sources="$!params.sources"
+
+    #if (!$params.leadType)
+     data-lead-type="active"
+     #else
+     data-lead-type="$!params.leadType"
+    #end
+
+    >
+
+
+    <div class="panel panel-default ">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive no-scroll-medium">
+                    <table id="leadTable" class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th>Score</th>
+                            <th>Title</th>
+                            <th>Company Title</th>
+                            <th>First Name</th>
+                            <th>Surame</th>
+                            <th>Email</th>
+                            <th>Stage</th>
+                            <th>Source</th>
+                            <th>Deal Amount</th>
+                            <th>Assigned To</th>
+                            <th>Created Date</th>
+                            <th>Journey</th>
+                            <th></th>
+                            <th><input type="checkbox" id="leadsCheckAll"></th>
+                        </tr>
+                        </thead>
+                        <tbody id="leadBody">
+                        <tr class="text-center">
+                            <td colspan="99">Loading...</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -19,7 +19,13 @@
     #set ($selectedOrg = $rootFolder.orgData.childOrg( $selectedOrgId ) )
 #end
 
-#set($beans = $applications.Reporting.listUserOrgs(20, $rootFolder.orgData, true, $groups))
+#if ($request.params.numOrgs && $request.params.numOrgs != '')
+    #set ($numOrgsInt = $formatter.toInteger($request.params.numOrgs))
+#else
+    #set ($numOrgsInt = 20)
+#end
+
+#set($beans = $applications.Reporting.listUserOrgs($numOrgsInt, $rootFolder.orgData, true, $groups))
 #if($beans.empty)
     <li><i class="fa fa-check" style="visibility: hidden"></i> No selections available</li>
 #else
@@ -31,7 +37,9 @@
 #macro(genList $b $padding)
     <li #if($padding && $padding > 0)style="padding-left: ${padding}px"#end>
         <a data-orgId="$b.orgId" href="#">
-            <i class="fa fa-check" #if($selectedOrgId != $b.orgId)style="visibility: hidden"#end></i> $b.title
+            <i class="fa fa-check" #if($selectedOrgId != $b.orgId)style="visibility: hidden"#end></i> 
+            $b.title 
+            <small class="text-muted">$b.orgId</small>
         </a>
     </li>
     #if($b.childOrgs && !$b.childOrgs.empty)

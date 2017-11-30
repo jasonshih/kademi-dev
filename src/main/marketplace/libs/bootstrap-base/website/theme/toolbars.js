@@ -9,7 +9,7 @@ if (console && console.log) {
 var editorSkin = "bootstrapck";
 
 // Plugins
-var standardExtraPlugins = "autogrow,embed_video,embed_audio,fuse-image,modal,bspanel,forms,bslayout2col,bslayout3col";
+var standardExtraPlugins = "autogrow,embed_video,embed_audio,fuse-image,kcode,modal,bspanel,forms,bslayout2col,bslayout3col";
 var standardRemovePlugins = "resize,image,save,newpage,preview,tliyoutube,image2,pbckcode,googledocs,language"
 
 // Paths

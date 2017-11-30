@@ -112,7 +112,6 @@
             
             var dataContinue;
             
-            
             // Event of hiding the modal
             $(upcropContainer).on('hidden.bs.modal', function () {
                 flog("Hiding modal...");
@@ -316,7 +315,6 @@
                 return tag;
             }
             
-            
             function convertCanvasToBlob(canvas) {
                 var blobBin = atob(canvas.toDataURL('image/png').split(',')[1]);
                 var array = [];
@@ -453,10 +451,6 @@
                         cropZone.find('.jcrop-holder').children().eq(0).hide();
                     });
 
-                    // img.Jcrop({
-                    //     setSelect: [ 106, 0, 359, 359 ]
-                    // });
-
                     if (!config.isEmbedded) {
                         upcropContainer.trigger('resize');
                     }
@@ -548,6 +542,18 @@
                 var imgCrop = upcropData.cropZone.find('.image-crop');
                 
                 return imgCrop.data('Jcrop');
+            } else {
+                $.error('This is not upcrop object!');
+                return null;
+            }
+        },
+        setUrl: function (url) {
+            var target = $(this);
+            var upcropData = target.data('upcrop');
+            
+            if (upcropData) {
+                upcropData.options.url = url;
+                upcropData.uploadZone.find('form').attr('action', url);
             } else {
                 $.error('This is not upcrop object!');
                 return null;

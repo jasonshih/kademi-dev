@@ -42,7 +42,7 @@
             <table class="table table-striped">
                 <colgroup>
                     <col width="200px" />
-                    <col width="700px"/>
+                    <col width="60px"/>
                     <col />
                     <col width="100px" />
                     <col width="100px" />
@@ -222,7 +222,7 @@
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                 <h4 class="modal-title">Assign points to</h4>
             </div>
-            <form method="post" action="/rewards/points/" class="form-horizontal" id="new-points-form">
+            <form method="post" action="/points-buckets/points/" class="form-horizontal" id="new-points-form">
                 <div class="modal-body">
                     <p class="alert alert-warning">Please note that any applicable allocation rules will also be processed.</p>
 
@@ -234,7 +234,7 @@
                     <div class="form-group">
                         <label class="control-label col-md-3" for="awardNumPoints">No. of points</label>
                         <div class="col-md-9">
-                            <input type="text" name="awardNumPoints" required="true" id="awardNumPoints" class="numeric required form-control" />
+                            <input type="number" name="awardNumPoints" id="awardNumPoints" class="numeric required form-control" />
                         </div>
                     </div>
 
@@ -253,7 +253,7 @@
                     <div class="form-group">
                         <label class="control-label col-md-3" for="reason">Reason</label>
                         <div class="col-md-9">
-                            <input type="text" name="reason" class="form-control" />
+                            <input type="text" name="reason" class="form-control required" />
                         </div>
                     </div>
 
@@ -272,7 +272,7 @@
 <div id="modal-debit-points" class="modal fade" aria-hidden="true" tabindex="-1">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
-            <form method="post" action="/rewards/points/" class="form-horizontal" id="new-points-form">
+            <form method="post" action="/points-buckets/points/" class="form-horizontal" id="new-points-form">
 
                 <input type="hidden" name="debitPoints" value="debitPoints" />
                 <input type="hidden" name="email" value="" />
@@ -289,7 +289,7 @@
                     <div class="form-group">
                         <label class="control-label col-md-3" for="numPoints">No. of points</label>
                         <div class="col-md-9">
-                            <input type="text" name="numPoints" required="true" class="numeric required form-control" />
+                            <input type="number" name="numPoints" class="numeric required form-control" />
                         </div>
                     </div>
 

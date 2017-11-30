@@ -1,0 +1,30 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Activate Alert Action</title>
+    </head>
+    <body>
+        #if( $params.mode == "settings" )
+        <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="opportunityTitle">Opportunity Title</label>
+                    <input type="text" id="opportunityTitle" name="opportunityTitle" value="$!formatter.htmlEncode( $page.opportunityTitle)" placeholder="My Opportunity" class="form-control" />
+                    <small>Can use MVEL syntax. Leave blank for the lead profile.</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="stageId">Stage</label>
+                    <select name="stageId" class="form-control stage">
+                        $formatter.option("", "[No stage selected]", null)
+                        #foreach($sp in $page.salesPipelines)
+                        $formatter.option($sp.stage_id, $sp.stage_name, $page.stageId)
+                        #end
+                    </select>
+                </div>
+            </div>
+        </form>
+        #end
+    </body>
+</html>

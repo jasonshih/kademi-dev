@@ -597,6 +597,13 @@
                     table.attr('data-experiment', this.value);
                 });
                 
+                var visRules = form.find(".visible-rules");
+                visRules.on('change', function () {
+                    var container = keditor.getSettingContainer();
+                    var table = container.find('.keditor-container-inner > table');
+                    table.attr('data-expr', this.value);
+                });                  
+                
                 form.find('.columns-setting').on('change', '.txt-padding', function () {
                     var txt = $(this);
                     var dataCss = txt.attr('data-css');
@@ -658,6 +665,10 @@
         var expPath = table.data("experiment");
         var txtExperiment = form.find('.select-experiment');
         txtExperiment.val(expPath);
+        
+        var visRulesExpr = table.data("expr");
+        var visRules = form.find(".visible-rules");
+        visRules.val(visRulesExpr);        
         
         var columnsSettings = form.find('.columns-setting');
         columnsSettings.html('');
@@ -787,8 +798,8 @@
                                 {name: 'others', groups: ['others']},
                                 {name: 'about', groups: ['about']}
                             ],
-                            extraPlugins: 'sourcedialog,lineheight,onchange,fuse-image',
-                            removePlugins: 'table,magicline,tabletools',
+                            extraPlugins: 'sourcedialog,lineheight,onchange,fuse-image,kcode',
+                            removePlugins: 'resize,image,save,newpage,preview,tliyoutube,image2,pbckcode,googledocs,language,table,magicline,tabletools',
                             removeButtons: 'Save,NewPage,Preview,Print,Templates,PasteText,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Outdent,Indent,Blockquote,CreateDiv,Language,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,Maximize,About,ShowBlocks,BidiLtr,BidiRtl,Flash,Image,Subscript,Superscript,Anchor',
                             enterMode: CKEDITOR.ENTER_DIV,
                             forceEnterMode: true,
@@ -798,7 +809,8 @@
                             stylesSet: 'myStyles:' + stylesPath,
                             line_height: '1;1.2;1.5;2;2.2;2.5',
                             pagePath: options.pagePath,
-                            basePath: options.basePath
+                            basePath: options.basePath,
+                            fullUrl: true
                         },
                         niceScrollEnabled: false,
                         nestedContainerEnabled: false,
