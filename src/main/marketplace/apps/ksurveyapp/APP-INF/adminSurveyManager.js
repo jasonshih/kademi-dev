@@ -906,15 +906,21 @@ function getSurveyCSV(page) {
     var searchResult = findQuestionBySurvey(page, survey.name);
     var questionResult = searchResult.questionResult;
     var answerResult = searchResult.answerResult;
-    var csvheader = ["Survey", "Total Submissions","Question Title", "Question Type", "Answer", "Votes", "Percentage", "Submitted By"];
+    var csvheader = ["Survey","Question Title", "Question Type", "Answer", "Votes", "Percentage", "Submitted By"];
     arr.push(csvheader);
-    var surveyStats = getUserSurveyStatistic(page, survey.name);
+    var surveyStats = getSurveyStatistic(page, survey.name);
     var surveyResult = surveyStats.surveyResult;
     var questions = questionResult.hits.hits;
     var answers = answerResult.hits.hits;
+    var totalSumits = surveyStats.totalSubmits;
 
     for (var i in questions) {
         var q = questions[i];
+
+        if (!q || !surveyResult[q.id]){
+            continue;
+        }
+
         if (q.source.type != '1') {
             var totalQuestionSubmits = surveyResult[q.id].docCount;
             for (j in answers) {
@@ -925,28 +931,30 @@ function getSurveyCSV(page) {
                         totalAnswerSubmits = surveyResult[q.id].answers[a.id];
                     }
                     var progress = formatter.toPercent(totalAnswerSubmits, totalQuestionSubmits);
-                    var surveyCSVRow = [survey.jsonObject.name, totalAnswerSubmits, q.source.title, getQuestionType(q.source.type), a.source.body, totalAnswerSubmits, progress];
+                    var surveyCSVRow = [survey.jsonObject.name, q.source.title, getQuestionType(q.source.type), a.source.body, totalAnswerSubmits, progress];
                     arr.push(surveyCSVRow);
                 }
             }
         } else {
-            var totalAnswerSubmits = surveyResult[q.id].answers['PLAIN_TEXT_ANSWER'];
+            // var totalAnswerSubmits = surveyResult[q.id].answers['PLAIN_TEXT_ANSWER'];
             var plainAnswers = getPlainAnswers(page, q.id, survey.name);
 
-            for (var i in plainAnswers.hits.hits) {
-                var a = plainAnswers.hits.hits[i];
+            for (var k in plainAnswers.hits.hits) {
+                var a = plainAnswers.hits.hits[k];
                 var userRes = applications.userApp.findUserResource(a.source.userId);
                 var name = '';
                 if (userRes){
                     name = userRes.extProfileBean.formattedName();
                 }
-                var surveyCSVRow = [survey.jsonObject.name, totalAnswerSubmits, q.source.title, getQuestionType(q.source.type), a.source.answerBody, '', '', name]
+                var surveyCSVRow = [survey.jsonObject.name, q.source.title, getQuestionType(q.source.type), a.source.answerBody, '', '', name]
                 arr.push(surveyCSVRow);
             }
         }
     }
 
-
+    arr.push([]);
+    arr.push([]);
+    arr.push(['Total Submits', totalSumits]);
 
     return views.csvView(arr);
 }
