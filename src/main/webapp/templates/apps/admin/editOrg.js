@@ -1,3 +1,6 @@
+var map;
+var mapDiv;
+
 function initEditOrg() {
     $(".org-details").forms({
         onSuccess: function (resp) {
@@ -17,16 +20,25 @@ function initEditOrg() {
     $(".chosen-select").chosen({
         search_contains: true
     });
+    
     $(document.body).on("click", ".btnSearchAddress", function (e) {
         e.preventDefault();
+        
+        if (mapDiv.is(':hidden')) {
+            mapDiv.show();
+            google.maps.event.trigger(map, "resize");
+        }
+        
         search();
     });
+    
     $(document.body).on("click", ".addOrgType", function (e) {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
         var name = getFileName(href);
         addOrgType(name, e);
     });
+    
     $(document.body).on("click", ".removeOrgType", function (e) {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
@@ -95,12 +107,14 @@ function initEditOrg() {
 }
 
 function initMap() {
+    mapDiv = $('#map');
+    
     var orgLoc = {}; //lat: -33.867, lng: 151.195
     if (orgLat && orgLng) {
         orgLoc.lat = orgLat;
         orgLoc.lng = orgLng;
         flog("use coords", orgLoc);
-        map = new google.maps.Map(document.getElementById('map'), {
+        map = new google.maps.Map(mapDiv.get(0), {
             center: orgLoc,
             zoom: 15
         });
