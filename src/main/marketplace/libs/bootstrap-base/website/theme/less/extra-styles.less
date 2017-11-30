@@ -630,6 +630,19 @@ acronym[title] {
     }
 }
 
+.media {
+    .media-left,
+    .media-right {
+        a {
+            display: block;
+        }
+    }
+    
+    .media-object {
+        height: auto;
+    }
+}
+
 @media (max-width: @screen-xs-max) {
     .media,
     .media-left,
@@ -648,10 +661,6 @@ acronym[title] {
     .media {
         > * + * {
             margin-top: 15px;
-        }
-        
-        .media-object {
-            .img-responsive;
         }
     }
 }
