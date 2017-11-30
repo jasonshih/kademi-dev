@@ -11,6 +11,21 @@
 #set($showExtraFields = false)
 #end
 
+#set($showTC = $appSettings.showTC)
+#if( "$!showTC" == "" )
+#set($showTC = false)
+#end
+
+#set($hasURL = true)
+#if( "$!appSettings.tcURL" == "" )
+#set($hasURL = false)
+#end
+
+#set($tcText = $appSettings.tcText)
+#if( "$!tcText" == "" )
+#set($tcText = "Please read and accept the T&C")
+#end
+
 #set( $rightKindOfPage = $page.is("dashboard") )
 
 #if( $rightKindOfPage )
@@ -92,6 +107,19 @@
                             <small>Kademi ID: $currentUser.id</small>
                         </div>
                     </div>
+
+                    #if($showTC == true)
+                    #if($hasURL == true)
+                    <div class="form-group">
+                        <label for="tc" class="control-label col-md-3">Terms & Conditions</label>
+                        <div class="col-md-9">
+                            <div class="input-group" style="margin-top:8px">
+                                <input type="checkbox" name="acceptTC" class="required" style="margin-top:0px; margin-right: 10px" id="acceptTC"/> <a target="_blank" href="$appSettings.tcURL">$tcText</a>
+                            </div>
+                        </div>
+                    </div>
+                    #end
+                    #end
                 </div>
 
                 <div class="modal-footer">
