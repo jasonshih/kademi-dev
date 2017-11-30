@@ -60,7 +60,7 @@ function initProductContentsTab(editorType, allGroups) {
             }
         },
         onSuccess: function () {
-            Msg.success('Successfully updated product\'s brief!');
+            Msg.success('Successfully updated product\'s brief!', 'saveProduct');
         }
     });
     
@@ -72,7 +72,7 @@ function initProductContentsTab(editorType, allGroups) {
             }
         },
         onSuccess: function () {
-            Msg.success('Successfully updated product\'s content!');
+            Msg.success('Successfully updated product\'s content!', 'saveProduct');
         }
     });
 }
@@ -85,7 +85,7 @@ function initProductDetailsForm() {
                 whenComplete: function (dom) {
                 }
             });
-            Msg.success('Successfully updated product!');
+            Msg.success('Successfully updated product!', 'saveProduct');
             
             var webNameInput = $('form.updateProduct [name=webName]');
             var origWebname = webNameInput.data('orig')
@@ -184,7 +184,7 @@ function initProductVariants() {
         var id = $(this).attr('href');
         var name = $(this).attr('title');
         confirmDelete(id, name, function () {
-            Msg.success('Variant type deleted');
+            Msg.success('Variant type deleted', 'deleteVariant');
             reloadVariantList();
         });
     });
@@ -194,7 +194,7 @@ function initProductVariants() {
         var id = $(this).attr('href');
         var name = $(this).attr('title');
         confirmDelete(id, name, function () {
-            Msg.success('Variant deleted');
+            Msg.success('Variant deleted', 'deleteVariant');
             reloadVariantList();
         });
     });
@@ -285,10 +285,10 @@ function initProductVariantImgUpload() {
                     success: function (resp) {
                         flog('success');
                         if (resp.status) {
-                            Msg.info('Done');
+                            Msg.info('Done', 'uploadVariantImg');
                             reloadVariantList();
                         } else {
-                            Msg.error('An error occured processing the variant image.');
+                            Msg.error('An error occured processing the variant image.', 'uploadVariantImg');
                         }
                     },
                     error: function () {
@@ -330,10 +330,10 @@ function initProductImages() {
                 success: function (resp) {
                     flog('success');
                     if (resp.status) {
-                        Msg.info('Done');
+                        Msg.info('Done', 'uploadProductImg');
                         $('#product-images').reloadFragment();
                     } else {
-                        Msg.error('An error occured processing the product image');
+                        Msg.error('An error occured processing the product image', 'uploadProductImg');
                     }
                 },
                 error: function () {
@@ -364,10 +364,10 @@ function doCreateProductParameter(newTitle) {
         success: function (resp) {
             flog('success');
             if (resp.status) {
-                Msg.info('Done');
+                Msg.info('Done', 'productParams');
                 reloadVariantList();
             } else {
-                Msg.error('An error occured creating the variant type');
+                Msg.error('An error occured creating the variant type', 'productParams');
             }
         },
         error: function () {
@@ -387,10 +387,10 @@ function doCreateProductField(newTitle) {
         success: function (resp) {
             flog('success');
             if (resp.status) {
-                Msg.info('Done');
+                Msg.info('Done', 'productParams');
                 reloadVariantList();
             } else {
-                Msg.error('An error occured creating the field');
+                Msg.error('An error occured creating the field', 'productParams');
             }
         },
         error: function () {
@@ -407,8 +407,7 @@ function initCategoryManagment() {
         e.stopPropagation();
         if (confirm('Are you sure you want to delete this category?')) {
             var a = $(this);
-            var href = a.attr('href');
-            var categoryName = $(e.target).closest('a').attr('href');
+            var categoryName = a.attr('href');
             doRemoveFromCategory(categoryName);
         }
     });
@@ -434,11 +433,11 @@ function doAddToCategory(categoryName) {
             if (resp.status) {
                 reloadCategories();
             } else {
-                Msg.error('Couldnt add the product to category: ' + resp.messages);
+                Msg.error('Couldnt add the product to category: ' + resp.messages, 'addToCategory');
             }
         },
         error: function (e) {
-            Msg.error(e.status + ': ' + e.statusText);
+            Msg.error(e.status + ': ' + e.statusText, 'addToCategory');
         }
     })
     
@@ -455,11 +454,11 @@ function doRemoveFromCategory(categoryName) {
             if (resp.status) {
                 reloadCategories();
             } else {
-                Msg.error('Couldnt remove the product to category: ' + resp.messages);
+                Msg.error('Couldnt remove the product to category: ' + resp.messages, 'removeCategory');
             }
         },
         error: function (e) {
-            Msg.error(e.status + ': ' + e.statusText);
+            Msg.error(e.status + ': ' + e.statusText, 'removeCategory');
         }
     })
     
