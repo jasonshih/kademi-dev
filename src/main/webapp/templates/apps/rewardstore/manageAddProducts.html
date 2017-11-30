@@ -182,7 +182,7 @@
                 flog("add prods", $('#addProducts'));
                 $('#addSelected').click(function (e) {
                     e.preventDefault();
-                    Msg.info('Adding selected');
+                    Msg.info('Adding selected', 'manageAddProducts');
                     var checks = $("#products-list").find('input:checked');
                     var ids = [];
                     checks.each(function (count, item) {
@@ -206,7 +206,7 @@
                                 window.location.reload();
                             },
                             error: function () {
-                                Msg.error('Oh No! Something went wrong!');
+                                Msg.error('Oh No! Something went wrong!', 'manageAddProducts');
                             }
                         });
                     });
@@ -251,7 +251,7 @@
                         $("#searchResults").replaceWith(fragment);
                     },
                     error: function (resp) {
-                        Msg.error("An error occured doing the search. Please check your internet connection and try again");
+                        Msg.error("An error occured doing the search. Please check your internet connection and try again", 'manageAddProducts');
                     }
                 });
             }
@@ -269,15 +269,15 @@
                     success: function (response) {
                         flog("response", response, response.status);
                         if (response.status) {
-                            Msg.info(response.messages[0]);
+                            Msg.info(response.messages[0], 'manageAddProducts');
                             window.location.reload();
                         } else {
-                            Msg.error("There was an error changing the product status");
+                            Msg.error("There was an error changing the product status", 'manageAddProducts');
                         }
                     },
                     error: function (event, XMLHttpRequest, ajaxOptions, thrownError) {
                         flog('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
-                        Msg.error("There was an error changing the product inclusion status");
+                        Msg.error("There was an error changing the product inclusion status", 'manageAddProducts');
                     }
                 });
             }
