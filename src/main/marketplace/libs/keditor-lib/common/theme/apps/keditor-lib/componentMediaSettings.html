@@ -1,15 +1,9 @@
 <div class="form-horizontal">
+    <p class="alert alert-info">These options effect to left part of media component</p>
     <div class="form-group">
-        <label class="col-sm-12">Left width</label>
+        <label class="col-sm-12">Width</label>
         <div class="col-sm-12">
             <input type="number" class="form-control left-width" />
-            <small class="help-block">Width of left part which contains the photo</small>
-        </div>
-    </div>
-    <hr />
-    <div class="form-group">
-        <div class="col-sm-12">
-            <button type="button" class="btn btn-block btn-primary photo-edit">Change Photo</button>
         </div>
     </div>
     <div class="form-group">
@@ -22,8 +16,14 @@
             </select>
         </div>
     </div>
+    <hr />
     <div class="form-group">
-        <label class="col-sm-12">Style</label>
+        <div class="col-sm-12">
+            <button type="button" class="btn btn-block btn-primary photo-edit">Change Photo</button>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Photo Style</label>
         <div class="col-sm-12">
             <select class="form-control photo-style">
                 <option value="">None</option>
@@ -34,17 +34,13 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-12">Width</label>
+        <label class="col-sm-12">Photo width</label>
         <div class="col-sm-12">
             <input type="number" class="form-control photo-width" />
+            <small class="help-block">Height of photo will be <code>auto</code></small>
         </div>
     </div>
-    <div class="form-group">
-        <label class="col-sm-12">Height</label>
-        <div class="col-sm-12">
-            <input type="number" class="form-control photo-height" />
-        </div>
-    </div>
+    <hr />
     <div class="form-group">
         <label class="col-sm-12">Linkable</label>
         <div class="col-sm-12">

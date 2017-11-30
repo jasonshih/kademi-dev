@@ -84,7 +84,7 @@ $(function () {
             flog(listToDelete.join(','));
             deleteProducts(listToDelete.join(','));
         } else {
-            Msg.error('Please select the products you want to remove by clicking the checkboxes on the right');
+            Msg.error('Please select the products you want to remove by clicking the checkboxes on the right', 'deleteProduct');
         }
     });
 

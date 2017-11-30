@@ -310,9 +310,9 @@
                 $(".rewardStoreForm").forms({
                     onSuccess: function (resp) {
                         if (resp.status) {
-                            Msg.info("Saved ok");
+                            Msg.info("Saved ok", 'manageRewardStore');
                         } else {
-                            Msg.error("An error occured saving: " + resp);
+                            Msg.error("An error occured saving: " + resp, 'manageRewardStore');
                         }
                     }
                 });
@@ -330,7 +330,7 @@
                 $('#removeSelected').click(function (e) {
                     flog("clic");
                     e.preventDefault();
-                    Msg.info('Removing selected');
+                    Msg.info('Removing selected', 'manageRewardStore');
                     var checks = $("#products-list").find('input:checked');
                     var ids = [];
                     checks.each(function (count, item) {
@@ -354,7 +354,7 @@
                                 window.location.reload();
                             },
                             error: function () {
-                                Msg.error('Oh No! Something went wrong!');
+                                Msg.error('Oh No! Something went wrong!', 'manageRewardStore');
                             }
                         });
                     });
@@ -414,7 +414,7 @@
                         productInRewardModal.find("form").forms({
                             onSuccess: function (resp) {
                                 flog(resp);
-                                Msg.success(resp.messages);
+                                Msg.success(resp.messages, 'manageRewardStore');
                                 productInRewardModal.modal("hide");
                             }
                         });
@@ -422,7 +422,7 @@
                         productInRewardModal.modal("show");
                     },
                     error: function (resp) {
-                        Msg.error("An error occured doing the user search. Please check your internet connection and try again");
+                        Msg.error("An error occured doing the user search. Please check your internet connection and try again", 'manageRewardStore');
                     }
                 });
             }
@@ -463,7 +463,7 @@
                         $("#searchResults").replaceWith(fragment);
                     },
                     error: function (resp) {
-                        Msg.error("An error occured doing the search. Please check your internet connection and try again");
+                        Msg.error("An error occured doing the search. Please check your internet connection and try again", 'manageRewardStore');
                     }
                 });
             }
@@ -481,15 +481,15 @@
                     success: function (response) {
                         flog("response", response, response.status);
                         if (response.status) {
-                            Msg.info(response.messages[0]);
+                            Msg.info(response.messages[0], 'manageRewardStore');
                             window.location.reload();
                         } else {
-                            Msg.error("There was an error changing the product status");
+                            Msg.error("There was an error changing the product status", 'manageRewardStore');
                         }
                     },
                     error: function (event, XMLHttpRequest, ajaxOptions, thrownError) {
                         flog('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
-                        Msg.error("There was an error changing the product inclusion status");
+                        Msg.error("There was an error changing the product inclusion status", 'manageRewardStore');
                     }
                 });
             }

@@ -1519,9 +1519,6 @@
             
             var options = keditor.options;
             var componentContent = component.children('.keditor-component-content');
-            var img = componentContent.find('img.media-object');
-            
-            img.css('display', 'inline-block');
             
             var mediaBody = componentContent.find('.media-body');
             mediaBody.addClass('clearfix');
@@ -1649,11 +1646,6 @@
                         img.attr('width', this.value);
                     });
                     
-                    form.find('.photo-height').on('change', function () {
-                        var img = keditor.getSettingComponent().find('img.media-object');
-                        img.attr('height', this.value);
-                    });
-                    
                     var photoEdit = form.find('.photo-edit');
                     photoEdit.mselect({
                         contentTypes: ['image'],
@@ -1681,7 +1673,6 @@
             var inputVAlign = form.find('.photo-v-align');
             var inputResponsive = form.find('.photo-responsive');
             var inputWidth = form.find('.photo-width');
-            var inputHeight = form.find('.photo-height');
             var cbbStyle = form.find('.photo-style');
             var txtLink = form.find('.photo-link');
             var cbbTarget = form.find('.photo-target');
@@ -1718,8 +1709,7 @@
             
             inputVAlign.val(valign);
             inputResponsive.prop('checked', img.hasClass('img-responsive'));
-            inputWidth.val(img.width());
-            inputHeight.val(img.height());
+            inputWidth.val(img.attr('width'));
         }
     };
     
