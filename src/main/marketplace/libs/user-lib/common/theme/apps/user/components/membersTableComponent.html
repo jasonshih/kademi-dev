@@ -43,11 +43,14 @@
                         #foreach( $f in $fields )
                         #if ($columns && $columns.contains($f))
                         #if ($f == "pointsBalance")
-                            #if ($row.source.points.size() > 0)
-                            <td>$!row.source.points[0].get($pointsBucket)</td>
-                            #else
-                            <td>-</td>
+                            #set ($pb = "")
+                            #foreach ($p in $row.source.points)
+                                #if ($p.get($pointsBucket))
+                                #set ($pb = $p.get($pointsBucket))
+                                #break
+                                #end
                             #end
+                            <td>$pb</td>
                         #elseif ($f == "lastVisit")
                         <td>$formatter.formatDate($formatter.toDate($row.source.get($f)))</td>
                         #elseif ($f == "groupNames")

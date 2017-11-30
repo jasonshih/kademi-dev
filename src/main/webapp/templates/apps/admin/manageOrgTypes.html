@@ -21,14 +21,15 @@
                     <div class="table-responsive">
                         <table id="org-types" class="table table-hover table-striped">
                             <colgroup>
-                                <col width="30%" />
-                                <col width="65%" />
+                                <col width="" />
+                                <col width="" />
                                 <col width="5%" />
                             </colgroup>
                             <thead>
                                 <tr>
                                     <th>Code</th>
                                     <th>Display Name</th>
+                                    <th>No.</th>
                                     <th class="action"></th>
                                 </tr>
                             </thead>
@@ -37,6 +38,7 @@
                                     <tr>
                                         <td>$ot.name</td>
                                         <td>$formatter.htmlEncode($ot.title)</td>
+                                        <td>$ot.count</td>
                                         <td class="action">
                                             <div class="btn-group btn-group-sm">
                                                 <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown">
