@@ -252,8 +252,7 @@ function initMove() {
         e.preventDefault();
         var checkBoxes = $('#searchResults').find('input[name=toRemoveId]:checked');
         if (checkBoxes.length === 0) {
-            Msg.singletonForCategory = true;
-            Msg.error("Please select the organisations you want to move by clicking the checkboxs to the right");
+            Msg.error("Please select the organisations you want to move by clicking the checkboxs to the right", 'multiOrgsAction');
             return;
         } else {
             var tbody = modal.find(".orgsMoveTableBody");
@@ -315,8 +314,7 @@ function initAssignToOrgType() {
         e.preventDefault();
         var checkBoxes = $('#searchResults').find('input[name=toRemoveId]:checked');
         if (checkBoxes.length === 0) {
-            Msg.singletonForCategory = true;
-            Msg.error("Please select the organisations you want to assign by clicking the checkboxs to the right");
+            Msg.error("Please select the organisations you want to assign by clicking the checkboxs to the right", 'multiOrgsAction');
             return;
         } else {
             var tbody = modal.find(".assignOrgTypeTableBody");
@@ -374,8 +372,7 @@ function initMerge() {
         e.preventDefault();
         var checkBoxes = $('#searchResults').find('input[name=toRemoveId]:checked');
         if (checkBoxes.length === 0) {
-            Msg.singletonForCategory = true;
-            Msg.error("Please select the organisations you want to merge by clicking the checkboxs to the right");
+            Msg.error("Please select the organisations you want to merge by clicking the checkboxs to the right", 'multiOrgsAction');
         } else {
             var tbody = modal.find(".orgsMergeTableBody");
             var destSelect = modal.find("select[name=mergeDest]");
@@ -487,7 +484,7 @@ function reloadSearchResults(newUrl) {
         url: newUrl,
         whenComplete: function (response) {
             window.history.pushState("", document.title, newUrl);
-            Msg.info('Refreshed', 1500)
+            Msg.info('Refreshed', 'filterOrg')
             flog('complete', response);
             var inner = $(response).find('#aggregationsContainer > *');
             $('#aggregationsContainer').html(inner);
@@ -511,14 +508,12 @@ function aggFilter() {
 }
 
 function initRemoveOrgs() {
-    Msg.singletonForCategory = true;
-
     $(".btn-orgs-remove").click(function (e) {
         var node = $(e.target);
         flog("remove orgs", node, node.is(":checked"));
         var checkBoxes = $('#searchResults').find('input[name=toRemoveId]:checked');
         if (checkBoxes.length === 0) {
-            Msg.error("Please select the organisations you want to remove by clicking the checkboxs to the right", 'no-org-selected');
+            Msg.error("Please select the organisations you want to remove by clicking the checkboxs to the right", 'multiOrgsAction');
         } else {
             Kalert.confirm("Are you sure you want to remove " + checkBoxes.length + " organisations?", function () {
                 doRemoveOrgs(checkBoxes);

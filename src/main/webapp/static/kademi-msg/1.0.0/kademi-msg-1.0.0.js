@@ -389,7 +389,7 @@
                 x: 0,
                 y: 60
             },
-            onClosed: function () {
+            onClose: function () {
                 if (category) {
                     Msg.instances[category] = null;
                 }
