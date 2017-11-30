@@ -250,8 +250,6 @@
                 </div>
                 
                 <div role="tabpanel" class="tab-pane" id="statistic">
-                    #set($linebreaker ="\n")
-                    #set ($surveyCSV = "Survey,Total_Submissions,Question_Title,Question_Type,Answer,Votes,Percentage,Submitted_By$linebreaker")
                     #set ($surveyStatistic = $page.controllerMappings.call('getSurveyStatistic', $page, $survey.name))
                     #set ($surveyResult = $surveyStatistic.get('surveyResult'))
                     #set ($userAgentResult = $surveyStatistic.get('userAgentResult'))
@@ -277,7 +275,7 @@
 
                                 <div class="col-sm-3">
                                     <h3 style="padding-top: 60px">Total Submissions: $totalSubmits</h3>
-                                    <a id="csvDownload" download="data.csv" class="btn btn-primary">Download CSV</a>
+                                    <a href="/ksurvey/${survey.name}/getSurveyCSV" download="${survey.jsonObject.title}.csv" class="btn btn-primary">Download CSV</a>
                                     <div class="dropdown" style="margin-top: 10px">
                                         <button class="btn btn-danger" id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             Clear Results
@@ -345,9 +343,6 @@
                                                             #end
                                                             #set ($userRes = $applications.userApp.findUserResource($answer.source.userId))
                                                             #set($progress = $formatter.toPercent($totalAnswerSubmits, $totalQuestionSubmits) )
-                                                            #set($surveyCSV =
-                                                                "$surveyCSV$survey.jsonObject.name,$totalAnswerSubmits,$question.source.title,$page.controllerMappings.call(
-                                                                    'getQuestionType',$question.source.type),$answer.source.body,$totalAnswerSubmits,$progress,$linebreaker")
                                                             <div class="progress">
                                                                 <div class="progress-bar progress-bar-info active" role="progressbar" aria-valuenow="$progress.replace(
                                                                     '%','')" aria-valuemin="0" aria-valuemax="100" style="text-align: left;">
@@ -370,8 +365,6 @@
                                                 #if($plainAnswers.hits.totalHits > 0)
                                                     #foreach($plainAnswer in $plainAnswers.hits.hits)
                                                         #set ($userRes = $applications.userApp.findUserResource($plainAnswer.source.userId))
-                                                        #set($surveyCSV ="$surveyCSV$survey.jsonObject.name,$totalSubmits,$question.source.title,$page.controllerMappings.call(
-                                                            'getQuestionType',$question.source.type),$plainAnswer.source.answerBody,,,$!userRes.firstName $!userRes.surName$linebreaker")
                                                         <li class="list-group-item">$plainAnswer.source.answerBody -
                                                             <a href="/manageUsers/${userRes.thisProfile.id}"><b>$!userRes.firstName $!userRes.surName</b></a></li>
                                                     #end
@@ -383,16 +376,6 @@
                             #end
                         #end
                     </div>
-                    <script>
-                        var surveyCSV = "data:text/csv;charset=utf-8,$surveyCSV";
-                        var encodedUri = encodeURI(surveyCSV);
-                        var link = document.getElementById("csvDownload");
-                        if (link) {
-                            link.setAttribute("href", encodedUri);
-                            link.setAttribute("download", "my_data.csv");
-                        }
-                    </script>
-
                 </div>
             </div>
         </div>

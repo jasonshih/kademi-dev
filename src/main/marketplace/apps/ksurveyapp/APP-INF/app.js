@@ -25,8 +25,15 @@ controllerMappings
     .defaultView(views.templateView('ksurveyapp/surveyDetail.html'))
     .addMethod('GET', 'getSurvey')
     .addMethod('POST', 'saveSurvey')
-    .addMethod('POST', 'saveSurvey')
     .title('generateTitle')
+    .build();
+
+controllerMappings
+    .adminController()
+    .path('/ksurvey/(?<surveyId>[^/]*)/getSurveyCSV')
+    .enabled(true)
+    .addPathResolver('surveyId', 'findSurvey')
+    .addMethod('GET', 'getSurveyCSV')
     .build();
 
 controllerMappings
