@@ -10,19 +10,19 @@
                 <div class="form-group">
                     <label class="col-md-3 control-label" for="margin">Margin</label>
                     <div class="col-md-8">
-                        <input value='$!page.productInStore.margin' class="form-control" type="text" name="margin" maxlength="250" placeholder="Margin as decimal, eg 0.05 for 5%" />
+                        <input value='$!page.productInStore.margin' class="form-control required-if numeric" type="text" name="margin" maxlength="250" placeholder="Margin as decimal, eg 0.05 for 5%" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-3 control-label" for="gstRate">GST</label>
                     <div class="col-md-8">
-                        <input value='$!page.productInStore.gstRate' class="form-control" type="text" name="gstRate" maxlength="250" placeholder="Margin as decimal, eg 0.05 for 5%" />
+                        <input value='$!page.productInStore.gstRate' class="form-control required-if numeric" type="text" name="gstRate" maxlength="250" placeholder="Margin as decimal, eg 0.05 for 5%" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-3 control-label" for="costOverride">Final cost</label>
                     <div class="col-md-8">
-                        <input value='$!page.productInStore.costOverride' class="form-control numeric" type="text" name="costOverride" maxlength="20" placeholder="Final cost value, optional"/>
+                        <input value='$!page.productInStore.costOverride' class="form-control required-if numeric" type="text" name="costOverride" maxlength="20" placeholder="Final cost value, optional"/>
                     </div>
                 </div>
             </div>
