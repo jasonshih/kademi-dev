@@ -9,7 +9,12 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>        
+    <tbody>
+        #if ($history.size() < 1)
+        <tr>
+            <td colspan="99">There are no orders yet</td>
+        </tr>
+        #else
         #set( $last = false )
         #foreach( $status in $history )
         <tr>
@@ -23,6 +28,7 @@
             <td>$!status.statusCode</td>
             <td>$!status.description</td>
         </tr>
+        #end
         #end
     </tbody>
 </table>

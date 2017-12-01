@@ -87,6 +87,9 @@
                             </tr>
                         </thead>
                         <tbody id="shoppingCartList">
+                            #if ($page.searchResults.size() < 1)
+                            <tr><td colspan="99">There are no orders yet</td></tr>
+                            #else
                             #foreach($v in $page.searchResults)
                             <tr>
                                 #genStatus($v)
@@ -97,6 +100,7 @@
                                 <td class="text-center">$formatter.formatCurrency($v.totalCost)</td>
                                 <th><input type="checkbox" data-carthref="$v.href" data-cartid="$v.cart.id" class="cart-check"/></th>
                             </tr>
+                            #end
                             #end
                         </tbody>
                     </table>
