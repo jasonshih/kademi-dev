@@ -15,7 +15,7 @@ function initManageOrgTypeModal() {
         
         var name = prompt('Please enter a name for the new field');
         
-        if (name === '') {
+        if (name === undefined || name === null || name === '') {
             return;
         } else if (name.contains(' ')) {
             Msg.error('Please enter a name without spaces or other special characters');
