@@ -30,7 +30,7 @@ controllerMappings
 
 controllerMappings
     .adminController()
-    .path('/ksurvey/(?<surveyId>[^/]*)/getSurveyCSV')
+    .path('/ksurvey/(?<surveyId>[^/]*)/survey-data.csv')
     .enabled(true)
     .addPathResolver('surveyId', 'findSurvey')
     .addMethod('GET', 'getSurveyCSV')
