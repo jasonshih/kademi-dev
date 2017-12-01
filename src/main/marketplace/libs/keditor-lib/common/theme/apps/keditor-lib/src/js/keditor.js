@@ -961,8 +961,6 @@
                 
                 if (item.is('.keditor-snippet')) {
                     var snippetContent = body.find(item.attr('data-snippet')).html();
-                    flog('Snippet content', snippetContent);
-                    
                     var container = $(
                         '<section class="keditor-ui keditor-container">' +
                         '   <section class="keditor-ui keditor-container-inner">' + snippetContent + '</section>' +
@@ -992,7 +990,7 @@
                     options.onContentChanged.call(self, event, contentArea);
                 }
                 
-                item.addClass('keditor-ui-dragging');
+                item.removeClass('keditor-ui-dragging');
                 contentArea.removeClass('keditor-highlighted-dropzone');
             },
             start: function (e, ui) {
@@ -1150,7 +1148,6 @@
                     var snippetContentElement = body.find(item.attr('data-snippet'));
                     var snippetContent = snippetContentElement.html();
                     var snippetType = item.attr('data-type');
-                    flog('Snippet content', snippetContent);
                     
                     if (snippetType === 'container') {
                         flog('Add nested container into container content', containerContent);
