@@ -165,9 +165,9 @@
                             #end
 
                             <ul>
-                            #foreach( $line in $event.logEvent.stackTrace )
-                            <li>$line</li>
-                            #end
+                                #foreach( $line in $event.logEvent.stackTrace )
+                                <li>$line</li>
+                                #end
                             </ul>
                             <hr/>
                             #end
@@ -199,7 +199,7 @@
                         </div>
                         <div class="panel-body">
                             <p>Enter the physical ID of the organisation with the group(s) to delete from, and the comma seperated list of group membership IDs</p>
-                            <p>You MUT re-index the profiles for the organisation when this is complete</p>
+                            <p>You MUST re-index the profiles for the organisation when this is complete</p>
                             <br/>
                             <form method="POST" action="maint" class="bulkDeleteMembershipsForm" >
                                 <input type="text" name="rootOrg" value="" placeholder="123123" />
@@ -389,15 +389,67 @@
                             </form>
                         </div>
                     </article>
+
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Fetch Missing Blob, File fanout or chunk fanout</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form method="POST" action="maint" id="fetchMissingHash" class="form-horizontal">
+                                <input type="hidden" name="fetchMissingHash" value="true"/>
+
+                                <div class="form-group">
+                                    <label for="missingHash" class="col-sm-2 control-label">Hash</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control required" name="hash" id="missingHash" placeholder="Hash">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="hashType" class="col-sm-2 control-label">Hash</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control required" name="hashType" id="hashType">
+                                            <option value="repository">Repository Hash</option>
+                                            <option value="file">File Hash</option>
+                                            <option value="fileFanout">File Fanout</option>
+                                            <option value="chunkFanout">Chunk Fanout</option>
+                                            <option value="blob">Blob</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="remoteUrl" class="col-sm-2 control-label">Remote URL</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control required" name="remoteUrl" id="remoteUrl" placeholder="e.g. http://rootorg.admin.kademi-ci.co">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="remoteUser" class="col-sm-2 control-label">Remote User</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control required" name="remoteUser" id="remoteUser" placeholder="e.g. admin">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="remotePassword" class="col-sm-2 control-label">Remote Password</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control required" name="remotePassword" id="remotePassword" placeholder="e.g. test123">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button type="submit" class="btn btn-sm btn-danger">Fetch Hash</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </article>
                 </div>
             </div>
         </div>
-
-
-
-
-
-
 
         <script type="text/javascript">
             $(function () {
@@ -448,6 +500,13 @@
                         flog("resp", resp);
                         Msg.info("Done: " + resp.messages);
                         window.location.reload();
+                    }
+                });
+
+                $("#fetchMissingHash").forms({
+                    onSuccess: function (resp) {
+                        Msg.success(resp.messages);
+                        $("#fetchMissingHash").trigger('reset');
                     }
                 });
 
