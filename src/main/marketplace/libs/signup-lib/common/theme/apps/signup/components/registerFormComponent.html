@@ -4,6 +4,7 @@
     #set ($displayNickname = $formatter.toBool($displayName))  
 #end
 #set ($displayName = $formatter.toBool($displayName))
+#set ($displayPhone = $formatter.toBool($displayPhone))
 #set ($displayPwd = $formatter.toBool($displayPwd))
 #set ($showOrgs = $formatter.toBool($showOrgs))
 #set ($showOptins = $formatter.toBool($showOptins))
@@ -59,6 +60,15 @@
     </div>
     #end
 
+    #if ($displayPhone)
+    <div class="form-group">
+        <label class="control-label col-md-3" style="$!labelAlign" for="phone">Phone</label>
+        <div class="col-md-9">
+            <input class="required form-control" type="number" name="phone" id="phone" placeholder="Your phone" />
+        </div>
+    </div>
+    #end
+    
     #if ($displayPwd)
     <div class="form-group">
         <label class="control-label col-md-3" style="$!labelAlign" for="password">Password</label>
