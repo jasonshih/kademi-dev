@@ -16,11 +16,11 @@
                 <input class="circle-sales-knob" value="$formatter.formatCurrency($percent)" data-color="$formatter.ifNull($levelStatus.nextLevel.colour, $levelStatus.currentLevel.colour)" />
             </div>
             <div class="circle-sales-label">
-                <label class="label label-achievement" style="background-color: ${levelStatus.currentLevel.colour};">$formatter.ifNull($levelStatus.currentLevel.title, "No level")</label>
+                <label class="label label-achievement" style="background-color: $!{levelStatus.currentLevel.colour};">$formatter.ifNull($levelStatus.currentLevel.title, "No level")</label>
                 #if ($levelStatus.currentLevel)
                     <div class="current-level"><b>You've reached $levelStatus.currentLevel.title level</b></div>
                 #else
-                    <div class="current-level"><b>You have no level</b></div>
+                    <div class="current-level"><b>You haven't reached any levels yet.</b></div>
                 #end
                 #if ($levelStatus.nextLevel)
                     <div class="next-level">You're ${formatter.toInteger($percent)}% of the way to $levelStatus.nextLevel.title</div>
