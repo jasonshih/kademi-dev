@@ -1,6 +1,6 @@
 $(function () {
     Msg.singletonForCategory = true;
-
+    
     var fields = [],
             TYPES = {
                 "AVG": "integer",
@@ -27,7 +27,7 @@ $(function () {
                 "RANGE": true,
                 "DATE_RANGE": true
             };
-
+            
     function saveQuery() {
         $('#aggregationForm').submit();
     }
@@ -35,12 +35,12 @@ $(function () {
     $(".saveRules").on("click", function () {
         saveQuery();
     });
-
+    
     function initModalFields() {
         $("#saveRulesModal").on("click", function () {
             saveQuery();
         });
-
+        
         $("body").off("click", ".btn-add-field").on("click", ".btn-add-field", function () {
             var field = $(this).data("text");
             var selected = $("#fieldsSelected").val();
@@ -88,6 +88,16 @@ $(function () {
             dataType: 'json',
             success: function (resp) {
                 flog("Response: ", resp);
+                var f = {
+                    id: '_type',
+                    label: 'type',
+                    input: "select",
+                    operators: ['equal', "not_equal"],
+                    values: INDEXES,
+                    type: "string"
+                };
+                resp.data.filters.push(f);
+
                 var builderConf = {
                     allow_empty: true,
                     plugins: ['bt-tooltip-errors'],
@@ -97,6 +107,21 @@ $(function () {
                 $("#fieldsSelected").val(resp.data.fields);
                 flog("Query Size: ", resp.data.size);
                 $("#qbbSize").val(resp.data.size);
+                $(".orderDirection").val(resp.data.order);
+                var orderField = $(".orderField");
+                $(fields).each(function () {
+                    var field = $(this)[0];
+                    orderField.append($('<option>', {value: field.id, text: field.id}));
+                });
+                if (resp.data.orderBy !== undefined && resp.data.orderBy !== []) {
+                    var orderBy = resp.data.orderBy;
+                    for (var i = 0; i < orderBy.length; i++) {
+                        if (isValid(orderBy[i])) {
+                            var field = orderField.get(i)
+                            $(field).val(orderBy[i]);
+                        }
+                    }
+                }
 
                 if (resp.data.aggregationsSource !== "") {
                     var aggs = resp.data.aggregationsSource;
@@ -112,12 +137,12 @@ $(function () {
                         var agg = aggs[i];
                         flog("Agg: ", agg);
                         flog("Li: ", li);
-
+                        
                         li.find(".aggregationType").val(agg.aggType);
                         li.find(".aggregationType").change();
                         li.find(".aggFields").val(agg.aggField);
                         li.find(".aggSize").val(agg.aggSize);
-
+                        
                         if (agg.ranges !== undefined) {
                             var range = agg.ranges[0];
                             if (range.to !== undefined) {
@@ -169,6 +194,10 @@ $(function () {
         return newLi;
     }
 
+    function isValid(val) {
+        return (val !== undefined && val !== "-1" && val !== -1);
+    }
+
     function initLoadAggregations() {
 
         $('#aggregationForm').forms({
@@ -179,7 +208,23 @@ $(function () {
                 var query = builder.queryBuilder('getESBool');
                 flog("Save Rules: ", rules, query);
                 var querySize = ($.isNumeric($("#qbbSize").val())) ? $("#qbbSize").val() : 1000;
-                data = data + "&queryBuilder=true&qbbRules=" + JSON.stringify(rules) + "&qbbQuery=" + JSON.stringify(query) + "&qbbSize=" + querySize + "&qbbFieldsSelected=" + $("#fieldsSelected").val();
+                data = data + "&queryBuilder=true&qbbRules=" + JSON.stringify(rules);
+                data = data + "&qbbQuery=" + JSON.stringify(query);
+                data = data + "&qbbSize=" + querySize;
+                data = data + "&qbbFieldsSelected=" + $("#fieldsSelected").val();
+                var orderDirection = $(".orderDirection").val();
+                if (isValid(orderDirection)) {
+                    data = data + "&order=" + orderDirection;
+                    var fields = $(".orderField");
+                    data = data + "&fields=";
+                    for (var i = 0; i < fields.length; i++) {
+                        var val = $(fields[i]).val();
+                        if (isValid(val)) {
+                            data = data + val + ",";
+                        }
+                    }
+                }
+
                 flog("BeforePostForm", data);
                 return data;
             },
@@ -208,7 +253,7 @@ $(function () {
                 });
             }
         });
-
+        
         function toggleDiv(show, div, input) {
             flog("Show ", $(input).attr("name"), ": ", show);
             if (show) {
@@ -238,9 +283,9 @@ $(function () {
             // Interval
             var aggInterval = li.find(".aggInterval");
             var divInterval = aggInterval.closest("div");
-
+            
             var showSize = false, showFormat = false, showRange = false, showInterval = false;
-
+            
             if ($(this).val() !== -1 && $(this).val() !== "-1") {
                 var aggType = $(this).find(":selected").text();
                 flog("Agg Type ", aggType);
@@ -263,7 +308,7 @@ $(function () {
             toggleDiv(showRange, divRange, aggFrom);
             toggleDiv(showInterval, divInterval, aggInterval);
         });
-
+        
         function clearAggLi(li) {
             $(li).find("input").val("");
             $(li).find(".aggregationType").val("-1").trigger("change");
@@ -279,7 +324,7 @@ $(function () {
                 $("#" + li).remove();
             }
         });
-
+        
         $("body").off("click", ".addAgg").on("click", ".addAgg", function () {
             var newLi = createNewAggRule();
             var ul = $('#aggregations-ul');
