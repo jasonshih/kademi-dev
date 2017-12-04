@@ -171,7 +171,7 @@
             var mediaLeft = component.find('.media-left');
             var mediaLeftInner = component.find('.media-left-inner');
             
-            form.find('.left-width').val(mediaLeftInner.get(0).style.width || '');
+            form.find('.left-width').val((mediaLeftInner.get(0).style.width || '').replace('px', ''));
             
             var a = img.parent('a');
             if (a.length > 0) {
