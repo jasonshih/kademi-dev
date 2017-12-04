@@ -100,6 +100,7 @@
             if (!options.showNav){
                 self.hideNav();
             }
+            self.initNav();
         },
 
         hideEndingNow: function () {
@@ -113,6 +114,38 @@
 
         hideNav: function () {
             this.container.find('.pageDatePickerPrev, .pageDatePickerNext').addClass('hide');
+        },
+
+        initNav: function () {
+            var self = this;
+            this.container.find('.pageDatePickerPrev, .pageDatePickerNext').on('click', function (e) {
+                e.preventDefault();
+
+                var cookieStartDate = $.cookie('pageDatePicker-startDate');
+                var cookieEndDate = $.cookie('pageDatePicker-endDate');
+                if (cookieStartDate && cookieEndDate){
+                    var picker = self.dateRange.data('daterangepicker');
+                    picker.locale.format = self.options.dateFormat;
+                    var start = moment(cookieStartDate, self.options.dateFormat);
+                    var end = moment(cookieEndDate, self.options.dateFormat);
+                    var duration = moment.duration(end.diff(start));
+                    var newStart;
+                    var newEnd;
+                    if ($(this).hasClass('pageDatePickerPrev')){
+                        newEnd = start;
+                        newStart = start.clone().subtract(duration.asDays(), 'days');
+                    } else if ($(this).hasClass('pageDatePickerNext')){
+                        newStart = end;
+                        newEnd = end.clone().add(duration.asDays(), 'days');
+                    }
+
+                    picker.setStartDate(newStart);
+                    picker.setEndDate(newEnd);
+                    picker.updateFormInputs();
+                    picker.updateCalendars();
+                    self.selectRange(newStart.format(self.options.dateFormat), newEnd.format(self.options.dateFormat), null, null, true);
+                }
+            })
         },
 
         initDropDown: function () {
