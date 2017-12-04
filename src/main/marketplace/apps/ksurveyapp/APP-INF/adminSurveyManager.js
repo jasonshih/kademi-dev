@@ -906,7 +906,7 @@ function getSurveyCSV(page) {
     var searchResult = findQuestionBySurvey(page, survey.name);
     var questionResult = searchResult.questionResult;
     var answerResult = searchResult.answerResult;
-    var csvheader = ["Survey","Question Title", "Question Type", "Question body", "Answer", "Votes", "Percentage", "Submitted By", "Email"];
+    var csvheader = ["Survey","Question Title", "Question body", "Question Type", "Answer", "Votes", "Percentage", "Submitted By", "Email"];
     arr.push(csvheader);
     var surveyStats = getSurveyStatistic(page, survey.name);
     var surveyResult = surveyStats.surveyResult;
