@@ -1,0 +1,23 @@
+{
+    "appDependencies": [
+        {
+            "appId": "moment-lib",
+            "branch": "2.18.3"
+        }
+    ],
+
+    "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/daterangepicker/2.0.11/daterangepicker.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/daterangepicker/2.0.11/daterangepicker.js"
+            }
+        }
+    ]
+}
