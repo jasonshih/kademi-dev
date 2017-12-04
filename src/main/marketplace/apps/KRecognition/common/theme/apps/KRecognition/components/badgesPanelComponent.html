@@ -24,15 +24,15 @@
 #if ($topic && $topic != "")
     #set( $recognitionService = $applications.userApp.recognitionService )
     #set( $badges = $recognitionService.getAwardedBadges($topic) )
-    
+
+        <div class="kbadges-list row row-sm">
     #if( !$badges or $badges.empty)
-        #if (!$page)
-            NO BADGES
-        #end
+
+        <div class="kbadge">You havent earned any badges yet.</div>
+
     #else
         #set ($badges = $formatter.sortByProperty($badges, "createdDate"))
         #set ($badges = $formatter.sortReverse($badges))
-        <div class="kbadges-list row row-sm">
             #foreach($b in $badges)
                 <div class="$badgeClass kbadge">
                     #if ($b.recognition.imageHash)
@@ -44,13 +44,13 @@
                         <div class="kbadge-title">$b.recognition.title</div>
                     #end
                 </div>
-            
+
                 #if ($mostRecentBadge == "true")
                     #break
                 #end
             #end
-        </div>
     #end
+        </div>
 #else
     #if (!$page)
         <p class="alert alert-warning">No topic selected</p>
