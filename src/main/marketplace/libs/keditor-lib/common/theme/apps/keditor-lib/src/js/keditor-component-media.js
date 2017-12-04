@@ -1,5 +1,6 @@
 (function ($) {
     var KEditor = $.keditor;
+    var contentEditor = $.contentEditor;
     var flog = KEditor.log;
     
     KEditor.components['media'] = {
@@ -135,17 +136,10 @@
                         img.attr('width', this.value);
                     });
                     
-                    var photoEdit = form.find('.photo-edit');
-                    photoEdit.mselect({
-                        contentTypes: ['image'],
-                        bs3Modal: true,
-                        pagePath: keditor.options.pagePath,
-                        basePath: keditor.options.basePath,
-                        onSelectFile: function (url, relativeUrl, fileType, hash) {
-                            var img = keditor.getSettingComponent().find('img.media-object');
-                            
-                            img.attr('src', '/_hashes/files/' + hash);
-                        }
+                    contentEditor.initMselectImage(form.find('.photo-edit'), keditor, function (url, relativeUrl, fileType, hash) {
+                        var img = keditor.getSettingComponent().find('img.media-object');
+                        
+                        img.attr('src', '/_hashes/files/' + hash);
                     });
                     
                     form.find('.left-width').on('change', function () {

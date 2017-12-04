@@ -32,14 +32,10 @@
     #set($programs = $page.find("/programs"))
     #if($page.is("course"))
         #set($curCourse = $page)
+        #set ($modules = $curCourse.children.ofType.module.sortByField("order"))
     #else
-        #set($curCourse = $programs.bestCourse)
-        #if(!$curCourse )
-            #set($curCourse = $programs.bestProgram.children.ofType.course.first)
-        #end
+        #set ($modules =$programs.getBestModules($numberOfModules))
     #end
-
-    #set ($modules = $curCourse.children.ofType.module.sortByField("order"))
 #end
 
 #if ($itemsPerRow == 1)
@@ -64,7 +60,7 @@
                     #renderModuleListItem($mod)
                 #end
             </div>
-        
+
             #if ($numberOfModules == 0)
             #elseif ($count >= $numberOfModules)
                 #break
@@ -86,7 +82,7 @@
                     #renderModuleListItemExample($count)
                 #end
             </div>
-        
+
             #if ($numberOfModules == 0)
             #elseif ($count >= $numberOfModules)
                 #break
