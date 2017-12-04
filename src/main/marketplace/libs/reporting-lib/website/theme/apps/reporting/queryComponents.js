@@ -11,10 +11,14 @@ $(function () {
         var pageDatePicker = $(this);
         var cls = pageDatePicker.attr('data-style');
         var position = pageDatePicker.attr('data-position');
-
+        var defaultRange = pageDatePicker.attr('data-default-range');
+        if (!defaultRange){
+            defaultRange = '7 days';
+        }
         pageDatePicker.pageDatePicker({
             extraClass: cls,
-            position: position
+            position: position,
+            default: defaultRange
         });
     });
 

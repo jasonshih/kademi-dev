@@ -36,10 +36,15 @@
 
                     var cls = pageDatePicker.attr('data-style');
                     var position = pageDatePicker.attr('data-position');
-
+                    var defaultRange = pageDatePicker.attr('data-default-range');
+                    if (!defaultRange){
+                        defaultRange = '7 days';
+                    }
+                    $.cookie('pageDatePicker-text', defaultRange);
                     pageDatePicker.pageDatePicker({
                         extraClass: cls,
-                        position: position
+                        position: position,
+                        default: defaultRange
                     });
                 }
             });
@@ -60,7 +65,17 @@
                 dataType: 'html',
                 success: function (resp) {
                     form.html(resp);
-                    
+
+                    form.find('.defaultRange').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-default-range', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initPicker();
+                        });
+                    });
+
                     form.find('#cbbPickerAlign').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
