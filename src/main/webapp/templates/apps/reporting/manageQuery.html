@@ -9,7 +9,7 @@
         <link rel="stylesheet" type="text/css" href="/theme/apps/admin/textEditor.css" />
     </head>
     <body>
-        <h4>Query: $page.name  - <b>Indexes: </b> #foreach( $index in $page.indexes)<a href="/manageSearch/$index" class="label label-primary">$index</a>#end</h4>
+        <h4>Query: $page.name  - <b>Indexes: </b> #foreach( $index in $page.indexes)<a href="/manageSearch/$index" class="label label-primary">$index</a>#end</h4>   
         #set($qbbPage = $page.isQueryBuilderQuery())
         <input name="fieldsSelected" id="fieldsSelected" vlaue="" type="hidden" />
 
@@ -36,6 +36,43 @@
                 <div class="tab-content">
                     <div id="queryBuilderTab" class="tab-pane active">
                         <div id="query-builder"></div>
+
+                        <div class="row" style="min-height: 300px; margin: 1px; clear: both;">
+                            <div id="query-builder" class="query-builder form-inline">
+                                <form id="aggregationForm">
+                                    <dl id="aggregation" class="rules-group-container">
+                                        <dd class="rules-group-body">
+                                            <ul class="rules-list" id="aggregations-ul">
+                                                <li class="rule-container">
+                                                    <div class="rule-filter-container">
+                                                        <select class="form-control orderDirection" name="orderDirection">
+                                                            <option value="-1">------</option>
+                                                            <option value="ASC">ASC</option>
+                                                            <option value="DESC">DESC</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="rule-operator-container">
+                                                        <select class="form-control orderField" name="orderField">
+                                                            <option value="-1">------</option>
+                                                        </select>                    
+                                                    </div>
+                                                    <div class="rule-operator-container">
+                                                        <select class="form-control orderField" name="orderField">
+                                                            <option value="-1">------</option>
+                                                        </select>                    
+                                                    </div>
+                                                    <div class="rule-operator-container">
+                                                        <select class="form-control orderField" name="orderField">
+                                                            <option value="-1">------</option>
+                                                        </select>                    
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </dd>
+                                    </dl>
+                                </form>
+                            </div>
+                        </div>
 
                     </div>
                     <div id="queryResult" class="tab-pane">
@@ -98,7 +135,7 @@ $page.records
                     </div>
 
                     <div id="queryAggregation" class="tab-pane">
-                        <div class="row" style="min-height: 300px; clear: both;">
+                        <div class="row" style="min-height: 300px; margin: 1px; clear: both;">
                             <div id="query-builder" class="query-builder form-inline">
                                 <form id="aggregationForm">
                                     <dl id="aggregation" class="rules-group-container">
@@ -228,7 +265,10 @@ $page.records
             <script type="text/javascript" src="/static/jquery-querybuilder-elasticsearch/query-builder-elasticsearch.js">//</script>
             <script type="text/javascript" src="/theme/apps/reporting/manageQueryQueryBuilder.js">//</script>
             <script type="text/javascript">
-
+                var INDEXES = [];
+                #foreach($index in $page.indexers)
+                    INDEXES.push('$index.id');
+                #end
             </script>
             #end
     </body>
