@@ -4,6 +4,7 @@
 $(function () {
     $('abbr.timeago').timeago();
     
+    /*
     var redeemModal = $("#redeemVoucherModal");
     $("#redeemVoucherForm").forms({
         onSuccess: function (e) {
@@ -16,6 +17,7 @@ $(function () {
             redeemModal.modal('hide');
         }
     });
+    */
     
     var allocateVoucherModal = $("#allocateVoucherModal");
     allocateVoucherModal.find("form").forms({
