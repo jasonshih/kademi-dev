@@ -22,12 +22,16 @@ var recordMapping = {
             "type": "integer",
             "store": true
         },
+        "trackingId": {
+            "type": "text",
+            "store": true
+        },
         "savedDate": {
             "type": "date",
             "store": true
         }
     }
-}
+};
 
 var DB_MAPPINGS = {
     record: recordMapping
