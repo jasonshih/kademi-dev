@@ -16,12 +16,12 @@ $(document).on({
 
 function initContentEditorPage(options) {
     flog('initContentEditorPage fileName=' + options.fileName);
-    
+
     initKEditor(options);
     initSaving(options.fileName);
     initPropertiesModal();
     initNavbar();
-    
+
     // Confirm before closed tab or window
     window.onbeforeunload = function (e) {
         if ($(document.body).hasClass('content-changed')) {
@@ -32,10 +32,10 @@ function initContentEditorPage(options) {
 
 function initNavbar() {
     var nav = $('.content-editor-nav');
-    
+
     $('.content-editor-toggle').on('click', function (e) {
         e.preventDefault();
-        
+
         nav.toggleClass('closed');
         this.setAttribute('title', nav.hasClass('closed') ? 'Open navbar' : 'Close navbar');
     });
@@ -43,7 +43,7 @@ function initNavbar() {
 
 function initPropertiesModal() {
     var modal = $('#modal-page-properties');
-    
+
     modal.find('form').forms({
         onSuccess: function () {
             $('#file-title').reloadFragment({
@@ -55,34 +55,34 @@ function initPropertiesModal() {
             });
         }
     });
-    
+
     // Load metas
     addMetaTags(metas);
-    
+
     // Load data/param
     addParams(params);
-    
+
     modal.find('.btn-add-meta').on('click', function (e) {
         e.preventDefault();
-        
+
         addMetaTag('', '');
     });
-    
+
     modal.on('click', '.btn-remove-meta', function (e) {
         e.preventDefault();
-        
+
         $(this).closest('.meta').remove();
     });
-    
+
     modal.find('.btn-add-param').on('click', function (e) {
         e.preventDefault();
-        
+
         addParam('', '');
     });
-    
+
     modal.on('click', '.btn-remove-param', function (e) {
         e.preventDefault();
-        
+
         $(this).closest('.param').remove();
     });
 }
@@ -90,13 +90,13 @@ function initPropertiesModal() {
 function initKEditor(options) {
     var themeCss = $('head link[href^="/--theme--less--bootstrap.less"]');
     if (typeof themeCssFiles !== 'undefined') {
-        
+
         if (themeCss.length > 0) {
             themeCssFiles.push(themeCss.attr('href'));
         }
         themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap-ckeditor.css');
     }
-    
+
     var timer;
     win.on('resize', function () {
         clearTimeout(timer);
@@ -108,7 +108,7 @@ function initKEditor(options) {
             }
         }, 100);
     });
-    
+
     var basePath = window.location.pathname.replace('contenteditor', '');
     $('#content-area').contentEditor({
         snippetsUrl: options.snippetsUrl,
@@ -125,13 +125,13 @@ function initKEditor(options) {
         },
         isCustomApp: options.isCustomApp
     });
-    
+
     // Stop prevent reloading page or redirecting to other pages
     $(document.body).on('click', '.keditor-component-content a', function (e) {
         var a = $(this);
-        
+
         if (a.is('[data-slide]') || a.is('[data-slide-to]')) {
-        
+
         } else {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -142,17 +142,25 @@ function initKEditor(options) {
 
 function initSaving(fileName) {
     flog('initSaving', fileName);
-    
+
     var btnSaveFile = $('.btn-save-file');
     btnSaveFile.on('click', function (e) {
         e.preventDefault();
-        
+
         $('[contenteditable]').blur();
         showLoadingIcon();
         var fileContent = $('#content-area').contentEditor('getContent');
-        
+
+        var saveHref;
+        if( fileName == "" ) {
+            saveHref = "./";
+        } else {
+            saveHref = fileName;
+        }
+        flog('initSaving: save to ', saveHref);
+
         $.ajax({
-            url: fileName,
+            url: saveHref,
             type: 'POST',
             data: {
                 body: fileContent
@@ -169,7 +177,7 @@ function initSaving(fileName) {
             }
         })
     });
-    
+
     win.on({
         keydown: function (e) {
             if (e.ctrlKey && e.keyCode === keymap.S) {
@@ -207,11 +215,11 @@ function addMetaTags(metasData) {
     var hasDescription = false;
     $.each(metasData, function (i, meta) {
         addMetaTag(meta.name, meta.content);
-        
+
         if (meta.name === 'keywords') {
             hasKeywords = true;
         }
-        
+
         if (meta.name === 'description') {
             hasDescription = true;
         }
@@ -228,7 +236,7 @@ function addMetaTag(name, content) {
     var metaWrapper = $('.meta-wrapper');
     var id = (new Date()).getTime();
     var isSeoMeta = name === 'keywords' || name === 'description';
-    
+
     metaWrapper.append(
         '<div class="input-group meta">' +
         '    <input type="text" class="form-control input-sm required" name="metaName.' + id + '" placeholder="Meta name" value="' + name + '" ' + (isSeoMeta ? 'readonly="readonly"' : '') + ' />' +
@@ -243,7 +251,7 @@ function addMetaTag(name, content) {
 function addParam(title, value) {
     var metaWrapper = $('.param-wrapper');
     var id = (new Date()).getTime();
-    
+
     metaWrapper.append(
         '<div class="input-group param">' +
         '    <input type="text" class="form-control input-sm required" required="required" name="paramTitle.' + id + '" placeholder="Data/parameter title" value="' + title + '" />' +
