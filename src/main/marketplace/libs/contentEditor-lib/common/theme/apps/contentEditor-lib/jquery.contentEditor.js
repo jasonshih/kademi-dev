@@ -1321,6 +1321,17 @@
         
         return newContainer;
     };
+    
+    contentEditor.initMselectImage = function (target, keditor, onSelectFile) {
+        target.mselect({
+            contentTypes: ['image'],
+            bs3Modal: true,
+            pagePath: keditor.options.pagePath,
+            basePath: keditor.options.basePath,
+            onSelectFile: onSelectFile
+        });
+    };
+    
     var methods = {
         init: function (options) {
             options = $.extend({}, contentEditor.DEFAULTS, options);

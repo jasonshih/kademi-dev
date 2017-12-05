@@ -54,11 +54,11 @@ function initCalendarStuff() {
             reloadEvents();
         }
     });
-    btn.click(function (e) {        
+    btn.click(function (e) {
         e.preventDefault();
         modal.modal("show");
     });
-    
+
     $("body").on("click", ".deleteEvent", function(e) {
         e.preventDefault();
         var link = $(e.target).closest("a");
@@ -77,7 +77,7 @@ function initCalendarStuff() {
                 }
             });
         }
-        
+
     });
     $("abbr.timeago").timeago();
 }
@@ -87,7 +87,7 @@ function reloadEvents() {
         whenComplete: function() {
             $("abbr.timeago").timeago();
         }
-    });    
+    });
 }
 
 function initResultsSearch() {
@@ -426,7 +426,8 @@ function initCRUDModulePages() {
         modalFormHandle(form, null, false);
 
         if (isKEditor) {
-            openEditorFrame('newPage.html');
+            //openEditorFrame('newPage.html');
+            openEditorFrame('');
         }
 
         openFuseModal(modal);

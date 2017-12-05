@@ -906,7 +906,7 @@ function getSurveyCSV(page) {
     var searchResult = findQuestionBySurvey(page, survey.name);
     var questionResult = searchResult.questionResult;
     var answerResult = searchResult.answerResult;
-    var csvheader = ["Survey","Question Title", "Question Type", "Answer", "Votes", "Percentage", "Submitted By"];
+    var csvheader = ["Survey","Question Title", "Question body", "Question Type", "Answer", "Votes", "Percentage", "Submitted By", "Email"];
     arr.push(csvheader);
     var surveyStats = getSurveyStatistic(page, survey.name);
     var surveyResult = surveyStats.surveyResult;
@@ -921,6 +921,8 @@ function getSurveyCSV(page) {
             continue;
         }
 
+        arr.push([]);
+
         if (q.source.type != '1') {
             var totalQuestionSubmits = surveyResult[q.id].docCount;
             for (j in answers) {
@@ -931,7 +933,7 @@ function getSurveyCSV(page) {
                         totalAnswerSubmits = surveyResult[q.id].answers[a.id];
                     }
                     var progress = formatter.toPercent(totalAnswerSubmits, totalQuestionSubmits);
-                    var surveyCSVRow = [survey.jsonObject.name, q.source.title, getQuestionType(q.source.type), a.source.body, totalAnswerSubmits, progress];
+                    var surveyCSVRow = [survey.jsonObject.name, q.source.title, formatter.toPlain(q.source.body, true), getQuestionType(q.source.type), a.source.body, totalAnswerSubmits, progress];
                     arr.push(surveyCSVRow);
                 }
             }
@@ -943,13 +945,16 @@ function getSurveyCSV(page) {
                 var a = plainAnswers.hits.hits[k];
                 var userRes = applications.userApp.findUserResource(a.source.userId);
                 var name = '';
+                var email = '';
                 if (userRes){
                     name = userRes.extProfileBean.formattedName();
+                    email = userRes.email;
                 }
-                var surveyCSVRow = [survey.jsonObject.name, q.source.title, getQuestionType(q.source.type), a.source.answerBody, '', '', name]
+                var surveyCSVRow = [survey.jsonObject.name, q.source.title, formatter.toPlain(q.source.body, true), getQuestionType(q.source.type), a.source.answerBody, '', '', name, email]
                 arr.push(surveyCSVRow);
             }
         }
+
     }
 
     arr.push([]);

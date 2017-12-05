@@ -11,25 +11,17 @@
         {
             "appId": "moment-lib",
             "branch": "2.18.3"
+        },
+        {
+            "appId": "pagedatepicker-lib",
+            "branch": "1.0.4"
         }
     ],
     "dependencies": [
         {
             "css": {
                 "cssMedia": "all",
-                "path": "/static/daterangepicker/2.0.11/daterangepicker.css"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
                 "path": "/static/typeahead/0.11.1/typeahead.css"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.css"
             }
         },
         {
@@ -42,18 +34,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/daterangepicker/2.0.11/daterangepicker.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/jquery.pageDatePicker/1.0.3/jquery.pageDatePicker-1.0.3.js"
             }
         },
         {
