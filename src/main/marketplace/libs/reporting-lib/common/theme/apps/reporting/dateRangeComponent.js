@@ -16,9 +16,9 @@
                 $('head').append('<link href="/theme/apps/pagedatepicker-lib/jquery.pageDatePicker.css" rel="stylesheet" type="text/css" />');
             }
 
-            $.getScriptOnce('/static/moment/2.17.1/moment.js', function () {
-                $.getScriptOnce('/static/daterangepicker/2.0.11/daterangepicker.js', function () {
-                    $.getScriptOnce('/theme/apps/pagedatepicker-lib/jquery.pageDatePicker.js', function () {
+            $.getScript('/static/moment/2.17.1/moment.js', function () {
+                $.getScript('/static/daterangepicker/2.0.11/daterangepicker.js', function () {
+                    $.getScript('/theme/apps/pagedatepicker-lib/jquery.pageDatePicker.js', function () {
                         self.initPicker();
                     });
                 });

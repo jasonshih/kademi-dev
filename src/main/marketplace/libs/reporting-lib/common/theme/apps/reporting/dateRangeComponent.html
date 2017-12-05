@@ -1,3 +1,6 @@
+#if (!$showNav)
+#set ($showNav = 'true')
+#end
 <div class=" #if($pickerAlign == 'right') text-right #else text-left #end" style="padding-bottom: 20px;">
     <div class="$!pickerClass pageDatePicker" data-show-nav="$!showNav" data-default-range="$!defaultRange" data-style="btn $pickerSize $pickerColor" data-position="$pickerAlign"></div>
 </div>
