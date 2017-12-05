@@ -140,7 +140,10 @@
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </button>
                                     <ul role="menu" class="dropdown-menu pull-right">
+                                        #if($v.quoteState == 'Accepted') 
+                                        #else
                                         <li><a class="acceptQuote" href="$v.name"><i class="fa fa-send"></i> Mark as Accepted</a></li>
+                                        #end
                                         <li><a class="XQuote" href="$v.name"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
                                     </ul>
                                 </div>
