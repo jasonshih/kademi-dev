@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        #set($isCustomApp = false)
+        #set($fileTitle = $params.fileName)
+        #if($page.attributes.editFile)
+            #set($fileTitle = $page.attributes.editFile.title)
+            #set($fileBody = $page.attributes.editFile.body)
+            #set($isCustomApp = true)
+            #set($fileName = $page.name)
+        #else
+            #set($fileName = $params.fileName)
+            #if( $fileName )
+                #set($file = $folder.child($fileName))
+            #else
+                #set($file = $page)
+            #end
+            #set($fileBody = $file.body)
+            #set ($fileTitle = $file.title)
+        #end
+
+        <title>Edit: $!fileTitle</title>
+        <link href="/theme/apps/admin/contentEditor.css" rel="stylesheet" type="text/css" />
+        
+        <script type="text/javascript">
+            // Templates should push page init function into this array. It will then be run after outer template init functions. X2
+            var pageInitFunctions = new Array();
+        </script>
+
+        <script src="/static/jquery/1.11.0/jquery-1.11.0.js">//</script>
+        <script src="/theme/js/kademi.js">//</script>
+        <script src="/theme/js/kademi.jquery.js">//</script>
+        <script src="/theme/js/kademi.theme.js">//</script>
+
+        <script src="/theme/js/bootstrap.min.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.cookie.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
+        <script type="text/javascript" src="/static/jquery.forms/1.1.0/jquery.forms-1.1.0.js">//</script>
+        <script type="text/javascript" src="/theme/js/jquery.user.js">//</script>
+        <script type="text/javascript" src="/static/jquery.comments/1.0.4/jquery.comments-1.0.4.js">//</script>
+
+        <script type="text/javascript" src="/static/bootstrap-msg/0.3/bootstrap-msg.min.js">//</script>
+        <script type="text/javascript" src="/theme/js/toolbars.js">//</script>
+        <script type="text/javascript" src="/static/ckeditor456/ckeditor.js">//</script>
+        <script type="text/javascript" src="/static/ckeditor456/adapters/jquery.js">//</script>
+        <script type="text/javascript" src="/static/jquery-ui/1.12.1-noui/jquery-ui.min.js">//</script>
+        <script type="text/javascript" src="/static/js/keymap.js">//</script>
+        <script type="text/javascript" src="/theme/apps/admin/contentEditor.js">//</script>
+
+        $templater.pushLess("/theme/less/bootstrap.less", "all", 0)
+        $templater.pushLess("/theme/theme-params.less", "all")
+
+        #foreach( $lessSource in $templater.lessSources.entrySet())
+            <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
+        #end
+
+        <link rel="stylesheet" href="/static/bootstrap-msg/0.3/bootstrap-msg.min.css" type="text/css" />
+
+        <!-- Injected CSS sources -->
+        #foreach($groupEntry in $templater.cssSources.entrySet())
+            #foreach($cssFile in $groupEntry.value)
+                <link rel="stylesheet" href="$cssFile" media="$!groupEntry.key" />
+            #end
+        #end
+        <!-- End injected CSS sources -->
+
+        <!-- Injected JS sources -->
+        #foreach($groupEntry in $templater.jsSources.entrySet())
+            #foreach($jsFile in $groupEntry.value)
+                <script charset="utf-8" src="$jsFile">//</script>
+            #end
+        #end
+        <!-- End injected CSS sources -->
+
+        #portlets("header")
+
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+        <script src="/js/html5shiv.js"></script>
+        <![endif]-->
+        <!--[if lt IE 8]>
+        <link href="/css/bootstrap-ie7.css" rel="stylesheet">
+        <![endif]-->
+    </head>
+    <body class="content-editor-page">
+        
+        #renderNavbar( $fileTitle $fileName $isCustomApp )
+
+        #if(!$isCustomApp)
+            #renderPropertiesModal($fileName $file)
+        #end
+        
+        #renderContentPage($page $file $fileBody $isCustomApp)
+
+        <div id="content-area">$!fileBody</div>
+        <div id="editor-loading">
+            <span>
+                <span class="loading-icon"><i class="fa fa-spinner fa-spin fa-4x fa-fw"></i></span>
+                <span class="loading-text">Initializing Content Editor...</span>
+            </span>
+        </div>
+
+        #set($snippetsUrl = "_components?fileName=$!fileName")
+        #set($snippetsHandlersUrl = "${page.parent.href}_components?handlers&fileName=$!fileName")
+        
+        <script type="text/javascript">
+            var useHash = "$!useHash";
+            var allGroups = {
+                #foreach ($group in $page.find("/").allGroups)
+                    '$group.name': '$formatter.firstNotNull($group.title, $group.name)',
+                #end
+            };
+            
+            var metas = [];
+            #foreach($metaName in $file.metaNames)
+                metas.push({
+                    'name': '$metaName',
+                    'content': '$!file.getMeta($metaName)'
+                });
+            #end
+            
+            var params = {};
+            #foreach($paramName in $file.paramNames)
+                params['$paramName'] = '$!file.getParam($paramName)';
+            #end
+
+            $(function () {
+                initContentEditorPage({
+                    fileName: '$!fileName',
+                    snippetsUrl: '$snippetsUrl',
+                    snippetsHandlersUrl: '$snippetsHandlersUrl',
+                    allGroups: allGroups,
+                    pagePath: '$!pagePath',
+                    isCustomApp: $isCustomApp
+                });
+            });
+        </script>
+
+    </body>
+</html>
