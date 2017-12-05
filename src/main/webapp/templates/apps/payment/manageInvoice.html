@@ -6,7 +6,7 @@
     <body>
         <section style="padding-top: 15px">
 
-            <header>
+            <header id="header">
                 <h2>
                     $page.title - $page.invoiceState
                     <div class="btn-group pull-right">
@@ -312,6 +312,7 @@ active
                 onSuccess: function (resp) {
                     flog("done", resp);
                     modal.modal('hide');
+                    $("#header").reloadFragment();
                     Msg.success('Invoice was sent!');
                 }
             });
@@ -423,7 +424,7 @@ active
             data: data,
             success(data) {
                 if (row.data("item-id") === "NEW") {
-                    if (data.data !== undefined) {
+                    if (data.data !== undefined && data.data !== null) {
                         row.data("item-id", data.data.id);
                     }
                 }

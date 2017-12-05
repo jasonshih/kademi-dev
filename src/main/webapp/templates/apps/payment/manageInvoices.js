@@ -7,6 +7,7 @@ function initManageInvoices() {
     initDateTimePicker();
     initInvoiceDelete();
     initInvoiceTable();
+    initMarkAsSentInvoice();
 }
 
 function initTimeAgo() {
@@ -46,16 +47,16 @@ function initModalForm() {
 function initDateTimePicker() {
     var date = new Date();
     date.setDate(date.getDate() - 1);
-    $('body').css('position','relative');
+    $('body').css('position', 'relative');
     var opts = {
         widgetParent: 'body',
         format: "DD/MM/YYYY HH:mm",
         minDate: moment()
     };
-    
+
     $('#invoiceDueDate').datetimepicker(opts);
 
-    $('#invoiceDueDate').on('dp.show', function() {
+    $('#invoiceDueDate').on('dp.show', function () {
         var datepicker = $('body').find('.bootstrap-datetimepicker-widget:last');
         if (datepicker.hasClass('bottom')) {
             var top = $(this).offset().top - $(this).outerHeight();
@@ -76,6 +77,29 @@ function initDateTimePicker() {
                 'z-index': 9999
             });
         }
+    });
+}
+
+function initMarkAsSentInvoice() {
+    $('#invoice-wrapper').on('click', '.markAsSent', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+        var href = btn.attr('href');
+        var url = window.location.href + "/" + href;
+
+        $.ajax({
+            url: url,
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                'markAsSent': true
+            },
+            success: function (data) {
+                Msg.success('Invoice marked as sent.', "invoiceSent");
+                reloadInvoiceTable();
+            }
+        });
     });
 }
 
@@ -122,6 +146,7 @@ function reloadInvoiceTable() {
         whenComplete: function () {
             $('abbr.timeago').timeago();
             initInvoiceTable();
+            initMarkAsSentInvoice();
         }
     });
 }
