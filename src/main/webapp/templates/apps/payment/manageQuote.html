@@ -6,14 +6,16 @@
     <body>
         <section style="padding-top: 15px">
             
-            <header>
+            <header id="header">
                 <h2>
                     $page.title - $page.quoteState
                     <div class="btn-group pull-right">
-                        <button type="submit" class="btn btn-sm btn-success">
+                        #if($page.quoteState == "Accepted")
+                        #else
+                        <button type="button" class="btn btn-sm btn-success acceptQuote">
                             <i class="fa fa-arrow-circle-right"></i> Accept Now
                         </button>
-                        
+                        #end
                         <a href="#" class="btn btn-sm btn-info">
                             <i class="fa fa-eye"></i> Preview
                         </a>

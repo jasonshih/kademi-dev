@@ -7,6 +7,7 @@ function initManageQuotes() {
     initDateTimePicker();
     initQuoteDelete();
     initQuoteTable();
+    initAcceptQuote();
 }
 
 function initTimeAgo() {
@@ -46,16 +47,16 @@ function initModalForm() {
 function initDateTimePicker() {
     var date = new Date();
     date.setDate(date.getDate() - 1);
-    $('body').css('position','relative');
+    $('body').css('position', 'relative');
     var opts = {
         widgetParent: 'body',
         format: "DD/MM/YYYY HH:mm",
         minDate: moment()
     };
-    
+
     $('#quoteExpiryDate').datetimepicker(opts);
 
-    $('#quoteExpiryDate').on('dp.show', function() {
+    $('#quoteExpiryDate').on('dp.show', function () {
         var datepicker = $('body').find('.bootstrap-datetimepicker-widget:last');
         if (datepicker.hasClass('bottom')) {
             var top = $(this).offset().top - $(this).outerHeight();
@@ -76,6 +77,29 @@ function initDateTimePicker() {
                 'z-index': 9999
             });
         }
+    });
+}
+
+function initAcceptQuote() {
+    $('#quote-wrapper').on('click', '.acceptQuote', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+        var href = btn.attr('href');
+        var url = window.location.href + "/" + href;
+
+        $.ajax({
+            url: url,
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                'markAccepted': true
+            },
+            success: function (data) {
+                Msg.success('Quote accepted.');
+                reloadQuoteTable();
+            }
+        });
     });
 }
 
