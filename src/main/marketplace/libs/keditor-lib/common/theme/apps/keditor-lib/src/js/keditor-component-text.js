@@ -96,17 +96,11 @@
                     // =================================================================================
                     // Backgrounds
                     // =================================================================================
-                    form.find('.background-image-edit').mselect({
-                        contentTypes: ['image'],
-                        bs3Modal: true,
-                        pagePath: keditor.options.pagePath,
-                        basePath: keditor.options.basePath,
-                        onSelectFile: function (url, relativeUrl, fileType, hash) {
-                            var target = keditor.getSettingComponent().find('.keditor-component-text-content');
-                            var imageUrl = 'http://' + window.location.host + '/_hashes/files/' + hash;
-                            target.css('background-image', 'url("' + imageUrl + '")');
-                            form.find('.background-image-previewer').attr('src', imageUrl);
-                        }
+                    contentEditor.initMselectImage(form.find('.background-image-edit'), keditor, function (url, relUrl, type, hash) {
+                        var target = keditor.getSettingComponent().find('.keditor-component-text-content');
+                        var imageUrl = 'http://' + window.location.host + '/_hashes/files/' + hash;
+                        target.css('background-image', 'url("' + imageUrl + '")');
+                        form.find('.background-image-previewer').attr('src', imageUrl);
                     });
                     form.find('.background-image-delete').on('click', function (e) {
                         e.preventDefault();

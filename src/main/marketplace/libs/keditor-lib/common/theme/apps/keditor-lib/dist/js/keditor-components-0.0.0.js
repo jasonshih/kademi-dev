@@ -342,6 +342,7 @@
 
 (function ($) {
     var KEditor = $.keditor;
+    var contentEditor = $.contentEditor;
     var flog = KEditor.log;
     
     KEditor.components['carousel'] = {
@@ -429,22 +430,16 @@
                     var carouselAddImage = form.find('.carouselAddImage');
                     var carouselItemsWrap = form.find('.carouselItemsWrap');
                     
-                    carouselAddImage.mselect({
-                        contentTypes: ['image'],
-                        bs3Modal: true,
-                        pagePath: keditor.options.pagePath,
-                        basePath: keditor.options.basePath,
-                        onSelectFile: function (url, relUrl, type, hash) {
-                            flog('Keditor carousel selected a file', url, hash);
-                            self.addItemToList(form, {
-                                src: url,
-                                hash: hash,
-                                caption: ''
-                            });
-                            
-                            self.refreshCarousel(keditor.getSettingComponent(), form);
-                            self.editingItemId = '';
-                        }
+                    contentEditor.initMselectImage(carouselAddImage, keditor, function (url, relUrl, type, hash) {
+                        flog('Keditor carousel selected a file', url, hash);
+                        self.addItemToList(form, {
+                            src: url,
+                            hash: hash,
+                            caption: ''
+                        });
+                        
+                        self.refreshCarousel(keditor.getSettingComponent(), form);
+                        self.editingItemId = '';
                     });
                     
                     carouselItemsWrap.sortable({
@@ -1711,6 +1706,7 @@
 
 (function ($) {
     var KEditor = $.keditor;
+    var contentEditor = $.contentEditor;
     var flog = KEditor.log;
     
     KEditor.components['photo'] = {
@@ -1846,29 +1842,22 @@
                         inputWidth.val(newWidth);
                     });
                     
-                    var photoEdit = form.find('#photo-edit');
-                    photoEdit.mselect({
-                        contentTypes: ['image'],
-                        bs3Modal: true,
-                        pagePath: keditor.options.pagePath,
-                        basePath: keditor.options.basePath,
-                        onSelectFile: function (url, relativeUrl, fileType, hash) {
-                            var img = keditor.getSettingComponent().find('img');
-                            var src = '/_hashes/files/' + hash;
-                            
-                            $('<img />').attr('src', src).load(function () {
-                                img.attr({
-                                    width: this.width,
-                                    height: this.height,
-                                    src: src
-                                });
-                                self.ratio = this.width / this.height;
-                                self.width = this.width;
-                                self.height = this.height;
-                                inputWidth.val(this.width);
-                                inputHeight.val(this.height);
+                    contentEditor.initMselectImage(form.find('#photo-edit'), keditor, function (url, relUrl, type, hash) {
+                        var img = keditor.getSettingComponent().find('img');
+                        var src = '/_hashes/files/' + hash;
+                        
+                        $('<img />').attr('src', src).load(function () {
+                            img.attr({
+                                width: this.width,
+                                height: this.height,
+                                src: src
                             });
-                        }
+                            self.ratio = this.width / this.height;
+                            self.width = this.width;
+                            self.height = this.height;
+                            inputWidth.val(this.width);
+                            inputHeight.val(this.height);
+                        });
                     });
                 }
             });
@@ -2032,17 +2021,11 @@
                     // =================================================================================
                     // Backgrounds
                     // =================================================================================
-                    form.find('.background-image-edit').mselect({
-                        contentTypes: ['image'],
-                        bs3Modal: true,
-                        pagePath: keditor.options.pagePath,
-                        basePath: keditor.options.basePath,
-                        onSelectFile: function (url, relativeUrl, fileType, hash) {
-                            var target = keditor.getSettingComponent().find('.keditor-component-text-content');
-                            var imageUrl = 'http://' + window.location.host + '/_hashes/files/' + hash;
-                            target.css('background-image', 'url("' + imageUrl + '")');
-                            form.find('.background-image-previewer').attr('src', imageUrl);
-                        }
+                    contentEditor.initMselectImage(form.find('.background-image-edit'), keditor, function (url, relUrl, type, hash) {
+                        var target = keditor.getSettingComponent().find('.keditor-component-text-content');
+                        var imageUrl = 'http://' + window.location.host + '/_hashes/files/' + hash;
+                        target.css('background-image', 'url("' + imageUrl + '")');
+                        form.find('.background-image-previewer').attr('src', imageUrl);
                     });
                     form.find('.background-image-delete').on('click', function (e) {
                         e.preventDefault();

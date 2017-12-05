@@ -1,5 +1,6 @@
 (function ($) {
     var KEditor = $.keditor;
+    var contentEditor = $.contentEditor;
     var flog = KEditor.log;
     
     KEditor.components['carousel'] = {
@@ -87,22 +88,16 @@
                     var carouselAddImage = form.find('.carouselAddImage');
                     var carouselItemsWrap = form.find('.carouselItemsWrap');
                     
-                    carouselAddImage.mselect({
-                        contentTypes: ['image'],
-                        bs3Modal: true,
-                        pagePath: keditor.options.pagePath,
-                        basePath: keditor.options.basePath,
-                        onSelectFile: function (url, relUrl, type, hash) {
-                            flog('Keditor carousel selected a file', url, hash);
-                            self.addItemToList(form, {
-                                src: url,
-                                hash: hash,
-                                caption: ''
-                            });
-                            
-                            self.refreshCarousel(keditor.getSettingComponent(), form);
-                            self.editingItemId = '';
-                        }
+                    contentEditor.initMselectImage(carouselAddImage, keditor, function (url, relUrl, type, hash) {
+                        flog('Keditor carousel selected a file', url, hash);
+                        self.addItemToList(form, {
+                            src: url,
+                            hash: hash,
+                            caption: ''
+                        });
+                        
+                        self.refreshCarousel(keditor.getSettingComponent(), form);
+                        self.editingItemId = '';
                     });
                     
                     carouselItemsWrap.sortable({

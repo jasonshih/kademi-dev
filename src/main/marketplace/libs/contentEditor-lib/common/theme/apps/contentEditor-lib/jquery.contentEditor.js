@@ -233,46 +233,40 @@
                     }
                 });
                 
-                form.find('#btnAddImagesBGs').mselect({
-                    contentTypes: ['image'],
-                    bs3Modal: true,
-                    pagePath: options.pagePath,
-                    basePath: options.basePath,
-                    onSelectFile: function (url, relativeUrl, fileType, hash) {
-                        var container = keditor.getSettingContainer();
-                        var containerBg = contentEditor.getContainerElement(container, '.container-bg');
-                        var imageUrl = '/_hashes/files/' + hash;
-                        var currentMselect = form.find('.currentMselect').val();
-                        var target = contentEditor.getContainerBgElement(container, form);
-                        
-                        if (currentMselect === '.bgImagesPreview .btn-edit-image') {
-                            var oldImageUrl = form.find('.bgImagesPreview img').attr('src');
-                            form.find('.bgImagesPreview img').attr('src', imageUrl);
-                            var images = form.find('.bgImagesPreview [data-images]').attr('data-images');
-                            if (images) {
-                                var imagesArr = images.split(',');
-                                var index = imagesArr.indexOf(oldImageUrl);
-                                imagesArr[index] = imageUrl;
-                                form.find('.bgImagesPreview [data-images]').attr('data-images', imagesArr.join(','));
-                                containerBg.attr('data-images', imagesArr.join(','));
-                            }
-                            target.css('background-image', 'url("' + imagesArr[0] + '")');
-                        } else if (currentMselect === '#background-image-edit') {
-                            target.css('background-image', 'url("' + imageUrl + '")');
-                            form.find('#background-image-previewer').attr('src', imageUrl);
-                        } else {
-                            form.find('.bgImagesPreview img').attr('src', imageUrl);
-                            var images = form.find('.bgImagesPreview [data-images]').attr('data-images');
-                            if (images) {
-                                var imagesArr = images.split(',');
-                                imagesArr.push(imageUrl);
-                                form.find('.bgImagesPreview [data-images]').attr('data-images', imagesArr.join(','));
-                                containerBg.attr('data-images', imagesArr.join(','));
-                            }
+                contentEditor.initMselectImage(form.find('#btnAddImagesBGs'), keditor, function (url, relativeUrl, fileType, hash) {
+                    var container = keditor.getSettingContainer();
+                    var containerBg = contentEditor.getContainerElement(container, '.container-bg');
+                    var imageUrl = '/_hashes/files/' + hash;
+                    var currentMselect = form.find('.currentMselect').val();
+                    var target = contentEditor.getContainerBgElement(container, form);
+                    
+                    if (currentMselect === '.bgImagesPreview .btn-edit-image') {
+                        var oldImageUrl = form.find('.bgImagesPreview img').attr('src');
+                        form.find('.bgImagesPreview img').attr('src', imageUrl);
+                        var images = form.find('.bgImagesPreview [data-images]').attr('data-images');
+                        if (images) {
+                            var imagesArr = images.split(',');
+                            var index = imagesArr.indexOf(oldImageUrl);
+                            imagesArr[index] = imageUrl;
+                            form.find('.bgImagesPreview [data-images]').attr('data-images', imagesArr.join(','));
+                            containerBg.attr('data-images', imagesArr.join(','));
                         }
-                        
-                        form.find('.currentMselect').val('');
+                        target.css('background-image', 'url("' + imagesArr[0] + '")');
+                    } else if (currentMselect === '#background-image-edit') {
+                        target.css('background-image', 'url("' + imageUrl + '")');
+                        form.find('#background-image-previewer').attr('src', imageUrl);
+                    } else {
+                        form.find('.bgImagesPreview img').attr('src', imageUrl);
+                        var images = form.find('.bgImagesPreview [data-images]').attr('data-images');
+                        if (images) {
+                            var imagesArr = images.split(',');
+                            imagesArr.push(imageUrl);
+                            form.find('.bgImagesPreview [data-images]').attr('data-images', imagesArr.join(','));
+                            containerBg.attr('data-images', imagesArr.join(','));
+                        }
                     }
+                    
+                    form.find('.currentMselect').val('');
                 });
                 
                 form.find('.bgImagesPreview .btn-nav').on('click', function (e) {
@@ -1066,20 +1060,14 @@
             keditor.initDynamicContent(dynamicElement);
         });
         
-        form.find('.logo-edit').mselect({
-            contentTypes: ['image'],
-            bs3Modal: true,
-            pagePath: keditor.options.pagePath,
-            basePath: keditor.options.basePath,
-            onSelectFile: function (url, relativeUrl, fileType, hash) {
-                var imageUrl = '/_hashes/files/' + hash;
-                var component = keditor.getSettingComponent();
-                var dynamicElement = component.find('[data-dynamic-href]');
-                
-                component.attr('data-logo', imageUrl);
-                keditor.initDynamicContent(dynamicElement);
-                form.find('.logo-previewer').attr('src', imageUrl);
-            }
+        contentEditor.initMselectImage(form.find('.logo-edit'), keditor, function (url, relativeUrl, fileType, hash) {
+            var imageUrl = '/_hashes/files/' + hash;
+            var component = keditor.getSettingComponent();
+            var dynamicElement = component.find('[data-dynamic-href]');
+            
+            component.attr('data-logo', imageUrl);
+            keditor.initDynamicContent(dynamicElement);
+            form.find('.logo-previewer').attr('src', imageUrl);
         });
         form.find('.logo-delete').on('click', function (e) {
             e.preventDefault();
@@ -1323,6 +1311,8 @@
     };
     
     contentEditor.initMselectImage = function (target, keditor, onSelectFile) {
+        flog('[jquery.contentEditor] initMselectImage', target);
+        
         target.mselect({
             contentTypes: ['image'],
             bs3Modal: true,
