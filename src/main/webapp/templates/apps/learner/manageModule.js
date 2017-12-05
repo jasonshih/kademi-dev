@@ -163,12 +163,13 @@ function initPostMessage() {
     flog('initPostMessage');
 
     win.on('message', function (e) {
-        flog('On got message', e, e.originalEvent);
-
         var data = $.parseJSON(e.originalEvent.data);
+        flog('On got message', e);
+        
         if (data.from === 'keditor') {
             if (data.isSaved) {
                 Msg.success('Saved!');
+                
                 if (data.willClose) {
                     $('#modal-add-page').modal('hide');
                 }
@@ -904,7 +905,7 @@ function doSavePage(form, pageArticle, isQuiz) {
                         modal.modal('hide');
                     } else {
                         if (isKEditor) {
-                            var editorFrame = $('#editor-frame');
+                            var editorFrame = modal.find('iframe');
                             var pageName = modal.find('[name=pageName]').val();
                             if (!pageName) {
                                 pageName = getFileName(response.nextHref);

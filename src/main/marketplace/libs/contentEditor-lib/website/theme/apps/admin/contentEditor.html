@@ -72,7 +72,7 @@
         <link href="/css/bootstrap-ie7.css" rel="stylesheet">
         <![endif]-->
     </head>
-    <body class="content-editor-page">
+    <body class="content-editor-page #if($params.url) iframe-mode #end">
         #if(!$isCustomApp)
             #set($fname = $params.fileName)
             #if( $fname )
@@ -246,7 +246,8 @@
                     snippetsHandlersUrl: '$snippetsHandlersUrl',
                     allGroups: allGroups,
                     pagePath: '$!pagePath',
-                    isCustomApp: $isCustomApp
+                    isCustomApp: $isCustomApp,
+                    originalUrl: '$!params.url'
                 });
             });
         </script>

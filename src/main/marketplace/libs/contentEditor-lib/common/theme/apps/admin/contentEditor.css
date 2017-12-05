@@ -2,6 +2,7 @@
     padding-top: 50px !important;
 }
 
+
 /* ================================================================== */
 /* Keditor
 /* ================================================================== */
@@ -111,6 +112,21 @@
 .content-editor-nav .content-editor-navbar li a .fa {
     font-size: 20px !important;
     line-height: 1 !important;
+}
+
+/* ================================================================== */
+/* Iframe mode */
+/* ================================================================== */
+body.content-editor-page.iframe-mode {
+    padding-top: 0 !important;
+}
+
+body.content-editor-page.iframe-mode #keditor-sidebar {
+    top: 0;
+}
+
+body.content-editor-page.iframe-mode .content-editor-nav {
+    display: none !important;
 }
 
 /* ================================================================== */

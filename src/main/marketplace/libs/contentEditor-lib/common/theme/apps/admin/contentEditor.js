@@ -1,5 +1,6 @@
 var win = $(window);
-var contentEditor = true;
+var postMessageUrl;
+var postMessageData;
 
 $(document).on({
     'show.bs.modal': function () {
@@ -18,7 +19,7 @@ function initContentEditorPage(options) {
     flog('initContentEditorPage fileName=' + options.fileName);
     
     initKEditor(options);
-    initSaving(options.fileName);
+    initSaving(options.fileName, options.originalUrl);
     initPropertiesModal();
     initNavbar();
     
@@ -28,6 +29,10 @@ function initContentEditorPage(options) {
             e.returnValue = 'Are you sure you would like to leave the editor? You will lose any unsaved changes';
         }
     };
+    
+    if (options.originalUrl) {
+        initIframeMode(options);
+    }
 }
 
 function initNavbar() {
@@ -131,7 +136,7 @@ function initKEditor(options) {
         var a = $(this);
         
         if (a.is('[data-slide]') || a.is('[data-slide-to]')) {
-        
+            
         } else {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -140,8 +145,34 @@ function initKEditor(options) {
     });
 }
 
-function initSaving(fileName) {
-    flog('initSaving', fileName);
+function initIframeMode(options) {
+    postMessageUrl = options.originalUrl;
+    
+    doPostMessage({
+        url: window.location.href.split('#')[0]
+    });
+    
+    win.on('message', function (e) {
+        
+        var data = $.parseJSON(e.originalEvent.data);
+        if (data.triggerSave) {
+            flog('On got message', e);
+            postMessageData = data;
+            $('.btn-save-file').trigger('click');
+        }
+    });
+}
+
+function doPostMessage(data) {
+    flog('doPostMessage', data);
+    
+    data.from = 'keditor';
+    var dataStr = JSON.stringify(data);
+    window.parent.postMessage(dataStr, postMessageUrl);
+}
+
+function initSaving(fileName, originalUrl) {
+    flog('initSaving', fileName, originalUrl);
     
     var btnSaveFile = $('.btn-save-file');
     btnSaveFile.on('click', function (e) {
@@ -150,9 +181,10 @@ function initSaving(fileName) {
         $('[contenteditable]').blur();
         showLoadingIcon();
         var fileContent = $('#content-area').contentEditor('getContent');
+        var saveUrl = postMessageData && postMessageData.pageName ? postMessageData.pageName : fileName;
         
         $.ajax({
-            url: fileName,
+            url: saveUrl,
             type: 'POST',
             data: {
                 body: fileContent
@@ -160,8 +192,13 @@ function initSaving(fileName) {
             dataType: 'json',
             success: function () {
                 $(document.body).removeClass('content-changed');
-                Msg.success('File is saved!');
                 hideLoadingIcon();
+                if (originalUrl) {
+                    postMessageData.isSaved = true;
+                    doPostMessage(postMessageData);
+                } else {
+                    Msg.success('File is saved!');
+                }
             },
             error: function (e) {
                 Msg.error(e.status + ': ' + e.statusText);
@@ -180,6 +217,9 @@ function initSaving(fileName) {
     });
 }
 
+// ============================================================
+// Loading icon
+// ============================================================
 function hideLoadingIcon() {
     $('#editor-loading').addClass('hide');
 }
@@ -187,7 +227,6 @@ function hideLoadingIcon() {
 function showLoadingIcon() {
     $('#editor-loading').removeClass('hide');
 }
-
 
 // ============================================================
 // Meta and data/param functions
