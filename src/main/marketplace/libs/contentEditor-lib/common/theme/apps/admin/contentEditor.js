@@ -181,7 +181,16 @@ function initSaving(fileName, originalUrl) {
         $('[contenteditable]').blur();
         showLoadingIcon();
         var fileContent = $('#content-area').contentEditor('getContent');
-        var saveUrl = postMessageData && postMessageData.pageName ? postMessageData.pageName : fileName;
+        
+        var saveUrl;
+        if( fileName == "" ) {
+            saveUrl = "./";
+        } else {
+            saveUrl = fileName;
+        }
+        if (postMessageData && postMessageData.pageName) {
+            saveUrl = postMessageData.pageName;
+        }
         
         $.ajax({
             url: saveUrl,
