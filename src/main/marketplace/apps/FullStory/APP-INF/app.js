@@ -23,6 +23,17 @@ function initFullStory(orgRoot, webRoot, enabled) {
         }
 
         saveMapping(db);
+
+        var currentUser = securityManager.currentUser;
+        var savedUser = db.child(TYPE_DEFAULT_USER);
+
+        if (isNull(savedUser)) {
+            savedUser = db.createNew(TYPE_DEFAULT_USER, JSON.stringify({
+                'userId': currentUser.userId,
+                'userName': currentUser.name
+            }), TYPE_DEFAULT_USER);
+        }
+
     } else {
         log.info("I'm in an organisation");
     }
@@ -99,6 +110,7 @@ function saveSession(page, params) {
     var trackingApp = applications.tracking;
     var trackingId = null;
     var currentUser = securityManager.currentUser;
+    var savedUser = db.child(TYPE_DEFAULT_USER);
 
     var queryJson = {
         'stored_fields': [
@@ -163,8 +175,10 @@ function saveSession(page, params) {
         if (isNotNull(currentUser)) {
             d.userId = currentUser.userId;
         }
+        
+        var runAsUser = isNotNull(currentUser) ? currentUser : savedUser.userName;
 
-        securityManager.runAsUser(currentUser, function () {
+        securityManager.runAsUser(runAsUser, function () {
             db.createNew(recordName, JSON.stringify(d), TYPE_RECORD);
         });
     }
