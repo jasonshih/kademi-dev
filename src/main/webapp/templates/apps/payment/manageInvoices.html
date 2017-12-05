@@ -95,15 +95,15 @@
                     </thead>
                     <tbody id="invoiceTableBody">
                         #if ($state == 'Draft')
-                            #set( $invoices = $draftInvoices )
+                        #set( $invoices = $draftInvoices )
                         #elseif ($state == 'Sent')
-                            #set( $invoices = $sentInvoices )
+                        #set( $invoices = $sentInvoices )
                         #elseif ($state == 'Overdue')
-                            #set( $invoices = $overdueInvoices )
+                        #set( $invoices = $overdueInvoices )
                         #elseif ($state == 'Paid')
-                            #set( $invoices = $paidInvoices )
+                        #set( $invoices = $paidInvoices )
                         #end
-                
+
                         #foreach($v in $invoices)
                         <tr>
                             <td title="$v.invoiceState" class="text-center lead">
@@ -140,7 +140,10 @@
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </button>
                                     <ul role="menu" class="dropdown-menu pull-right">
+                                        #if($v.invoiceState == "Sent")
+                                        #else
                                         <li><a class="markAsSent" href="$v.name"><i class="fa fa-send"></i> Mark as Sent</a></li>
+                                        #end
                                         <li><a class="XInvoice" href="$v.name"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
                                     </ul>
                                 </div>
@@ -151,11 +154,11 @@
                 </table>
             </div>
         </div>
-        
+
         #macro(isActive $state)
-            #if($request.params.state == $state)
-            active            
-            #end
+        #if($request.params.state == $state)
+        active            
+        #end
         #end
         <script src="/theme/apps/payment/manageInvoices.js" type="text/javascript">//</script>
         <script type="text/javascript">
