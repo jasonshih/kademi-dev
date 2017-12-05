@@ -38,6 +38,21 @@
                 <div id="summary" class="tab-pane">
                     <article class="panel panel-default">
                         <div class="panel-heading">
+                            <h3 class="panel-title">Top Hosts</h3>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                #foreach( $entry in $page.hitsByHost.entrySet() )
+                                <tr>
+                                    <th>$entry.key</th>
+                                    <td>$entry.value</td>
+                                </tr>
+                                #end
+                            </table>
+                        </div>
+                    </article>
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
                             <h3 class="panel-title">Memory</h3>
                         </div>
                         <div class="panel-body">
