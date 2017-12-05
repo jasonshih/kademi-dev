@@ -146,6 +146,7 @@ function reloadQuoteTable() {
         whenComplete: function () {
             $('abbr.timeago').timeago();
             initQuoteTable();
+            initAcceptQuote();
         }
     });
 }
