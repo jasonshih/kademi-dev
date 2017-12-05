@@ -334,13 +334,17 @@ active
         });
 
         $("#line-items").on("keyup", "input", function (event) {
-            // on enter or tab
-            if (event.keyCode === 13 || event.keyCode === 9) {
+            // on enter
+            if (event.keyCode === 13) {
                 var row = $(this).parents("tr");
                 saveChangedRow(row);
             }
         });
 
+        $("#line-items").on("focusout", "input", function () {
+            var row = $(this).parents("tr");
+            saveChangedRow(row);
+        });
 
         $("#line-items").on("focus", "input", function () {
             $(this).parents("tr").addClass("highlighted");

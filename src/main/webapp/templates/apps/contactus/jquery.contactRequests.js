@@ -36,7 +36,6 @@
             this.data("config", config);
         },
         load: function (explicitHref) {
-            flog("load stream", this);
             var config = this.data("config");
             var container = this;
             var containerForms = $("#formsBody");

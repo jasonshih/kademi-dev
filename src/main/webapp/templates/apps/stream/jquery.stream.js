@@ -75,7 +75,7 @@
             this.data("streamConfig", config);
         },
         loadAggregated: function (streamHref) {
-            flog("load stream", this);
+            flog("loadAggregated: load stream", this);
             var config = this.data("streamConfig");
             var container = this;
             var href = config.streamHref;
@@ -129,7 +129,7 @@
             });
         },
         load: function (streamHref) {
-            flog("load stream", this);
+            flog("load: load stream", this);
             var config = this.data("streamConfig");
             var container = this;
             var href = config.streamHref;

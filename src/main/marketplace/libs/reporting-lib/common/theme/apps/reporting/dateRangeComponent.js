@@ -12,13 +12,13 @@
                 $('head').append('<link href="/static/daterangepicker/2.0.11/daterangepicker.css" rel="stylesheet" type="text/css" />');
             }
 
-            if ($('[href="/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.css"]').length === 0) {
-                $('head').append('<link href="/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.css" rel="stylesheet" type="text/css" />');
+            if ($('[href="/theme/apps/pagedatepicker-lib/jquery.pageDatePicker.css"]').length === 0) {
+                $('head').append('<link href="/theme/apps/pagedatepicker-lib/jquery.pageDatePicker.css" rel="stylesheet" type="text/css" />');
             }
 
-            $.getScriptOnce('/static/moment/2.17.1/moment.js', function () {
-                $.getScriptOnce('/static/daterangepicker/2.0.11/daterangepicker.js', function () {
-                    $.getScriptOnce('/static/jquery.pageDatePicker/1.0.3/jquery.pageDatePicker-1.0.3.js', function () {
+            $.getScript('/static/moment/2.17.1/moment.js', function () {
+                $.getScript('/static/daterangepicker/2.0.11/daterangepicker.js', function () {
+                    $.getScript('/theme/apps/pagedatepicker-lib/jquery.pageDatePicker.js', function () {
                         self.initPicker();
                     });
                 });
@@ -36,10 +36,17 @@
 
                     var cls = pageDatePicker.attr('data-style');
                     var position = pageDatePicker.attr('data-position');
-
+                    var showNav = pageDatePicker.attr('data-show-nav') == 'true';
+                    var defaultRange = pageDatePicker.attr('data-default-range');
+                    if (!defaultRange){
+                        defaultRange = '7 days';
+                    }
+                    $.cookie('pageDatePicker-text', defaultRange);
                     pageDatePicker.pageDatePicker({
                         extraClass: cls,
-                        position: position
+                        position: position,
+                        default: defaultRange,
+                        showNav: showNav
                     });
                 }
             });
@@ -60,7 +67,26 @@
                 dataType: 'html',
                 success: function (resp) {
                     form.html(resp);
-                    
+
+                    form.find('.defaultRange').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-default-range', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initPicker();
+                        });
+                    });
+
+                    form.find('[name=showNav]').on('click', function(e){
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-show-nav', this.value === 'true');
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initPicker();
+                        });
+                    });
+
                     form.find('#cbbPickerAlign').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -112,6 +138,7 @@
             form.find('#cbbPickerSize').val(dataAttributes['data-picker-size']);
             form.find('#cbbPickerColor').val(dataAttributes['data-picker-color']);
             form.find('#txtPickerClass').val(dataAttributes['data-picker-class']);
+            form.find('[name=showNav][value='+dataAttributes['data-show-nav']+']').prop('checked', true);
         }
     };
 

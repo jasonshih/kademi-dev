@@ -190,36 +190,36 @@
     
     .dashboard-modules-page & {
         padding: 40px;
-        
+
         .module-thumb {
             width: 250px;
-            top: 40px;
-            bottom: 40px;
-            left: 40px;
+            top: 0;
+            bottom: 15px;
+            left: 5px;
         }
         
         .module-body {
             padding: 0 0 0 30px;
             margin-left: 250px;
         }
-    }
-    
-    @media (max-width: 767px) {
-        padding: 0;
-        
-        .module-thumb {
-            position: static;
-            width: auto;
-            
-            > * {
-                height: auto;
-                padding-bottom: 56.25%;
+
+        @media (max-width: 767px) {
+            padding: 0;
+
+            .module-thumb {
+                position: static;
+                width: auto;
+
+                > * {
+                    height: auto;
+                    padding-bottom: 56.25%;
+                }
             }
-        }
-        
-        .module-body {
-            margin-left: 0;
-            padding: 15px;
+
+            .module-body {
+                margin-left: 0;
+                padding: 15px;
+            }
         }
     }
 }

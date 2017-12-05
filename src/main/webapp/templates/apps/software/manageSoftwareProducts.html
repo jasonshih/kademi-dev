@@ -1,0 +1,64 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Organization Types</title>
+        <script type="text/javascript" src="manageOrgTypes.js">//</script>
+        <link href="manageOrgTypes.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body class="manage-org-types">
+        <div id="manage-org-types">
+            <header class="clearfix">
+                <p class="pull-left">
+                    <a class="btn btn-primary btn-sm btn-add" href="_new"><i class="fa fa-plus"></i> Add new software product</a>
+                </p>
+            </header>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table id="org-types" class="table table-hover table-striped">
+                            <colgroup>
+                                <col width="" />
+                                <col width="" />
+                                <col width="5%" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th class="action"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach($ot in $page.children)
+                                    <tr>
+                                        <td>$ot.softwareProduct.description</td>
+                                        <td class="action">
+                                            <div class="btn-group btn-group-sm">
+                                                <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown">
+                                                    <i class="fa fa-cog"></i> <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu pull-right" role="menu">
+                                                    <li class="presentation" role="menuitem">
+                                                        <a class="btn-edit-orgtype" role="menuitem" href="$ot.name"><i class="fa fa-edit"></i> Edit details</a>
+                                                    </li>
+                                                    <li class="presentation">
+                                                        <a class="btn-delete-orgtype" role="menuitem" href="$ot.name"><i class="fa fa-times"></i> Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+            <script type="text/javascript">
+                $(function () {
+                    initM();
+                });
+            </script>
+        </div>
+    </body>
+</html>

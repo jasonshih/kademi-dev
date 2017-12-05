@@ -1,9 +1,14 @@
 <form class="form-horizontal">
 
     <div class="form-group">
-        <label class="col-sm-12">Website Name</label>
+        <label class="col-sm-12">Website</label>
         <div class="col-sm-12">
-            <input type="text" class="form-control loginas-website"/>
+            <select name="" id="" class="form-control loginas-website">
+                <option value="" selected>Select a website</option>
+                #foreach($website in $rootFolder.organisation.websites)
+                $formatter.option($website.name, $formatter.ifNull($website.title, $website.name), "")
+                #end
+            </select>
             <em class="help-block small text-muted">The website to login to</em>
         </div>
     </div>
