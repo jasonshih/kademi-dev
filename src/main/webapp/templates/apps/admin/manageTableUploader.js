@@ -440,6 +440,7 @@ function checkProcessStatus() {
 
                     var totalRows = 0;
                     var currentRow = 0;
+                    var startRow = 0;
                     var state = result.data.state;
                     flog("state", state);
 
@@ -459,6 +460,7 @@ function checkProcessStatus() {
 
                         totalRows = state.totalRows;
                         currentRow = state.currentRow;
+                        startRow = state.startRow;
                     }
 
                     if (result.data.statusInfo.complete) {
@@ -486,7 +488,7 @@ function checkProcessStatus() {
                         // running
                         flog("Message", result.messages[0]);
                         resultStatus.text(result.messages[0]);
-                        var percentComplete = currentRow / totalRows * 100;
+                        var percentComplete = (currentRow - startRow) / (totalRows - startRow) * 100;
                         if (isNaN(percentComplete)) {
                             percentComplete = 0;
                         }
