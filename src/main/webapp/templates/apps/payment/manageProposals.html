@@ -22,27 +22,20 @@
                                                 #set($acceptedQuotes = $proposals.ofType('Accepted'))
                                                 #set($invoicedQuotes = $proposals.ofType('Invoiced'))
 
-                                                <div class="btn-group" data-toggle="buttons">
-                                                    <label class="btn btn-info $formatter.ifEqual('active', '', $state, 'New')">
-                                                        <input type="radio" name="quoteStatus" id="New" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $state, 'New') />
-                                                        <span id="newQuotesTotal">$newQuotes.size()</span> New
-                                                    </label>
-                                                    <label class="btn btn-success $formatter.ifEqual('active', '', $state, 'Accepted')">
-                                                        <input type="radio" name="quoteStatus" id="Accepted" autocomplete="off" $formatter.ifEqual(
-                                                               'checked="checked"', '', $state, 'Accepted') /> <span id="acceptedQuotesTotal">$acceptedQuotes.size()</span> Accepted
-                                                    </label>
-                                                    <label class="btn btn-warning $formatter.ifEqual('active', '', $state, 'Invoiced')">
-                                                        <input type="radio" name="quoteStatus" id="Invoiced" autocomplete="off" $formatter.ifEqual(
-                                                               'checked="checked"', '', $state, 'Invoiced') /> <span id="invoicedQuotesTotal">$invoicedQuotes.size()</span> Invoiced
-                                                    </label>
+                                                <!--
+                                                <div class="btn-group" >
+                                                    <a href="#if ($state == 'New') ?state= #else ?state=New #end" class="btn btn-sm btn-default #isActive('New')"><i class="fa fa-pencil-square-o"></i> $newQuotes.size() New</a>
+                                                    <a href="#if ($state == 'Accepted') ?state= #else ?state=Accepted #end" class="btn btn-sm btn-default #isActive('Accepted')"><i class="fa fa-send"></i> $acceptedQuotes.size() Accepted</a>
+                                                    <a href="#if ($state == 'Invoiced') ?state= #else ?state=Invoiced #end" class="btn btn-sm btn-default #isActive('Invoiced')"><i class="fa fa-exclamation-circle"></i> $invoicedQuotes.size() Invoiced</a>
                                                 </div>
+                                                -->
                                             </div>
 
                                             <div class="btn-group pull-right">
                                                 <!--
                                                 <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#addQuoteModal" >New Quote</button>
                                                 -->
-                                                <button class="btn btn-success" type="button" onclick="newProposal();">
+                                                <button class="btn btn-success hide" type="button">
                                                     <span class="fa fa-plus"></span>
                                                     New from quotes
                                                 </button>
@@ -93,12 +86,12 @@
                                                                     #foreach($v in $proposals)
                                                                     <tr>
                                                                         <td style="text-align: center;"><input name="quote-for-proposal" value="$v.name" type="checkbox" /></td>
-                                                                        <td title="$v.quoteState" class="text-center lead">
-                                                                            #if($v.quoteState == "New")
+                                                                        <td title="$v.proposalState" class="text-center lead">
+                                                                            #if($v.proposalState == "Created")
                                                                             <i class="fa fa-pencil-square-o text-muted"></i>
-                                                                            #elseif($v.quoteState == "Accepted")
+                                                                            #elseif($v.proposalState == "Accepted")
                                                                             <i class="fa fa-check-circle text-success"></i>
-                                                                            #elseif($v.quoteState == "Invoiced")
+                                                                            #elseif($v.proposalState == "Invoiced")
                                                                             <i class="fa fa-check-circle text-success"></i>
                                                                             #else
                                                                             <i class="fa fa-exclamation-circle text-danger"></i>
@@ -226,5 +219,6 @@
                 </div>
             </div>
         </section>
+        <script src="/theme/apps/payment/manageProposals.js" type="text/javascript">//</script>
     </body>
 </html>
