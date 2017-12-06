@@ -38,39 +38,37 @@
                         <div id="query-builder"></div>
 
                         <div class="row" style="min-height: 300px; margin: 1px; clear: both;">
-                            <div id="query-builder" class="query-builder form-inline">
-                                <form id="aggregationForm">
-                                    <dl id="aggregation" class="rules-group-container">
-                                        <dd class="rules-group-body">
-                                            <ul class="rules-list" id="aggregations-ul">
-                                                <li class="rule-container">
-                                                    <div class="rule-filter-container">
-                                                        <select class="form-control orderDirection" name="orderDirection">
-                                                            <option value="-1">------</option>
-                                                            <option value="ASC">ASC</option>
-                                                            <option value="DESC">DESC</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="rule-operator-container">
-                                                        <select class="form-control orderField" name="orderField">
-                                                            <option value="-1">------</option>
-                                                        </select>                    
-                                                    </div>
-                                                    <div class="rule-operator-container">
-                                                        <select class="form-control orderField" name="orderField">
-                                                            <option value="-1">------</option>
-                                                        </select>                    
-                                                    </div>
-                                                    <div class="rule-operator-container">
-                                                        <select class="form-control orderField" name="orderField">
-                                                            <option value="-1">------</option>
-                                                        </select>                    
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </dd>
-                                    </dl>
-                                </form>
+                            <div class="query-builder form-inline">
+                                <dl class="rules-group-container">
+                                    <dd class="rules-group-body">
+                                        <ul class="rules-list">
+                                            <li class="rule-container">
+                                                <div class="rule-filter-container">
+                                                    <select class="form-control orderDirection" name="orderDirection">
+                                                        <option value="-1">------</option>
+                                                        <option value="ASC">ASC</option>
+                                                        <option value="DESC">DESC</option>
+                                                    </select>
+                                                </div>
+                                                <div class="rule-operator-container">
+                                                    <select class="form-control orderField" name="orderField">
+                                                        <option value="-1">------</option>
+                                                    </select>                    
+                                                </div>
+                                                <div class="rule-operator-container">
+                                                    <select class="form-control orderField" name="orderField">
+                                                        <option value="-1">------</option>
+                                                    </select>                    
+                                                </div>
+                                                <div class="rule-operator-container">
+                                                    <select class="form-control orderField" name="orderField">
+                                                        <option value="-1">------</option>
+                                                    </select>                    
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </dd>
+                                </dl>
                             </div>
                         </div>
 
@@ -266,9 +264,9 @@ $page.records
             <script type="text/javascript" src="/theme/apps/reporting/manageQueryQueryBuilder.js">//</script>
             <script type="text/javascript">
                 var INDEXES = [];
-                #foreach($index in $page.indexers)
-                    INDEXES.push('$index.indexItemType');
-                #end
+                        #foreach($index in $page.indexers)
+                INDEXES.push('$index.indexItemType');
+                        #end
             </script>
             #end
     </body>

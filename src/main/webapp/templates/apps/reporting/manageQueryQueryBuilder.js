@@ -1,6 +1,6 @@
 $(function () {
     Msg.singletonForCategory = true;
-    
+
     var fields = [],
             TYPES = {
                 "AVG": "integer",
@@ -27,7 +27,7 @@ $(function () {
                 "RANGE": true,
                 "DATE_RANGE": true
             };
-            
+
     function saveQuery() {
         $('#aggregationForm').submit();
     }
@@ -35,12 +35,12 @@ $(function () {
     $(".saveRules").on("click", function () {
         saveQuery();
     });
-    
+
     function initModalFields() {
         $("#saveRulesModal").on("click", function () {
             saveQuery();
         });
-        
+
         $("body").off("click", ".btn-add-field").on("click", ".btn-add-field", function () {
             var field = $(this).data("text");
             var selected = $("#fieldsSelected").val();
@@ -114,6 +114,7 @@ $(function () {
                     orderField.append($('<option>', {value: field.id, text: field.id}));
                 });
                 if (resp.data.orderBy !== undefined && resp.data.orderBy !== []) {
+                    flog("Setting sorting: ", resp.data.orderBy);
                     var orderBy = resp.data.orderBy;
                     for (var i = 0; i < orderBy.length; i++) {
                         if (isValid(orderBy[i])) {
@@ -124,6 +125,7 @@ $(function () {
                 }
 
                 if (resp.data.aggregationsSource !== "") {
+                    flog("Setting aggregations: ", resp.data.aggregationsSource);
                     var aggs = resp.data.aggregationsSource;
                     var ul = $('#aggregations-ul');
                     for (var i = 0; i < aggs.length; i++) {
@@ -137,12 +139,12 @@ $(function () {
                         var agg = aggs[i];
                         flog("Agg: ", agg);
                         flog("Li: ", li);
-                        
+
                         li.find(".aggregationType").val(agg.aggType);
                         li.find(".aggregationType").change();
                         li.find(".aggFields").val(agg.aggField);
                         li.find(".aggSize").val(agg.aggSize);
-                        
+
                         if (agg.ranges !== undefined) {
                             var range = agg.ranges[0];
                             if (range.to !== undefined) {
@@ -202,6 +204,7 @@ $(function () {
 
         $('#aggregationForm').forms({
             beforePostForm: function (form, config, data) {
+                flog("Data ", data);
                 var builder = $('#query-builder');
                 flog("Builder: ", builder);
                 var rules = builder.queryBuilder('getRules');
@@ -253,7 +256,7 @@ $(function () {
                 });
             }
         });
-        
+
         function toggleDiv(show, div, input) {
             flog("Show ", $(input).attr("name"), ": ", show);
             if (show) {
@@ -283,9 +286,9 @@ $(function () {
             // Interval
             var aggInterval = li.find(".aggInterval");
             var divInterval = aggInterval.closest("div");
-            
+
             var showSize = false, showFormat = false, showRange = false, showInterval = false;
-            
+
             if ($(this).val() !== -1 && $(this).val() !== "-1") {
                 var aggType = $(this).find(":selected").text();
                 flog("Agg Type ", aggType);
@@ -308,7 +311,7 @@ $(function () {
             toggleDiv(showRange, divRange, aggFrom);
             toggleDiv(showInterval, divInterval, aggInterval);
         });
-        
+
         function clearAggLi(li) {
             $(li).find("input").val("");
             $(li).find(".aggregationType").val("-1").trigger("change");
@@ -324,7 +327,7 @@ $(function () {
                 $("#" + li).remove();
             }
         });
-        
+
         $("body").off("click", ".addAgg").on("click", ".addAgg", function () {
             var newLi = createNewAggRule();
             var ul = $('#aggregations-ul');
