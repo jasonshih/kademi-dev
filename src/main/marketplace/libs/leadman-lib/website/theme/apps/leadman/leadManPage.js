@@ -13,6 +13,7 @@
     var dataTable = null;
     var editor = null;
     var stages = [];
+    var scores = {};
 
     function initDataTable(hits) {
         if (dataTable !== null) {
@@ -257,6 +258,7 @@
             var hit = hits.hits[i];
             var _source = hit._source;
             _source.score = hit._score.toFixed(2);
+            scores[_source.leadId] = _source.score;
             dataTable.row.add(_source);
         }
 
@@ -274,7 +276,11 @@
         });
 
         editor.on('submitComplete', function (e, json, data) {
-            // doSearch();
+            var scoreTd = $('#leadTable').find('.leadMan-del-lead[value='+data.leadId+']').closest('td').parent('tr').find('td').first();
+            if (scoreTd){
+                var cell = dataTable.cell( scoreTd );
+                cell.data( scores[data.leadId] ).draw();
+            }
         });
 
         dataTable.draw();
