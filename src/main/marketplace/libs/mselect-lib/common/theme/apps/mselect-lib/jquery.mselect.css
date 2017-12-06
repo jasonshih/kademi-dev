@@ -1,0 +1,92 @@
+/* ============================================================================
+   Milton select container
+   ============================================================================ */
+.milton-file-select-container {
+    height: 480px;
+}
+
+.milton-file-select-container > .row,
+.milton-file-select-container > .row > div {
+    height: 100%;
+}
+
+.milton-file-select-container .milton-btn-upload-file {
+    float: left;
+}
+
+.milton-file-select-container .btn-ok {
+    float: right;
+}
+
+.milton-file-select-container .dropzone-previews {
+    display: none !important;
+}
+
+.milton-file-select-container .milton-file-preview-wrapper {
+    position: relative;
+    height: 100%;
+}
+
+.milton-file-select-container .milton-file-progress {
+    position: absolute;
+    top: 45px;
+    left: 0px;
+    right: 0px;
+    z-index: 1;
+}
+
+.milton-file-select-container .milton-file-preview {
+    position: absolute;
+    border: 1px solid #ddd !important;
+    overflow: auto !important;
+    position: absolute;
+    top: 45px;
+    left: 0px;
+    right: 0px;
+    bottom: 0;
+    height: auto !important;
+}
+
+/* ============================================================================
+   Milton tree
+   ============================================================================ */
+.milton-file-select-container .milton-tree-wrapper {
+    position: relative;
+    height: 100%;
+}
+
+.milton-file-select-container .milton-tree {
+    border: 1px solid #ddd !important;
+    overflow: auto !important;
+    position: absolute;
+    top: 45px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: auto !important;
+}
+
+.milton-file-select-container .milton-tree.jstree-default a ins.jstree-icon {
+    font-family: FontAwesome !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    font-weight: normal !important;
+    line-height: 1 !important;
+    text-transform: none !important;
+    background: none !important;
+    font-size: inherit !important;
+    padding-top: 2px;
+}
+
+.milton-file-select-container .milton-tree.jstree-default .jstree-closed > a ins.jstree-icon.folder:before {
+    content: "\f114" !important;
+}
+
+.milton-file-select-container .milton-tree.jstree-default .jstree-open > a ins.jstree-icon.folder:before,
+.milton-file-select-container .milton-tree.jstree-default .jstree-leaf > a ins.jstree-icon.folder:before {
+    content: "\f115" !important;
+}
+
+.milton-file-select-container .milton-tree.jstree-default a ins.jstree-icon.file:before {
+    content: "\f016" !important;
+}

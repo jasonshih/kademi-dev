@@ -1,0 +1,12 @@
+{
+    "appDependencies": [
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "admin",
+                "path": "/theme/apps/mupload-lib/jquery.mupload.js"
+            }
+        }
+    ]
+}
