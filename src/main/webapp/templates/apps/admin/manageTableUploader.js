@@ -458,9 +458,9 @@ function checkProcessStatus() {
                             wizard.find('.errorCount').text(state.errorCount);
                         }
 
-                        totalRows = state.totalRows;
-                        currentRow = state.currentRow;
-                        startRow = state.startRow;
+                        totalRows = state.totalRows || 0;
+                        currentRow = state.currentRow || 0;
+                        startRow = state.startRow || 0;
                     }
 
                     if (result.data.statusInfo.complete) {
@@ -489,10 +489,15 @@ function checkProcessStatus() {
                         flog("Message", result.messages[0]);
                         resultStatus.text(result.messages[0]);
                         var percentComplete = (currentRow - startRow) / (totalRows - startRow) * 100;
-                        if (isNaN(percentComplete)) {
+
+                        if (isNaN(percentComplete) || percentComplete < 0.1 || (currentRow == 0 || totalRows == 0)) {
                             percentComplete = 0;
+                        } else {
+                            percentComplete = percentComplete * 0.9; // scale down to a max of 90% so the Org doesnt think they're finished when they're not.   
                         }
-                        percentComplete = percentComplete * 0.9; // scale down to a max of 90% so the Org doesnt think they're finished when they're not.
+
+                        flog('percentComplete', startRow, currentRow, totalRows, percentComplete);
+
                         $('#importProgressbar .progress-bar').attr('aria-valuenow', percentComplete).css('width', percentComplete + '%');
                         jobTitle.text("Process running...");
                     }
