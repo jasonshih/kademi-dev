@@ -1,6 +1,9 @@
 {
     "appDependencies": [
-
+        {
+            "appId": "moment-lib",
+            "branch": "2.18.3"
+        }
     ],
     "dependencies": [
         {
