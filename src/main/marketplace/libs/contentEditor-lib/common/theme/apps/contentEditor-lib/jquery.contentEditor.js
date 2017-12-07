@@ -1,6 +1,5 @@
 (function ($) {
     var EDITOR_PATH = '/theme/apps/contentEditor-lib/';
-    var KEDITOR_PATH = '/theme/apps/keditor-lib/dist/';
     
     $.fn.contentEditor = function (method) {
         if (methods[method]) {
@@ -35,19 +34,10 @@
     };
     
     contentEditor.dependScripts = [
-        '/static/jquery-ui/1.12.1-noui/jquery-ui.min.js',
-        '/theme/js/toolbars.js',
-        '/static/ckeditor456/ckeditor.js',
-        '/static/ckeditor456/adapters/jquery.js',
-        KEDITOR_PATH + 'js/keditor-0.0.0.min.js',
-        KEDITOR_PATH + 'js/keditor-components-0.0.0.js',
-        '/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.js',
         '/static/bootstrap-colorpicker/2.5.1/js/bootstrap-colorpicker.min.js'
     ];
     
     contentEditor.dependStyles = [
-        KEDITOR_PATH + 'css/keditor-0.0.0.min.css',
-        KEDITOR_PATH + 'css/keditor-components-0.0.0.min.css',
         '/static/font-awesome/4.7.0/css/font-awesome.min.css',
         EDITOR_PATH + 'jquery.contentEditor.css',
         '/static/bootstrap-colorpicker/2.5.1/css/bootstrap-colorpicker.min.css'
@@ -94,7 +84,11 @@
             });
         }
         
-        loadScript(0);
+        loadCKEditor(function () {
+            loadKEditor(function () {
+                loadScript(0);
+            });
+        });
     };
     
     contentEditor.getContainerElement = function (container, selector) {
@@ -1315,7 +1309,6 @@
         
         target.mselect({
             contentTypes: ['image'],
-            bs3Modal: true,
             pagePath: keditor.options.pagePath,
             basePath: keditor.options.basePath,
             onSelectFile: onSelectFile

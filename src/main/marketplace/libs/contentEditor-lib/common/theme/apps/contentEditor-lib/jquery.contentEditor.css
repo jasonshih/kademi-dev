@@ -7,7 +7,7 @@
     position: static !important;
 }
 
-.keditor-content-area {
+body.content-editor-page .keditor-content-area {
     padding-top: 30px;
     margin-right: 0 !important;
 }
