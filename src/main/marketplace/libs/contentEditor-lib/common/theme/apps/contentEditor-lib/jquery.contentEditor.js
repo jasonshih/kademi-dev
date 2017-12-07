@@ -1319,6 +1319,7 @@
                 }
                 
                 contentEditor.checkDependencies(options, function () {
+                    CKEDITOR.dtd.$removeEmpty['span'] = false;
                     target.keditor({
                         niceScrollEnabled: false,
                         ckeditorOptions: {
@@ -1329,7 +1330,7 @@
                             templates_files: [templatesPath],
                             templates_replaceContent: false,
                             toolbarGroups: toolbarSets['Default'],
-                            extraPlugins: 'embed_video,fuse-image,kcode,sourcedialog,modal,rating',
+                            extraPlugins: 'widget,lineutils,fontawesome,embed_video,fuse-image,kcode,sourcedialog,modal,rating',
                             removePlugins: standardRemovePlugins + ',autogrow,magicline,showblocks',
                             removeButtons: 'Find,Replace,SelectAll,Scayt,FontSize,Font',
                             enterMode: 'P',

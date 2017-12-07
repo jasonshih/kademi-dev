@@ -3,7 +3,7 @@
         <title>Calendar</title>
         <link href="manageCalendars.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="calendars.js">//</script>
-        <script type="text/javascript" src="manageEvent.js">//</script>
+        <script type="text/javascript" src="manageEvent.js?v=1">//</script>
         <script type="text/javascript" src="cal-utils.js">//</script>
         <script type="text/javascript" src="/static/chosen/1.1.0/chosen.jquery.js">//</script>
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-chosen/1.0.1/bootstrap-chosen.css" />
@@ -111,7 +111,7 @@
                         <div class="form-group">
                             <label class="control-label col-md-3 col-lg-2" for="Organisor">Organisor</label>
                             <div class="col-md-8 col-lg-4">
-                                <input type="text" name="organisor" id="Organisor" placeholder="Email address or user id" value="$!page.organisor.email" class="required form-control" />
+                                <input type="text" name="organisor" id="Organisor" data-text="$!page.organisor.formattedName" placeholder="Email address or user id" value="$!page.organisor.email" class="required form-control" />
                             </div>
                         </div>
 
