@@ -457,6 +457,15 @@ function checkProcessStatus() {
                         if (typeof state.errorCount !== 'undefined') {
                             wizard.find('.errorCount').text(state.errorCount);
                         }
+                        if (typeof state.remainingTime !== 'undefined') {
+                            var span = wizard.find('.remainingTime');
+                            span.attr("title", state.remainingTime);
+                            var remaining = state.remainingTime;
+                            if (remaining !== "Calculating...") {
+                                remaining = jQuery.timeago(remaining);
+                            }
+                            span.text(remaining);
+                        }
 
                         totalRows = state.totalRows || 0;
                         currentRow = state.currentRow || 0;
