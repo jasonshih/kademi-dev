@@ -66,8 +66,7 @@
                 var hit = hits[i]._source;
                 var t = '<tr>'
                         + '    <td>' + hit.source + '</td>'
-                        + '    <td>' + hit.type + '</td>'
-                        + '    <td>' + (hit.commentText != null ? hit.commentText : '') + '</td>';
+                        + '    <td>' + hit.type + '</td>';
 
                 if (hit.userId !== null && typeof hit.userId !== 'undefined') {
                     var name = hit.nickName || hit.userName || hit.email || hit.userId;
@@ -77,7 +76,8 @@
                     t += '<td></td>';
                 }
 
-                t += '    <td>' + (new moment(hit.reqDate)).format('DD/MM/YYYY hh:mm') + '</td>'
+                t += '    <td>' + (hit.commentText != null ? hit.commentText : '') + '</td>'
+                        + '    <td>' + (new moment(hit.reqDate)).format('DD/MM/YYYY hh:mm') + '</td>'
                         + '</tr>';
                 table.append(t);
             }
