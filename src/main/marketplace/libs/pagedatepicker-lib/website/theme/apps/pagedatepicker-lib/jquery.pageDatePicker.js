@@ -1,7 +1,7 @@
 /**
  *
  * jquery.pageDatePicker.js
- * @version: 1.0.2
+ * @version: 1.0.4
  * @require: momentjs
  *
  * Configuration:
@@ -31,7 +31,7 @@
             '3 mo': [moment().subtract(3, 'month'), moment()],
             '1 yr': [moment().subtract(1, 'year'), moment()],
             '3 yrs': [moment().subtract(3, 'year'), moment()],
-            '10 yrs': [moment().subtract(10, 'year'), moment()],
+            '10 yrs': [moment().subtract(10, 'year'), moment()]
         },
         dateFormat: 'DD/MM/YYYY',
         onSelect: function (text, startDate, endDate) {
@@ -60,7 +60,7 @@
 
             container.append(
                 '<div class="btn-group" role="group" aria-label="...">' +
-                ' <button type="button" class="btn btn-primary pageDatePickerPrev"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>' +
+                ' <button type="button" class="btn '+options.extraClass+' pageDatePickerPrev"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>' +
                 '<div class="btn-group dropdown pageDatePicker-wrapper">' +
                 '   <a class="dropdown-toggle pageDatePicker-dropdown-trigger ' + options.extraClass + '">' +
                 '       <span class="pageDatePicker-text"></span>' +
@@ -78,7 +78,7 @@
                 '       </div>' +
                 '   </div>' +
                 '</div>' +
-                ' <button type="button" class="btn btn-primary pageDatePickerNext"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></button>' +
+                ' <button type="button" class="btn '+options.extraClass+' pageDatePickerNext"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></button>' +
                 '</div>'
             );
 
@@ -321,7 +321,7 @@
                 options.onSelect.call(self, startDate, endDate);
             }
 
-            flog("fire event");
+            flog("pageDateChanged fire event");
             $(document.body).trigger('pageDateChanged', [startDate, endDate, text, self.container, initial]);
         },
 
@@ -369,7 +369,6 @@
             }
 
             //flog('[jquery.pageDatePicker] Init value: ' + options.default);
-            debugger;
             var defaultValue = options.default.split(' ');
             if (moment(defaultValue[0], options.dateFormat).isValid() && moment(defaultValue[1], options.dateFormat).isValid()) {
                 //flog('[jquery.pageDatePicker] Default is range');
@@ -377,25 +376,14 @@
                 startDate = defaultValue[0];
                 endDate = defaultValue[1];
             } else {
-                //flog('[jquery.pageDatePicker] Default is time ago');
-                var unit = '';
-                switch (defaultValue[1]){
-                    case 'mo':
-                        unit = 'months';
-                        break;
-                    case 'yr':
-                    case 'yrs':
-                        unit = 'years';
-                        break;
-                    default:
-                        unit = 'days';
-                        break;
-                }
-                var now = moment();
-                var from = moment().subtract(+defaultValue[0], unit);
+                var range = options.ranges[options.default];
+                if (range && $.isArray(range) && range.length > 1){
+                    var from = range[0];
+                    var now = range[1];
 
-                startDate = from.format(options.dateFormat);
-                endDate = now.format(options.dateFormat);
+                    startDate = from.format(options.dateFormat);
+                    endDate = now.format(options.dateFormat);
+                }
             }
 
             var trigger = rangeItems.filter('[data-start-date="' + startDate + '"][data-end-date="' + endDate + '"]');
