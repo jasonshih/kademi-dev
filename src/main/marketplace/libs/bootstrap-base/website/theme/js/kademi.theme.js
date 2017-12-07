@@ -4,11 +4,8 @@
  *  A default is defined in toolbars.js. You should override that file in your
  *  application to get the toolbars you want
  */
-CKEDITOR_BASEPATH = "/static/ckeditor456/";
 
 // Templates should push theme css files into this array, so they will be included in the editor
-var themeCssFiles = new Array();
-
 function initCollapseListGroup() {
     flog('initCollapseListGroup');
     
@@ -119,7 +116,6 @@ function initLogin() {
  *
  * See /static/js/toolbars.js
  */
-var ADDED_EXTRA_CSS = false;
 function initHtmlEditors(elements, height, width, extraPlugins, removePlugins, callback) {
     var fullUrl = false;
     if ($.isPlainObject(height)) {
@@ -134,104 +130,90 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins, c
     
     flog('initHtmlEditors', elements, height, width, extraPlugins, removePlugins);
     
-    $.getScriptOnce('/static/ckeditor456/ckeditor.js', function () {
-        $.getScriptOnce('/static/ckeditor456/adapters/jquery.js', function () {
-            $.getScriptOnce('/theme/js/toolbars.js', function () {
-                if (!elements) {
-                    elements = $('.htmleditor');
+    loadCKEditor(function () {
+        if (!elements) {
+            elements = $('.htmleditor');
+        }
+        if (!extraPlugins) {
+            extraPlugins = standardExtraPlugins;
+        }
+        if (!removePlugins) {
+            removePlugins = standardRemovePlugins;
+        }
+        
+        flog('Prepare html editors using templates=' + templatesPath + ' and styles=' + stylesPath); // see toolbars.js for templatesPath
+        elements.each(function () {
+            var element = $(this);
+            
+            // Add id for editor if dont have id
+            if (!element.attr('id')) {
+                element.attr('id', 'editor-' + Math.round(Math.random() * 123456789));
+            }
+            
+            var inputClasses = element.attr('class');
+            var toolbar = 'Default';
+            if (inputClasses) {
+                inputClasses = inputClasses.split(' ');
+                for (var i = 0; i < inputClasses.length; i++) {
+                    var s = inputClasses[i];
+                    if (s.startsWith('toolbar-')) {
+                        s = s.substring(8);
+                        toolbar = s;
+                        break;
+                    }
                 }
-                if (!extraPlugins) {
-                    extraPlugins = standardExtraPlugins;
+            }
+            
+            flog('Using toolbar=' + toolbar + ' => ', toolbarSets[toolbar]);
+            
+            themeCssFiles.push('/static/bootstrap/3.3.7/css/bootstrap.min.css');
+            themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap-ckeditor.css');
+            
+            var config = {
+                skin: editorSkin,
+                allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
+                contentsCss: themeCssFiles, // mainCssFile,
+                bodyId: 'editor',
+                templates_files: [templatesPath],
+                templates_replaceContent: false,
+                toolbarGroups: toolbarSets[toolbar],
+                extraPlugins: extraPlugins,
+                removePlugins: removePlugins,
+                enterMode: 'P',
+                forceEnterMode: true,
+                filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
+                filebrowserUploadUrl: '/uploader/upload',
+                format_tags: 'p;h1;h2;h3;h4;h5;h6', // removed p2
+                format_p2: {
+                    element: 'p',
+                    attributes: {
+                        'class': 'lessSpace'
+                    }
+                },
+                minimumChangeMilliseconds: 100,
+                fullUrl: fullUrl
+            };
+            
+            if (height) {
+                if (height !== 'auto') {
+                    config.height = height;
                 }
-                if (!removePlugins) {
-                    removePlugins = standardRemovePlugins;
+            } else {
+                config.height = '300';
+            }
+            if (width) {
+                config.width = width;
+            }
+            
+            config.stylesSet = 'myStyles:' + stylesPath; // See toolbars.js, or overridden elsewhere
+            
+            flog('Create editor', element, config);
+            var editor = element.ckeditor(config).editor;
+            
+            editor.on('instanceReady', function () {
+                if (typeof callback === 'function') {
+                    callback.call(this, editor);
                 }
-                
-                flog('Prepare html editors using templates=' + templatesPath + ' and styles=' + stylesPath); // see toolbars.js for templatesPath
-                elements.each(function () {
-                    var element = $(this);
-                    
-                    // Add id for editor if dont have id
-                    if (!element.attr('id')) {
-                        element.attr('id', 'editor-' + Math.round(Math.random() * 123456789));
-                    }
-                    
-                    var inputClasses = element.attr('class');
-                    var toolbar = 'Default';
-                    if (inputClasses) {
-                        inputClasses = inputClasses.split(' ');
-                        for (var i = 0; i < inputClasses.length; i++) {
-                            var s = inputClasses[i];
-                            if (s.startsWith('toolbar-')) {
-                                s = s.substring(8);
-                                toolbar = s;
-                                break;
-                            }
-                        }
-                    }
-                    
-                    flog('Using toolbar=' + toolbar + ' => ', toolbarSets[toolbar]);
-                    
-                    themeCssFiles.push('/static/bootstrap/3.3.7/css/bootstrap.min.css');
-                    themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap-ckeditor.css');
-                    
-                    var config = {
-                        skin: editorSkin,
-                        allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
-                        contentsCss: themeCssFiles, // mainCssFile,
-                        bodyId: 'editor',
-                        templates_files: [templatesPath],
-                        templates_replaceContent: false,
-                        toolbarGroups: toolbarSets[toolbar],
-                        extraPlugins: extraPlugins,
-                        removePlugins: removePlugins,
-                        enterMode: 'P',
-                        forceEnterMode: true,
-                        filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
-                        filebrowserUploadUrl: '/uploader/upload',
-                        format_tags: 'p;h1;h2;h3;h4;h5;h6', // removed p2
-                        format_p2: {
-                            element: 'p',
-                            attributes: {
-                                'class': 'lessSpace'
-                            }
-                        },
-                        minimumChangeMilliseconds: 100,
-                        fullUrl: fullUrl
-                    };
-                    
-                    if (height) {
-                        if (height !== 'auto') {
-                            config.height = height;
-                        }
-                    } else {
-                        config.height = '300';
-                    }
-                    if (width) {
-                        config.width = width;
-                    }
-                    
-                    config.stylesSet = 'myStyles:' + stylesPath; // See toolbars.js, or overridden elsewhere
-                    
-                    flog('Create editor', element, config);
-                    var editor = element.ckeditor(config).editor;
-                    
-                    editor.on('instanceReady', function () {
-                        if (!ADDED_EXTRA_CSS) {
-                            var cssCkeditorExtra = '/static/ckeditor456/skins/bootstrapck/editor_extra.css';
-                            flog('Loading ckeditor extra css');
-                            $('<link href="' + cssCkeditorExtra + '" rel="stylesheet">').appendTo('head');
-                            
-                            ADDED_EXTRA_CSS = true;
-                        }
-                        
-                        if (typeof callback === 'function') {
-                            callback.call(this, editor);
-                        }
-                    });
-                });
-                
-                CKEDITOR.dtd.$removeEmpty['i'] = false;
             });
         });
     });

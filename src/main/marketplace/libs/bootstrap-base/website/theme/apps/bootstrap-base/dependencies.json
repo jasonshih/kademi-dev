@@ -1,6 +1,10 @@
 {
     "appDependencies": [
         {
+            "appId": "ckeditor-lib",
+            "branch": "4.5.6"
+        },
+        {
             "appId": "contentEditor-lib",
             "branch": "1.0.3"
         }
