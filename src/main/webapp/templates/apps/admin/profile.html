@@ -431,7 +431,7 @@
                                 <div class="panel-body">
                                     #foreach($p in $providers)
                                     #set( $connected = false)
-                                    #set( $connected = $applications.oauth.oAuthDetails.get( $p.providerId ) )
+                                    #set( $connected = $applications.oauth.getOAuthDetails($page.profile).get( $p.providerId ) )
                                     #if( $connected )
                                     <div class="alert alert-info">
                                         <i class="fa fa-${p.providerId}"></i> Connected with $p.providerId as $formatter.propertyOfObject($connected.details, $connected.displayNamePath)

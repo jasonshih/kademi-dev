@@ -137,32 +137,16 @@
     }
 
     function initReportDateRange() {
-        var reportRange = $('#report-range');
-        reportRange.exist(function () {
-            flog("init report range");
-            reportRange.daterangepicker({
-                format: 'DD/MM/YYYY', // YYYY-MM-DD
-                ranges: {
-                    'Last 7 Days': [moment().subtract('days', 6), moment()],
-                    'Last 30 Days': [moment().subtract('days', 29), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                    'This Year': [moment().startOf('year'), moment()],
-                },
-            },
-                    function (start, end) {
-                        flog('onChange', start, end);
-                        options.startDate = start.format('DD/MM/YYYY');
-                        options.endDate = end.format('DD/MM/YYYY');
-                        updateAnalytics();
-                    }
-            );
+        $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+            options.startDate = startDate;
+            options.endDate = endDate;
+
+            updateAnalytics();
         });
     }
 
     w.initManageSocialImports = function () {
         initImportButton();
         initReportDateRange();
-        updateAnalytics();
     };
 })(this);
