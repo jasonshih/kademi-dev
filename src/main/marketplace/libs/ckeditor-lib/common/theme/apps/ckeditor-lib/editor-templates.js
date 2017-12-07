@@ -4,7 +4,7 @@
  */
 
 CKEDITOR.addTemplates('default', {
-    imagesPath: CKEDITOR_PATH +  "templates-preview/",
+    imagesPath: CKEDITOR_BASEPATH +  "templates-preview/",
     templates: [
         {
             title: 'Expandable Panel (Default)',

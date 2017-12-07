@@ -6,8 +6,8 @@ var standardExtraPlugins = "autogrow,embed_video,embed_audio,fuse-image,kcode,mo
 var standardRemovePlugins = "resize,image,save,newpage,preview,tliyoutube,image2,pbckcode,googledocs,language"
 
 // Paths
-var templatesPath = CKEDITOR_PATH + 'editor-templates.js';
-var stylesPath = CKEDITOR_PATH + "styles.js";
+var templatesPath = CKEDITOR_BASEPATH + 'editor-templates.js';
+var stylesPath = CKEDITOR_BASEPATH + "styles.js";
 
 // ================================================================
 // Toolbar sets
