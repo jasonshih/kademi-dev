@@ -40,16 +40,16 @@
                             #end
                             <!--[if (gte mso 9)|(IE)]>
                             <tr>
-                                <td width="$tableWidth">
+                                <td width="$!tableWidth">
                             <![endif]-->
                         #else
                             <!--[if (gte mso 9)|(IE)]>
                             </td>
-                            <td width="$tableWidth">
+                            <td width="$!tableWidth">
                             <![endif]-->
                         #end
 
-                        <table cellpadding="0" cellspacing="0" border="0" width="$tableWidth" align="left" class="col">
+                        <table cellpadding="0" cellspacing="0" border="0" width="$!tableWidth" align="left" class="col">
                             <tbody>
                                 <tr>
                                     <td style="padding-left: 10px; padding-right: 10px;">
@@ -60,15 +60,15 @@
                                                     #if( $article.bestSquareImageHref )
                                                         #set($bg = "http://${rootFolder.domainName}${formatter.portString}${article.bestSquareImageHref}/alt-600-400.png")
                                                     #end
-                                                    <a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$linkStyles">
-                                                        <img src="$bg" width="100%" height="auto" alt="$article.title" style="display: block; border: 0;" />
+                                                    <a title="$!article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$!linkStyles">
+                                                        <img src="$bg" width="100%" height="auto" alt="$!article.title" style="display: block; border: 0;" />
                                                     </a>
-                                                    <h4 style="font-size: ${fontSizeH4}px; line-height: ${lineHeightH4}px;margin-top:0;margin-bottom: 0;"><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$linkStyles">$article.title</a>
+                                                    <h4 style="font-size: $!{fontSizeH4}px; line-height: $!{lineHeightH4}px;margin-top:0;margin-bottom: 0;"><a title="$!article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$!linkStyles">$article.title</a>
                                                     </h4>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td height="40" valign="top" style="$baseStyles">
+                                                <td height="40" valign="top" style="$!baseStyles">
                                                     #set ($brief = $formatter.toPlain( $!article.brief ))
                                                     <p>
                                                         $!formatter.truncate( $brief, 100)
@@ -76,8 +76,8 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td style="$baseStyles">
-                                                    <p><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$linkStyles">Read more</a></p>
+                                                <td style="$!baseStyles">
+                                                    <p><a title="$!article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$!linkStyles">Read more</a></p>
                                                 </td>
                                             </tr>
                                         </table>
@@ -112,20 +112,20 @@
                         <!--[if (gte mso 9)|(IE)]>
                         <table cellspacing="0" cellpadding="0" width="100%" border="0">
                             <tr>
-                                <td width="$leftWidth">
+                                <td width="$!leftWidth">
                         <![endif]-->
-                        <table cellpadding="0" cellspacing="0" border="0" width="$leftWidth" align="left" class="col">
+                        <table cellpadding="0" cellspacing="0" border="0" width="$!leftWidth" align="left" class="col">
                             <tr>
                                 <td class="wrapper" style="padding-right: 15px">
                                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                         <tr>
-                                            <td style="$baseStyles">
+                                            <td style="$!baseStyles">
                                                 #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
                                                 #if( $article.bestSquareImageHref )
                                                     #set($bg = "http://${rootFolder.domainName}${formatter.portString}${article.bestSquareImageHref}/alt-600-400.png")
                                                 #end
-                                                <a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$baseStyles">
-                                                    <img src="$bg" width="100%" height="auto" alt="$article.title" style="display: block; border: 0;" />
+                                                <a title="$!article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$!baseStyles">
+                                                    <img src="$!bg" width="100%" height="auto" alt="$!article.title" style="display: block; border: 0;" />
                                                 </a>
                                             </td>
                                         </tr>
@@ -135,17 +135,17 @@
                         </table>
                         <!--[if (gte mso 9)|(IE)]>
                         </td>
-                        <td width="$rightWidth">
+                        <td width="$!rightWidth">
                         <![endif]-->
-                        <table cellpadding="0" cellspacing="0" border="0" width="$rightWidth" align="right" class="col">
+                        <table cellpadding="0" cellspacing="0" border="0" width="$!rightWidth" align="right" class="col">
                             <tr>
-                                <td class="wrapper" style="$baseStyles">
-                                    <h4 style="font-size: ${fontSizeH4}px; line-height: ${lineHeightH4}px;margin-top:0;margin-bottom: 0;"><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$linkStyles">$article.title</a></h4>
+                                <td class="wrapper" style="$!baseStyles">
+                                    <h4 style="font-size: $!{fontSizeH4}px; line-height: $!{lineHeightH4}px;margin-top:0;margin-bottom: 0;"><a title="$!article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$!linkStyles">$article.title</a></h4>
                                     #set ($brief = $formatter.toPlain( $article.brief ))
                                     <p>
                                         $!formatter.truncate( $brief, 300)
                                     </p>
-                                    <p><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$linkStyles">Read more</a></p>
+                                    <p><a title="$!article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$!linkStyles">Read more</a></p>
                                 </td>
                             </tr>
                         </table>

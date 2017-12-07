@@ -17,26 +17,26 @@
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tbody>
         <tr>
-            <td style="$baseStyles">
-                <h4 style="font-size: ${fontSizeH4}px; line-height: ${lineHeightH4}px;margin-top:0;margin-bottom: 0;">
-                    <a target="_blank" style="$linkStyles" title="$calendarEvent.summary" href="$url">$calendarEvent.summary</a></h4>
+            <td style="$!baseStyles">
+                <h4 style="font-size: $!{fontSizeH4}px; line-height: $!{lineHeightH4}px;margin-top:0;margin-bottom: 0;">
+                    <a target="_blank" style="$!linkStyles" title="$!calendarEvent.summary" href="$!url">$calendarEvent.summary</a></h4>
             </td>
         </tr>
         <tr>
             <td height="20">&nbsp;</td>
         </tr>
         <tr>
-            <td style="$baseStyles">
+            <td style="$!baseStyles">
                 $!calendarEvent.description
             </td>
         </tr>
         <tr>
-            <td style="$baseStyles">
+            <td style="$!baseStyles">
                 <table align="center" border="0" cellpadding="0" cellspacing="0" class="button-wrapper" bgcolor="#2baadf" style="border-radius: 3px;background-color:#2baadf;">
                     <tbody>
                         <tr>
                             <td align="center" valign="middle" class="button-inner" style="padding-top: 15px; padding-bottom: 15px; padding-left: 15px; padding-right: 15px;font-size: 16px; font-weight: bold; text-align: center; ">
-                                <a title="$calendarEvent.summary" href="$url" target="_blank" style="text-decoration: none;color:#ffffff;">Register Now</a>
+                                <a title="$!calendarEvent.summary" href="$!url" target="_blank" style="text-decoration: none;color:#ffffff;">Register Now</a>
                             </td>
                         </tr>
                     </tbody>

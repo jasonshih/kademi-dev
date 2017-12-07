@@ -49,12 +49,12 @@
                         #end
                         <!--[if (gte mso 9)|(IE)]>
                         <tr>
-                            <td width="$tableWidth">
+                            <td width="$!tableWidth">
                         <![endif]-->
                     #else
                         <!--[if (gte mso 9)|(IE)]>
                         </td>
-                        <td width="$tableWidth">
+                        <td width="$!tableWidth">
                         <![endif]-->
                     #end
                     #set ($catePath = "/categories/" + $cate)
@@ -64,12 +64,12 @@
                     #if( $cateResource.imageHref )
                         #set($cateImage = "http://${rootFolder.domainName}${formatter.portString}${$cateResource.imageHref}/alt-600-400.png")
                     #end
-                <table data-index="$foreach.index" data-count="$foreach.count" data-new="$newLine" data-end="$endLine" cellpadding="0" cellspacing="0" border="0" width="$tableWidth" align="left" class="col">
+                <table data-index="$foreach.index" data-count="$foreach.count" data-new="$!newLine" data-end="$!endLine" cellpadding="0" cellspacing="0" border="0" width="$!tableWidth" align="left" class="col">
                         <tbody>
                             <tr>
                                 <td valign="top" align="center" style="padding-left: $horizontalPaddingpx; padding-right: $horizontalPaddingpx; $baseStyles">
-                                    <a href="$cateLink" target="_blank" style="$linkStyles">
-                                        <img src="$cateImage" width="$imgWidth" alt="$cateResource.title" />
+                                    <a href="$!cateLink" target="_blank" style="$!linkStyles">
+                                        <img src="$!cateImage" width="$!imgWidth" alt="$!cateResource.title" />
                                     </a>
                                 </td>
                             </tr>
@@ -80,7 +80,7 @@
                                 <td align="center">
                                     #set ($fontSizeName = "$" + "fontSize" + $tag.toUpperCase())
                                     #set ($lineHeightName = "$" + "lineHeight" + $tag.toUpperCase())
-                                    <a href="$cateLink" target="_blank" style="$linkStyles">
+                                    <a href="$!cateLink" target="_blank" style="$!linkStyles">
                                         <$tag style="font-size: #evaluate($fontSizeName)px; line-height: #evaluate($lineHeightName)px;margin-top:0;margin-bottom: 0;">
                                             $cateResource.title
                                         </$tag>
