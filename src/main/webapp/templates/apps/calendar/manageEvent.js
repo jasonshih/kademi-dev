@@ -13,6 +13,7 @@ function initManageEvent() {
     initDetailsTab();
     initChosen();
     initFullscreenEditor($('[name=description]'));
+    initOrganisor();
 }
 
 window.onbeforeunload = function () {
@@ -306,4 +307,8 @@ function postCreateEmail(websiteName) {
         }
         
     });
+}
+
+function initOrganisor() {
+    $('#Organisor').entityFinder({type: 'profile'});
 }
