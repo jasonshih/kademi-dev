@@ -32,10 +32,11 @@
         <div class="tabbable">
             <ul class="nav nav-tabs tab-bricky">
                 <li><a data-toggle="tab" href="#threads">Threads</a></li>
+                <li><a data-toggle="tab" href="#hotspots">Hot spots</a></li>
             </ul>
             <div class="tab-content">
-                                
-                
+
+
                 <div id="threads" class="tab-pane">
 
                     <table class="stacktraces table table-striped">
@@ -66,7 +67,7 @@
                             #if( $entry.requestData )
                             <tr class="state-$entry.key.state">
                                 <td>
-                                    $entry.threadName 
+                                    $entry.threadName
 
                                     <p>
                                         <br/>
@@ -96,10 +97,10 @@
                             </tr>
                             #end
                             #end
-                            
+
                             <tr>
                                 <td colspan="3">
-                                    <p class="text-center"><i>Non-request threads</i></p>                                    
+                                    <p class="text-center"><i>Non-request threads</i></p>
                                 </td>
                             </tr>
 
@@ -132,7 +133,43 @@
                     </table>
                     #end
                 </div>
+                <div id="hotspots" class="tab-pane">
+                    <form method="POST" action="maintThreads" class="hotSpotsForm" >
+
+                        #if( $page.hotspotRunning )
+                        <input type="hidden" name="hotStacks" value="false"/>
+                        <button class="btn-sm btn btn-danger" type="submit">Stop</button>
+                        #else
+                        <input type="hidden" name="hotStacks" value="true"/>
+                        <button class="btn-sm btn btn-danger" type="submit">Start</button>
+                        #end
+                    </form>
+
+
+                    <hr/>
+
+                    Total scans: $page.totalScans
+                    #if( $request.params.minPercent )
+                        #set( $minPerc = $formatter.toInteger($request.params.minPercent) )
+                        Min - $minPerc %
+                        $page.hotspotHtml( $minPerc )
+                    #else
+                        $page.hotspotHtml
+                    #end
+                </div>
             </div>
         </div>
+
+
+        <script type="text/javascript">
+            $(function () {
+                $("form.hotSpotsForm").forms({
+                    onSuccess: function (resp) {
+                        Msg.success("Done");
+                        window.location.reload();
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

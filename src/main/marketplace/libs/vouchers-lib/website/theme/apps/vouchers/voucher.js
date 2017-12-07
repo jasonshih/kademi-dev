@@ -3,10 +3,10 @@
  */
 $(function () {
     $('abbr.timeago').timeago();
-    
-    /*
-    var redeemModal = $("#redeemVoucherModal");
-    $("#redeemVoucherForm").forms({
+
+
+    var redeemModal = $("#redeemVoucherPageModal");
+    redeemModal.find("#redeemVoucherPageForm").forms({
         onSuccess: function (e) {
             Msg.info("Redeemed ok");
             $("#voucherContent").reloadFragment({
@@ -17,8 +17,7 @@ $(function () {
             redeemModal.modal('hide');
         }
     });
-    */
-    
+
     var allocateVoucherModal = $("#allocateVoucherModal");
     allocateVoucherModal.find("form").forms({
         onSuccess: function (e) {
@@ -31,7 +30,7 @@ $(function () {
             allocateVoucherModal.modal('hide');
         }
     });
-    
+
     var changeStatusModal = $("#changeStatusModal");
     changeStatusModal.find("form").forms({
         onSuccess: function (e) {
@@ -44,5 +43,5 @@ $(function () {
             changeStatusModal.modal('hide');
         }
     });
-    
+
 });
