@@ -57,8 +57,8 @@
                 if (typeof window.Dropzone !== 'undefined') {
                     methods.initDropZone(container, form, config);
                 } else {
-                    $.getStyleOnce('/static/dropzone/v3.10.2/css/dropzone.css');
-                    $.getScriptOnce(('/static/dropzone/v3.10.2/dropzone.js'), function () {
+                    $.getStyleOnce('/static/dropzone/4.3.0/downloads/css/dropzone.css');
+                    $.getScriptOnce(('/static/dropzone/4.3.0/downloads/dropzone.min.js'), function () {
                         methods.initDropZone(container, form, config);
                     });
                 }
@@ -81,6 +81,14 @@
                 parallelUploads: 1,
                 uploadMultiple: false,
                 init: function () {
+                    this.on("processing", function (file) {
+                        this.options.url = form.attr('action');
+                    });
+                    
+                    if (config.maxFiles == 1) {
+                        this.hiddenFileInput.removeAttribute('multiple'); // click file chooser btn allow select one
+                    }
+                    
                     this.on('success', function (file, resp) {
                         flog('[jquery.milton-upload] success1', resp);
                         var result = null;
