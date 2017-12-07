@@ -39,7 +39,7 @@
             // ===========================================================
             editor.addCommand('imageDialog', new CKEDITOR.command(editor, {
                 exec: function (instance) {
-                    if (!modalBody.data('mselectOptions')) {
+                    if (!modalBody.data('mselect')) {
                         flog('[fuse-image] Init mselect modal');
                         
                         var options = {

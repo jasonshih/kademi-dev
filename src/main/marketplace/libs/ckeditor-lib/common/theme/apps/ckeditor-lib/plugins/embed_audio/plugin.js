@@ -32,7 +32,7 @@
             // ===========================================================
             editor.addCommand('audioDialog', new CKEDITOR.command(editor, {
                 exec: function (instance) {
-                    if (!modalBody.data('mselectOptions')) {
+                    if (!modalBody.data('mselect')) {
                         var options = {
                             contentTypes: ['audio'],
                             useModal: false,

@@ -1,19 +1,5 @@
 (function ($) {
-    $.fn.mselect = function (method) {
-        if (methods[method]) {
-            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-        } else if (typeof method === 'object' || !method) {
-            return methods.init.apply(this, arguments);
-        } else {
-            $.error('[jquery.mselect] Method ' + method + ' does not exist on jquery.mselect');
-        }
-    };
-    
-    // since there's jquery.milton-image-select is using the same shorthand $().mselect, just create alias for this
-    $.fn.mselectAll = $.fn.mselect;
-    flog('[jquery.mselect] mselectAll is loaded');
-    
-    $.fn.mselect.DEFAULT = {
+    var DEFAULTS = {
         btnClass: 'btn btn-success',
         btnOkClass: 'btn btn-sm btn-primary',
         modalTitle: 'Select file',
@@ -32,75 +18,109 @@
             
         },
         onPreviewFile: function (type, selectedUrl, hash) {
-            
         },
         useModal: true
     };
     
-    var methods = {
-        init: function (options) {
-            var config = $.extend({}, $.fn.mselect.DEFAULT, options);
-            var target = this;
+    function MSelect(target, options) {
+        this.target = target;
+        this.options = $.extend({}, DEFAULTS, options);
+        this.init();
+    }
+    
+    MSelect.prototype.init = function () {
+        var self = this;
+        var options = self.options;
+        var target = self.target;
+        
+        $.getStyleOnce('/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.css');
+        $.when(
+            $.getScriptOnce('/static/js/jquery.jstree.js'),
+            $.getScriptOnce('/static/js/jquery.milton-tree.js'),
+            $.getScriptOnce('/static/milton-upload/1.0.1/jquery.milton-upload.js')
+        ).then(function () {
+            flog('[jquery.mselect] Initializing mselect', target);
             
-            if (target.data('mselectOptions')) {
-                flog('[jquery.mselect] mselect is already initialized!', config, target);
-                return target;
-            }
-            
-            $.getStyleOnce('/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.css');
-            $.when(
-                $.getScriptOnce('/static/js/jquery.jstree.js'),
-                $.getScriptOnce('/static/js/jquery.milton-tree.js'),
-                $.getScriptOnce('/static/milton-upload/1.0.1/jquery.milton-upload.js')
-            ).then(function () {
-                flog('[jquery.mselect] Initializing mselect', config, target);
-                if (config.useModal) {
-                    flog('[jquery.mselect] Initializing button and modal...', config, target);
-                    var modalId = 'modal-milton-file-select-' + (new Date()).getTime();
-                    target.attr('data-modal', '#' + modalId).on('click', function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        var modal = getModal(modalId, config);
-                        config.showModal(modal);
-                        if (config.zIndex) {
-                            modal.css('z-index', config.zIndex + 1).siblings('.modal-backdrop').last().css('z-index', config.zIndex);
-                        }
-                    });
-                } else {
-                    flog('[jquery.mselect] Initializing mselect container only', config, target);
-                    
-                    target.html(getSelectContainer(config));
-                    initSelectContainer(target, config);
-                }
+            if (options.useModal) {
+                flog('[jquery.mselect] Initializing button and modal...', target);
                 
-                target.data('mselectOptions', config);
-                flog('[jquery.mselect] Initialized mselect');
-            });
-        },
-        selectFile: function (hash, callback) {
-            var target = this;
-            var tree = target.find('div.milton-tree-wrapper');
-            try {
-                tree.mtree('select', tree.find('[data-hash="' + hash + '"]'), callback);
-            } catch (e) {
+                target.on('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (!self.modal) {
+                        self.getModal();
+                    }
+                    
+                    options.showModal(self.modal);
+                    
+                    if (options.zIndex) {
+                        self.modal.css('z-index', options.zIndex + 1).siblings('.modal-backdrop').last().css('z-index', options.zIndex);
+                    }
+                });
+            } else {
+                flog('[jquery.mselect] Initializing mselect container only', target);
+                
+                target.html(self.getSelectContainer());
+                self.initSelectContainer(target);
             }
-        },
-        updateOption: function (key, value) {
-            var target = this;
-            var options = target.data('mselectOptions');
-            options[key] = value;
-            target.data('mselectOptions', options);
-        }
+            
+            flog('[jquery.mselect] Initialized mselect');
+        });
     };
     
-    function getExtension(filename) {
+    MSelect.prototype.getModal = function () {
+        var self = this;
+        var options = self.options;
+        var modalId = 'modal-milton-file-select-' + (new Date()).getTime();
+        
+        var modal = $(
+            '<div id="' + modalId + '" class="modal fade" aria-hidden="true" tabindex="-1">' +
+            '   <div class="modal-dialog modal-lg">' +
+            '       <div class="modal-content">' +
+            '           <div class="modal-header">' +
+            '               <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
+            '               <h4 class="modal-title">' + options.modalTitle + '</h4>' +
+            '           </div>' +
+            '           <div class="modal-body">' + self.getSelectContainer() + '</div>' +
+            '           <div class="modal-footer">' +
+            '               <button class="' + options.btnOkClass + ' btn-ok" type="button"> OK </button>' +
+            '           </div>' +
+            '       </div>' +
+            '   </div>' +
+            '</div>'
+        );
+        
+        $(document.body).append(modal);
+        
+        self.initSelectContainer(modal, function () {
+            modal.modal('hide');
+        });
+        
+        self.modal = modal;
+    };
+    
+    MSelect.prototype.selectFile = function (hash, callback) {
+        var self = this;
+        var target = self.target;
+        var tree = target.find('div.milton-tree-wrapper');
+        try {
+            tree.mtree('select', tree.find('[data-hash="' + hash + '"]'), callback);
+        } catch (e) {
+        }
+    }
+    
+    MSelect.prototype.updateOption = function (key, value) {
+        this.options[key] = value;
+    }
+    
+    MSelect.prototype.getExtension = function (filename) {
         var parts = filename.split('.');
         return parts[parts.length - 1];
     }
     
-    function isImage(filename) {
-        var ext = getExtension(filename);
+    MSelect.prototype.isImage = function (filename) {
+        var ext = this.getExtension(filename);
         switch (ext.toLowerCase()) {
             case 'jpg':
             case 'gif':
@@ -110,10 +130,10 @@
                 return true;
         }
         return false;
-    }
+    };
     
-    function isVideo(filename) {
-        var ext = getExtension(filename);
+    MSelect.prototype.isVideo = function (filename) {
+        var ext = this.getExtension(filename);
         switch (ext.toLowerCase()) {
             case 'm4v':
             case 'avi':
@@ -123,10 +143,10 @@
                 return true;
         }
         return false;
-    }
+    };
     
-    function isAudio(filename) {
-        var ext = getExtension(filename);
+    MSelect.prototype.isAudio = function (filename) {
+        var ext = this.getExtension(filename);
         switch (ext.toLowerCase()) {
             // Since jwplayer supports mp3, aac and Vorbis
             case 'mp3':
@@ -137,59 +157,78 @@
                 return true;
         }
         return false;
-    }
+    };
     
-    function getAcceptedFiles(contentTypes) {
+    MSelect.prototype.getFileType = function (fileUrl) {
+        // Remove '/_DAV/....' before checking file type
+        fileUrl = fileUrl.replace(/^(.+)(\/_DAV\/.+)$/, '$1')
+        
+        var fileType = 'other';
+        if (this.isVideo(fileUrl)) {
+            fileType = 'video';
+        } else if (this.isImage(fileUrl)) {
+            fileType = 'image';
+        } else if (this.isAudio(fileUrl)) {
+            fileType = 'audio';
+        }
+        
+        return fileType;
+    };
+    
+    MSelect.prototype.getAcceptedFiles = function (contentTypes) {
         return contentTypes.map(function (a) {
             return a + '/*'
         }).join(',');
-    }
+    };
     
-    function initSelectContainer(container, config, onOk) {
-        flog('[jquery.mselect] initSelectContainer', container, config);
+    MSelect.prototype.getCleanUrl = function (url) {
+        return (url || '').replace(/\/\//g, '/');
+    };
+    
+    MSelect.prototype.initSelectContainer = function (container, onOk) {
+        flog('[jquery.mselect] initSelectContainer', container);
         
-        config.basePath = config.basePath.replace(/\/\//g, '/');
-        config.pagePath = config.pagePath.replace(/\/\//g, '/');
+        var self = this;
+        var options = self.options;
         
-        var tree = container.find('div.milton-tree-wrapper');
-        var progressBar = container.find('.milton-file-progress');
+        options.basePath = self.getCleanUrl(options.basePath);
+        options.pagePath = self.getCleanUrl(options.pagePath);
+        
+        var treeContainer = self.treeContainer = container.find('div.milton-tree-wrapper');
+        var progressBar = self.progressBar = container.find('.milton-file-progress');
         var progressBarInner = progressBar.find('.progress-bar');
-        var previewContainer = container.find('.milton-file-preview');
+        var previewContainer = self.previewContainer = container.find('.milton-file-preview');
+        var btnUpload = self.btnUpload = container.find('.milton-btn-upload-file');
+        
         var mtreeOptions = {
-            basePath: config.basePath,
-            pagePath: config.pagePath,
-            excludedEndPaths: config.excludedEndPaths,
-            onselectFolder: function (n, selectedUrl, hash) {
-                flog('Selected folder', n, selectedUrl, hash);
+            basePath: options.basePath,
+            pagePath: options.pagePath,
+            excludedEndPaths: options.excludedEndPaths,
+            onselectFolder: function (nodeFolder, selectedUrl, hash) {
+                flog('[jquery.mselect] Selected folder', nodeFolder, selectedUrl, hash);
+                
                 if (selectedUrl.indexOf('/') !== 0) {
                     selectedUrl = '/' + selectedUrl;
                 }
-                container.find('.milton-btn-upload-file').mupload('setUrl', selectedUrl);
-                //previewContainer.html('<p class="alert alert-warning">Unsupported preview folder</p>');
+                btnUpload.mupload('setUrl', selectedUrl);
                 previewContainer.attr('data-url', selectedUrl);
                 previewContainer.attr('data-hash', hash);
             },
-            onselectFile: function (n, selectedUrl, hash) {
-                flog('Selected file', n, selectedUrl, hash);
+            onselectFile: function (nodeFile, selectedUrl, hash) {
+                flog('[jquery.mselect] Selected file', nodeFile, selectedUrl, hash);
+                
                 if (selectedUrl.indexOf('/') !== 0) {
                     selectedUrl = '/' + selectedUrl;
                 }
-                var newUrl = selectedUrl.substr(0, selectedUrl.lastIndexOf('/')) + '/';
-                newUrl = newUrl.replace(/\/\//g, '/');
-                container.find('.milton-btn-upload-file').mupload('setUrl', newUrl);
+                var newUrl = self.getCleanUrl(selectedUrl.substr(0, selectedUrl.lastIndexOf('/')) + '/');
+                btnUpload.mupload('setUrl', newUrl);
                 
-                var fileType = 'other';
-                if (isVideo(selectedUrl)) {
-                    fileType = 'video';
-                } else if (isImage(selectedUrl)) {
-                    fileType = 'image';
-                } else if (isAudio(selectedUrl)) {
-                    fileType = 'audio';
-                }
-                
+                var fileType = self.getFileType(selectedUrl);
                 var hashUrl = '/_hashes/files/' + hash;
+                
                 progressBar.show();
                 progressBarInner.html('Loading...');
+                
                 if (fileType === 'video') {
                     previewContainer.html('<div class="jp-video" data-hash="' + hash + '"></div>');
                     $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
@@ -197,8 +236,8 @@
                             jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
                             buildJWPlayer(previewContainer.find('div.jp-video'), 100, hashUrl, hashUrl + '/alt-640-360.png');
                             
-                            if (typeof config.onPreviewFile === 'function') {
-                                config.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                            if (typeof options.onPreviewFile === 'function') {
+                                options.onPreviewFile.call(container, fileType, selectedUrl, hash);
                             }
                         });
                     });
@@ -210,8 +249,8 @@
                             jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
                             buildJWAudioPlayer(100, hashUrl, false);
                             
-                            if (typeof config.onPreviewFile === 'function') {
-                                config.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                            if (typeof options.onPreviewFile === 'function') {
+                                options.onPreviewFile.call(container, fileType, selectedUrl, hash);
                             }
                         });
                     });
@@ -224,16 +263,16 @@
                         
                         previewContainer.html('<img src="' + hashUrl + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" />');
                         
-                        if (typeof config.onPreviewFile === 'function') {
-                            config.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                        if (typeof options.onPreviewFile === 'function') {
+                            options.onPreviewFile.call(container, fileType, selectedUrl, hash);
                         }
                         progressBar.hide();
                     });
                 } else {
                     previewContainer.html('<p class="alert alert-warning">Unsupported preview file</p>');
                     
-                    if (typeof config.onPreviewFile === 'function') {
-                        config.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                    if (typeof options.onPreviewFile === 'function') {
+                        options.onPreviewFile.call(container, fileType, selectedUrl, hash);
                     }
                     progressBar.hide();
                 }
@@ -245,59 +284,49 @@
                 if (isFolder) {
                     flog('Deleted folder', n, isFolder);
                     
-                    var newUrl = config.basePath + config.pagePath;
-                    newUrl = newUrl.replace(/\/\//g, '/');
-                    container.find('.milton-btn-upload-file').mupload('setUrl', newUrl);
+                    var newUrl = self.getCleanUrl(options.basePath + options.pagePath);
+                    btnUpload.mupload('setUrl', newUrl);
                 }
             }
         };
-        if (!config.mselectAll) {
-            mtreeOptions.includeContentTypes = config.contentTypes;
+        if (!options.mselectAll) {
+            mtreeOptions.includeContentTypes = options.contentTypes;
         }
-        tree.mtree(mtreeOptions);
+        treeContainer.mtree(mtreeOptions);
         
         var muploadOptions = {
-            url: config.basePath,
+            url: options.basePath,
             buttonText: '<i class="fa fa-upload"></i>',
             oncomplete: function (data, name, href) {
                 flog('[jquery.mselect] oncomplete', data);
                 progressBar.hide();
-                //tree.mtree('addFile', name, href, hash);
-                addFileToTree(name, href, tree);
-                url = href;
+                self.addFileToTree(name, href);
             },
             onBeforeUpload: function () {
                 progressBar.show();
                 progressBarInner.html('Uploading...');
             }
         };
-        if (!config.mselectAll) {
-            muploadOptions.acceptedFiles = getAcceptedFiles(config.contentTypes);
+        if (!options.mselectAll) {
+            muploadOptions.acceptedFiles = self.getAcceptedFiles(options.contentTypes);
         }
-        container.find('.milton-btn-upload-file').mupload(muploadOptions);
+        btnUpload.mupload(muploadOptions);
         
         container.find('.btn-ok').click(function () {
             var url = previewContainer.attr('data-url');
             var hash = previewContainer.attr('data-hash');
             
             if (url) {
-                if (typeof config.onSelectFile === 'function') {
-                    var relUrl = url.substring(config.basePath.length, url.length);
+                if (typeof options.onSelectFile === 'function') {
+                    var relUrl = url.substring(options.basePath.length, url.length);
                     flog('[jquery.mselect] Selected', url, relUrl);
-                    var fileType = 'other';
-                    if (isVideo(url)) {
-                        fileType = 'video';
-                    } else if (isImage(url)) {
-                        fileType = 'image';
-                    } else if (isAudio(url)) {
-                        fileType = 'audio';
-                    }
+                    var fileType = self.getFileType(url);
                     
-                    config.onSelectFile.call(container, url, relUrl, fileType, hash);
+                    options.onSelectFile.call(container, url, relUrl, fileType, hash);
                 }
                 
-                if (typeof config.onSelectFolder === 'function') {
-                    config.onSelectFolder.call(container, url, hash);
+                if (typeof options.onSelectFolder === 'function') {
+                    options.onSelectFolder.call(container, url, hash);
                 }
                 
                 if (typeof onOk === 'function') {
@@ -308,28 +337,33 @@
             }
         });
         
-        if (typeof config.onReady === 'function') {
-            config.onReady.call(config);
+        if (typeof options.onReady === 'function') {
+            options.onReady.call(options);
         }
-    }
+    };
     
-    function addFileToTree(name, href, tree) {
-        var t = "/_DAV/PROPFIND?fields=milton:hash";
-        flog("addFileToTree", href + t);
+    MSelect.prototype.addFileToTree = function (name, href) {
+        href += '/_DAV/PROPFIND?fields=milton:hash';
+        flog('[jquery.mselect] addFileToTree', href);
+        
+        var self = this;
+        var treeContainer = self.treeContainer;
+        
         $.ajax({
-            url: href + t,
+            url: href,
             cache: false
         }).done(function (data) {
-            var hash = data[0].hash;
-            flog("addFileToTree", data, hash);
-            tree.mtree('addFile', name, href, hash);
+            flog('addFileToTree', data);
+            treeContainer.mtree('addFile', name, href, data[0].hash);
         });
     }
     
-    function getSelectContainer(config) {
+    MSelect.prototype.getSelectContainer = function () {
+        var self = this;
+        var options = self.options;
         var extraElement = '';
         
-        if (!config.useModal) {
+        if (!options.useModal) {
             extraElement += '<button type="button" class="btn btn-primary btn-ok"><i class="fa fa-check"></i></button>';
         }
         
@@ -349,38 +383,25 @@
             '    </div>' +
             '</div>'
         );
-    }
+    };
     
-    function getModal(modalId, config) {
-        flog('[jquery.mselect] getModal', modalId, config);
+    MSelect.DEFAULTS = DEFAULTS;
+    
+    $.fn.mselect = $.fn.mselectAll = function (options) {
+        var element = $(this)
+        var data = element.data('mselect');
         
-        var modal = $('#' + modalId);
-        if (modal.length === 0) {
-            modal = $(
-                '<div id="' + modalId + '" class="modal fade" aria-hidden="true" tabindex="-1">' +
-                '   <div class="modal-dialog modal-lg">' +
-                '       <div class="modal-content">' +
-                '           <div class="modal-header">' +
-                '               <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
-                '               <h4 class="modal-title">' + config.modalTitle + '</h4>' +
-                '           </div>' +
-                '           <div class="modal-body">' + getSelectContainer(config) + '</div>' +
-                '           <div class="modal-footer">' +
-                '               <button class="' + config.btnOkClass + ' btn-ok" type="button"> OK </button>' +
-                '           </div>' +
-                '       </div>' +
-                '   </div>' +
-                '</div>'
-            );
-            
-            $(document.body).append(modal);
-            
-            initSelectContainer(modal, config, function () {
-                modal.modal('hide');
-            });
+        if (!data) {
+            element.data('mselect', (data = new MSelect(element, options)));
         }
         
-        return modal;
-    }
+        if (typeof options == 'string') {
+            return data[options].apply(data, Array.prototype.slice.call(arguments, 1));
+        } else {
+            return data;
+        }
+    };
+    
+    $.fn.mselect.constructor = MSelect;
     
 })(jQuery);
