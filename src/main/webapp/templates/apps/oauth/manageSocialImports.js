@@ -67,8 +67,17 @@
                 var t = '<tr>'
                         + '    <td>' + hit.source + '</td>'
                         + '    <td>' + hit.type + '</td>'
-                        + '    <td>' + (hit.commentText != null ? hit.commentText : '') + '</td>'
-                        + '    <td>' + (new moment(hit.reqDate)).format('DD/MM/YYYY hh:mm') + '</td>'
+                        + '    <td>' + (hit.commentText != null ? hit.commentText : '') + '</td>';
+
+                if (hit.userId !== null && typeof hit.userId !== 'undefined') {
+                    var name = hit.nickName || hit.userName || hit.email || hit.userId;
+
+                    t += '<td><a href="/manageUsers/' + hit.userId + '">' + name + '</a></td>';
+                } else {
+                    t += '<td></td>';
+                }
+
+                t += '    <td>' + (new moment(hit.reqDate)).format('DD/MM/YYYY hh:mm') + '</td>'
                         + '</tr>';
                 table.append(t);
             }
