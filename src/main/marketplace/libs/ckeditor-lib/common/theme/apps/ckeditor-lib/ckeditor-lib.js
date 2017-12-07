@@ -3,7 +3,7 @@ var CKEDITOR_TOOLBAR_PATH = CKEDITOR_PATH + 'toolbars.js';
 var CKEDITOR_JS_PATH = CKEDITOR_PATH + 'ckeditor.js';
 var CKEDITOR_JQUERY_ADAPTER_PATH = CKEDITOR_PATH + 'adapters/jquery.js';
 
-function loadCKeditor(callback) {
+function loadCKEditor(callback) {
     $.getScriptOnce(CKEDITOR_TOOLBAR_PATH, function () {
         $.getScriptOnce(CKEDITOR_JS_PATH, function () {
             $.getScriptOnce(CKEDITOR_JQUERY_ADAPTER_PATH, function () {
@@ -16,7 +16,7 @@ function loadCKeditor(callback) {
 }
 
 function initCKEditor(target, options) {
-    loadCKeditor(function () {
+    loadCKEditor(function () {
         target.ckeditor(options);
     });
 }
