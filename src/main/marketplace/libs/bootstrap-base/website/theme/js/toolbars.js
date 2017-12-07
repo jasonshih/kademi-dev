@@ -118,5 +118,5 @@ toolbarSets["Logo"] = [
 
 $(function () {
     // https://github.com/Kademi/kademi-dev/issues/1397
-    CKEDITOR.timestamp = '141020161';
+    CKEDITOR.timestamp = '141020162';
 });
