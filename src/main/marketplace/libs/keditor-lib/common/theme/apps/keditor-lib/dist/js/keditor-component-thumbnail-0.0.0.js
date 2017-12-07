@@ -7,7 +7,6 @@
  */
 (function ($) {
     var KEditor = $.keditor;
-    var contentEditor = $.contentEditor;
     var flog = KEditor.log;
     
     KEditor.components['thumbnail'] = {
@@ -95,7 +94,7 @@
                 success: function (resp) {
                     form.html(resp);
                     
-                    contentEditor.initMselectImage(form.find('.photo-edit'), keditor, function (url, relativeUrl, fileType, hash) {
+                    initMSelectImage(form.find('.photo-edit'), keditor, function (url, relativeUrl, fileType, hash) {
                         var img = keditor.getSettingComponent().find('.thumbnail img');
                         
                         img.attr('src', '/_hashes/files/' + hash);

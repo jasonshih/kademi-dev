@@ -1,6 +1,5 @@
 (function ($) {
     var KEditor = $.keditor;
-    var contentEditor = $.contentEditor;
     var flog = KEditor.log;
     
     KEditor.components['photo'] = {
@@ -136,7 +135,7 @@
                         inputWidth.val(newWidth);
                     });
                     
-                    contentEditor.initMselectImage(form.find('#photo-edit'), keditor, function (url, relUrl, type, hash) {
+                    initMSelectImage(form.find('#photo-edit'), keditor, function (url, relUrl, type, hash) {
                         var img = keditor.getSettingComponent().find('img');
                         var src = '/_hashes/files/' + hash;
                         

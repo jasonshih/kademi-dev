@@ -96,7 +96,7 @@
                     // =================================================================================
                     // Backgrounds
                     // =================================================================================
-                    contentEditor.initMselectImage(form.find('.background-image-edit'), keditor, function (url, relUrl, type, hash) {
+                    initMSelectImage(form.find('.background-image-edit'), keditor, function (url, relUrl, type, hash) {
                         var target = keditor.getSettingComponent().find('.keditor-component-text-content');
                         var imageUrl = 'http://' + window.location.host + '/_hashes/files/' + hash;
                         target.css('background-image', 'url("' + imageUrl + '")');

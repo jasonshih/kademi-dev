@@ -18,3 +18,24 @@ function loadKEditor(callback) {
         });
     });
 }
+
+function initMSelectImage(target, keditor, onSelectFile) {
+    flog('[jquery.contentEditor] initMSelectImage', target);
+    
+    target.mselect({
+        contentTypes: ['image'],
+        pagePath: keditor.options.pagePath,
+        basePath: keditor.options.basePath,
+        onSelectFile: onSelectFile
+    });
+    
+    // var mselect = target.data('mselect');
+    // var modal = mselect.modal;
+    //
+    // var btnCrop = $('<button type="button" class="btn-crop-image" title="Crop this image"><i class="fa fa-crop"></i></button>')
+    // mselect.btnUpload.after(btnCrop);
+    //
+    // btnCrop.on('click', function (e) {
+    //
+    // });
+};

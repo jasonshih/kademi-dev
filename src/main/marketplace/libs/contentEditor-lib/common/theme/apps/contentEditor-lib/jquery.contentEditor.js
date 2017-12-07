@@ -227,7 +227,7 @@
                     }
                 });
                 
-                contentEditor.initMselectImage(form.find('#btnAddImagesBGs'), keditor, function (url, relativeUrl, fileType, hash) {
+                initMSelectImage(form.find('#btnAddImagesBGs'), keditor, function (url, relativeUrl, fileType, hash) {
                     var container = keditor.getSettingContainer();
                     var containerBg = contentEditor.getContainerElement(container, '.container-bg');
                     var imageUrl = '/_hashes/files/' + hash;
@@ -1054,7 +1054,7 @@
             keditor.initDynamicContent(dynamicElement);
         });
         
-        contentEditor.initMselectImage(form.find('.logo-edit'), keditor, function (url, relativeUrl, fileType, hash) {
+        initMSelectImage(form.find('.logo-edit'), keditor, function (url, relativeUrl, fileType, hash) {
             var imageUrl = '/_hashes/files/' + hash;
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
@@ -1302,17 +1302,6 @@
         newContainer.find('.keditor-component-text-content-inner').html(content);
         
         return newContainer;
-    };
-    
-    contentEditor.initMselectImage = function (target, keditor, onSelectFile) {
-        flog('[jquery.contentEditor] initMselectImage', target);
-        
-        target.mselect({
-            contentTypes: ['image'],
-            pagePath: keditor.options.pagePath,
-            basePath: keditor.options.basePath,
-            onSelectFile: onSelectFile
-        });
     };
     
     var methods = {

@@ -1,6 +1,5 @@
 (function ($) {
     var KEditor = $.keditor;
-    var contentEditor = $.contentEditor;
     var flog = KEditor.log;
     
     KEditor.components['carousel'] = {
@@ -88,7 +87,7 @@
                     var carouselAddImage = form.find('.carouselAddImage');
                     var carouselItemsWrap = form.find('.carouselItemsWrap');
                     
-                    contentEditor.initMselectImage(carouselAddImage, keditor, function (url, relUrl, type, hash) {
+                    initMSelectImage(carouselAddImage, keditor, function (url, relUrl, type, hash) {
                         flog('Keditor carousel selected a file', url, hash);
                         self.addItemToList(form, {
                             src: url,

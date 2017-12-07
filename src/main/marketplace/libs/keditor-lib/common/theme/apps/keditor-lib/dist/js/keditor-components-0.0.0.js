@@ -342,7 +342,6 @@
 
 (function ($) {
     var KEditor = $.keditor;
-    var contentEditor = $.contentEditor;
     var flog = KEditor.log;
     
     KEditor.components['carousel'] = {
@@ -430,7 +429,7 @@
                     var carouselAddImage = form.find('.carouselAddImage');
                     var carouselItemsWrap = form.find('.carouselItemsWrap');
                     
-                    contentEditor.initMselectImage(carouselAddImage, keditor, function (url, relUrl, type, hash) {
+                    initMSelectImage(carouselAddImage, keditor, function (url, relUrl, type, hash) {
                         flog('Keditor carousel selected a file', url, hash);
                         self.addItemToList(form, {
                             src: url,
@@ -1506,7 +1505,6 @@
 
 (function ($) {
     var KEditor = $.keditor;
-    var contentEditor = $.contentEditor;
     var flog = KEditor.log;
     
     KEditor.components['media'] = {
@@ -1642,7 +1640,7 @@
                         img.attr('width', this.value);
                     });
                     
-                    contentEditor.initMselectImage(form.find('.photo-edit'), keditor, function (url, relativeUrl, fileType, hash) {
+                    initMSelectImage(form.find('.photo-edit'), keditor, function (url, relativeUrl, fileType, hash) {
                         var img = keditor.getSettingComponent().find('img.media-object');
                         
                         img.attr('src', '/_hashes/files/' + hash);
@@ -1706,7 +1704,6 @@
 
 (function ($) {
     var KEditor = $.keditor;
-    var contentEditor = $.contentEditor;
     var flog = KEditor.log;
     
     KEditor.components['photo'] = {
@@ -1842,7 +1839,7 @@
                         inputWidth.val(newWidth);
                     });
                     
-                    contentEditor.initMselectImage(form.find('#photo-edit'), keditor, function (url, relUrl, type, hash) {
+                    initMSelectImage(form.find('#photo-edit'), keditor, function (url, relUrl, type, hash) {
                         var img = keditor.getSettingComponent().find('img');
                         var src = '/_hashes/files/' + hash;
                         
@@ -2021,7 +2018,7 @@
                     // =================================================================================
                     // Backgrounds
                     // =================================================================================
-                    contentEditor.initMselectImage(form.find('.background-image-edit'), keditor, function (url, relUrl, type, hash) {
+                    initMSelectImage(form.find('.background-image-edit'), keditor, function (url, relUrl, type, hash) {
                         var target = keditor.getSettingComponent().find('.keditor-component-text-content');
                         var imageUrl = 'http://' + window.location.host + '/_hashes/files/' + hash;
                         target.css('background-image', 'url("' + imageUrl + '")');
@@ -2211,7 +2208,6 @@
 
 (function ($) {
     var KEditor = $.keditor;
-    var contentEditor = $.contentEditor;
     var flog = KEditor.log;
     
     KEditor.components['thumbnail'] = {
@@ -2299,7 +2295,7 @@
                 success: function (resp) {
                     form.html(resp);
                     
-                    contentEditor.initMselectImage(form.find('.photo-edit'), keditor, function (url, relativeUrl, fileType, hash) {
+                    initMSelectImage(form.find('.photo-edit'), keditor, function (url, relativeUrl, fileType, hash) {
                         var img = keditor.getSettingComponent().find('.thumbnail img');
                         
                         img.attr('src', '/_hashes/files/' + hash);
