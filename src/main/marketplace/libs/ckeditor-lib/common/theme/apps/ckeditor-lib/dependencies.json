@@ -1,0 +1,20 @@
+{
+    "appDependencies": [
+        {
+            "appId": "mupload-lib",
+            "branch": "1.0.0"
+        },
+        {
+            "appId": "mselect-lib",
+            "branch": "1.0.0"
+        }
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "admin",
+                "path": "/theme/apps/ckeditor-lib/ckeditor-lib.js"
+            }
+        }
+    ]
+}

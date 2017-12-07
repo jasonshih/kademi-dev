@@ -1,0 +1,53 @@
+#editor .jstree-clicked {
+    border: 1px solid #2274C9;
+}
+
+#editor .fa {
+    display: inline-block;
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#editor .fa-2x {
+    font-size: 2em;
+}
+
+#editor .fa-3x {
+    font-size: 3em;
+}
+
+#editor .fa-4x {
+    font-size: 4em;
+}
+
+#editor .fa-plus:before {
+    content: "";
+}
+
+#editor .fa-times:before {
+    content: "";
+}
+
+#editor .fa-sign-in:before {
+    content: "";
+}
+
+a.cke_dialog_ui_button span {
+    color: inherit;
+    font-size: 12px;
+    line-height: 20px;
+    cursor: inherit;
+}
+
+a.cke_dialog_ui_button span i {
+    color: inherit;
+    cursor: inherit;
+}
+
+a.cke_dialog_ui_button_ok {
+    background-color: #3F8EDF !important;
+}
