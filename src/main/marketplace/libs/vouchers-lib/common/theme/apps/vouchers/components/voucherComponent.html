@@ -2,7 +2,7 @@
 
 <div id="voucherContent">
     #if( !$voucherPage.redeemed )
-    <button class="btn btn-success" data-toggle="modal" data-target="#redeemVoucherModal">Redeem</button>
+    <button class="btn btn-success" data-toggle="modal" data-target="#redeemVoucherPageModal">Redeem</button>
     <button class="btn btn-success" data-toggle="modal" data-target="#allocateVoucherModal">Allocate</button>
     <button class="btn btn-danger" data-toggle="modal" data-target="#changeStatusModal">Change status</button>
     #else
@@ -57,14 +57,14 @@
     </table>
 </div>
 
-<div class="modal fade" id="redeemVoucherModal" tabindex="-1" role="dialog" aria-labelledby="redeemVoucherModal" aria-hidden="true">
+<div class="modal fade" id="redeemVoucherPageModal" tabindex="-1" role="dialog" aria-labelledby="redeemVoucherModal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="myModalLabel">Redeem voucher</h4>
             </div>
-            <form class="form-horizontal" method="POST" action="$voucherPage.href" id="redeemVoucherForm">
+            <form class="form-horizontal" method="POST" action="$voucherPage.href" id="redeemVoucherPageForm">
                 <div class="modal-body">
                     <p>Redeeming a voucher means it has been used for a purchase and cannot be used again.</p>
                     <i>Optional, you may enter any notes here</i>
