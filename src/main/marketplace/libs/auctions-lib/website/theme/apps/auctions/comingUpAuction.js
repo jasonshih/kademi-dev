@@ -76,10 +76,13 @@
             wsocket.onmessage = function (evt) {
                 var c = $.parseJSON(evt.data);
                 if (c.beanType != null && c.beanType == "auctionBid") {
-                    log("onMessage", c);
-                    var dt = moment(c.bidDate);
-                    flog("Received Date: ", dt);
-                    panel.find('.bidValue').text(c.bidValue);
+                    if (c.action == "BID_PLACED"){
+                        var dt = moment(c.bidDate);
+                        flog("Received Date: ", dt);
+                        panel.find('.bidValue').text(c.bidValue);
+                    } else {
+                        flog('Auction outbid');
+                    }
                 } else { // Bid must be closing
                     panel.reloadFragment();
                     Msg.info("Auction is closing, no more bids will be accepted.")
