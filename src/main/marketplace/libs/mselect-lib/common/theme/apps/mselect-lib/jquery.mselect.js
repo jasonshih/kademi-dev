@@ -19,6 +19,9 @@
         },
         onPreviewFile: function (type, selectedUrl, hash) {
         },
+        onReady: function () {
+        
+        },
         useModal: true
     };
     
@@ -44,13 +47,10 @@
             if (options.useModal) {
                 flog('[jquery.mselect] Initializing button and modal...', target);
                 
+                self.getModal();
                 target.on('click', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    
-                    if (!self.modal) {
-                        self.getModal();
-                    }
                     
                     options.showModal(self.modal);
                     
@@ -338,7 +338,7 @@
         });
         
         if (typeof options.onReady === 'function') {
-            options.onReady.call(options);
+            options.onReady.call(self);
         }
     };
     
