@@ -2,6 +2,7 @@ var iframeUrl;
 var win = $(window);
 
 function initManagePoints() {
+    Msg.singletonForCategory = true;
     
     var editModal = $("#modalEditPoints");
     var modalForm = editModal.find("form");
@@ -78,7 +79,7 @@ function initManagePoints() {
         onSuccess: function (resp) {
             if (resp.status) {
                 reloadFragmentPoints(function () {
-                    Msg.info("Assigned points OK");
+                    Msg.info("Assigned points OK" , "points assign");
                     $('#modal-new-points').modal('hide');
                 });
             } else {
