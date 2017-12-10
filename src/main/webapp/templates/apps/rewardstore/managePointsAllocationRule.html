@@ -47,6 +47,10 @@
                                 </select>
                             </div>
                         </div>
+                        
+                        $!formatter.formatJodaDate($page.rule.startDate, 'dd/MM/YYYY HH:mm', $rootFolder.organisation.timezone)
+                        $!formatter.formatDateTime($page.rule.startDate, $rootFolder.organisation.timezone)
+                        
                         <div class="form-group">
                             <label class="control-label col-md-3" for="startDate">Start Date</label>
                             <div class="col-md-3">
