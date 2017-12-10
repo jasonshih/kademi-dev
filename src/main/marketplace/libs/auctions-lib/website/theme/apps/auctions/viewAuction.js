@@ -43,8 +43,12 @@
             var wsocket = new WebSocket(wsPath);
             wsocket.onmessage = function (evt) {
                 var data = $.parseJSON(evt.data);
-                if (data.beanType != null && data.beanType == 'auctionBid') {
-                    processReceivedBid(data, panel);
+                if (data && data.beanType == 'auctionBid') {
+                    if (data.action == "BID_PLACED"){
+                        processReceivedBid(data, panel);
+                    } else {
+                        flog('You were outbid');
+                    }
                 } else {
                     Msg.info('Auction is closing, no more bids will be accepted.')
                     panel.closest('[data-dynamic-href]').reloadFragment({
@@ -72,7 +76,7 @@
                 '<tr>' +
                 '    <td>' + data.bidValue.toFixed(2) + '</td>' +
                 '    <td><abbr title="' + dt.toISOString() + '" class="timeago">' + dt.format() + '</abbr></td>' +
-                '    <td><a href="' + data.bidderHref + '" target="_blank"> ' + data.bidderName + ' </a></td>' +
+                '    <td><a href="' + data.bidderHref + '" target="_blank"> ' + data.bidderFormattedName + ' </a></td>' +
                 '</tr>'
             );
             

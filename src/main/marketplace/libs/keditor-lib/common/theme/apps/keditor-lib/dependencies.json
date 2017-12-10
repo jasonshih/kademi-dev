@@ -11,6 +11,10 @@
         {
             "appId": "ckeditor-lib",
             "branch": "4.5.6"
+        },
+        {
+            "appId": "jcrop-lib",
+            "branch": "0.9.12"
         }
     ],
     "dependencies": [

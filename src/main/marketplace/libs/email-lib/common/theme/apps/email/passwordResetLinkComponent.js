@@ -4,7 +4,7 @@
     var flog = KEditor.log;
 
     // BM: Would be nice if we can extend button, but not sure how to do that..
-    KEditor.components['passwordResetLinkEDM'] = $.extend({}, KEditor.components['button'], {
+    KEditor.components['passwordResetLink'] = $.extend({}, KEditor.components['button'], {
         settingTitle: 'Password Reset Settings',
 
         initSettingForm: function (form, keditor) {
@@ -55,21 +55,26 @@
                     );
 
                     var colorPicker = form.find('.txt-bg-color');
-                    edmEditor.initSimpleColorPicker(colorPicker, function (color) {
+                    edmEditor.initColorPicker(colorPicker, function (color) {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         component.attr('data-bg-color', color);
-                        form.find('.txt-bg-color').val(color);
-
                         keditor.initDynamicContent(dynamicElement);
                     });
 
                     var buttonColorPicker = form.find('#button-color');
-                    edmEditor.initSimpleColorPicker(buttonColorPicker, function (color) {
+                    edmEditor.initColorPicker(buttonColorPicker, function (color) {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         component.attr('data-color', color);
-                        form.find('.button-color').val(color);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    var buttonTextColor = form.find('#button-text-color');
+                    edmEditor.initColorPicker(buttonTextColor, function (color) {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-button-text-color', color);
 
                         keditor.initDynamicContent(dynamicElement);
                     });
@@ -84,13 +89,13 @@
 
                     form.find('.button-inner-padding').each(function () {
                         var input = $(this);
-                        var dataCss = input.attr('data-css');
+                        var dataCss = input.attr('data-css').replace('padding-', '');
 
                         edmEditor.initPaddingControl(input, function (value) {
                             var component = keditor.getSettingComponent();
                             var dynamicElement = component.find('[data-dynamic-href]');
 
-                            component.attr('data-inner-' + dataCss, value);
+                            component.attr('data-padding-inner-' + dataCss, value);
                             keditor.initDynamicContent(dynamicElement);
                         });
                     });
@@ -114,16 +119,6 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
 
                         component.attr('data-message', (this.value || '').trim());
-                        keditor.initDynamicContent(dynamicElement);
-                    });
-
-                    var buttonTextColorPicker = form.find('#button-text-color');
-                    edmEditor.initSimpleColorPicker(buttonTextColorPicker, function (color) {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-button-text-color', color);
-                        form.find('.button-text-color').val(color);
-
                         keditor.initDynamicContent(dynamicElement);
                     });
 
@@ -202,9 +197,9 @@
 
             form.find('.button-inner-padding').each(function () {
                 var input = $(this);
-                var name = input.attr('name');
+                var name = input.attr('data-css').replace('padding-', '');
 
-                input.val(dataAttributes['data-inner-' + name] || '0');
+                input.val(dataAttributes['data-padding-inner-' + name] || '0');
             });
 
             form.find('.txt-padding').each(function () {

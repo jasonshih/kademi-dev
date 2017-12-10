@@ -1,0 +1,128 @@
+#parse('/theme/apps/leadman/leadManMacros.html')
+#if($userResource.hasRole('Sales'))
+<div class="">
+    <div role="tabpanel" id="all_contacts" class="tab-pane animation-fade active">
+        <p class="text-center">
+            <button type="button" class="btn btn-default btn-load-more-lead" disabled="disabled">Loading...</button>
+        </p>
+    </div>
+</div>
+#end
+#if (!$page)
+<div role="tabpanel" id="all_contacts" class="tab-pane animation-fade active">
+    <ul class="list-group leadsList" id="dashLeadsList">
+        <li class="list-group-item">
+            <div class="media" id="18">
+                <div class="media-left hidden-xs">
+                    <div class="avatar avatar-away">
+                        <img alt="..." src="/theme/apps/leadman/user-placeholder.png" class="img img-circle"
+                             style="width: 100px">
+                        <i class="avatar avatar-busy"></i>
+                    </div>
+                    <br>
+                    <p class="text-center">
+                        SCORE: 3.0
+                    </p>
+                </div>
+                <div class="media-body" style="padding-left: 20px; position: relative">
+                    <h3 class="media-heading">
+                        <a class="text-success" href="/leads/18/">
+                            Candy
+                            (Google)
+                        </a>
+                        <small class="pull-right">
+                            Lead created:
+                            <abbr title="2017-11-28 11:24:09.569" data-iso="2017-11-28T11:24:09.569+07:00"
+                                  class="timeago">10 days ago</abbr> for Journey Email Campaign
+                        </small>
+                    </h3>
+                    <p>
+                        <i aria-hidden="true" class="fa fa-envelope"></i>
+                        candy@mailinator.com
+                    </p>
+                    <div class="leadActions">
+                        <ul class="list-inline" style="right: 0">
+                            <li>
+                                <a href="/leads/18" class="btn btn-success closeLead" title="Sold, close the deal">
+                                    <span class="fa fa-check"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/leads/18?cancel" class="btn btn-danger" title="Deal cancelled"
+                                   data-target="#modalCancelLead" data-toggle="modal">
+                                    <span class="fa fa-remove"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/leads/18/" class="btn btn-info createNote" title="Add note">
+                                    <span class="fa fa-pencil"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:candy@mailinator.com?bcc=to-lead-18@kcrm-rootorg.loopbackdns.com"
+                                   class="btn btn-warning" title="Send email">
+                                    <span class="fa fa-envelope-o"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="media" id="19">
+                <div class="media-left hidden-xs">
+                    <div class="avatar avatar-away">
+                        <img alt="..." src="/theme/apps/leadman/user-placeholder.png" class="img img-circle"
+                             style="width: 100px">
+                        <i class="avatar avatar-busy"></i>
+                    </div>
+                    <br>
+                    <p class="text-center">
+                        SCORE: 3.0
+                    </p>
+                </div>
+                <div class="media-body" style="padding-left: 20px; position: relative">
+                    <h3 class="media-heading">
+                        <a class="text-success" href="/leads/19/">
+                            Andy
+                            (Apple)
+                        </a>
+                        <small class="pull-right">
+                            Lead created:
+                            <abbr title="2017-11-28 11:25:05.068" data-iso="2017-11-28T11:25:05.068+07:00"
+                                  class="timeago">10 days ago</abbr> for Journey Email Campaign
+                        </small>
+                    </h3>
+                    <div class="leadActions">
+                        <ul class="list-inline" style="right: 0">
+                            <li>
+                                <a href="/leads/19" class="btn btn-success closeLead" title="Sold, close the deal">
+                                    <span class="fa fa-check"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/leads/19?cancel" class="btn btn-danger" title="Deal cancelled"
+                                   data-target="#modalCancelLead" data-toggle="modal">
+                                    <span class="fa fa-remove"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/leads/19/" class="btn btn-info createNote" title="Add note">
+                                    <span class="fa fa-pencil"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:?bcc=to-lead-19@kcrm-rootorg.loopbackdns.com" class="btn btn-warning"
+                                   title="Send email">
+                                    <span class="fa fa-envelope-o"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+#end

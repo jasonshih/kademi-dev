@@ -72,7 +72,6 @@
             type: 'GET',
             url: newUrl,
             success: function (data) {
-                flog("success", data);
                 window.history.pushState("", document.title, newUrl);
                 var $fragment = $(data).find("#searchResults");
                 flog("replace", $("#se"));

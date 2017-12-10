@@ -10,7 +10,7 @@
                         <tr>
                             <td>$!c.bidValue</td>
                             <td><abbr title="$formatter.formatDateISO8601($c.changeDate)" class="timeago">$!c.changeDate</abbr></td>
-                            <td><a href="/users/$c.changedBy.userName/public" target="_blank">$!c.changedBy.name</a></td>
+                            <td><a href="/users/$c.changedBy.userName/public" target="_blank">$!c.changedBy.formattedName()</a></td>
                         </tr>
                     #end
                 #else
