@@ -50,12 +50,12 @@
                         <div class="form-group">
                             <label class="control-label col-md-3" for="startDate">Start Date</label>
                             <div class="col-md-3">
-                                <input type="text" name="startDate" id="startDate" value="$!formatter.formatJodaDate($page.rule.startDate, 'dd/MM/YYYY HH:mm')" placeholder="Start Date" data-date-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker" />
+                                <input type="text" name="startDate" id="startDate" value="$!formatter.formatJodaDate($page.rule.startDate, 'dd/MM/YYYY HH:mm', $rootFolder.organisation.timezone)" placeholder="Start Date" data-date-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker" />
                             </div>
 
                             <label class="control-label col-md-2" for="endDate">End Date</label>
                             <div class="col-md-3">
-                                <input type="text" name="endDate" id="endDate" value="$!formatter.formatJodaDate($page.rule.endDate, 'dd/MM/YYYY HH:mm')" placeholder="End Date" data-date-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker" />
+                                <input type="text" name="endDate" id="endDate" value="$!formatter.formatJodaDate($page.rule.endDate, 'dd/MM/YYYY HH:mm', $rootFolder.organisation.timezone)" placeholder="End Date" data-date-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker" />
                             </div>
                         </div>
                         <div class="form-group">
