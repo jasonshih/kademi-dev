@@ -41,6 +41,12 @@
                     margin: 0 auto;
                 }
             }
+            .user-id{
+                -ms-text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
         </style>
     </head>
     <body class="profile">
@@ -204,7 +210,7 @@
 
                                                 <div class="col-md-9">
                                                     <div class="input-group">
-                                                        <span type="text" class="form-control">$page.profile.name</span>
+                                                        <span title="$page.profile.name" type="text" class="form-control user-id">$page.profile.name</span>
                                                         <span class="input-group-btn">
                                                             <button class="btn btn-default change-userid" type="button">Change</button>
                                                         </span>

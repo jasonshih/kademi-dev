@@ -47,15 +47,15 @@
 
             componentContent.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').on('input', function (e) {
                 if (typeof options.onComponentChanged === 'function') {
-                    options.onComponentChanged.call(contentArea, e, component);
+                    options.onComponentChanged.call(keditor, e, component, contentArea);
                 }
-
+                
                 if (typeof options.onContainerChanged === 'function') {
-                    options.onContainerChanged.call(contentArea, e, container);
+                    options.onContainerChanged.call(keditor, e, container, contentArea);
                 }
-
+                
                 if (typeof options.onContentChanged === 'function') {
-                    // options.onContentChanged.call(contentArea, e);
+                    options.onContentChanged.call(keditor, e, contentArea);
                 }
             });
 
@@ -1277,15 +1277,15 @@
             
             componentContent.on('input', function (e) {
                 if (typeof options.onComponentChanged === 'function') {
-                    options.onComponentChanged.call(contentArea, e, component);
+                    options.onComponentChanged.call(keditor, e, component, contentArea);
                 }
                 
                 if (typeof options.onContainerChanged === 'function') {
-                    options.onContainerChanged.call(contentArea, e, container);
+                    options.onContainerChanged.call(keditor, e, container, contentArea);
                 }
                 
                 if (typeof options.onContentChanged === 'function') {
-                    options.onContentChanged.call(contentArea, e);
+                    options.onContentChanged.call(keditor, e, contentArea);
                 }
             });
             
@@ -1530,15 +1530,15 @@
             mediaBody.prop('contenteditable', true);
             mediaBody.on('input', function (e) {
                 if (typeof options.onComponentChanged === 'function') {
-                    options.onComponentChanged.call(contentArea, e, component);
+                    options.onComponentChanged.call(keditor, e, component, contentArea);
                 }
                 
                 if (typeof options.onContainerChanged === 'function') {
-                    options.onContainerChanged.call(contentArea, e, container);
+                    options.onContainerChanged.call(keditor, e, container, contentArea);
                 }
                 
                 if (typeof options.onContentChanged === 'function') {
-                    options.onContentChanged.call(contentArea, e);
+                    options.onContentChanged.call(keditor, e, contentArea);
                 }
             });
             
@@ -1954,15 +1954,15 @@
             ckeditorPlace.prop('contenteditable', true);
             ckeditorPlace.on('input', function (e) {
                 if (typeof options.onComponentChanged === 'function') {
-                    options.onComponentChanged.call(contentArea, e, component);
+                    options.onComponentChanged.call(keditor, e, component, contentArea);
                 }
                 
                 if (typeof options.onContainerChanged === 'function') {
-                    options.onContainerChanged.call(contentArea, e, container);
+                    options.onContainerChanged.call(keditor, e, container, contentArea);
                 }
                 
                 if (typeof options.onContentChanged === 'function') {
-                    options.onContentChanged.call(contentArea, e);
+                    options.onContentChanged.call(keditor, e, contentArea);
                 }
             });
             
@@ -2033,8 +2033,15 @@
                     });
                     
                     var colorPicker = form.find('.txt-bg-color');
-                    contentEditor.initSimpleColorPicker(colorPicker, function (color) {
+                    contentEditor.initColorPicker(colorPicker, function (color) {
+                        var target = keditor.getSettingComponent().find('.keditor-component-text-content');
                         target.css('background-color', color);
+                    });
+
+                    var textColorPicker = form.find('.txt-text-color');
+                    contentEditor.initColorPicker(textColorPicker, function (color) {
+                        var target = keditor.getSettingComponent().find('.keditor-component-text-content');
+                        target.css('color', color);
                     });
                     
                     form.find('.select-bg-repeat').on('change', function () {
@@ -2179,9 +2186,10 @@
             form.find('.select-bg-repeat').val(target.style.backgroundRepeat || 'repeat');
             form.find('.select-bg-position').val(target.style.backgroundPosition || '0% 0%');
             form.find('.select-bg-size').val(target.style.backgroundSize || 'auto');
-            
-            form.find('.txt-bg-color').val(target.style.backgroundColor || '').trigger('update')
-            
+
+            form.find('.txt-bg-color').colorpicker('setValue', target.style.backgroundColor);
+            form.find('.txt-text-color').colorpicker('setValue', target.style.color);
+
             form.find('.txt-padding').each(function () {
                 var txt = $(this);
                 var styleName = txt.attr('data-style-name');
@@ -2233,15 +2241,15 @@
             captionInner.prop('contenteditable', true);
             captionInner.on('input', function (e) {
                 if (typeof options.onComponentChanged === 'function') {
-                    options.onComponentChanged.call(contentArea, e, component);
+                    options.onComponentChanged.call(keditor, e, component, contentArea);
                 }
                 
                 if (typeof options.onContainerChanged === 'function') {
-                    options.onContainerChanged.call(contentArea, e, container);
+                    options.onContainerChanged.call(keditor, e, container, contentArea);
                 }
                 
                 if (typeof options.onContentChanged === 'function') {
-                    options.onContentChanged.call(contentArea, e);
+                    options.onContentChanged.call(keditor, e, contentArea);
                 }
             });
             

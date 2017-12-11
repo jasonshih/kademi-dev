@@ -30,15 +30,15 @@
             
             componentContent.on('input', function (e) {
                 if (typeof options.onComponentChanged === 'function') {
-                    options.onComponentChanged.call(contentArea, e, component);
+                    options.onComponentChanged.call(keditor, e, component, contentArea);
                 }
                 
                 if (typeof options.onContainerChanged === 'function') {
-                    options.onContainerChanged.call(contentArea, e, container);
+                    options.onContainerChanged.call(keditor, e, container, contentArea);
                 }
                 
                 if (typeof options.onContentChanged === 'function') {
-                    options.onContentChanged.call(contentArea, e);
+                    options.onContentChanged.call(keditor, e, contentArea);
                 }
             });
             

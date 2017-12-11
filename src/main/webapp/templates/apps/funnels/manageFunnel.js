@@ -53,7 +53,11 @@ function initPropertiesList() {
         $(document.body).on('click', '.btn-remove-' + item, function (e) {
             e.preventDefault();
 
-            $(this).closest('.' + item).remove();
+            if (item === 'stage' && $(this).closest('.' + item).find("input[name = stageName]").prop("disabled") === true) {
+                removeStage($(this).closest('.' + item));
+            } else {
+                $(this).closest('.' + item).remove();
+            }
         });
     });
 }
@@ -171,6 +175,8 @@ function initPropertiesForm() {
                 }
 
                 $('#builder .panel-setting .stageName').html(stagesOptionStr);
+                
+                $("input[name = stageName]").prop("disabled", true);
             });
         }
     });
@@ -224,4 +230,26 @@ function initEngagementScoring() {
             }
         })
     });
+}
+
+function removeStage(stage) {
+    if (confirm('Are you sure you want to delete this stage?')) {
+        $.ajax({
+            url: $(".form-properties").prop("action"),
+            method: 'POST',
+            data: {
+                "stageToDelete": stage.find("input[name = stageName]").val()
+            },
+            dataType: 'json',
+            success: function(data){
+                if (data.status === true) {
+                    stage.remove();
+                    
+                    $(".form-properties").submit();
+                } else {
+                    Msg.error(data.messages.length > 0 ? data.messages[0] : "Something went wrong while deleting stage");
+                }
+            } 
+        });
+    }
 }

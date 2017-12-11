@@ -11,7 +11,6 @@
             form.forms({
                 onSuccess: function (resp) {
                     if (resp && resp.status) {
-                        showKpollResult();
                         form.fhide();
                         tile.find('.kpoll-success').fshow();
                     } else {

@@ -72,7 +72,7 @@
             <div class="tab-content">
                 <div id="journeyBuilder" class="tab-pane active">
                     <div class="well" style="display: none">
-                        <textarea id="funnelJson" autocomplete="off">$page.funnelJson</textarea>
+                        <script id="funnelJson" type="text/html">$!page.funnelJson</script>
                     </div>
                     <div id="builder">
                         <a href="#" id="builder-fullscreen" title="Enter fullscreen mode">
@@ -353,7 +353,7 @@
                                     <div class="input-group input-group-sm input-group-stage">
                                         <span title="Stage colour" class="input-group-addon stageColorPicker" style="background: $!s.colour">&nbsp;&nbsp;</span>
                                         <input type="hidden" class="form-control" name="stageColour" value="$!s.colour" />
-                                        <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage name" name="stageName" value="$s.name" />
+                                        <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage name" name="stageName" value="$s.name" disabled />
                                         <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage description" name="stageDesc" value="$s.desc" />
                                         <span class="input-group-btn">
                                             <a class="btn btn-default btn-move-stage"><i class="fa fa-arrows-v"></i></a>
