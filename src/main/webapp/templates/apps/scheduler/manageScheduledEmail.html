@@ -14,14 +14,14 @@
             <div class="row" id="textual-description">
                 <div class="col-sm-8 col-lg-8"><p class="lead">$page.description</p></div>
                 <div class="col-sm-4 col-lg-4"><p class="lead">
-                    <i class="fa fa-clock-o"></i> Next run: <br class="hidden-lg" />
-                    <abbr title="$!formatter.formatDateISO8601($page.nextRunTime, $page.organisation.timezone)" class="timeago">$!formatter.formatDate($page.nextRunTime, $page.organisation.timezone)</abbr>, at $!formatter.formatTime($page.nextRunTime, $page.organisation.timezone)
-                </p></div>
+                        <i class="fa fa-clock-o"></i> Next run: <br class="hidden-lg" />
+                        <abbr title="$!formatter.formatDateISO8601($page.nextRunTime, $page.organisation.timezone)" class="timeago">$!formatter.formatDateLong($page.nextRunTime, $page.organisation.timezone)</abbr>, at $!formatter.formatTime($page.nextRunTime, $page.organisation.timezone)
+                    </p></div>
             </div>
             <form name="frmDetails" action="." method="post" class="form-horizontal" enctype="multipart/form-data">
                 <div class="enabledSwitchContainer pull-right" style="z-index: 2; margin-right: 10px; position: relative;">
                     <input class='make-switch' type='checkbox' data-on-color='success' data-off-color='danger' data-size="small" $formatter.ifTrue($page.job.enabled,'checked',
-                        '') value="true" id="enabled" />
+                           '') value="true" id="enabled" />
                 </div>
                 <div class="tabbable">
                     <ul class="nav nav-tabs tab-bricky">
@@ -34,18 +34,18 @@
                                 <div class="btn-group pull-right" style="z-index: 2;">
                                     <button type="submit" class="btn btn-sm btn-success Draft"><i class="fa fa-floppy-o"></i> Save</button>
                                     <!--<button type="button" class="btn btn-sm btn-success test" name="test" value="test"><i class="fa fa-send"></i> Send Test</button>-->
-                                        <button type="button" class="btn btn-sm btn-info test" name="test">
-                                            <span class="glyphicon glyphicon-send"></span>
-                                            Test
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#" class="btn-sent-test-choose">Enter recipient address..</a></li>
-                                            <li><a href="#" class="btn-reschedule">Re-schedule last send</a></li>
-                                        </ul>
+                                    <button type="button" class="btn btn-sm btn-info test" name="test">
+                                        <span class="glyphicon glyphicon-send"></span>
+                                        Test
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right" role="menu">
+                                        <li><a href="#" class="btn-sent-test-choose">Enter recipient address..</a></li>
+                                        <li><a href="#" class="btn-reschedule">Re-schedule last send</a></li>
+                                    </ul>
                                 </div>
                             </div>
                             <hr />
@@ -96,7 +96,7 @@
                                                         <span class="btn-text">$page.job.frequency </span> <span class="caret"></span></button>
                                                     <ul class="dropdown-menu dropdown-menu-right">
                                                         #foreach($f in $page.allFrequencies)
-                                                            <li><a href="#" data-value="$f">$f</a></li>
+                                                        <li><a href="#" data-value="$f">$f</a></li>
                                                         #end
                                                     </ul>
                                                 </div>
@@ -107,7 +107,7 @@
                                         <label class="col-md-3 control-label" for="runHour">Hour of day to run</label>
                                         <div class="col-md-8">
                                             <input type="text" name="runHour" value="$!page.job.runHour" placeholder="What hour of the day to run" class="form-control" />
-                                            <em class="help-block text-muted small">Current hour is $formatter.getHour($formatter.now)</em>
+                                            <em class="help-block text-muted small">Current hour is $formatter.getHour($formatter.now, $page.organisation.timezone)</em>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -164,11 +164,11 @@
                                             <select name="pipeline" id="pipeline" class="form-control">
                                                 <option value="">No Pipeline</option>
                                                 #foreach($entry in $page.outboundPipelines.entrySet())
-                                                    #foreach($pipeline in $entry.value)
-                                                        #set($pId = $entry.key.id + '_' + $pipeline.id)
-                                                        #set($pName = $entry.key.repository.name + ' - ' + $pipeline.id)
-                                                        $formatter.option($pId, $pName, $page.job.pipeline)
-                                                    #end
+                                                #foreach($pipeline in $entry.value)
+                                                #set($pId = $entry.key.id + '_' + $pipeline.id)
+                                                #set($pName = $entry.key.repository.name + ' - ' + $pipeline.id)
+                                                $formatter.option($pId, $pName, $page.job.pipeline)
+                                                #end
                                                 #end
                                             </select>
                                         </div>
@@ -181,7 +181,7 @@
                                             <select name="hrefTemplate" class="form-control">
                                                 <option value="">No attachment</option>
                                                 #foreach($att in $page.attachmentChoices)
-                                                    $formatter.option($att.path, $att.title, $page.job.hrefTemplate)
+                                                $formatter.option($att.path, $att.title, $page.job.hrefTemplate)
                                                 #end
                                             </select>
                                         </div>
@@ -199,23 +199,23 @@
                                     <small class="text-muted" style="font-size: 14px;"> (Select which user groups to send to)</small>
                                 </p>
                                 <div class="GroupList blocks-wrapper" id="recipientList">
-                                                                        
+
                                     #if( $page.numRecipients > $page.maxRecipients )
                                     <div class="alert alert-danger">
-                                        
+
                                         <h2>WARNING: Exceeded max recipients</h2>
-                                        
+
                                         <p>
                                             Number recipients: 
                                             <b>$page.numRecipients</b>
 
                                             Max: $page.maxRecipients
                                         </p>
-                                        
+
                                         <p>The number of recipients exceeds the configured maximum. This email will not send!</p>                                        
-                                        
+
                                         <p>Note that this limit is for your protection, against inadvertently sending emails to customers.</p>
-                                        
+
                                         <p>Usually this means you've selected the wrong group. If you're confident that you've selected the correct groups, then
                                             head on over to the <a href='/manageApps'>manage apps page</a> and edit the settings for the Scheduler app to increase the limit.</p>
                                     </div>
@@ -223,18 +223,18 @@
                                     <p>
                                         Number recipients: 
                                         <b>$page.numRecipients</b>
-                                        
+
                                         Max: $page.maxRecipients
                                     </p>
-                                    
+
                                     #end
-                                    
+
                                     #foreach($g in $page.groupRecipients)
-                                        <span class="block $g.name">$g.name
-                                            #if( $page.status == "Draft" )
-                                                <a href="$g.name" class="btn btn-xs btn-bricky"><i class="fa fa-times fa fa-white"></i></a>
-                                            #end
-                                        </span>
+                                    <span class="block $g.name">$g.name
+                                        #if( $page.status == "Draft" )
+                                        <a href="$g.name" class="btn btn-xs btn-bricky"><i class="fa fa-times fa fa-white"></i></a>
+                                        #end
+                                    </span>
                                     #end                                    
                                 </div>
                             </div>
@@ -266,17 +266,17 @@
                                     <tr>
                                         <td colspan="5">No emails have been sent</td>
                                     </tr>
-                                #else
+                                    #else
                                     #foreach($item in $history)
-                                        <tr>
-                                            <td><a href="/emails/$item.id">$item.subject <i class="fa fa-arrow-circle-right"></i></a></td>
-                                            <td>#if($item.recipient.formattedName) $item.recipient.formattedName #end</td>
-                                            <td>#if($item.recipientAddress) $item.recipientAddress #end</td>
-                                            <td>#if($item.sendStatus) <span class="label label-info">$item.sendStatus</span> #end</td>
-                                            <td>#if($item.sendStatusDate) $formatter.formatDateTime($item.sendStatusDate, $page.organisation.timezone) #end</td>
-                                        </tr>
+                                    <tr>
+                                        <td><a href="/emails/$item.id">$item.subject <i class="fa fa-arrow-circle-right"></i></a></td>
+                                        <td>#if($item.recipient.formattedName) $item.recipient.formattedName #end</td>
+                                        <td>#if($item.recipientAddress) $item.recipientAddress #end</td>
+                                        <td>#if($item.sendStatus) <span class="label label-info">$item.sendStatus</span> #end</td>
+                                        <td>#if($item.sendStatusDate) $formatter.formatDateTime($item.sendStatusDate, $page.organisation.timezone) #end</td>
+                                    </tr>
                                     #end
-                                #end
+                                    #end
                                 </tbody>
                             </table>
                         </div>
@@ -298,10 +298,10 @@
                                 <td colspan="2">
                                     <div class="ListItem blocks-wrapper">
                                         #foreach($g in $page.allGroups)
-                                            <span class="block">
-                                                #set($checkId = "group-" + $g.name)
-                                                <label for="$checkId">$formatter.checkbox($checkId, $g.name, $page.isSelected($g)) $g.name</label>
-                                            </span>
+                                        <span class="block">
+                                            #set($checkId = "group-" + $g.name)
+                                            <label for="$checkId">$formatter.checkbox($checkId, $g.name, $page.isSelected($g)) $g.name</label>
+                                        </span>
                                         #end
                                     </div>
                                 </td>
@@ -311,7 +311,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div id="modal-send-test" class="modal fade" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
