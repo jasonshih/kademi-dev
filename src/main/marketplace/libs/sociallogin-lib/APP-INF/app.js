@@ -1,0 +1,1 @@
+controllerMappings.addComponent("sociallogin-lib/components", "socialLogin", "html", "Shows buttons to ", "TeamApp");

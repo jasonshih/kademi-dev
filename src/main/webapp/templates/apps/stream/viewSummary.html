@@ -1,0 +1,53 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Stream Summary</title>
+        <link rel="template" href="reallyPlain" />
+    </head>
+    <body>
+        <div id="streamBody">
+            #set( $resp = $page.summary )
+
+            <ol class="discussion">
+                #foreach( $eventDateBucket om $resp.aggregations.eventDate.buckets)
+                #foreach( $categoryBucket in $eventDateBucket.aggregations.category.buckets)
+                #foreach( $itemTypeIconBucket in $categoryBucket.aggregations.itemTypeIcon.buckets)
+                #foreach( $actionDescNABucket in $itemTypeIconBucket.aggregations.actionDescNA.buckets)
+                <li class="other">
+                    <div class='messages'>
+                        <p>
+                            #set( $numUsers = $actionDescNABucket.aggregations.userId.buckets.size()  )
+                            #if( $numUsers == 1 )
+                            #set( $userId = $actionDescNABucket.aggregations.userId.buckets[0].key )
+                            #set( $actionUser = $applications.userApp.findUserResourceById($userId).thisProfile.formattedName )
+                            <a href="/users/$userId/">$actionUser</a>
+                            #elseif( $numUsers == 0 )
+
+                            #else
+                            $numUsers users
+                            #end
+
+                            $actionDescNABucket.key
+                            
+                            <span class="fa fa-${itemTypeIconBucket.key}"></span>
+                            ${actionDescNABucket.docCount} times
+
+                        </p>
+
+                        <p>
+                            <span class="label label-${categoryBucket.key}">
+                                <span class="time timeago" title="$eventDateBucket.key">$eventDateBucket.key</span>
+                            </span>
+                        </p>
+                    </div>
+                </li>
+                #end
+                #end
+                #end
+                #end
+            </ol>
+        </div>
+        <pre>
+            $resp
+        </pre>
+    </body>
+</html>

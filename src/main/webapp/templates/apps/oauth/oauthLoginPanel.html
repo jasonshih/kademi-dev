@@ -22,7 +22,12 @@
 #end
 
 <script>
+#if( $details )
     var oauthDetails = $details;
+#else
+    var oauthDetails = false;
+#end
+
     $(function () {
         if (oauthDetails) {
             var form = $("#registerForm");

@@ -1,7 +1,7 @@
-#if($formatter.toBool($displayNickname) == true || $formatter.toBool($displayNickname) == false) 
-    #set ($displayNickname = $formatter.toBool($displayNickname)) 
-#{else} 
-    #set ($displayNickname = $formatter.toBool($displayName))  
+#if($formatter.toBool($displayNickname) == true || $formatter.toBool($displayNickname) == false)
+    #set ($displayNickname = $formatter.toBool($displayNickname))
+#{else}
+    #set ($displayNickname = $formatter.toBool($displayName))
 #end
 #set ($displayName = $formatter.toBool($displayName))
 #set ($displayPhone = $formatter.toBool($displayPhone))
@@ -32,7 +32,7 @@
             <input class="required form-control" required="true" type="email" name="email" id="email" placeholder="Your email address" />
         </div>
     </div>
-    
+
     #if ($displayNickname)
     <div class="form-group">
         <label class="control-label col-md-3" style="$!labelAlign" for="nickName">Nickname</label>
@@ -41,7 +41,7 @@
         </div>
     </div>
     #end
-    
+
     #if ($displayName)
     <div class="form-group">
         <label class="control-label col-md-3" style="$!labelAlign" for="firstName">First name</label>
@@ -68,7 +68,7 @@
         </div>
     </div>
     #end
-    
+
     #if ($displayPwd)
     <div class="form-group">
         <label class="control-label col-md-3" style="$!labelAlign" for="password">Password</label>
@@ -152,7 +152,7 @@
 
     <br class="clearfix" />
 
-    #if ($applicationManager.isActive($applicationManager.oauth, $website.branch))
+    #if ($applicationManager.isActive($applicationManager.oauth, $rootFolder.branch))
     <div class="socialLoginPortlet">
         #portlets("socialLoginPage")
     </div>

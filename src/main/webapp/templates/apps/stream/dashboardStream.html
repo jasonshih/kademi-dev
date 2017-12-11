@@ -22,51 +22,11 @@
         </div>
     </div>
 
-    <script src="/theme/apps/stream/jquery.stream.js"></script>
-    <script id="entry-template" type="text/html">
-        <ol class="discussion">
-            {{#each aggregations.eventDate.buckets }}
-
-                    {{#each userName.buckets }}
-                    {{#each category.buckets }}
-                    {{#each path.buckets }}
-                    {{#each actionIcon.buckets }}
-                    {{#each actionDescNA.buckets }}
-            <li class="other">
-                <div class="avatar">
-                    {{#unless ../../../../key}}
-                        <img class="img img-circle" src="/templates/apps/user/profile.png" alt="" />
-                    {{else}}
-                        <img class="img img-circle" src="/users/{{../../../../../key}}/pic" alt="" />
-                    {{/unless}}
-                    <br/>
-                    <a href="/manageUsers/{{userId ../../../../key}}/" class="avatar-name" title="{{fullName ../../../../key}}">{{fullName ../../../../key}} - {{../../../../key}}</a>
-                </div>
-                <div class='messages'>
-                    <p>
-                        {{key}} <a href="{{../../key}}">{{itemTitle ../../key}}</a> {{../../../../../doc_count}} times
-
-                    </p>
-
-                    <p>
-                        <span class="label label-{{lowerCase ../../../key}}">
-                            <span class="time timeago" title="{{dateFromLong ../../../../../key}}">{{../../../../../key}}</span>
-                        </span>
-                    </p>
-                </div>
-            </li>
-                    {{/each}}
-                    {{/each}}
-                    {{/each}}
-                    {{/each}}
-                    {{/each}}
-            {{/each}}
-        </ol>
-    </script>
     <script>
         $(function () {
-            $("#streamBody").stream();
-            $("#streamBody").stream("loadAggregated");
+            $("#streamBody").reloadFragment({
+                url: "/stream/"
+            });
         });
     </script>
 </div>
