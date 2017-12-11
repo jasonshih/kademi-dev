@@ -67,7 +67,7 @@ var JBApp = {
         flog('parseFunnel');
 
         try {
-            JBApp.funnel = $.parseJSON($('#funnelJson').val());
+            JBApp.funnel = $.parseJSON($('#funnelJson').html());
         } catch (e) {
             flog('no funnel found');
             JBApp.funnel = {
