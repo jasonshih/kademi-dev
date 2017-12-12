@@ -51,15 +51,6 @@
                         <textarea cols="100" id="editContent" name="text" rows="10" class="htmleditor">$!page.text</textarea>
                     </div>
                 </div>
-                
-                <h2>Example template tags</h2>
-                <p>Its a good idea to wrap any free text fields in the htmlEncode function to ensure no special characters cause PDF conversion to fail</p>
-                <pre>User's name: @{formatter.htmlEncode(profile.formattedName)}
-User's organisation:@{formatter.htmlEncode(userOrganisation.formattedName)}
-User's organisation address: @{formatter.htmlEncode(userOrganisation.address)}
-Module title: @{formatter.htmlEncode(parent.title)}
-Completed date: @{formatter.formatDate(completedDate)}
-                </pre>
             </div>
         </div>
 
