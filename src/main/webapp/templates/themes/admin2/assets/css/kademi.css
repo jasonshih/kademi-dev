@@ -714,3 +714,21 @@ body .form-control::-webkit-input-placeholder {
 .rocketchat-widget[data-state="closed"] {
     width: 210px !important;
 }
+
+#streamBody .timelime {
+
+}
+
+
+
+#streamBody .timeline::before {
+    left: 85%;
+}
+
+#streamBody .timeline > li .timeline-badge {
+    left: 85%;
+}
+
+#streamBody .timeline > li > .timeline-panel {
+    width: 75%;
+}
