@@ -1,6 +1,6 @@
 #set( $results = false)
 #set( $results = $applications.search.omniSearch($request.params.omni, 100, 0))
-#if( $results )
+#if( $formatter.isNotNull($results) )
     $results
 #else
 <li class="no-result text-muted">No results found</li>
