@@ -33,9 +33,9 @@
                     </td>
                     <td>
                         #if( $p.itemHref )
-                        <a href="$p.itemHref">$p.description</a>
+                        <a href="$p.itemHref">$!p.description</a>
                         #else
-                        $p.description
+                        $!p.description
                         #end
                     </td>
                 </tr>
