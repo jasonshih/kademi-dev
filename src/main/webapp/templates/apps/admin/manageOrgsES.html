@@ -148,7 +148,8 @@
                                         <li><a class="btn-edit-org" role="button" href="${org.href}edit">Edit details</a></li>
                                         <li><a class="btn-edit-path" role="button" data-path="$org.orgPathToEdit" data-orgid="$org.actualId" href="#">Edit Path</a></li>
                                         <li><a class="btn-edit-parent" role="button" data-parent="$!org.parent" data-orgid="$org.actualId" data-parent-title="$!org.parentTitle" href="#">Edit parent</a></li>
-                                        <li><a href="${org.href}viewDetails">View users and details</a></li>
+                                        <li><a href="${org.href}viewDetails">View memberships</a></li>
+                                        <li><a href="/manageUsers?term-orgs=${org.org.id}">View users</a></li>
                                         <li><a href="${org.href}organisations">Manage child orgs</a></li>
                                         <li><a href="${org.href}manageRepos">File manager</a></li>
                                         #if( $org.org.adminDomain )
