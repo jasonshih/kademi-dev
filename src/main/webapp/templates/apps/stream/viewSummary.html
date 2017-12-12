@@ -7,14 +7,20 @@
         <div id="streamBody">
             #set( $resp = $page.summary )
 
-            <ol class="discussion">
+            <ul class="timeline">
                 #foreach( $eventDateBucket om $resp.aggregations.eventDate.buckets)
+                <li class="tldateLi">
+                    <div class="tldate"><span>$formatter.formatDate($eventDateBucket.key)</span></div>
+                </li>
                 #foreach( $categoryBucket in $eventDateBucket.aggregations.category.buckets)
                 #foreach( $itemTypeIconBucket in $categoryBucket.aggregations.itemTypeIcon.buckets)
                 #foreach( $actionDescNABucket in $itemTypeIconBucket.aggregations.actionDescNA.buckets)
+
                 <li class="">
-                    <div class='messages'>
-                        <p>
+                    <div class="timeline-badge ${categoryBucket.key}"><i class="fa fa-$itemTypeIconBucket.key"></i></div>
+                    <div class="timeline-panel">
+                        <div class="timeline-body">
+                            <p>
                             #set( $numUsers = $actionDescNABucket.aggregations.userId.buckets.size()  )
                             #if( $numUsers == 1 )
                             #set( $userId = $actionDescNABucket.aggregations.userId.buckets[0].key )
@@ -28,26 +34,26 @@
 
                             $actionDescNABucket.key
 
-                            <span class="fa fa-${itemTypeIconBucket.key}"></span>
-                            ${actionDescNABucket.docCount} times
+                            #if( $actionDescNABucket.aggregations.itemPaths.buckets.size() == 1 )
+                            <i>$actionDescNABucket.aggregations.itemPaths.buckets.get(0).key</i>
+                            #end
 
-                        </p>
-
-                        <p>
-                            <span class="label label-${categoryBucket.key}">
-                                <span class="time timeago" title="$eventDateBucket.key">$eventDateBucket.key</span>
-                            </span>
-                        </p>
+                            #if( $actionDescNABucket.docCount > 1 )
+                            $actionDescNABucket.docCount times
+                            #end
+                            </p>
+                        </div>
                     </div>
                 </li>
                 #end
                 #end
                 #end
                 #end
-            </ol>
+            </ul>
         </div>
         <pre>
             $resp
         </pre>
+
     </body>
 </html>
