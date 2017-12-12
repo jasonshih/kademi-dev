@@ -94,9 +94,10 @@ $(function () {
                 flog('complete', response);
                 var $heading = $(response).find("#leadsHeading");
                 $("#leadsHeading").replaceWith($heading);
-
-                var $footer = $(response).find('#leadsFooter');
-                $('#leadsFooter').replaceWith($footer);
+                /*
+                 var $footer = $(response).find('#leadsFooter');
+                 $('#leadsFooter').replaceWith($footer);
+                 */
             }
         });
     }

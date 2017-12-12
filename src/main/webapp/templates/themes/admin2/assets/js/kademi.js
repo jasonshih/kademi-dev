@@ -462,7 +462,7 @@ function initNewUserForm() {
         },
         onSuccess: function (resp) {
             flog('done new user', resp);
-            
+
             switch (nextAction) {
                 case 'view':
                     if (resp.nextHref) {
@@ -473,7 +473,9 @@ function initNewUserForm() {
                     break;
                 
                 case 'close':
-                    $('#table-users-body').reloadFragment();
+                    setTimeout(function () {
+                        $('#table-users-body').reloadFragment();
+                    }, 600);
                     modal.modal('hide');
                     break;
                 
