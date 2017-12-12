@@ -7,6 +7,7 @@ function initManageGroupRegoMode() {
     initRegoMode();
     initOptins();
     initQueryBuilder();
+    initSearchRoles();
 }
 
 function initOptins() {
@@ -446,4 +447,30 @@ function checkRuleType(rules) {
     }
 
     return rules;
+}
+
+function initSearchRoles() {
+    $("#modal-edit-roles").on('input', '#roleFilter', function () {
+        if (!this.value){
+            $('#rolesWrap').find('.block').each(function () {
+                $(this).parent().removeClass('hide');
+            })
+        } else {
+            $('#rolesWrap').find('.block').each(function () {
+                $(this).parent().addClass('hide');
+            });
+            var s = this.value;
+            $('#rolesWrap').find('.block').each(function () {
+                var m = $(this).parent();
+                var name = m.find('.article-name').text().toLowerCase();
+                if (name.indexOf(s.toLowerCase()) != -1){
+                    m.removeClass('hide').trigger('input');
+                }
+            });
+        }
+    });
+
+    $("#modal-edit-roles").on('show.bs.modal', function () {
+        $('#roleFilter').val('').trigger('input');
+    });
 }

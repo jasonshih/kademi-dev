@@ -1,10 +1,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Groups</title>
-        <link href="manageGroupRegoMode.css" rel="stylesheet" type="text/css" />
+        <link href="manageGroupRegoMode.css?v=1" rel="stylesheet" type="text/css" />
         <link href="/templates/apps/learner/groupsAdminPortlet.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="manageGroup.js">//</script>
-        <script type="text/javascript" src="manageGroupRegoMode.js?v=1.0.1">//</script>
+        <script type="text/javascript" src="manageGroupRegoMode.js?v=1.0.3">//</script>
         <script type="text/javascript" src="manageExtraField.js?v=1.0.1">//</script>
         <script type="text/javascript" src="/templates/apps/learner/groupsAdminPortlet.js">//</script>
     </head>
@@ -420,7 +420,7 @@
 
         <!-- START OF MODAL ROLES -->
         <div class="modal fade" aria-hidden="true" tabindex="-1" id="modal-edit-roles">
-            <div class="modal-dialog modal-sm">
+            <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
@@ -457,14 +457,25 @@
                                 </select>
                             </p>
                         </div>
-                        <div class="article-wrapper article-sm showed-action roles">
+                        <div class="searchRoles">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="roleFilter" placeholder="Search roles...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+                                </span>
+                            </div><!-- /input-group -->
+                        </div>
+                        <p>&nbsp;</p>
+                        <div id="rolesWrap" class="article-wrapper article-sm showed-action roles row blocks-wrapper">
                             #foreach($role in $page.parent.allRoles)
-                            <article>
-                                <span class="article-name">$role</span>
-                                <aside class="article-action">
-                                    <button class="btn btn-xs btn-success btn-add-role" title="Add role"><i class="clip-plus-circle "></i></button>
-                                </aside>
-                            </article>
+                            <div class="col-sm-4">
+                                <article class="block">
+                                    <span class="article-name">$role</span>
+                                    <span class="article-action pull-right">
+                                        <button class="btn btn-xs btn-success btn-add-role" title="Add role"><i class="fa fa-plus-circle"></i></button>
+                                    </span>
+                                </article>
+                            </div>
                             #end
                         </div>
                     </div>
