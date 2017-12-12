@@ -12,7 +12,7 @@
                 #foreach( $categoryBucket in $eventDateBucket.aggregations.category.buckets)
                 #foreach( $itemTypeIconBucket in $categoryBucket.aggregations.itemTypeIcon.buckets)
                 #foreach( $actionDescNABucket in $itemTypeIconBucket.aggregations.actionDescNA.buckets)
-                <li class="other">
+                <li class="">
                     <div class='messages'>
                         <p>
                             #set( $numUsers = $actionDescNABucket.aggregations.userId.buckets.size()  )
@@ -27,7 +27,7 @@
                             #end
 
                             $actionDescNABucket.key
-                            
+
                             <span class="fa fa-${itemTypeIconBucket.key}"></span>
                             ${actionDescNABucket.docCount} times
 
