@@ -69,7 +69,7 @@
                         <tr>
                             #set( $lead = $leadBean.lead )
                             <td>$leadBean.score</td>
-                            <td>$lead.title</td>
+                            <td>$!lead.title</td>
                             <td>
                                 #if( $lead.profile )
                                 <a href="/manageUsers/$lead.profile.id">$!lead.profile.email</a>
