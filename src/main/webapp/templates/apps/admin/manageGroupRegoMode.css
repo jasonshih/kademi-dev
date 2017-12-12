@@ -9,3 +9,8 @@
     white-space: nowrap;
     overflow: hidden;
 }
+
+.blocks-wrapper.roles .block{
+    display: block;
+    padding: 8px 12px;
+}
