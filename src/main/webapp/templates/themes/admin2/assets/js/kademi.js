@@ -474,7 +474,7 @@ function initNewUserForm() {
                 
                 case 'close':
                     setTimeout(function () {
-                        $('#table-users-body').reloadFragment();
+                        $('#table-users-body,#searchStats').reloadFragment();
                     }, 600);
                     modal.modal('hide');
                     break;
