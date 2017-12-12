@@ -51,7 +51,15 @@
                         
                         component.attr('data-layout', this.value);
                         keditor.initDynamicContent(dynamicElement);
-                    })
+                    });
+                    
+                    form.find('.txt-formtitle').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        
+                        component.attr('data-login-form-title', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                     
                     form.find('.txt-username-placeholder').on('change', function () {
                         var component = keditor.getSettingComponent();
@@ -106,6 +114,10 @@
             form.find('.logo-previewer').attr('src', dataAttributes['data-logo'] || '/static/images/photo_holder.png');
             form.find('.select-layout').val(dataAttributes['data-layout'] || 'horizontal');
             form.find('.chk-auto-redirect').prop('checked', dataAttributes['data-auto-redirect'] === 'true');
+            
+            form.find('.txt-formtitle').val(dataAttributes['data-login-form-title']);
+            form.find('.txt-username-placeholder').val(dataAttributes['data-username-placeholder']);
+            form.find('.txt-password-placeholder').val(dataAttributes['data-password-placeholder']);
             
             var isCustomRedirect = dataAttributes['data-redirect-url'] && dataAttributes['data-redirect-url'] !== 'null' && dataAttributes['data-redirect-url'] !== '/dashboard' && dataAttributes['data-redirect-url'] !== '/profile';
             form.find('.rdb-redirect').filter('[value="' + (isCustomRedirect ? '' : dataAttributes['data-redirect-url'] || 'null') + '"]').trigger('click');
