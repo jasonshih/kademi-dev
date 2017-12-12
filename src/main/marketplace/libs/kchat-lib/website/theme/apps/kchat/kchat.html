@@ -1,0 +1,51 @@
+<div class="kchat-chat-container col-xs-12 col-sm-6 col-md-3" data-cid="$page.organisation.id" style="display: none;">
+    <div class="panel panel-default panel-kchat">
+        <div class="panel-collapse collapse" id="kchat-accordion-collapse">
+            <div class="panel-body">
+                <ul class="chat">
+                </ul>
+            </div>
+            <div class="panel-footer">
+                <div class="input-group input-group-sm">
+                    <input id="btn-input" type="text" class="form-control input-sm kchat-msg-input" placeholder="Type your message here..." />
+                    <span class="input-group-btn">
+                        <button class="btn btn-xs btn-primary btn-sm" data-action="kchat-send" >Send</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="panel-heading" id="kchat-accordion">
+            <span class="glyphicon glyphicon-comment"></span> Chat
+            <div class="btn-group btn-group-xs pull-right">
+                <a class="btn btn-default btn-xs collapsed" data-toggle="collapse" data-parent="#kchat-accordion" href="#kchat-accordion-collapse">
+                    <span class="kchat-toggle-up glyphicon glyphicon-chevron-up"></span>
+                    <span class="kchat-toggle-down glyphicon glyphicon-chevron-down"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script class="kchat-msgl-template" type="text/html">
+        <li class="left clearfix" data-messageid="{{id}}" data-timestamp="{{timestamp}}">
+            <div class="chat-body clearfix">
+                <div class="header">
+                    <small class="pull-right text-muted"><span class="glyphicon glyphicon-time"></span><abbr class="timeago" title="{{timestamp}}">{{timestamp}}</abbr></small>
+                    <strong class="primary-font">{{profile.name}}</strong>
+                </div>
+                <p>{{message}}</p>
+            </div>
+        </li>
+    </script>
+
+    <script class="kchat-msgr-template" type="text/html">
+        <li class="right clearfix" data-messageid="{{id}}" data-timestamp="{{timestamp}}">
+            <div class="chat-body clearfix">
+                <div class="header">
+                    <small class="text-muted"><span class="glyphicon glyphicon-time"></span><abbr class="timeago" title="{{timestamp}}">{{timestamp}}</abbr></small>
+                    <strong class="pull-right primary-font">Me</strong>
+                </div>
+                <p class="pull-right">{{message}}</p>
+            </div>
+        </li>
+    </script>
+</div>

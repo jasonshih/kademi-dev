@@ -1,0 +1,12 @@
+{
+  "appDependencies": [
+        {
+            "appId": "kchat",
+            "branch" : ""
+        },
+        {
+            "appId": "kchat-lib",
+            "branch": "1.0.0"
+        }    
+  ]
+}
