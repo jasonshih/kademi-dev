@@ -6,15 +6,15 @@
     #set ($autoRedirect = false)
 #end
 
-#if (!$passwordPlaceholder)
+#if ($formatter.isNull($passwordPlaceholder) || !$passwordPlaceholder)
     #set ($passwordPlaceholder = "Enter your password")
 #end
 
-#if (!$usernamePlaceholder)
+#if ($formatter.isNull($usernamePlaceholder) || !$usernamePlaceholder)
     #set ($usernamePlaceholder = "Enter your email address or username")
 #end 
 
-#if (!$loginFormTitle)
+#if ($formatter.isNull($loginFormTitle) || !$loginFormTitle)
     #set ($loginFormTitle = "Please login to view this page")
 #end
 
