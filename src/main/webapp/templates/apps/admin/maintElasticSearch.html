@@ -3,25 +3,40 @@
         <title>ES Maintenance</title>
     </head>
     <body class="manageApplications appsContainer">
-        
+        <form method="POST" action="$page.href" class="maintForm" >
         <table class="table table-striped">
             #foreach( $orgIndexMap in $page.indexes.entrySet() )
             <tr>
-                <th colspan="2">$orgIndexMap.key</th>                
+                <th colspan="4">$orgIndexMap.key</th>                
+                <td>
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                </td>
             </tr>
             #foreach( $indexMap in $orgIndexMap.value.entrySet() )
             <tr>
                 <td>$indexMap.key</td>     
-                <td>$indexMap.value</td>
+                <td class="text-right">$indexMap.value.docs</td>
+                <td class="text-right">$indexMap.value.shards</td>
+                <td class="text-right">
+                    $formatter.formatBytes( $indexMap.value.storeSize )
+                </td>
+                <td>
+                    <input type="checkbox" name="deleteIndexes" value="$indexMap.key" />
+                </td>
             </tr>            
             #end
             #end
         </table>
+        </form>
 
         <script type="text/javascript">
-            $(function () {
-                
-
+            $(function () {                
+                $("form.maintForm").forms({
+                    onSuccess: function (resp) {
+                        flog("resp", resp);
+                        Msg.success("Done");
+                    }
+                });
             });
         </script>
     </body>
