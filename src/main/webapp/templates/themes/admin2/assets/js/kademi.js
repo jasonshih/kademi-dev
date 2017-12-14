@@ -232,7 +232,6 @@ function initDatePicker() {
     });
 }
 
-
 function initTabbable() {
     flog('initTabbable');
     
@@ -532,24 +531,6 @@ function closeFuseModal(modal, callback) {
     }
 }
 
-function initLoadingOverlay() {
-    if (!findLoadingOverlay()[0]) {
-        $('.main-content').children('.container').prepend('<div class="loading-overlay hide"></div>');
-    }
-}
-
-function findLoadingOverlay() {
-    return $('.main-content').children('.container').find('.loading-overlay');
-}
-
-function showLoadingOverlay() {
-    findLoadingOverlay().removeClass('hide');
-}
-
-function hideLoadingOverlay() {
-    findLoadingOverlay().addClass('hide');
-}
-
 function getStandardEditorHeight() {
     return $(window).height() - 400;
 }
@@ -560,14 +541,6 @@ function getStandardModalEditorHeight() {
 
 function getStandardModalHeight() {
     return getStandardModalEditorHeight();
-}
-
-function getMainContainerContentHeight() {
-    var container = $('.main-content > .container');
-    var breadcrumb = container.children('.breadcrumb');
-    var mainContentInner = container.find('.main-content-inner');
-    
-    return container.height() - breadcrumb.outerHeight() - +mainContentInner.css('padding-top').replace('px', '');
 }
 
 /**
@@ -732,7 +705,6 @@ function initTimeago() {
 $(function () {
     flog("Fuse init");
     
-    initLoadingOverlay();
     initAdminTopNavSearch();
     initSwitch();
     initToggled();
@@ -811,7 +783,6 @@ function initEmailEventSimulator() {
         });
     });
 }
-
 
 $(window).load(function () {
     if ((typeof CKEDITOR != 'undefined')) {
@@ -1272,6 +1243,44 @@ function initColorPicker(target, onChangeHandle) {
         flog('ERROR! You need bootstrap-colorpicker plugin to continue this method!');
     }
 }
+
+function initImagePicker(target, basePath, pagePath) {
+    flog('initImagePicker', target, basePath, pagePath);
+    
+    target.hide();
+    target.wrap('<div class="image-picker-wrapper"></div>');
+    
+    var imgSrc = target.val() || target.attr('src') || target.attr('data-src') || '/static/images/photo_holder.png';
+    
+    var wrapper = target.parent();
+    wrapper.append(
+        '<div class="thumbnail">' +
+        '   <img src="' + imgSrc + '" class="image-picker-previewer" />' +
+        '</div>' +
+        '<div class="btn-group btn-group-sm btn-group-justified">' +
+        '   <a href="#" class="btn btn-success image-picker-upload" role="button"><i class="fa fa-picture-o"></i> Select</a>' +
+        '   <a href="#" class="btn btn-danger image-picker-clear" role="button"><i class="fa fa-times"></i> Clear</a>' +
+        '</div>'
+    );
+    
+    var preview = wrapper.find('.image-picker-previewer');
+    
+    wrapper.find('.image-picker-upload').mselect({
+        basePath: basePath,
+        pagePath: pagePath,
+        onSelectFile: function (selectedUrl) {
+            target.val(selectedUrl);
+            preview.attr('src', selectedUrl);
+        }
+    });
+    
+    wrapper.find('.image-picker-clear').on('click', function (e) {
+        e.preventDefault();
+        
+        target.val('');
+        preview.attr('src', '/static/images/photo_holder.png');
+    });
+};
 
 // ========================================================================
 // Kalert

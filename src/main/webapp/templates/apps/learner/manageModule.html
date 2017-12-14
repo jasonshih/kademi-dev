@@ -188,12 +188,8 @@
 
                                                                 <div class="form-group">
                                                                     <label for="thumb" class="control-label col-md-3">Thumbnail (image)</label>
-                                                                    <div class="col-md-9">
-                                                                        <div class="input-group">
-                                                                            <input class="thumbnail-image form-control" type="text" id="thumb" name="thumb" value="$!page.rawThumb" placeholder="Path to a thumbnail for the module. Eg thumb.png" readonly="readonly" />
-                                                                            <span class="input-group-btn">
-                                                                                <button type="button" class="btn btn-success btn-select-thumb">Select file</button>
-                                                                        </div>
+                                                                    <div class="col-md-6 col-sm-12">
+                                                                        <input type="hidden" id="thumb" name="thumb" value="$!page.rawThumb" />
                                                                     </div>
                                                                 </div>
 

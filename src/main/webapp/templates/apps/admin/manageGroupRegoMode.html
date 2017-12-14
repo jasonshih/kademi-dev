@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Groups</title>
-        <link href="manageGroupRegoMode.css?v=1" rel="stylesheet" type="text/css" />
+        <link href="manageGroupRegoMode.css?v=2" rel="stylesheet" type="text/css" />
         <link href="/templates/apps/learner/groupsAdminPortlet.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="manageGroup.js">//</script>
         <script type="text/javascript" src="manageGroupRegoMode.js?v=1.0.3">//</script>
@@ -468,14 +468,22 @@
                         <p>&nbsp;</p>
                         <div id="rolesWrap" class="article-wrapper article-sm showed-action roles row blocks-wrapper">
                             #foreach($role in $page.parent.allRoles)
+                            #set ($v = $foreach.index % 3)
+                            #if ($v == 0) <div class="row"> #end
                             <div class="col-sm-4">
                                 <article class="block">
-                                    <span class="article-name">$role</span>
-                                    <span class="article-action pull-right">
+
+                                    <span class="article-name">$role.name</span>
+                                    #if ($role.description && $role.description != "")
+                                    <br>
+                                    <small>$!role.description</small>
+                                    #end
+                                    <span class="article-action">
                                         <button class="btn btn-xs btn-success btn-add-role" title="Add role"><i class="fa fa-plus-circle"></i></button>
                                     </span>
                                 </article>
                             </div>
+                            #if ($v == 2 || $foreach.index == $page.parent.allRoles.size() - 1) </div> #end
                             #end
                         </div>
                     </div>
