@@ -1,0 +1,22 @@
+{
+    "appDependencies": [
+        {
+            "appId": "cropperjs-lib",
+            "branch": "1.1.3"
+        }
+    ],
+    "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/photoeditor-lib/photoeditor.css"
+            }
+        },
+        {
+            "js": {
+                "group": "admin",
+                "path": "/theme/apps/photoeditor-lib/photoeditor.js"
+            }
+        }
+    ]
+}
