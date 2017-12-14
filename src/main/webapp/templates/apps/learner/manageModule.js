@@ -26,7 +26,7 @@ function initManageModule(baseHref, themePath) {
         initCssForEditor(themePath);
     }
     initDropdownMix();
-    initThumbnail();
+    initImagePicker($('#thumb'), window.location.pathname, '');
     initCRUDModulePages();
     initModuleList();
     initPublishingMenu('manageModules');
@@ -176,35 +176,6 @@ function initPostMessage() {
             } else {
                 iframeUrl = data.url;
             }
-        }
-    });
-}
-
-function initThumbnail() {
-    var pagePath = '';
-    var basePath = window.location.pathname;
-
-    flog('init thumbnail-image selector', basePath, pagePath);
-    var thumbSel = $('input.thumbnail-image');
-    var btnSelectThumbnail = $('.btn-select-thumb');
-    btnSelectThumbnail.mselect({
-        basePath: basePath,
-        pagePath: pagePath,
-        onSelectFile: function (selectedUrl, relUrl) {
-            flog('relUrl', relUrl, this);
-            thumbSel.val(relUrl);
-        }
-    });
-
-    var inpGroup = thumbSel.closest('.input-group');
-
-    inpGroup.find('.input-group-btn').append('<button type="button" class="btn btn-danger btn-clear-thumb">Clear</button>');
-
-    $('body').on('click', '.btn-clear-thumb', function (e) {
-        e.preventDefault();
-
-        if (confirm('Are you sure you want to clear the thumbnail?')) {
-            $('input.thumbnail-image').val('');
         }
     });
 }
@@ -708,19 +679,15 @@ function saveModulePages() {
         $('input', page).attr('value', order);
     });
 
-    showLoadingOverlay();
-
     $.ajax({
         type: 'POST',
         url: '',
         data: $('form.modulePages').serialize(),
         dataType: 'json',
         success: function (resp) {
-            hideLoadingOverlay();
             flog('saved module', resp);
         },
         error: function (resp) {
-            hideLoadingOverlay();
             Msg.error('Sorry couldnt update module');
         }
     });
