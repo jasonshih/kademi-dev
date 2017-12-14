@@ -22,7 +22,8 @@
         onReady: function () {
         
         },
-        useModal: true
+        useModal: true,
+        useCrop: true
     };
     
     function MSelect(target, options) {
@@ -75,7 +76,7 @@
         var modalId = 'modal-milton-file-select-' + (new Date()).getTime();
         
         var modal = $(
-            '<div id="' + modalId + '" class="modal fade" aria-hidden="true" tabindex="-1">' +
+            '<div id="' + modalId + '" class="modal fade" aria-hidden="true" tabindex="-1" data-backdrop="static" data-keyboard="false">' +
             '   <div class="modal-dialog modal-lg">' +
             '       <div class="modal-content">' +
             '           <div class="modal-header">' +
@@ -185,20 +186,17 @@
         return (url || '').replace(/\/\//g, '/');
     };
     
-    MSelect.prototype.initSelectContainer = function (container, onOk) {
-        flog('[jquery.mselect] initSelectContainer', container);
+    MSelect.prototype.initTreeContainer = function (container) {
+        flog('[jquery.mselect] initTreeContainer', container);
         
         var self = this;
         var options = self.options;
         
-        options.basePath = self.getCleanUrl(options.basePath);
-        options.pagePath = self.getCleanUrl(options.pagePath);
-        
-        var treeContainer = self.treeContainer = container.find('div.milton-tree-wrapper');
-        var progressBar = self.progressBar = container.find('.milton-file-progress');
-        var progressBarInner = progressBar.find('.progress-bar');
-        var previewContainer = self.previewContainer = container.find('.milton-file-preview');
-        var btnUpload = self.btnUpload = container.find('.milton-btn-upload-file');
+        var treeContainer = self.treeContainer;
+        var progressBar = self.progressBar;
+        var progressBarInner = self.progressBarInner;
+        var previewContainer = self.previewContainer;
+        var btnUpload = self.btnUpload;
         
         var mtreeOptions = {
             basePath: options.basePath,
@@ -229,6 +227,8 @@
                 progressBar.show();
                 progressBarInner.html('Loading...');
                 
+                container.find('.btn-edit-image').hide();
+                
                 if (fileType === 'video') {
                     previewContainer.html('<div class="jp-video" data-hash="' + hash + '"></div>');
                     $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
@@ -256,6 +256,8 @@
                     });
                     progressBar.hide();
                 } else if (fileType === 'image') {
+                    container.find('.btn-edit-image').show();
+                    
                     $('<img />').attr('src', hashUrl).load(function () {
                         var realWidth = this.width;
                         var realHeight = this.height;
@@ -293,6 +295,15 @@
             mtreeOptions.includeContentTypes = options.contentTypes;
         }
         treeContainer.mtree(mtreeOptions);
+    };
+    
+    MSelect.prototype.initUploadButton = function (container) {
+        var self = this;
+        var options = self.options;
+        
+        var progressBar = self.progressBar;
+        var progressBarInner = self.progressBarInner;
+        var btnUpload = self.btnUpload;
         
         var muploadOptions = {
             url: options.basePath,
@@ -311,6 +322,25 @@
             muploadOptions.acceptedFiles = self.getAcceptedFiles(options.contentTypes);
         }
         btnUpload.mupload(muploadOptions);
+    };
+    
+    MSelect.prototype.initSelectContainer = function (container, onOk) {
+        flog('[jquery.mselect] initSelectContainer', container);
+        
+        var self = this;
+        var options = self.options;
+        
+        options.basePath = self.getCleanUrl(options.basePath);
+        options.pagePath = self.getCleanUrl(options.pagePath);
+        
+        var treeContainer = self.treeContainer = container.find('div.milton-tree-wrapper');
+        var progressBar = self.progressBar = container.find('.milton-file-progress');
+        var progressBarInner = self.progressBarInner = progressBar.find('.progress-bar');
+        var previewContainer = self.previewContainer = container.find('.milton-file-preview');
+        var btnUpload = self.btnUpload = container.find('.milton-btn-upload-file');
+        
+        self.initTreeContainer(container);
+        self.initUploadButton(container);
         
         container.find('.btn-ok').click(function () {
             var url = previewContainer.attr('data-url');
@@ -337,9 +367,84 @@
             }
         });
         
+        self.initEditZone(container);
+        
         if (typeof options.onReady === 'function') {
             options.onReady.call(self);
         }
+    };
+    
+    MSelect.prototype.initEditZone = function (container) {
+        flog('[jquery.mselect] initEditZone', container);
+        
+        var self = this;
+        var options = self.options;
+        var btnEditImage = container.find('.btn-edit-image');
+        
+        var photoEditor = btnEditImage.photoEditor({
+            modalSize: 'modal-lg',
+            modalAuto: false,
+            onModalShow: function () {
+                if (options.useModal) {
+                    container.modal('hide');
+                }
+            },
+            onModalShown: function () {
+                var hash = self.previewContainer.attr('data-hash');
+                this.setImage('/_hashes/files/' + hash);
+            },
+            onSave: function (data) {
+                var modal = this.modal;
+                var btns = modal.find('.btn');
+                btns.prop('disabled', true);
+                
+                $.ajax({
+                    url: '/mselect-lib/cropImage',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        x: data.x,
+                        y: data.y,
+                        w: data.width,
+                        h: data.height,
+                        hash: self.previewContainer.attr('data-hash')
+                    },
+                    success: function (resp) {
+                        if (resp && resp.status) {
+                            if (typeof self.options.onSelectFile === 'function') {
+                                var url = '/_hashes/files/' + resp.hash;
+                                self.options.onSelectFile(url, url, 'image', resp.hash);
+                            }
+                        }
+                        
+                        modal.modal('hide');
+                        btns.prop('disabled', false);
+                    }
+                });
+            }
+        });
+        
+        if (options.useModal) {
+            photoEditor.modal.find('.modal-footer').prepend('<button type="button" class="btn btn-default btn-back-to-upload">Back to Upload</button>');
+            photoEditor.modal.find('.btn-back-to-upload').on('click', function (e) {
+                e.preventDefault();
+                
+                container.modal('show');
+                photoEditor.modal.modal('hide');
+            });
+        }
+        
+        btnEditImage.on('click', function (e) {
+            e.preventDefault();
+            
+            var url = self.previewContainer.attr('data-url');
+            
+            if (url) {
+                photoEditor.showModal();
+            } else {
+                flog('[jquery.mselect] No selected file!');
+            }
+        });
     };
     
     MSelect.prototype.addFileToTree = function (name, href) {
@@ -362,6 +467,10 @@
         var self = this;
         var options = self.options;
         var extraElement = '';
+        
+        if (options.useCrop) {
+            extraElement += '<button type="button" class="btn btn-primary btn-edit-image" title="Edit image" style="display: none;"><i class="fa fa-edit"></i></button>';
+        }
         
         if (!options.useModal) {
             extraElement += '<button type="button" class="btn btn-primary btn-ok"><i class="fa fa-check"></i></button>';

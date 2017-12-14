@@ -12,6 +12,7 @@
 
 .milton-file-select-container .milton-btn-upload-file {
     float: left;
+    margin-right: 5px;
 }
 
 .milton-file-select-container .btn-ok {
