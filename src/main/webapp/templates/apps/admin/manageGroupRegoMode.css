@@ -9,3 +9,22 @@
     white-space: nowrap;
     overflow: hidden;
 }
+
+.blocks-wrapper.roles .block{
+    display: block;
+    padding: 8px 12px;
+    position: relative;
+}
+
+.blocks-wrapper.roles .block small{
+    display: inline-block;
+    width: 90%;
+}
+
+.blocks-wrapper.roles .block .btn-add-role{
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+}

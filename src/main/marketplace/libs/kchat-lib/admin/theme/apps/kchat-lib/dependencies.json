@@ -1,0 +1,32 @@
+{
+    "appDependencies": [
+        {
+            "appId": "moment-lib",
+            "branch": "2.18.3"
+        },
+        {
+            "appId": "handlebars-lib",
+            "branch": "3.0.3"
+        }
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/js/jquery.timeago.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/kchat/kchatAdmin.js"
+            }
+        },
+        {
+            "css": {
+                "media": "all",
+                "path": "/theme/apps/kchat/kchatAdmin.css"
+            }
+        }
+    ]
+}

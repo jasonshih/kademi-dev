@@ -151,7 +151,7 @@ function initLeadsDashLoading() {
             loadLeadsDash();
         }
     });
-    loadLeadsDash();
+    setTimeout(loadLeadsDash, 500);
 }
 
 function initNewLeadFromEmail() {

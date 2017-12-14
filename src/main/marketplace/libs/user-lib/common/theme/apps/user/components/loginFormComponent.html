@@ -6,13 +6,17 @@
     #set ($autoRedirect = false)
 #end
 
-#if (!$passwordPlaceholder)
+#if ($formatter.isNull($passwordPlaceholder) || !$passwordPlaceholder)
     #set ($passwordPlaceholder = "Enter your password")
 #end
 
-#if (!$usernamePlaceholder)
+#if ($formatter.isNull($usernamePlaceholder) || !$usernamePlaceholder)
     #set ($usernamePlaceholder = "Enter your email address or username")
 #end 
+
+#if ($formatter.isNull($loginFormTitle) || !$loginFormTitle)
+    #set ($loginFormTitle = "Please login to view this page")
+#end
 
 <div class="panel panel-default panel-user-login" data-redirect-url="$!redirectUrl" data-auto-redirect="$autoRedirect">
     <div class="panel-body">
@@ -43,11 +47,11 @@
 <div class="row">
     <div class="$colClass">
         <div class="login-container">
-            #if ($logo)
-                <p><img src="$logo" class="img-responsive" /></p>
-            #else
-                <h2>Please login to view this page</h2>
+            #if ($formatter.isNull($logo))
+                <h2>$loginFormTitle</h2>
                 <br>
+            #else
+                <p><img src="$logo" class="img-responsive" /></p>
             #end
             <form class="login form-horizontal" method="POST" role="form">
                 <p class="login message" style="display: none">.</p>

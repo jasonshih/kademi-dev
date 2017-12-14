@@ -272,8 +272,12 @@
             form.find('.select-bg-position').val(target.style.backgroundPosition || '0% 0%');
             form.find('.select-bg-size').val(target.style.backgroundSize || 'auto');
 
-            form.find('.txt-bg-color').colorpicker('setValue', target.style.backgroundColor);
-            form.find('.txt-text-color').colorpicker('setValue', target.style.color);
+            if (target.style.backgroundColor){
+                form.find('.txt-bg-color').colorpicker('setValue', target.style.backgroundColor);
+            }
+            if (target.style.color){
+                form.find('.txt-text-color').colorpicker('setValue', target.style.color);
+            }
 
             form.find('.txt-padding').each(function () {
                 var txt = $(this);
