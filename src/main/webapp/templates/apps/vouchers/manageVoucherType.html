@@ -105,7 +105,14 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="voucherIdTemplate">ID Template</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="voucherIdTemplate" value="$!page.voucherType.voucherIdTemplate"/>
+                                <div class="input-group">
+
+                                    <input type="text" class="form-control" id="voucherIdTemplate" name="voucherIdTemplate" value="$!page.voucherType.voucherIdTemplate"/>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" type="button" id="testTemplate">Test</button>
+                                    </span>
+                                </div>
+
                                 <small><i>If specified, this expression will be used to generate new voucher IDs. See the help page for details. Eg <b>YY-@{randomHex(2)}</b></i></small>
                             </div>
                         </div>
@@ -386,6 +393,34 @@
                 initSelectAll();
                 //initDeleteVouchers();
                 initContentForm();
+                initTestTemplate();
+
+
+                function initTestTemplate() {
+                    $("body").on("click", "#testTemplate", function () {
+                        $.ajax({
+                            type: 'POST',
+                            url: window.location.pathname,
+                            data: {
+                                "testTemplate": true,
+                                "voucherIdTemplate": $("#voucherIdTemplate").val()
+                            },
+                            success: function (data) {
+                                var d = JSON.parse(data);
+                                flog("Response", d);
+                                if (d.data !== null) {
+                                    Msg.info(d.data);
+                                } else {
+                                    Msg.error(d.messages[0]);
+                                }
+                            },
+                            error: function (resp) {
+                                Msg.error("An error occured testing the template.");
+                            }
+                        });
+                    });
+                }
+
 
                 $('abbr.timeago').timeago();
 
@@ -399,7 +434,10 @@
                             flog("redirect");
                             window.location = "../" + newName;
                         }
-
+                    },
+                    onError: function (resp, form) {
+                        flog(resp);
+                        Msg.error(resp.messages[0]);
                     }
                 });
                 var oldName = $("input[name=name]").val();

@@ -1,0 +1,28 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>ES Maintenance</title>
+    </head>
+    <body class="manageApplications appsContainer">
+        
+        <table class="table table-striped">
+            #foreach( $orgIndexMap in $page.indexes.entrySet() )
+            <tr>
+                <th colspan="2">$orgIndexMap.key</th>                
+            </tr>
+            #foreach( $indexMap in $orgIndexMap.value.entrySet() )
+            <tr>
+                <td>$indexMap.key</td>     
+                <td>$indexMap.value</td>
+            </tr>            
+            #end
+            #end
+        </table>
+
+        <script type="text/javascript">
+            $(function () {
+                
+
+            });
+        </script>
+    </body>
+</html>

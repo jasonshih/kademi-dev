@@ -78,8 +78,10 @@
                                 </a>
                                 #end
                             </td>
-                            <td style="text-align: right"><input type="checkbox" name="toRemoveId" value="$att.id"/></td>
+                            #else
+                                <td></td>
                             #end    
+                            <td style="text-align: right"><input type="checkbox" name="toRemoveId" value="$att.id"/></td>
                         </tr>
                         #end
                     </tbody>
@@ -167,6 +169,7 @@
                 initGenerateInvoices();
                 initSelectAll();
                 $("#guestOf").entityFinder({
+                    type: 'profile',
                     useActualId: true
                 });
             });
