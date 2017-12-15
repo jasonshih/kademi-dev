@@ -22,6 +22,24 @@
             $this.$elem.hide();
         }
 
+        // Init Handlebars Helpers
+        Handlebars.registerHelper('_ifImage', function (contentType, options) {
+            contentType = Handlebars.Utils.escapeExpression(contentType);
+
+            if (contentType.contains('image/')) {
+                return options.fn(this);
+            } else {
+                return options.inverse(this);
+            }
+        });
+
+        Handlebars.registerHelper('_getExtension', function (fileName) {
+            if (typeof fileName === 'string' && fileName.lastIndexOf('.') > -1) {
+                return fileName.substring(fileName.lastIndexOf('.'));
+            } else {
+                return '';
+            }
+        });
 
         // Init Handlebars Templates
         var msgr_templ = $this.$elem.find('.kchat-msgr-template').html();
@@ -49,6 +67,12 @@
                 $this.sendMsg(value);
                 inp.val('');
             }
+        });
+        $this.$elem.find('#kchat-accordion-collapse').on('shown.bs.collapse', function () {
+            var panel = $this.$elem.find('.panel-body');
+            panel.scrollTop(panel.find('ul').height());
+            
+            $this.$log('Scroll to the top!!', $this, panel);
         });
 
         // Init support for image pasting
@@ -193,12 +217,7 @@
             if (c.action === 'msg') {
                 $this._kchatStartCheckWS();
 
-                var html = $.parseHTML((c.chatMessage.fromAdmin ? $this.$msgl(c.chatMessage) : $this.$msgr(c.chatMessage)));
-
-                $(html).find('.timeago').timeago();
-                $this.$elem.find('.chat').append($(html));
-                var panel = $this.$elem.find('.panel-body');
-                panel.scrollTop(panel.find('ul').height());
+                $this._processMessage.call($this, c.chatMessage);
 
                 $this._kchatStartCheckWS();
             } else if (c.action === 'history') {
@@ -213,13 +232,7 @@
                     for (var i = 0; i < c.data.length; i++) {
                         var cm = c.data[i];
 
-                        if ($this.$elem.find('[data-messageid=' + cm.id + ']').length < 1) {
-                            var html = $.parseHTML((cm.fromAdmin ? $this.$msgl(cm) : $this.$msgr(cm)));
-                            $(html).find('.timeago').timeago();
-                            $this.$elem.find('.chat').append($(html));
-                            var panel = $this.$elem.find('.panel-body');
-                            panel.scrollTop(panel.find('ul').height());
-                        }
+                        $this._processMessage.call($this, cm);
                     }
 
                     $this._sortChatList();
@@ -228,6 +241,17 @@
                 $this._kchatStartCheckWS();
             } else if (c.action === 'pong') {
                 $this._kchatStartCheckWS();
+            }
+        },
+        _processMessage: function (cm) {
+            var $this = this;
+
+            if ($this.$elem.find('[data-messageid=' + cm.id + ']').length < 1) {
+                var html = $.parseHTML((cm.fromAdmin ? $this.$msgl(cm) : $this.$msgr(cm)));
+                $(html).find('.timeago').timeago();
+                $this.$elem.find('.chat').append($(html));
+                var panel = $this.$elem.find('.panel-body');
+                panel.scrollTop(panel.find('ul').height());
             }
         },
         _sortChatList: function () {
