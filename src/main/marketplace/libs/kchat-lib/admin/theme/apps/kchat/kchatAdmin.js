@@ -21,6 +21,25 @@
             $this.$log('Error: WebSocket not supported...');
         }
 
+        // Init Handlebars Helpers
+        Handlebars.registerHelper('_ifImage', function (contentType, options) {
+            contentType = Handlebars.Utils.escapeExpression(contentType);
+
+            if (contentType.contains('image/')) {
+                return options.fn(this);
+            } else {
+                return options.inverse(this);
+            }
+        });
+
+        Handlebars.registerHelper('_getExtension', function (fileName) {
+            if (typeof fileName === 'string' && fileName.lastIndexOf('.') > -1) {
+                return fileName.substring(fileName.lastIndexOf('.'));
+            } else {
+                return '';
+            }
+        });
+
         // Init Handlebars templates
         var kchat_user_templ = $this.$elem.find('.kchat-user-template').html();
         $this.$kchat_user_templ = Handlebars.compile(kchat_user_templ);

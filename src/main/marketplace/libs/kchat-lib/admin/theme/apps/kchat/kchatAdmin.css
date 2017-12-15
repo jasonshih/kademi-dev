@@ -126,6 +126,21 @@
     font-size: 12px;
 }
 
+#page-sidebar .kchat-media-box {
+    padding: 14px;
+    background-color: #d6d6d6;
+    border-radius: 10px;
+    text-align: center;
+}
+
+#page-sidebar .kchat-media-box .glyphicon {
+    font-size: 3em;
+}
+
+#page-sidebar .kchat-media-box img {
+    max-width: 100%;
+}
+
 @media (max-width: 767px) {
     #page-sidebar {
         top: 100px;

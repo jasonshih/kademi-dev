@@ -51,6 +51,19 @@
                             <img src="{{profilePic}}" alt="{{profile.name}}">
                         </div>
                         <div class="messages">
+                            {{\#if fileHash}}
+                            <div class="kchat-media-box">
+                                {{#_ifImage contentType}}
+                                <a href="/_hashes/files/{{fileHash}}" target="_target">
+                                    <img src="/_hashes/files/{{fileHash}}" />
+                                </a>
+                                {{else}}
+                                <a href="/_hashes/files/{{fileHash}}{{_getExtension fileName}}" download="{{fileName}}">
+                                    <span class="glyphicon glyphicon-file" aria-hidden="true"></span><br/>{{fileName}}
+                                </a>
+                                {{/_ifImage}}
+                            </div>
+                            {{/if}}
                             <p>{{message}}</p>
                             <span class="time"> {{time}} </span>
                         </div>
@@ -62,6 +75,19 @@
                             <img src="/manageUsers/${user.id}/pic" alt="${user.formattedName}" />
                         </div>
                         <div class="messages">
+                            {{\#if fileHash}}
+                            <div class="kchat-media-box">
+                                {{#_ifImage contentType}}
+                                <a href="/_hashes/files/{{fileHash}}" target="_target">
+                                    <img src="/_hashes/files/{{fileHash}}" />
+                                </a>
+                                {{else}}
+                                <a href="/_hashes/files/{{fileHash}}{{_getExtension fileName}}" download="{{fileName}}">
+                                    <span class="glyphicon glyphicon-file" aria-hidden="true"></span><br/>{{fileName}}
+                                </a>
+                                {{/_ifImage}}
+                            </div>
+                            {{/if}}
                             <p>{{message}}</p>
                             <span class="time"> {{time}} </span>
                         </div>
