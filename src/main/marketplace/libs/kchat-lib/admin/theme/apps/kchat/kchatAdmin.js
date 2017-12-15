@@ -276,6 +276,9 @@
         var kchatadmin_msg_templ = $this.$elem.find('.kchatadmin-msg-template').html();
         $this.$kchatadmin_msg_templ = Handlebars.compile(kchatadmin_msg_templ);
 
+        var kchat_user_chatlist_template = $this.$elem.find('.kchat-user-chatlist-template').html();
+        $this.$kchat_user_chatlist_templ = Handlebars.compile(kchat_user_chatlist_template);
+
         // Init sidebar
         var navBar = $('.navbar-tools .navbar-right');
         if (navBar.find('li.fuse-header-item a.sb-toggle').length === 0) {
@@ -302,10 +305,13 @@
             e.preventDefault();
 
             var btn = $(this);
-            var chatForm = btn.closest('user-chat-form');
-            var inp = chatForm.find('.kchat-msg-input');
+            var d = btn.closest('.discussion');
+            var inp = d.find('.kchat-msg-input');
+
             var msg = inp.val();
-            var visitorId = btn.data('visitorid');
+            var visitorId = d.data('visitorid');
+
+            $this.$log(btn, d, inp, msg, visitorId);
 
             var d = {
                 action: "msg",
@@ -320,15 +326,17 @@
             var time = new moment();
             var c = {
                 time: time.format('hh:mm A'),
-                msg: msg
+                message: msg
             };
             var html = $this.$kchatadmin_msg_templ(c);
-            $this.$elem.find('.user-chat').find('#chat-' + visitorId).prepend(html);
+            $this.$elem.find('.user-chat').find('#chat-' + visitorId).find('.kchat-client-msg-list').prepend(html);
         });
 
         $this.$elem.on('keypress', '.kchat-msg-input', function (e) {
             if (e.which === 13) {//Enter key pressed
-                $(this).closest('user-chat-form').find('.btn-send-msg').click();
+                var btn = $(this);
+                var d = btn.closest('.discussion');
+                d.find('.btn-send-msg').click();
             }
         });
 
@@ -436,7 +444,7 @@
 
             if (c.action === "connected") {
                 if ($('#user-' + c.visitorId).length > 0) {
-                    flog('user ' + c.visitorId + ' is already connected');
+                    $this.$log('user ' + c.visitorId + ' is already connected');
                     return;
                 }
 
@@ -445,7 +453,7 @@
                 c.time = time.format('hh:mm A');
 
                 if (c.profile.userId > 0) {
-                    c.profilePic = '/manageUsers/' + c.profile.userId + '/pic'
+                    c.profilePic = '/manageUsers/' + c.profile.userId + '/pic';
                 } else {
                     c.profilePic = "/theme/apps/user/profile.png";
                 }
@@ -454,7 +462,7 @@
 
                 $('#page-sidebar .media-list').append(html);
 
-                $('#page-sidebar .user-chat').append('<ol id="chat-' + c.visitorId + '" class="discussion sidebar-content"></ol>');
+                $('#page-sidebar .user-chat').append($this.$kchat_user_chatlist_templ(c));
             } else if (c.action === "disconnected") {
                 $('#page-sidebar .media-list').find('#user-' + c.visitorId).remove();
                 $('#page-sidebar .user-chat').find('#chat-' + c.visitorId).remove();
@@ -467,7 +475,7 @@
 
                 var html = $this.$kchat_msg_templ(c.chatMessage);
 
-                $('#page-sidebar .user-chat').find('#chat-' + c.visitorId).prepend(html);
+                $('#page-sidebar .user-chat').find('#chat-' + c.visitorId).find('.kchat-client-msg-list').prepend(html);
 
                 $this._newMessage(c.chatMessage);
             } else if (c.action === 'clients') {
@@ -487,7 +495,7 @@
 
                         $('#page-sidebar .media-list').append(html);
 
-                        $('#page-sidebar .user-chat').append('<ol id="chat-' + c.clients[i].visitorId + '" class="discussion sidebar-content"></ol>');
+                        $('#page-sidebar .user-chat').append($this.$kchat_user_chatlist_templ(c.clients[i]));
                     }
                 }
             } else if (c.action === 'history') {
@@ -502,15 +510,17 @@
                     for (var i = 0; i < data.length; i++) {
                         var cm = data[i];
 
-                        var time = new moment(cm.timestamp);
-                        cm.time = time.format('hh:mm A');
-                        cm.profilePic = "/theme/apps/user/profile.png";
+                        if ($this.$elem.find('[data-messageid=' + cm.id + ']').length < 1) {
+                            var time = new moment(cm.timestamp);
+                            cm.time = time.format('hh:mm A');
+                            cm.profilePic = "/theme/apps/user/profile.png";
 
-                        var html = cm.forAdmin ? $this.$kchatadmin_msg_templ(cm) : $this.$kchat_msg_templ(cm);
-                        $('#page-sidebar .user-chat').find('#chat-' + c.visitorId).prepend(html);
+                            var html = cm.fromAdmin ? $this.$kchatadmin_msg_templ(cm) : $this.$kchat_msg_templ(cm);
+                            $('#page-sidebar .user-chat').find('#chat-' + c.visitorId).find('.kchat-client-msg-list').prepend(html);
+                        }
                     }
 
-                    //$this._sortChatList(visitorId);
+                    $this._sortChatList(c.visitorId);
                 }
             }
 
@@ -624,7 +634,7 @@
                     $("#page-sidebar").css({
                         right: -$("#page-sidebar").outerWidth()
                     });
-                    $('.kchat-admin-container').css({right: 0})
+                    $('.kchat-admin-container').css({right: 0});
                 } else {
                     $(this).not(".sidebar-toggler ").find(".fa-outdent").removeClass("fa-outdent").addClass("fa-indent");
                     $(".sb-toggle").addClass("open");
@@ -674,17 +684,19 @@
         _sortChatList: function (visitorId) {
             var $this = this;
 
-            var chats = $this.$elem.find('li');
+            var ol = $this.$elem.find('#chat-' + visitorId).find('.kchat-client-msg-list');
+
+            var chats = ol.find('li');
 
             chats.sort(function (a, b) {
                 var aVal = $(a).data('timestamp');
                 var bVal = $(b).data('timestamp');
 
                 var result = (aVal < bVal) ? -1 : (aVal > bVal) ? 1 : 0;
-                return result * 1;
+                return result * -1;
             });
 
-            $this.$elem.find('.chat').empty().append(chats);
+            ol.empty().append(chats);
         }
     };
 

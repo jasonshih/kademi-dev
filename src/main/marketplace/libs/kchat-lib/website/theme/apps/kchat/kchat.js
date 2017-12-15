@@ -193,7 +193,8 @@
             if (c.action === 'msg') {
                 $this._kchatStartCheckWS();
 
-                var html = $.parseHTML($this.$msgr(c.chatMessage));
+                var html = $.parseHTML((c.chatMessage.fromAdmin ? $this.$msgl(c.chatMessage) : $this.$msgr(c.chatMessage)));
+
                 $(html).find('.timeago').timeago();
                 $this.$elem.find('.chat').append($(html));
                 var panel = $this.$elem.find('.panel-body');
