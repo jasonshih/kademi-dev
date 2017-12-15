@@ -48,6 +48,21 @@
     margin-right: 5px;
 }
 
+.kchat-chat-container .kchat-media-box {
+    padding: 14px;
+    background-color: #d6d6d6;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.kchat-chat-container .kchat-media-box .glyphicon {
+    font-size: 3em;
+}
+
+.kchat-chat-container .kchat-media-box img {
+    max-width: 100%;
+}
+
 /* ======================================================================
    Chat panel
    ====================================================================== */
@@ -65,7 +80,7 @@
 
 .kchat-chat-container .panel-kchat .panel-body {
     overflow-y: scroll;
-    height: 250px;
+    height: 370px;
 }
 
 .kchat-chat-container [href="#kchat-accordion-collapse"] .kchat-toggle-up {

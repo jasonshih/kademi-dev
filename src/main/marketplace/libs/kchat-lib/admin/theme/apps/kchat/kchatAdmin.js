@@ -1,248 +1,3 @@
-//(jQuery)(function () {
-//    var notification_audio = null;
-//
-//    function initSidebarToggle() {
-//        var navBar = $('.navbar-tools .navbar-right');
-//        if (navBar.find('li.fuse-header-item a.sb-toggle').length === 0) {
-//            navBar.append(
-//                    '<li class="fuse-header-item">' +
-//                    '    <a class="sb-toggle" href="#"><i class="fa fa-outdent"></i></a>' +
-//                    '</li>'
-//                    );
-//        }
-//
-//    }
-//
-//    var initKChatWebsocket = function () {
-//        var pageSidebar = $('#page-sidebar');
-//        var orgId = pageSidebar.data('cid').toString();
-//
-//        flog('initKChatWebsocket', orgId);
-//
-//        var b64ContentId = Base64.encode(orgId);
-//
-//        var port = parseInt(window.location.port || 80) + 1;
-//        var proto = 'ws://';
-//        if (window.location.protocol === 'https:') {
-//            proto = 'wss://';
-//            port = parseInt(window.location.port || 443) + 1;
-//        }
-//
-//        var url = window.location.hostname + ':' + port + '/ws/' + window.location.hostname + '/kchatAdmin/' + b64ContentId;
-//        flog(url);
-//        var kchatSocket = new WebSocket(proto + url);
-//
-//        kchatSocket.onmessage = function (evt) {
-//            flog('Received data', evt);
-//
-//            var c = $.parseJSON(evt.data);
-//
-//            if (c.action === "connected") {
-//                var templ = $('.kchat-user-template').html();
-//
-//                var streamItemTemplate = Handlebars.compile(templ);
-//
-//                if ($('#user-' + c.visitorId).length > 0) {
-//                    flog('user ' + c.visitorId + ' is already connected');
-//                    return;
-//                }
-//
-//                var time = new moment(c.timestamp);
-//
-//                c.time = time.format('hh:mm A');
-//
-//                if (c.profile.userId > 0) {
-//                    c.profilePic = '/manageUsers/' + c.profile.userId + '/pic'
-//                } else {
-//                    c.profilePic = "/theme/apps/user/profile.png";
-//                }
-//
-//                var html = streamItemTemplate(c);
-//
-//                $('#page-sidebar .media-list').append(html);
-//
-//                $('#page-sidebar .user-chat').append('<ol id="chat-' + c.visitorId + '" class="discussion sidebar-content"></ol>');
-//            } else if (c.action === "disconnected") {
-//                $('#page-sidebar .media-list').find('#user-' + c.visitorId).remove();
-//                $('#page-sidebar .user-chat').find('#chat-' + c.visitorId).remove();
-//            } else if (c.action === "msg") {
-//                var templ = $('.kchat-msg-template').html();
-//
-//                var streamItemTemplate = Handlebars.compile(templ);
-//
-//                var time = new moment(c.chatMessage.timestamp);
-//
-//                c.chatMessage.time = time.format('hh:mm A');
-//
-//                c.chatMessage.profilePic = "/theme/apps/user/profile.png";
-//
-//                var html = streamItemTemplate(c.chatMessage);
-//
-//                $('#page-sidebar .user-chat').find('#chat-' + c.visitorId).prepend(html);
-//
-//                newMessage();
-//            } else if (c.action === 'clients') {
-//                $('#page-sidebar .media-list').empty();
-//
-//                for (var i = 0; i < c.clients.length; i++) {
-//                    if ($('#user-' + c.clients[i].visitorId).length > 0) {
-//                        flog('user ' + c.clients[i].visitorId + ' is already connected');
-//                    } else {
-//                        var templ = $('.kchat-user-template').html();
-//
-//                        var streamItemTemplate = Handlebars.compile(templ);
-//
-//                        if (c.clients[i].profile.userId > 0) {
-//                            c.clients[i].profilePic = '/manageUsers/' + c.clients[i].profile.userId + '/pic'
-//                        } else {
-//                            c.clients[i].profilePic = "/theme/apps/user/profile.png";
-//                        }
-//
-//                        var html = streamItemTemplate(c.clients[i]);
-//
-//                        $('#page-sidebar .media-list').append(html);
-//
-//                        $('#page-sidebar .user-chat').append('<ol id="chat-' + c.clients[i].visitorId + '" class="discussion sidebar-content"></ol>');
-//                    }
-//                }
-//            }
-//        };
-//
-//        $('#page-sidebar').on('click', '.btn-send-msg', function (e) {
-//            e.preventDefault();
-//
-//            var btn = $(this);
-//            var inp = $('#page-sidebar .kchat-msg-input');
-//            var msg = inp.val();
-//            var visitorId = btn.data('visitorid');
-//
-//            var d = {
-//                action: "msg",
-//                visitorId: visitorId,
-//                message: msg
-//            };
-//
-//            kchatSocket.send(JSON.stringify(d));
-//
-//            inp.val('');
-//
-//            var templ = $('.kchatadmin-msg-template').html();
-//            var streamItemTemplate = Handlebars.compile(templ);
-//            var time = new moment();
-//            var c = {
-//                time: time.format('hh:mm A'),
-//                msg: msg
-//            };
-//            var html = streamItemTemplate(c);
-//            $('#page-sidebar .user-chat').find('#chat-' + visitorId).prepend(html);
-//        });
-//
-//        $('#page-sidebar').on('keypress', '.kchat-msg-input', function (e) {
-//            if (e.which == 13) {//Enter key pressed
-//                $('#page-sidebar').find('.btn-send-msg').click();
-//            }
-//        });
-//    };
-//
-//    //function to open quick sidebar
-//    var initQuickSideBar = function () {
-//        $(".sb-toggle").on("click", function (e) {
-//            if ($(this).hasClass("open")) {
-//                $(this).not(".sidebar-toggler ").find(".fa-indent").removeClass("fa-indent").addClass("fa-outdent");
-//                $(".sb-toggle").removeClass("open");
-//                $("#page-sidebar").css({
-//                    right: -$("#page-sidebar").outerWidth()
-//                });
-//            } else {
-//                $(this).not(".sidebar-toggler ").find(".fa-outdent").removeClass("fa-outdent").addClass("fa-indent");
-//                $(".sb-toggle").addClass("open");
-//                $("#page-sidebar").css({
-//                    right: 0
-//                });
-//            }
-//
-//            e.preventDefault();
-//        });
-//        $("#page-sidebar .media-list").on("click", '.media a', function (e) {
-//            e.preventDefault();
-//
-//            var btn = $(this);
-//            var href = btn.attr('href');
-//
-//            var discussion = btn.closest('.tab-pane').find('.user-chat .discussion');
-//            discussion.hide();
-//
-//            btn.closest('.tab-pane').find('#chat-' + href).show();
-//
-//            $('#page-sidebar .btn-send-msg').data('visitorid', href);
-//
-//            //user-chat-form
-//            btn.closest(".tab-pane").css({
-//                right: $("#page-sidebar").outerWidth()
-//            });
-//        });
-//
-//        $("#page-sidebar .sidebar-back").on("click", function (e) {
-//            $(this).closest(".tab-pane").css({
-//                right: 0
-//            });
-//            e.preventDefault();
-//        });
-//        $('#page-sidebar .sidebar-wrapper').perfectScrollbar({
-//            wheelSpeed: 1,
-//            minScrollbarLength: 20,
-//            suppressScrollX: true
-//        });
-//        $('#sidebar-tab a').on('shown.bs.tab', function (e) {
-//            $("#page-sidebar .sidebar-wrapper").perfectScrollbar('update');
-//        });
-//    };
-//
-//    function newMessage() {
-//        if (notification_audio !== null && notification_audio instanceof Audio) {
-//            if (notification_audio.paused) {
-//                notification_audio.currentTime = 0;
-//                notification_audio.play();
-//            } else {
-//                notification_audio.pause();
-//                notification_audio.currentTime = 0;
-//                notification_audio.play();
-//            }
-//        }
-//    }
-//
-//    function initNotificationSound() {
-//        try {
-//            notification_audio = new Audio('/theme/apps/kchat/notification.mp3');
-//        } catch (err) {
-//            flog('KChat: Failed to init notification sound', err);
-//            notification_audio = null;
-//        }
-//    }
-//
-//    window.sortChatList = function (visitorId) {
-//        var container = $('#chat-' + visitorId);
-//
-//        var chats = container.find('li');
-//
-//        chats.sort(function (a, b) {
-//            var aVal = $(a).data('timestamp');
-//            var bVal = $(b).data('timestamp');
-//
-//            var result = (aVal < bVal) ? -1 : (aVal > bVal) ? 1 : 0;
-//            return result * 1;
-//        });
-//    };
-//
-//    // Init KChat Admin
-//    $(function () {
-//        initSidebarToggle();
-//        initQuickSideBar();
-//        initKChatWebsocket();
-//        initNotificationSound();
-//    });
-//});
-
 (function ($) {
     var KChatAdmin = function (element, options) {
         var $this = this;
@@ -266,6 +21,25 @@
             $this.$log('Error: WebSocket not supported...');
         }
 
+        // Init Handlebars Helpers
+        Handlebars.registerHelper('_ifImage', function (contentType, options) {
+            contentType = Handlebars.Utils.escapeExpression(contentType);
+
+            if (contentType.contains('image/')) {
+                return options.fn(this);
+            } else {
+                return options.inverse(this);
+            }
+        });
+
+        Handlebars.registerHelper('_getExtension', function (fileName) {
+            if (typeof fileName === 'string' && fileName.lastIndexOf('.') > -1) {
+                return fileName.substring(fileName.lastIndexOf('.'));
+            } else {
+                return '';
+            }
+        });
+
         // Init Handlebars templates
         var kchat_user_templ = $this.$elem.find('.kchat-user-template').html();
         $this.$kchat_user_templ = Handlebars.compile(kchat_user_templ);
@@ -275,6 +49,9 @@
 
         var kchatadmin_msg_templ = $this.$elem.find('.kchatadmin-msg-template').html();
         $this.$kchatadmin_msg_templ = Handlebars.compile(kchatadmin_msg_templ);
+
+        var kchat_user_chatlist_template = $this.$elem.find('.kchat-user-chatlist-template').html();
+        $this.$kchat_user_chatlist_templ = Handlebars.compile(kchat_user_chatlist_template);
 
         // Init sidebar
         var navBar = $('.navbar-tools .navbar-right');
@@ -302,10 +79,13 @@
             e.preventDefault();
 
             var btn = $(this);
-            var chatForm = btn.closest('user-chat-form');
-            var inp = chatForm.find('.kchat-msg-input');
+            var d = btn.closest('.discussion');
+            var inp = d.find('.kchat-msg-input');
+
             var msg = inp.val();
-            var visitorId = btn.data('visitorid');
+            var visitorId = d.data('visitorid');
+
+            $this.$log(btn, d, inp, msg, visitorId);
 
             var d = {
                 action: "msg",
@@ -320,15 +100,17 @@
             var time = new moment();
             var c = {
                 time: time.format('hh:mm A'),
-                msg: msg
+                message: msg
             };
             var html = $this.$kchatadmin_msg_templ(c);
-            $this.$elem.find('.user-chat').find('#chat-' + visitorId).prepend(html);
+            $this.$elem.find('.user-chat').find('#chat-' + visitorId).find('.kchat-client-msg-list').prepend(html);
         });
 
         $this.$elem.on('keypress', '.kchat-msg-input', function (e) {
             if (e.which === 13) {//Enter key pressed
-                $(this).closest('user-chat-form').find('.btn-send-msg').click();
+                var btn = $(this);
+                var d = btn.closest('.discussion');
+                d.find('.btn-send-msg').click();
             }
         });
 
@@ -429,14 +211,13 @@
         },
         _kchatOnMessage: function (evt) {
             var $this = this;
-            flog('Received data', evt);
             $this._kchatStartCheckWS();
 
             var c = $.parseJSON(evt.data);
 
             if (c.action === "connected") {
                 if ($('#user-' + c.visitorId).length > 0) {
-                    flog('user ' + c.visitorId + ' is already connected');
+                    $this.$log('user ' + c.visitorId + ' is already connected');
                     return;
                 }
 
@@ -445,7 +226,7 @@
                 c.time = time.format('hh:mm A');
 
                 if (c.profile.userId > 0) {
-                    c.profilePic = '/manageUsers/' + c.profile.userId + '/pic'
+                    c.profilePic = '/manageUsers/' + c.profile.userId + '/pic';
                 } else {
                     c.profilePic = "/theme/apps/user/profile.png";
                 }
@@ -454,7 +235,7 @@
 
                 $('#page-sidebar .media-list').append(html);
 
-                $('#page-sidebar .user-chat').append('<ol id="chat-' + c.visitorId + '" class="discussion sidebar-content"></ol>');
+                $('#page-sidebar .user-chat').append($this.$kchat_user_chatlist_templ(c));
             } else if (c.action === "disconnected") {
                 $('#page-sidebar .media-list').find('#user-' + c.visitorId).remove();
                 $('#page-sidebar .user-chat').find('#chat-' + c.visitorId).remove();
@@ -467,7 +248,7 @@
 
                 var html = $this.$kchat_msg_templ(c.chatMessage);
 
-                $('#page-sidebar .user-chat').find('#chat-' + c.visitorId).prepend(html);
+                $('#page-sidebar .user-chat').find('#chat-' + c.visitorId).find('.kchat-client-msg-list').prepend(html);
 
                 $this._newMessage(c.chatMessage);
             } else if (c.action === 'clients') {
@@ -475,7 +256,7 @@
 
                 for (var i = 0; i < c.clients.length; i++) {
                     if ($('#user-' + c.clients[i].visitorId).length > 0) {
-                        flog('user ' + c.clients[i].visitorId + ' is already connected');
+                        $this.$log('user ' + c.clients[i].visitorId + ' is already connected');
                     } else {
                         if (c.clients[i].profile.userId > 0) {
                             c.clients[i].profilePic = '/manageUsers/' + c.clients[i].profile.userId + '/pic';
@@ -487,7 +268,7 @@
 
                         $('#page-sidebar .media-list').append(html);
 
-                        $('#page-sidebar .user-chat').append('<ol id="chat-' + c.clients[i].visitorId + '" class="discussion sidebar-content"></ol>');
+                        $('#page-sidebar .user-chat').append($this.$kchat_user_chatlist_templ(c.clients[i]));
                     }
                 }
             } else if (c.action === 'history') {
@@ -502,15 +283,17 @@
                     for (var i = 0; i < data.length; i++) {
                         var cm = data[i];
 
-                        var time = new moment(cm.timestamp);
-                        cm.time = time.format('hh:mm A');
-                        cm.profilePic = "/theme/apps/user/profile.png";
+                        if ($this.$elem.find('[data-messageid=' + cm.id + ']').length < 1) {
+                            var time = new moment(cm.timestamp);
+                            cm.time = time.format('hh:mm A');
+                            cm.profilePic = "/theme/apps/user/profile.png";
 
-                        var html = cm.forAdmin ? $this.$kchatadmin_msg_templ(cm) : $this.$kchat_msg_templ(cm);
-                        $('#page-sidebar .user-chat').find('#chat-' + c.visitorId).prepend(html);
+                            var html = cm.fromAdmin ? $this.$kchatadmin_msg_templ(cm) : $this.$kchat_msg_templ(cm);
+                            $('#page-sidebar .user-chat').find('#chat-' + c.visitorId).find('.kchat-client-msg-list').prepend(html);
+                        }
                     }
 
-                    //$this._sortChatList(visitorId);
+                    $this._sortChatList(c.visitorId);
                 }
             }
 
@@ -572,7 +355,6 @@
                         body: body
                     });
                     n.onclick = function () {
-                        flog(arguments);
                         n.close();
                         window.focus();
 
@@ -594,7 +376,7 @@
                 try {
                     $this.$notification_audio = new Audio('/theme/apps/kchat/notification.mp3');
                 } catch (err) {
-                    flog('KChat: Failed to init notification sound', err);
+                    $this.$log('KChat: Failed to init notification sound', err);
                     $this.$notification_audio = null;
                 }
             } else {
@@ -624,7 +406,7 @@
                     $("#page-sidebar").css({
                         right: -$("#page-sidebar").outerWidth()
                     });
-                    $('.kchat-admin-container').css({right: 0})
+                    $('.kchat-admin-container').css({right: 0});
                 } else {
                     $(this).not(".sidebar-toggler ").find(".fa-outdent").removeClass("fa-outdent").addClass("fa-indent");
                     $(".sb-toggle").addClass("open");
@@ -674,17 +456,19 @@
         _sortChatList: function (visitorId) {
             var $this = this;
 
-            var chats = $this.$elem.find('li');
+            var ol = $this.$elem.find('#chat-' + visitorId).find('.kchat-client-msg-list');
+
+            var chats = ol.find('li');
 
             chats.sort(function (a, b) {
                 var aVal = $(a).data('timestamp');
                 var bVal = $(b).data('timestamp');
 
                 var result = (aVal < bVal) ? -1 : (aVal > bVal) ? 1 : 0;
-                return result * 1;
+                return result * -1;
             });
 
-            $this.$elem.find('.chat').empty().append(chats);
+            ol.empty().append(chats);
         }
     };
 
