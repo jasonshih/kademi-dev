@@ -32,7 +32,7 @@
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
-                        component.attr('data-title', this.value);
+                        component.attr('data-table-title', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
@@ -73,7 +73,7 @@
         showSettingForm: function (form, component, keditor) {
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.query-height').val(dataAttributes['data-height']);
-            form.find('.txt-title').val(dataAttributes['data-title']);
+            form.find('.txt-title').val(dataAttributes['data-table-title']);
             form.find('.complete').val(dataAttributes['data-complete']);
             form.find('.programCode').val(dataAttributes['data-program-code']);
             form.find('.courseCode').val(dataAttributes['data-course-code']);

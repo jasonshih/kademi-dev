@@ -2,8 +2,8 @@
 #set( $height = 300 )
 #end
 
-#if( !$title )
-#set( $title = "Module Statuses Table" )
+#if( !$tableTitle )
+#set( $tableTitle = "Module Statuses Table" )
 #end
 
 #set ($queryTableId = "query-component-tbody-" + $formatter.randomGuid)
@@ -11,7 +11,7 @@
 #set ($resp = $applications.get("learner-lib").call("buildTableModuleStatuses", $programCode, $courseCode, $moduleCode, $complete))
 <div class="panel panel-default panel-query-table" id="$queryCompId" style="height: $!{height}px; min-height: 0; overflow-y: auto" data-items-per-page="$itemsPerPage" data-queryname="$query" data-querytype="$queryType">
     <div class="panel-heading">
-        <i class="fa fa-table"></i> $title
+        <i class="fa fa-table"></i> $tableTitle
     </div>
     <div class="panel-body">
         <div class="table-responsive">
