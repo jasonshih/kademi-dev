@@ -1,6 +1,31 @@
+/*
+ * a nice little Websocket wrapper for Kademi that will automaticly reconnect list connections using a few methods including ping/pong requests
+ * 
+ * Example of use:
+ * 
+ * var kSocket = new $.KWebsocket({
+ * 	url: 'ws://localhost/ws/'
+ * 	onmessage: function(evt){
+ * 		console.log(evt.data);
+ * 	}
+ * });
+ * 
+ * or
+ * 
+ * var kSocket = new $.KWebsocket({
+ *     url: 'ws://localhost/ws/'
+ * });
+ * kSocket.onmessage = function(evt){
+ *     console.log(evt.data);
+ * };
+ * 
+ */
+
 (function ($) {
     var KWebsocket = function (options) {
         var $this = this;
+
+        flog('THIS', this, $this);
 
         // Ping/Pong variables
         $this._pingMsg = ':::::ping:::::';
@@ -202,4 +227,5 @@
     };
 
     $.KWebsocket = KWebsocket;
+    $.KWebsocket.constructor = KWebsocket;
 })(jQuery);
