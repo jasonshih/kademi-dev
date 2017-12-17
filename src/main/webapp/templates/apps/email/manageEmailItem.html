@@ -88,7 +88,7 @@
                     <th>To</th>
                     <td>
                         #if( $page.emailItem.recipient )
-                            <a href="/manageUsers/$page.emailItem.recipient.id">$page.recipientAddress</a> ($page.emailItem.recipient.name)
+                            <a href="/manageUsers/$page.emailItem.recipient.id">$page.recipientAddress</a> ($page.emailItem.recipient.formattedName)
                         #else
                             $page.recipientAddress
                         #end
