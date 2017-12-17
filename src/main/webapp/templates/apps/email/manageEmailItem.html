@@ -3,6 +3,15 @@
         <title>Notifications</title>
         <link href="myInbox.less" rel="stylesheet" type="text/css" media="all" />
         <script type="text/javascript" src="myInbox.js">//</script>
+        <style>
+pre {
+    white-space: pre-wrap;       /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+        </style>
     </head>
     <body>
         <div id="email-item-info">
@@ -125,13 +134,26 @@
                 </tr>
             </table>
         </div>
-        <h4>Message content</h4>
+        #if( $page.emailHtml.length() > 0 )
+        <h4>Message content (Rich text)</h4>
         <hr />
         <iframe style="border: none; width: 100%; min-height: 400px" srcdoc="$formatter.htmlEncode($page.emailHtml).replace('ack?', '')"></iframe>
         <br />
         <hr />
         <br />
+        #end
         <br />
+        #if( $page.emailText.length() > 0 )
+        <h4>Message content (Plain text)</h4>
+        <hr />
+        <pre>
+$formatter.htmlEncode($page.emailText)
+        </pre>
+        <br />
+        <hr />
+        <br />
+        #end
+
     </body>
 </html>
 
