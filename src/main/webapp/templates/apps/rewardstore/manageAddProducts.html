@@ -102,6 +102,7 @@
                                 <col width="15%" />
                                 <col width="" />
                                 <col width="" />
+                                <col width="" />
                                 <col width="15%" />
                                 <col width="16%" />
                                 <col data-sort="false" width="100px" />
@@ -112,6 +113,7 @@
                                     <th><a class="sort-field" id="name" href="#">Code</a></th>
                                     <th><a class="sort-field" id="title" href="#">Title</a></th>
                                     <th><a class="sort-field" id="baseCost" href="#">Base Cost</a></th>
+                                    <th><a class="sort-field" id="rrp" href="#">RRP</a></th>
                                     <th><a class="sort-field" id="createdDate" href="#">Created Date</a></th>
                                     <th></th>
                                     <th class="text-center">
@@ -132,6 +134,7 @@
                                     <td><a href='/products/$p.productId'>$p.name</a></td>
                                     <td>$!formatter.htmlEncode($p.title)</td>
                                     <td>$!p.baseCost</td>
+                                    <td>$!p.rrp</td>
                                     <td>$!formatter.formatDateTime($p.createdDate, $rootFolder.organisation.timezone)</td>
                                     <td></td>
                                     <td class="text-center">

@@ -159,13 +159,13 @@
                                 </div>
 
                                 #macro(genCategories $categories)
-                                    #foreach($cat in $categories)
-                                        #set( $size = $cat.childCategories.size())
-                                        $formatter.option($cat.name, "$formatter.padWith('-', '', $cat.level) $cat.title", $request.params.categoryName)
-                                        #if( $size > 0 )
-                                            #genCategories($cat.childCategories)
-                                        #end
-                                    #end
+                                #foreach($cat in $categories)
+                                #set( $size = $cat.childCategories.size())
+                                $formatter.option($cat.name, "$formatter.padWith('-', '', $cat.level) $cat.title", $request.params.categoryName)
+                                #if( $size > 0 )
+                                #genCategories($cat.childCategories)
+                                #end
+                                #end
                                 #end
 
                                 <div class="col-md-6">
@@ -218,6 +218,7 @@
                                         <col width="15%" />
                                         <col width="" />
                                         <col width="" />
+                                        <col width="" />
                                         <col width="15%" />
                                         <col width="16%" />
                                         <col data-sort="false" width="100px" />
@@ -228,6 +229,7 @@
                                             <th><a class="sort-field" id="p.name" href="#">Code</a></th>
                                             <th><a class="sort-field" id="p.title" href="#">Title</a></th>
                                             <th><a class="sort-field" id="p.baseCost" href="#">Base Cost</a></th>
+                                            <th><a class="sort-field" id="p.rrp" href="#">RRP</a></th>
                                             <th><a class="sort-field" id="createdDate" href="#">Added Date</a></th>
                                             <th></th>
                                             <th class="text-center">
@@ -248,6 +250,7 @@
                                             <td><a href='/products/$p.productId'>$p.name</a></td>
                                             <td>$formatter.htmlEncode($p.title)</td>
                                             <td>$!p.baseCost</td>
+                                            <td>$!p.rrp</td>
                                             <td>$!formatter.formatDateTime($p.addedDate, $rootFolder.organisation.timezone)</td>
                                             <td></td>
                                             <td class="text-center">
