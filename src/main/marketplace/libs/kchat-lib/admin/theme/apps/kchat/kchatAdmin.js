@@ -140,27 +140,30 @@
             });
 
             // Init Drag-Drop file uploader
-//            if ('draggable' in $this.$elem[0] || ('ondragstart' in $this.$elem[0] && 'ondrop' in $this.$elem[0])) {
-//                var elm = $this.$elem.find('#kchat-accordion-collapse .panel-body');
-//
-//                elm.on('drag dragstart dragend dragover dragenter dragleave drop', function (e) {
-//                    $this.$log('Drag Event', e);
-//                    e.preventDefault();
-//                    e.stopPropagation();
-//                }).on('dragstart drag dragover dragenter', function (e) {
-//                    $this.$log('Drag Event 1', e);
-//                    elm.addClass('is-dragover');
-//                }).on('dragleave dragend drop', function (e) {
-//                    $this.$log('Drag Event 2', e);
-//                    elm.removeClass('is-dragover');
-//                }).on('drop', function (e) {
-//                    elm.removeClass('is-dragover');
-//                    var droppedFiles = e.originalEvent.dataTransfer.files;
-//                    if (droppedFiles && droppedFiles.length > 0) {
-//                        $this._kchatUploadFile(droppedFiles[0]);
-//                    }
-//                });
-//            }
+            if ('draggable' in $this.$elem[0] || ('ondragstart' in $this.$elem[0] && 'ondrop' in $this.$elem[0])) {
+                var elm = $this.$elem;
+
+                elm.on('drag dragstart dragend dragover dragenter dragleave drop', '.discussion', function (e) {
+                    $this.$log('Drag Event', e);
+                    e.preventDefault();
+                    e.stopPropagation();
+                }).on('dragstart drag dragover dragenter', '.discussion', function (e) {
+                    $this.$log('Drag Event 1', e);
+                    elm.addClass('is-dragover');
+                }).on('dragleave dragend drop', '.discussion', function (e) {
+                    $this.$log('Drag Event 2', e);
+                    elm.removeClass('is-dragover');
+                }).on('drop', '.discussion', function (e) {
+                    elm.removeClass('is-dragover');
+                    var visitorid = $(e.currentTarget).closest('.discussion').data('visitorid');
+
+                    flog('Dropped', e, elm, visitorid);
+                    var droppedFiles = e.originalEvent.dataTransfer.files;
+                    if (droppedFiles && droppedFiles.length > 0) {
+                        $this._kchatUploadFile(visitorid, droppedFiles[0]);
+                    }
+                });
+            }
         }
 
         // Init
