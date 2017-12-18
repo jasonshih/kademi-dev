@@ -71,29 +71,57 @@
         $this.$elem.find('#kchat-accordion-collapse').on('shown.bs.collapse', function () {
             var panel = $this.$elem.find('.panel-body');
             panel.scrollTop(panel.find('ul').height());
-            
+
             $this.$log('Scroll to the top!!', $this, panel);
         });
 
-        // Init support for image pasting
-        $this.$elem.on('paste', function (e) {
-            $this.$log('On Paste: ', this, e);
+        // Check if formData is supported
+        $this.$supportFormData = 'FormData' in window;
 
-            var items = (e.clipboardData || e.originalEvent.clipboardData).items;
-            console.log(JSON.stringify(items));
+        if ($this.$supportFormData) {
 
-            for (var index in items) {
-                var item = items[index];
-                if (item.kind === 'file') {
-                    var blob = item.getAsFile();
-                    var reader = new FileReader();
-                    reader.onload = function (event) {
-                        //console.log(event.target.result);
-                    }; // data url!
-                    reader.readAsDataURL(blob);
+            // Init support for image pasting
+            $this.$elem.on('paste', function (e) {
+                $this.$log('On Paste: ', this, e);
+
+                var items = (e.clipboardData || e.originalEvent.clipboardData).items;
+                console.log(JSON.stringify(items));
+
+                for (var index in items) {
+                    var item = items[index];
+                    if (item.kind === 'file') {
+                        var blob = item.getAsFile();
+
+                        $this._kchatUploadFile(blob);
+                    }
                 }
+            });
+
+            // Init Drag-Drop file uploader
+            if ('draggable' in $this.$elem[0] || ('ondragstart' in $this.$elem[0] && 'ondrop' in $this.$elem[0])) {
+                var elm = $this.$elem.find('#kchat-accordion-collapse .panel-body');
+
+                elm.on('drag dragstart dragend dragover dragenter dragleave drop', function (e) {
+                    $this.$log('Drag Event', e);
+                    e.preventDefault();
+                    e.stopPropagation();
+                }).on('dragstart drag dragover dragenter', function (e) {
+                    $this.$log('Drag Event 1', e);
+                    elm.addClass('is-dragover');
+                }).on('dragleave dragend drop', function (e) {
+                    $this.$log('Drag Event 2', e);
+                    elm.removeClass('is-dragover');
+                }).on('drop', function (e) {
+                    elm.removeClass('is-dragover');
+                    var droppedFiles = e.originalEvent.dataTransfer.files;
+                    if (droppedFiles && droppedFiles.length) {
+                        for (var i = 0; i < droppedFiles.length; i++) {
+                            $this._kchatUploadFile(droppedFiles[i]);
+                        }
+                    }
+                });
             }
-        });
+        }
 
         // Init Websockets URL
         $this.$cid = $this.$elem.data('cid');
@@ -272,14 +300,48 @@
         _kchatUploadFile: function (file) {
             var $this = this;
 
-            var reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function () {
-                $this.$log(reader.result);
-            };
-            reader.onerror = function (error) {
-                $this.$log('Error reading file: ', error);
-            };
+            $this.$elem.find('.kchat-fileUpload-title').text('Uploading ' + file.name + '...');
+            $this.$elem.find('.progress').show();
+            $this.$elem.find('.kchat-fileUpload-wrapper').show();
+
+            var fd = new FormData();
+
+            fd.append('file', file, file.name);
+
+            $.ajax({
+                type: 'POST',
+                url: '/kchat',
+                dataType: 'JSON',
+                success: function (data, textStatus, jqXHR) {
+                    flog('success', data);
+
+                    if (data.status) {
+                        $this._processMessage(data.data);
+                        $this.$elem.find('.kchat-fileUpload-wrapper').hide();
+                    } else {
+                        $this.$elem.find('.kchat-fileUpload-title').text('Error uploading file: ' + (data.messages || ''));
+                        $this.$elem.find('.progress').hide();
+                        $this.$elem.find('.kchat-fileUpload-wrapper').show();
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $this.$elem.find('.kchat-fileUpload-title').text('Error uploading file');
+                    $this.$elem.find('.progress').hide();
+                    $this.$elem.find('.kchat-fileUpload-wrapper').show();
+                },
+                processData: false,
+                contentType: false,
+                beforeSend: function (xhr, options) {
+                    options.data = fd;
+                    if (fd.fake) {
+                        xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + fd.boundary);
+                        // with fake FormData object, we must use sendAsBinary
+                        xhr.send = function (data) {
+                            xhr.sendAsBinary(data.toString());
+                        };
+                    }
+                }
+            });
         },
         _kchatOnClose: function () {
             var $this = this;
