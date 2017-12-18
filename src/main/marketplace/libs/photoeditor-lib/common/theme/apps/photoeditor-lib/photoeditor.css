@@ -1,16 +1,15 @@
 .photo-editor-wrapper {
-    padding-right: 200px;
+    /*padding-right: 200px;*/
     position: relative;
 }
 
 .photo-editor-wrapper .photo-editor-cropper {
     min-height: 310px;
+    margin-right: 200px;
 }
 
 .photo-editor-wrapper .photo-editor-helper {
-    position: absolute;
-    top: 0;
-    right: 0;
+    float: right;
     width: 185px;
 }
 
@@ -25,8 +24,21 @@
     overflow: hidden;
 }
 
+.photo-editor-wrapper .photo-editor-info {
+    padding-top: 10px;
+}
+
+.photo-editor-wrapper .photo-editor-info .input-group + .input-group {
+    margin-top: 5px;
+}
+
+.photo-editor-wrapper .photo-editor-info .input-group label.input-group-addon {
+    text-align: left;
+    min-width: 5em;
+}
+
 .photo-editor-wrapper .photo-editor-toolbar {
-    padding-top: 15px;
+    padding-top: 10px;
 }
 
 .photo-editor-wrapper .photo-editor-toolbar .btn-group {

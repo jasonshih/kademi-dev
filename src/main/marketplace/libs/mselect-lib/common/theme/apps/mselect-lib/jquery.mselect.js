@@ -297,7 +297,7 @@
         treeContainer.mtree(mtreeOptions);
     };
     
-    MSelect.prototype.initUploadButton = function (container) {
+    MSelect.prototype.initUploadButton = function () {
         var self = this;
         var options = self.options;
         
@@ -384,6 +384,7 @@
         var photoEditor = btnEditImage.photoEditor({
             modalSize: 'modal-lg',
             modalAuto: false,
+            btnCancelText: 'Back to Upload',
             onModalShow: function () {
                 if (options.useModal) {
                     container.modal('hide');
@@ -393,21 +394,22 @@
                 var hash = self.previewContainer.attr('data-hash');
                 this.setImage('/_hashes/files/' + hash);
             },
+            onCancel: function () {
+                if (options.useModal) {
+                    container.modal('show');
+                }
+            },
             onSave: function (data) {
-                var modal = this.modal;
-                var btns = modal.find('.btn');
+                var editModal = this.modal;
+                var btns = editModal.find('.btn');
                 btns.prop('disabled', true);
                 
                 $.ajax({
-                    url: '/mselect-lib/cropImage',
+                    url: '/mselect-lib/storeImage',
                     type: 'post',
                     dataType: 'json',
                     data: {
-                        x: data.x,
-                        y: data.y,
-                        w: data.width,
-                        h: data.height,
-                        hash: self.previewContainer.attr('data-hash')
+                        file: data.croppedImage
                     },
                     success: function (resp) {
                         if (resp && resp.status) {
@@ -417,22 +419,12 @@
                             }
                         }
                         
-                        modal.modal('hide');
+                        editModal.modal('hide');
                         btns.prop('disabled', false);
                     }
                 });
             }
         });
-        
-        if (options.useModal) {
-            photoEditor.modal.find('.modal-footer').prepend('<button type="button" class="btn btn-default btn-back-to-upload">Back to Upload</button>');
-            photoEditor.modal.find('.btn-back-to-upload').on('click', function (e) {
-                e.preventDefault();
-                
-                container.modal('show');
-                photoEditor.modal.modal('hide');
-            });
-        }
         
         btnEditImage.on('click', function (e) {
             e.preventDefault();
