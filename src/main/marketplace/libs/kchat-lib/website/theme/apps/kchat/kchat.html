@@ -1,11 +1,28 @@
-<div class="kchat-chat-container col-xs-12 col-sm-6 col-md-3" data-cid="$page.organisation.id" style="display: none;">
+<div class="kchat-chat-container col-xs-12 col-sm-6 col-md-3" data-cid="$rootFolder.organisation.id" style="display: none;">
     <div class="panel panel-default panel-kchat">
         <div class="panel-collapse collapse" id="kchat-accordion-collapse">
             <div class="panel-body">
+                <div class="kchat-upload-popover">
+                    <div>
+                        <span class="glyphicon glyphicon-open-file"></span>
+                        <br/>
+                        Drop file to upload...
+                    </div>
+                </div>
                 <ul class="chat">
                 </ul>
             </div>
             <div class="panel-footer">
+                <div class="kchat-fileUpload-wrapper" style="display: none;">
+                    <span class="kchat-fileUpload-title">
+                        Hello
+                    </span>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            <span class="sr-only">Uploading...</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="input-group input-group-sm">
                     <input id="btn-input" type="text" class="form-control input-sm kchat-msg-input" placeholder="Type your message here..." />
                     <span class="input-group-btn">

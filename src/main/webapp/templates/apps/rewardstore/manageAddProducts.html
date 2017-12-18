@@ -44,13 +44,22 @@
                                 <div class="col-sm-10">
                                     <select name="categoryName" class="category form-control input-sm">
                                         <option value="">[Any category]</option>
-                                        #foreach($cat in $page.categories)
-                                        $formatter.option($cat.name, $cat.title, $request.params.categoryName)
-                                        #end
+                                        #genCategories($page.categoryBeans)
                                     </select>
                                 </div>
                             </div>
                         </div>
+
+                        #macro(genCategories $categories)
+                            #foreach($cat in $categories)
+                                #set( $size = $cat.childCategories.size())
+                                $formatter.option($cat.name, "$formatter.padWith('-', '', $cat.level) $cat.title", $request.params.categoryName)
+                                #if( $size > 0 )
+                                    #genCategories($cat.childCategories)
+                                #end
+                            #end
+                        #end
+
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="search-group" class="col-sm-2 control-label">Library:</label>
