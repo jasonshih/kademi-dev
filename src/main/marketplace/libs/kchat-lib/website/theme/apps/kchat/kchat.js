@@ -2,6 +2,7 @@
     var KChat = function (element, options) {
         var $this = this;
         $this.$elem = $(element);
+        $this.$maxFileSize = 1000000 * 10; // 10 MB
 
         // Create a logger
         if (typeof window.flog === 'function') {
@@ -114,10 +115,8 @@
                 }).on('drop', function (e) {
                     elm.removeClass('is-dragover');
                     var droppedFiles = e.originalEvent.dataTransfer.files;
-                    if (droppedFiles && droppedFiles.length) {
-                        for (var i = 0; i < droppedFiles.length; i++) {
-                            $this._kchatUploadFile(droppedFiles[i]);
-                        }
+                    if (droppedFiles && droppedFiles.length > 0) {
+                        $this._kchatUploadFile(droppedFiles[0]);
                     }
                 });
             }
@@ -300,48 +299,54 @@
         _kchatUploadFile: function (file) {
             var $this = this;
 
-            $this.$elem.find('.kchat-fileUpload-title').text('Uploading ' + file.name + '...');
-            $this.$elem.find('.progress').show();
-            $this.$elem.find('.kchat-fileUpload-wrapper').show();
+            if (file.size > $this.$maxFileSize) {
+                $this.$elem.find('.kchat-fileUpload-title').text('File too large to upload');
+                $this.$elem.find('.progress').hide();
+                $this.$elem.find('.kchat-fileUpload-wrapper').show();
+            } else {
+                $this.$elem.find('.kchat-fileUpload-title').text('Uploading ' + file.name + '...');
+                $this.$elem.find('.progress').show();
+                $this.$elem.find('.kchat-fileUpload-wrapper').show();
 
-            var fd = new FormData();
+                var fd = new FormData();
 
-            fd.append('file', file, file.name);
+                fd.append('file', file, file.name);
 
-            $.ajax({
-                type: 'POST',
-                url: '/kchat',
-                dataType: 'JSON',
-                success: function (data, textStatus, jqXHR) {
-                    flog('success', data);
+                $.ajax({
+                    type: 'POST',
+                    url: '/kchat',
+                    dataType: 'JSON',
+                    success: function (data, textStatus, jqXHR) {
+                        flog('success', data);
 
-                    if (data.status) {
-                        $this._processMessage(data.data);
-                        $this.$elem.find('.kchat-fileUpload-wrapper').hide();
-                    } else {
-                        $this.$elem.find('.kchat-fileUpload-title').text('Error uploading file: ' + (data.messages || ''));
+                        if (data.status) {
+                            $this._processMessage(data.data);
+                            $this.$elem.find('.kchat-fileUpload-wrapper').hide();
+                        } else {
+                            $this.$elem.find('.kchat-fileUpload-title').text('Error uploading file: ' + (data.messages || ''));
+                            $this.$elem.find('.progress').hide();
+                            $this.$elem.find('.kchat-fileUpload-wrapper').show();
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $this.$elem.find('.kchat-fileUpload-title').text('Error uploading file');
                         $this.$elem.find('.progress').hide();
                         $this.$elem.find('.kchat-fileUpload-wrapper').show();
+                    },
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function (xhr, options) {
+                        options.data = fd;
+                        if (fd.fake) {
+                            xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + fd.boundary);
+                            // with fake FormData object, we must use sendAsBinary
+                            xhr.send = function (data) {
+                                xhr.sendAsBinary(data.toString());
+                            };
+                        }
                     }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    $this.$elem.find('.kchat-fileUpload-title').text('Error uploading file');
-                    $this.$elem.find('.progress').hide();
-                    $this.$elem.find('.kchat-fileUpload-wrapper').show();
-                },
-                processData: false,
-                contentType: false,
-                beforeSend: function (xhr, options) {
-                    options.data = fd;
-                    if (fd.fake) {
-                        xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + fd.boundary);
-                        // with fake FormData object, we must use sendAsBinary
-                        xhr.send = function (data) {
-                            xhr.sendAsBinary(data.toString());
-                        };
-                    }
-                }
-            });
+                });
+            }
         },
         _kchatOnClose: function () {
             var $this = this;
