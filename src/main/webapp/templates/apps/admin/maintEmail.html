@@ -1,0 +1,89 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>ES Maintenance</title>
+    </head>
+    <body class="manageApplications appsContainer">
+        <h2>Queues and settings</h2>
+        <form method="POST" action="$page.href" class="maintForm" >
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th></th>
+                    <th>Current</th>
+                    <th>Target</th>
+                </tr>
+                <tr>
+                    <th>Generation queue</th>
+                    <td>$page.generationQueueSize</td>
+                    <td>
+                        <input type="text" class="form-control required" name="generationQueueTargetSize" id="generationQueueTargetSize" value="$page.generationQueueTargetSize">
+                    </td>
+                </tr>
+                <tr>
+                    <th>Presend queue</th>
+                    <td>$page.presendQueueSize</td>
+                    <td>
+                        <input type="text" class="form-control required" name="presendQueueTargetSize" id="presendQueueTargetSize" value="$page.presendQueueTargetSize">
+                    </td>
+                </tr>
+                <tr>
+                    <th>Max attempts</th>
+                    <td></td>
+                    <td>
+                        <input type="text" class="form-control required" name="maxAttempts" id="maxAttempts" value="$page.maxAttempts">
+                    </td>
+                </tr>
+                <tr>
+                    <th>New item fetch size</th>
+                    <td></td>
+                    <td>
+                        <input type="text" class="form-control required" name="newItemFetchSize" id="newItemFetchSize" value="$page.newItemFetchSize">
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Mail host</th>
+                    <td>$page.mailHost</td>
+                    <td>
+
+                    </td>
+                </tr>
+                <tr>
+                    <th>Pre-generated map size</th>
+                    <td>$page.generatedMessagesMapSize</td>
+                    <td>
+
+                    </td>
+                </tr>
+                <tr>
+                    <th>Delivery rate</th>
+                    <td>
+                        $formatter.toDecimal($page.deliveryRateMsgsPerMin, 2)
+                        <br/>
+                        <small>Averaged over 20secs</small>
+                    </td>
+                    <td></td>
+                </tr>
+
+
+
+            </table>
+            <div class="form-group">
+                <div class="text-center">
+                    <button type="submit" class="btn btn-lg btn-danger">Save settings</button>
+                    <p>Changes are immediate, apply to this server only, and are NOT persisted</p>
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            $(function () {
+                $("form.maintForm").forms({
+                    onSuccess: function (resp) {
+                        flog("resp", resp);
+                        Msg.success("Done");
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

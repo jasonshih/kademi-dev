@@ -75,7 +75,7 @@ function initCRUDRole() {
 
         flog('add role', appliesToTypeVal, appliesToVal);
 
-        var roleName = btn.closest('.article-action').prev().text().trim();
+        var roleName = btn.closest('.role-wrapper').find('.article-name').text().trim();
 
         addRoleToGroup(roleName, appliesToTypeVal, appliesToVal, function (resp) {
             if (appliesToVal.length == 0) {
