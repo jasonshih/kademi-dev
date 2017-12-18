@@ -55,20 +55,10 @@
     };
     
     edmEditor.dependScripts = [
-        '/static/jquery-ui/1.12.1-noui/jquery-ui.min.js',
-        '/theme/toolbars.js',
-        '/static/ckeditor456/ckeditor.js',
-        '/static/ckeditor456/adapters/jquery.js',
-        KEDITOR_PATH + 'js/keditor-0.0.0.min.js',
-        KEDITOR_PATH + 'js/keditor-edm-components-0.0.0.js',
-        '/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.js',
         '/static/bootstrap-colorpicker/2.5.1/js/bootstrap-colorpicker.min.js'
     ];
     
     edmEditor.dependStyles = [
-        KEDITOR_PATH + 'css/keditor-0.0.0.min.css',
-        KEDITOR_PATH + 'css/keditor-bootstrap-settings-0.0.0.min.css',
-        KEDITOR_PATH + 'css/keditor-edm-components-0.0.0.min.css',
         '/static/font-awesome/4.7.0/css/font-awesome.min.css',
         EDITOR_PATH + 'jquery.edmEditor.css',
         '/static/bootstrap-colorpicker/2.5.1/css/bootstrap-colorpicker.min.css'
@@ -134,7 +124,11 @@
             });
         }
         
-        loadScript(0);
+        loadCKEditor(function () {
+            loadKEditor(true, function () {
+                loadScript(0);
+            });
+        });
     };
     
     edmEditor.getPxValue = function (value) {
@@ -586,7 +580,7 @@
                             experimentOptionsStr += '<option value="' + experiment.name + '">' + experiment.name + '</option>';
                             
                             $.each(experiment.variants, function (k, variant) {
-                            experimentOptionsStr += '<option value="' + experiment.name + '/' + variant.name + '">' + experiment.name + '/' + variant.name + '</option>';
+                                experimentOptionsStr += '<option value="' + experiment.name + '/' + variant.name + '">' + experiment.name + '/' + variant.name + '</option>';
                             });
                         });
                         
@@ -605,7 +599,7 @@
                     var container = keditor.getSettingContainer();
                     var table = container.find('.keditor-container-inner > table');
                     table.attr('data-expr', this.value);
-                });                  
+                });
                 
                 form.find('.columns-setting').on('change', '.txt-padding', function () {
                     var txt = $(this);
@@ -671,7 +665,7 @@
         
         var visRulesExpr = table.data("expr");
         var visRules = form.find(".visible-rules");
-        visRules.val(visRulesExpr);        
+        visRules.val(visRulesExpr);
         
         var columnsSettings = form.find('.columns-setting');
         columnsSettings.html('');
