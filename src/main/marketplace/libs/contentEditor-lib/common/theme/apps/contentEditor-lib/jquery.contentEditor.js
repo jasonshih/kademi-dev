@@ -1333,17 +1333,11 @@
                             extraPlugins: 'widget,lineutils,fontawesome,embed_video,fuse-image,kcode,sourcedialog,modal,rating',
                             removePlugins: standardRemovePlugins + ',autogrow,magicline,showblocks',
                             removeButtons: 'Find,Replace,SelectAll,Scayt,FontSize,Font',
-                            enterMode: 'P',
+                            enterMode: CKEDITOR.ENTER_P,
                             forceEnterMode: true,
                             filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
                             filebrowserUploadUrl: '/uploader/upload',
                             format_tags: 'p;h1;h2;h3;h4;h5;h6', // removed p2
-                            format_p2: {
-                                element: 'p',
-                                attributes: {
-                                    'class': 'lessSpace'
-                                }
-                            },
                             minimumChangeMilliseconds: 100,
                             stylesSet: 'myStyles:' + stylesPath,
                             basePath: options.basePath,

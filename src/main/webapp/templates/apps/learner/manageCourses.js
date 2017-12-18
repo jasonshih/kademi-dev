@@ -271,7 +271,6 @@ function initCourseModal() {
 
     initFuseModal(modal, function () {
         initHtmlEditors(modal.find('.htmleditor'), getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
-//        modal.find('.modal-body').css('height', getStandardModalEditorHeight());
     });
 }
 

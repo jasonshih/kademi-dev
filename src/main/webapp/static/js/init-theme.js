@@ -173,17 +173,11 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins, c
                         toolbarGroups: toolbarSets[toolbar],
                         extraPlugins: extraPlugins,
                         removePlugins: removePlugins,
-                        enterMode: 'P',
+                        enterMode: CKEDITOR.ENTER_P,
                         forceEnterMode: true,
                         filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
                         filebrowserUploadUrl: '/uploader/upload',
                         format_tags: 'p;h1;h2;h3;h4;h5;h6', // removed p2
-                        format_p2: {
-                            element: 'p',
-                            attributes: {
-                                'class': 'lessSpace'
-                            }
-                        },
                         minimumChangeMilliseconds: 100,
                         fullUrl: fullUrl
                     };
