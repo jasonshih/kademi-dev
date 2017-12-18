@@ -1,0 +1,13 @@
+#set ($enableFor = $!page.getAppSetting($app.instanceId, 'enableFor'))
+<hr>
+<div class="form-group">
+    <label class="col-sm-4 control-label" for="kexitpopup-enableFor">Enable for pages:</label>
+    <div class="col-sm-6">
+        <div class="input">
+            <label for="kexitpopup-enableFor">
+                <input type="text" name="enableFor" id="kexitpopup-enableFor" value="$enableFor">                
+            </label>
+        </div>
+    </div>    
+</div>
+<i>Comma separated list of pages to show <b>exit popup</b> in, put <b>*</b> for all pages.</i>
