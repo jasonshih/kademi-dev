@@ -3,6 +3,7 @@
         var $this = this;
         $this.$elem = $(element);
         $this.$orgId = $this.$elem.data('cid').toString();
+        $this.$maxFileSize = 1000000 * 10; // 10 MB
 
         // Create a logger
         if (typeof window.flog === 'function') {
@@ -113,6 +114,54 @@
                 d.find('.btn-send-msg').click();
             }
         });
+
+        // Check if formData is supported
+        $this.$supportFormData = 'FormData' in window;
+
+        if ($this.$supportFormData) {
+
+            // Init support for image pasting
+            $this.$elem.on('paste', '.discussion', function (e) {
+                var elem = $(this);
+                var visitorId = elem.closest('.discussion').data('visitorid');
+
+                $this.$log('On Paste: ', visitorId, this, e);
+
+                var items = (e.clipboardData || e.originalEvent.clipboardData).items;
+
+                for (var index in items) {
+                    var item = items[index];
+                    if (item.kind === 'file') {
+                        var blob = item.getAsFile();
+
+                        $this._kchatUploadFile(visitorId, blob);
+                    }
+                }
+            });
+
+            // Init Drag-Drop file uploader
+//            if ('draggable' in $this.$elem[0] || ('ondragstart' in $this.$elem[0] && 'ondrop' in $this.$elem[0])) {
+//                var elm = $this.$elem.find('#kchat-accordion-collapse .panel-body');
+//
+//                elm.on('drag dragstart dragend dragover dragenter dragleave drop', function (e) {
+//                    $this.$log('Drag Event', e);
+//                    e.preventDefault();
+//                    e.stopPropagation();
+//                }).on('dragstart drag dragover dragenter', function (e) {
+//                    $this.$log('Drag Event 1', e);
+//                    elm.addClass('is-dragover');
+//                }).on('dragleave dragend drop', function (e) {
+//                    $this.$log('Drag Event 2', e);
+//                    elm.removeClass('is-dragover');
+//                }).on('drop', function (e) {
+//                    elm.removeClass('is-dragover');
+//                    var droppedFiles = e.originalEvent.dataTransfer.files;
+//                    if (droppedFiles && droppedFiles.length > 0) {
+//                        $this._kchatUploadFile(droppedFiles[0]);
+//                    }
+//                });
+//            }
+        }
 
         // Init
         $this._initQuickSideBar();
@@ -323,6 +372,63 @@
                 $this.$log('Error connecting to WS, Re-attempt soon...');
 
                 $this._kchatStartCheckWS();
+            }
+        },
+        _kchatUploadFile: function (visitorId, file) {
+            var $this = this;
+
+            var chatWrapper = $this.$elem.find('#chat-' + visitorId);
+
+            if (file.size > $this.$maxFileSize) {
+                chatWrapper.find('.kchat-fileUpload-title').text('File too large to upload');
+                chatWrapper.find('.progress').hide();
+                chatWrapper.find('.kchat-fileUpload-wrapper').show();
+            } else {
+                chatWrapper.find('.kchat-fileUpload-title').text('Uploading ' + file.name + '...');
+                chatWrapper.find('.progress').show();
+                chatWrapper.find('.kchat-fileUpload-wrapper').show();
+
+                var fd = new FormData();
+
+                fd.append('visitorId', visitorId);
+                fd.append('file', file, file.name);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/kchatAdmin',
+                    dataType: 'JSON',
+                    success: function (data, textStatus, jqXHR) {
+                        flog('success', data);
+
+                        if (data.status) {
+
+                            var html = $this.$kchatadmin_msg_templ(data.data);
+                            $this.$elem.find('.user-chat').find('#chat-' + visitorId).find('.kchat-client-msg-list').prepend(html);
+                            chatWrapper.find('.kchat-fileUpload-wrapper').hide();
+                        } else {
+                            chatWrapper.find('.kchat-fileUpload-title').text('Error uploading file: ' + (data.messages || ''));
+                            chatWrapper.find('.progress').hide();
+                            chatWrapper.find('.kchat-fileUpload-wrapper').show();
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        chatWrapper.find('.kchat-fileUpload-title').text('Error uploading file');
+                        chatWrapper.find('.progress').hide();
+                        chatWrapper.find('.kchat-fileUpload-wrapper').show();
+                    },
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function (xhr, options) {
+                        options.data = fd;
+                        if (fd.fake) {
+                            xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + fd.boundary);
+                            // with fake FormData object, we must use sendAsBinary
+                            xhr.send = function (data) {
+                                xhr.sendAsBinary(data.toString());
+                            };
+                        }
+                    }
+                });
             }
         },
         _newMessage: function (cm) {
