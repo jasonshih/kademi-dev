@@ -1,6 +1,7 @@
 controllerMappings
     .websiteController()
     .path('/exitp')
+    .isPublic(true)
     .enabled(true)
     .defaultView(views.templateView('KExitPopup/kexitpopup.html'))
     .build();
@@ -9,6 +10,7 @@ controllerMappings
         .websiteController()
         .path('/isPageAllowed')
         .addMethod('GET', 'isPageAllowed')
+        .isPublic(true)
         .enabled(true)
         .build();
 
