@@ -144,10 +144,10 @@
                         <div class="form-group">
                             <label class="control-label col-sm-3">Title</label>
                             #set ($funnel = $page.funnel)
-                            #if ($funnel)
-                            #set ($funnelTitle = $funnel.title)
+                            #if ($funnel && $funnel.title && $funnel.title != "")
+                                #set ($funnelTitle = $funnel.title)
                             #else
-                            #set ($funnelTitle = $page.funnelRepository.title)
+                                #set ($funnelTitle = $page.funnelRepository.title)
                             #end
                             <div class="col-sm-6">
                                 <input type="text" class="form-control required" name="title" value="$!funnelTitle" />
