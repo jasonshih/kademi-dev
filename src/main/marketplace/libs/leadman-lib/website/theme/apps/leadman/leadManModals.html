@@ -103,22 +103,33 @@
                                     <textarea name="notes" class="form-control" style="height: 90px"></textarea>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="row">
                                 <label class="control-label col-md-2" for="datetimepickerFollowup">Follow-up</label>
                                 <div class="col-md-4">
-                                    <div id="dueDate" class="input-group">
-                                        <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDate($formatter.now) 08:00">
-                                        <span class="input-group-addon">
-                                            <span class="fa fa-calendar"></span>
-                                        </span>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div id="dueDate" class="input-group">
+                                                <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDate($formatter.now) 08:00">
+                                                <span class="input-group-addon">
+                                                    <span class="fa fa-calendar"></span>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                     <br />
-
-                                    <input type="text" name="title" id="title" class="form-control" placeholder="Task" />
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input type="text" name="title" id="newLeadTaskTitle" class="form-control" placeholder="Task" />
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <textarea name="taskDescription" class="form-control" style="height: 95px" placeholder="Follow-up task details"></textarea>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <textarea name="taskDescription" class="form-control" style="height: 95px" placeholder="Follow-up task details"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -201,10 +212,10 @@
                     <div class="form-group">
                         <label class="control-label col-md-3" for="newUserFirstName">Name</label>
                         <div class="col-md-4">
-                            <input type="text" name="firstName" id="newUserFirstName" class="form-control" placeholder="First name" />
+                            <input type="text" name="firstName" class="form-control" placeholder="First name" />
                         </div>
                         <div class="col-md-5">
-                            <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
+                            <input type="text" name="surName" class="form-control" placeholder="Surname" />
                         </div>
                     </div>
                     <div class="form-group">
@@ -212,7 +223,7 @@
                         <div class="col-md-4">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <input type="text" name="email" id="newUserEmail" class="form-control" placeholder="Email" />
+                                    <input type="text" name="email" class="form-control" placeholder="Email" />
                                 </div>
                             </div>
 
