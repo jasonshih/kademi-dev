@@ -31,12 +31,13 @@
                     </tr>
                     #end
                     #foreach($hit in $resp.hits.hits)
+                        #set ($usr = $applications.userApp.findUserResourceById($hit.source.profile.toString()))
                         <tr>
                             <td>$hit.source.moduleTitle</td>
                             #if ($linkedProfile == "true")
-                            <td><a href="/custs/${$hit.source.profile}">$!applications.userApp.findUserResourceById($hit.source.profile.toString()).extProfileBean.formattedName()</a></td>
+                            <td><a href="/custs/${usr.name}">$!applications.userApp.findUserResourceById($hit.source.profile.toString()).extProfileBean.formattedName()</a></td>
                             #else
-                            <td>$!applications.userApp.findUserResourceById($hit.source.profile.toString()).extProfileBean.formattedName()</td>
+                            <td>$!usr.extProfileBean.formattedName()</td>
                             #end
                             <td>$!formatter.formatDate($formatter.parseDate($hit.source.createdDate))</td>
                             #if ($hit.source.complete)
