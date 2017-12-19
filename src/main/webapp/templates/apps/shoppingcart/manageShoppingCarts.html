@@ -185,6 +185,7 @@
                                         </div>
                                     </div>
 
+                                    <!--
                                     <div class="form-group">
                                         <label for="website" class="col-sm-3 control-label">Website</label>
                                         <div class="col-sm-9">
@@ -198,6 +199,7 @@
                                             </select>
                                         </div>
                                     </div>
+                                    -->
 
                                     <div class="form-group">
                                         <label for="addressLine1" class="col-sm-3 control-label">Address Line 1</label>
@@ -246,13 +248,37 @@
                                     <div class="form-group">
                                         <label for="postcode" class="col-sm-3 control-label">Store Type</label>
                                         <div class="col-sm-9">
-                                            <select class="form-control required" name="storeType">
+                                            <select class="form-control required" name="storeType" id="storeType">
                                                 <option value="">[ NONE ]</option>
                                                 <option value="rewardStore">Reward Store</option>
                                                 <option value="ecommerceStore">eCommerce Store</option>
                                             </select>
                                         </div>
-                                    </div>  
+                                    </div>
+
+                                    <div class="form-group storeSelect" id="storeSelect_rewardStore" style="display: none;">
+                                        <label for="rewardStoreName" class="col-sm-3 control-label">Reward Stores</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control required" name="rewardStoreName">
+                                                <option value="">[ NONE ]</option>
+                                                #foreach($rs in $page.rewardStores)
+                                                <option value="$rs.name">$formatter.firstNotNull($rs.title, $rs.name)</option>
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group storeSelect" id="storeSelect_ecommerceStore" style="display: none;">
+                                        <label for="eCommStore" class="col-sm-3 control-label">eCommerce Stores</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control required" name="eCommStore">
+                                                <option value="">[ NONE ]</option>
+                                                #foreach($rs in $page.eCommerceStores)
+                                                <option value="$rs.name">$formatter.firstNotNull($rs.title, $rs.name)</option>
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
