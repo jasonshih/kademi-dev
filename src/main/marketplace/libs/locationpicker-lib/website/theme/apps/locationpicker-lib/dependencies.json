@@ -1,0 +1,15 @@
+{
+    "appDependencies": [
+        {
+            "appId": "googlemap-lib"
+        }
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/locationpicker-lib/locationpicker.jquery.min.js"
+            }
+        }
+    ]
+}
