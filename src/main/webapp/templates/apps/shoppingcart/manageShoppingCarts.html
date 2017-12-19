@@ -267,9 +267,9 @@
                                     </div>
                                     
                                     <div class="form-group storeSelect" id="storeSelect_ecommerceStore" style="display: none;">
-                                        <label for="eCommStore" class="col-sm-3 control-label">eCommerce Stores</label>
+                                        <label for="eCommStoreName" class="col-sm-3 control-label">eCommerce Stores</label>
                                         <div class="col-sm-9">
-                                            <select class="form-control required" name="eCommStore">
+                                            <select class="form-control required" name="eCommStoreName">
                                                 <option value="">[ NONE ]</option>
                                                 #foreach($rs in $page.eCommerceStores)
                                                 <option value="$rs.name">$formatter.firstNotNull($rs.title, $rs.name)</option>
