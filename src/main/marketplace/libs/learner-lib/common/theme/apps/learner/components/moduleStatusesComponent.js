@@ -43,6 +43,13 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
+                    form.find('.linkedProfile').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-linked-profile', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
                     form.find('.programCode').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');

@@ -185,7 +185,9 @@ $(function () {
                         whenComplete: function () {
                             initProgressBar();
                             var answersList = form.siblings('.answersList');
-                            answersList.sortable( "refresh" );
+                            if (answersList.data( 'ui-sortable' )) {
+                                answersList.sortable( "refresh" );
+                            }
                         }
                     });
                 } else {

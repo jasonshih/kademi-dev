@@ -215,8 +215,16 @@ function initAddNewOrder() {
         }
     });
 
+    form.on('change', '#storeType', function () {
+        var inp = $(this);
+
+        form.find('.storeSelect').hide();
+        form.find('#storeSelect_' + inp.val()).show();
+    });
+
     modal.on('hidden.bs.modal', function (e) {
         form.trigger('reset');
+        form.find('#storeType').val('').change();
     });
 
     form.forms({

@@ -567,10 +567,10 @@ function initNewLeadForm() {
             };
             var taskDescription = form.find('textarea[name=taskDescription]').val();
             if (taskDescription !== undefined && taskDescription !== "") {
-                var title = $("#title").val();
+                var title = form.find("#newLeadTaskTitle").val();
                 if (title === undefined || title === "") {
                     ret.error = 1;
-                    ret.errorFields.push($("#title"));
+                    ret.errorFields.push(form.find("#newLeadTaskTitle"));
                     ret.errorMessages.push("Please complete the task title.");
                 }
             }

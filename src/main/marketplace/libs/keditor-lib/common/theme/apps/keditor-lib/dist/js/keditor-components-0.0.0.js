@@ -1718,12 +1718,19 @@
                 img.css('vertical-align', 'middle');
             }
             
-            img.attr({
-                width: img.width(),
-                height: img.height()
-            }).css({
-                width: '',
-                height: ''
+            img.on('load', function () {
+                var imgWidth = img.get(0).style.width;
+                var imgHeight = img.get(0).style.height;
+                
+                if (imgWidth && imgHeight) {
+                    img.attr({
+                        width: imgWidth,
+                        height: imgHeight
+                    }).css({
+                        width: '',
+                        height: ''
+                    });
+                }
             });
             
             var options = keditor.options;
