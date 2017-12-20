@@ -2,11 +2,11 @@
     "appDependencies": [
         {
             "appId": "ckeditor-lib",
-            "branch": "4.5.6"
+            "branch": "4.5.6.1"
         },
         {
             "appId": "contentEditor-lib",
-            "branch": "1.0.5"
+            "branch": "1.0.6"
         }
     ]
 }
