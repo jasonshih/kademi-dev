@@ -366,10 +366,6 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
 
     var webbmUrl = src + '/../alt-640-360.webm';
     var m4vUrl = src + '/../alt-640-360.m4v';
-    if (isHash){
-        webbmUrl = src + '/alt-640-360.webm';
-        m4vUrl = src + '/alt-640-360.m4v';
-    }
     jwplayer(innerId).setup({
         flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
         html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
