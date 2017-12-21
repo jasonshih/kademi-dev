@@ -22,7 +22,8 @@ function initLeadManApp(orgRoot, webRoot, enabled, repoDir) {
         group = orgRoot.find("groups").child(salesGroupName);
         if (group == null) {
             group = orgRoot.createGroup(salesGroupName);
-            orgRoot.addRoles(group, orgRoot, "Content Viewer", "Sales", "SalesTeamViewer", "TakeLead");
+            orgRoot.addRoles(group, orgRoot, "Sales", "SalesTeamViewer", "TakeLead");
+            orgRoot.addRoles(group, website, "Content Viewer");
             orgRoot.addGroupToWebsite(group, website);
             log.info("Created sales group '" + salesGroupName + "'");
             if (alertsApp) {
@@ -34,7 +35,8 @@ function initLeadManApp(orgRoot, webRoot, enabled, repoDir) {
         group = orgRoot.find("groups").child(managerGroupName);
         if (group == null) {
             group = orgRoot.createGroup(managerGroupName);
-            orgRoot.addRoles(group, orgRoot, "Content Viewer", "Sales", "SalesTeamViewer", "TakeLead", "User Administrator", "SalesManager");
+            orgRoot.addRoles(group, orgRoot, "Sales", "SalesTeamViewer", "TakeLead", "User Administrator", "SalesManager");
+            orgRoot.addRoles(group, website, "Content Viewer");
             orgRoot.addGroupToWebsite(group, website);
             log.info("Created sales group '" + managerGroupName + "'");
             if (alertsApp) {
