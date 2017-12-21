@@ -214,7 +214,7 @@
             },
             onselectFile: function (nodeFile, selectedUrl, hash) {
                 flog('[jquery.mselect] Selected file', nodeFile, selectedUrl, hash);
-                
+
                 if (selectedUrl.indexOf('/') !== 0) {
                     selectedUrl = '/' + selectedUrl;
                 }
@@ -440,7 +440,7 @@
     };
     
     MSelect.prototype.addFileToTree = function (name, href) {
-        href += '/_DAV/PROPFIND?fields=milton:hash';
+        // href += '/_DAV/PROPFIND?fields=milton:hash';
         flog('[jquery.mselect] addFileToTree', href);
         
         var self = this;

@@ -4,7 +4,24 @@
 
     </head>
     <body class="manageEmail">
+        <form id="frmUpload" action="$page.href" method="post" enctype="multipart/form-data">
+            File Upload<br />
+            <input id="txtFileUpload" type="file" name="NewFile" />
+            <input type="submit" value="Upload" />
+        </form>
 
         $page.search("")
+
+        <script type="text/javascript" >
+            $(function () {
+                $("#frmUpload").forms({
+                    onSuccess: function (resp) {
+                        if (resp.status) {
+                            Msg.info(resp.messages[0]);
+                        }
+                    }
+                });
+            });
+        </script>
     </body>
 </html>
