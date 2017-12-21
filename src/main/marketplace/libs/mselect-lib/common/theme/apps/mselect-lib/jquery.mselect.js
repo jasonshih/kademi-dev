@@ -214,7 +214,7 @@
             },
             onselectFile: function (nodeFile, selectedUrl, hash) {
                 flog('[jquery.mselect] Selected file', nodeFile, selectedUrl, hash);
-
+                
                 if (selectedUrl.indexOf('/') !== 0) {
                     selectedUrl = '/' + selectedUrl;
                 }
@@ -258,7 +258,7 @@
                 } else if (fileType === 'image') {
                     container.find('.btn-edit-image').show();
                     
-                    $('<img />').attr('src', hashUrl).load(function () {
+                    $('<img />').attr('src', hashUrl).on('load', function () {
                         var realWidth = this.width;
                         var realHeight = this.height;
                         var ratio = realWidth / realHeight;
@@ -440,17 +440,15 @@
     };
     
     MSelect.prototype.addFileToTree = function (name, href) {
-        // href += '/_DAV/PROPFIND?fields=milton:hash';
         flog('[jquery.mselect] addFileToTree', href);
         
         var self = this;
         var treeContainer = self.treeContainer;
         
         $.ajax({
-            url: href,
+            url: href + '/_DAV/PROPFIND?fields=milton:hash',
             cache: false
         }).done(function (data) {
-            flog('addFileToTree', data);
             treeContainer.mtree('addFile', name, href, data[0].hash);
         });
     }

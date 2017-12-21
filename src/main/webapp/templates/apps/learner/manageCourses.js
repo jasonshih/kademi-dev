@@ -892,10 +892,15 @@ function initCourseModuleSearch() {
         var that = this;
         typewatch(function () {
             var panel = $(that).parents('.panel');
-            var list = panel.find('ul li').not('.splitter');
+            var list = panel.find('li.course, li.module').not('.splitter');
             if (that.value){
                 list.addClass('hide');
-                list.filter(':contains("'+that.value+'")').removeClass('hide');
+                list.each(function () {
+                    var a = $(this).find('>a');
+                    if (a.text().toLowerCase().indexOf(that.value.toLowerCase()) != -1){
+                        $(this).removeClass('hide');
+                    }
+                });
             } else {
                 list.removeClass('hide');
             }

@@ -165,6 +165,8 @@ function initApp(orgRoot, webRoot, enabled) {
         
         db = dbs.createDb(DB_NAME, DB_TITLE, DB_NAME);
         
+        setAllowAccess(db, true);
+        
         saveMapping(db);
     }
 }
