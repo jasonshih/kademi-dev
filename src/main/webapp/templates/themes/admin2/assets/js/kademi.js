@@ -1268,9 +1268,11 @@ function initImagePicker(target, basePath, pagePath) {
     wrapper.find('.image-picker-upload').mselect({
         basePath: basePath,
         pagePath: pagePath,
-        onSelectFile: function (selectedUrl) {
-            target.val(selectedUrl);
-            preview.attr('src', selectedUrl);
+        onSelectFile: function (selectedUrl, relativeUrl, type, hash) {
+            var newUrl = '/_hashes/files/' + hash;
+            
+            target.val(newUrl);
+            preview.attr('src', newUrl);
         }
     });
     
