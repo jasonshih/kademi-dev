@@ -224,7 +224,7 @@
                             #if($g)
                                 <div class="alert alert-info">
                                     <span class="fa fa-users"></span>
-                                    <a href="/groups/$g.name/members">$g.name</a>
+                                    <a class="alert-link" href="/groups/$g.name/members">$g.name</a>
                                     #if( $g.groupType == "P" )
                                         - Primary group
                                     #elseif( $g.groupType == "M" )
