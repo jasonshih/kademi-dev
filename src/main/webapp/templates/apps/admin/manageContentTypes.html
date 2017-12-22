@@ -5,13 +5,14 @@
     <body>
 
         HELLO WORLD
-
+<br/>
         #if( $page.contentTypeRepo )
-        HAZ REPO
+        I HAZ REPO
         #else
         NO REPO
         #end
 
+        
         #foreach( $contentType in $page.children )
         $contentType.link
         #end

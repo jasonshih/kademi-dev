@@ -10,7 +10,23 @@
             <input type="submit" value="Upload" />
         </form>
 
-        $page.search("")
+        #set( $assets = $page.search("") )
+        <table class="table table-striped">
+            <tr>
+                <th>Name</th>
+                <th>Format</th>
+                <th>Created</th>
+                <th>Modified</th>
+            </tr>
+            #foreach( $asset in $assets )
+            <tr>
+                <td>$asset.name</td>
+                <td>$asset.format</td>
+                <td>$asset.createdDate</td>
+                <td>$asset.modifiedDate</td>
+            </tr>
+            #end
+        </table>
 
         <script type="text/javascript" >
             $(function () {
