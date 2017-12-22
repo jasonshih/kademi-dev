@@ -108,7 +108,7 @@
                                     '    </select>' +
                                     '</div>'
                                 );
-                                modalBody.find('.milton-file-progress, .milton-file-preview').css({top: 90});
+                                modalBody.find('.milton-file-progress, .milton-file-preview').css({top: 105});
                                 txtWidth = modalBody.find('.txt-width');
                                 txtHeight = modalBody.find('.txt-height');
                                 txtAlt = modalBody.find('.txt-alt');
