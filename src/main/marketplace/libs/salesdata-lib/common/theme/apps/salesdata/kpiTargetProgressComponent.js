@@ -51,7 +51,7 @@
             var self = this;
 
             return $.ajax({
-                url: '_components/kpiVis?settings',
+                url: '_components/kpiTargetProgress?settings',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
