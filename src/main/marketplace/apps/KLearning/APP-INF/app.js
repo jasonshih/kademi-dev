@@ -11,7 +11,7 @@ function initLearningApp(orgRoot, webRoot, enabled, repoDir) {
         var group = orgRoot.find("groups").child(groupName);
         if (group == null) {
             group = orgRoot.createGroup(groupName);
-            orgRoot.addRoles(group, website, "Content Viewer", "Learner");
+            orgRoot.addRoles(group, "Content Viewer", "Learner");
             orgRoot.addGroupToWebsite(group, website);
             log.info("Created group '" + groupName + "'");
             if (alertsApp) {
