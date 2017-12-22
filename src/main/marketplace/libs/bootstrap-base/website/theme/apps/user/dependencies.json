@@ -2,7 +2,7 @@
     "appDependencies": [
         {
             "appId": "user-lib",
-            "branch": "1.2.2"
+            "branch": "1.2.3"
         }
     ]
 }
