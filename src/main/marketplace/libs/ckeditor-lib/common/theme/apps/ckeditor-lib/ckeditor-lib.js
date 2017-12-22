@@ -11,7 +11,7 @@ function loadCKEditor(callback) {
     $.getScriptOnce(CKEDITOR_TOOLBAR_PATH, function () {
         $.getScriptOnce(CKEDITOR_JS_PATH, function () {
             $.getScriptOnce(CKEDITOR_JQUERY_ADAPTER_PATH, function () {
-                CKEDITOR.timestamp = '20171207';
+                CKEDITOR.timestamp = '20171223';
                 CKEDITOR.dtd.$removeEmpty['i'] = false;
                 
                 if (typeof  callback === 'function') {

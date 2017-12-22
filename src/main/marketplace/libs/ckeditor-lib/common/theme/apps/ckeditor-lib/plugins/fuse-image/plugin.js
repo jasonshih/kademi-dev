@@ -3,6 +3,7 @@
     var modalBody;
     var txtWidth;
     var txtHeight;
+    var txtAlt;
     var cbbAlign;
     var previewContainer;
     
@@ -53,12 +54,14 @@
                                 var imageUrl = (editor.config.fullUrl ? 'http://' + window.location.host : '') + '/_hashes/files/' + hash;
                                 var width = previewImg.width();
                                 var height = previewImg.height();
-                                
+                                var alt = previewImg.attr('alt');
+
                                 that.element.setAttribute('src', imageUrl);
                                 that.element.setAttribute('data-hash', hash);
                                 that.element.setAttribute('align', previewImg.attr('align') || '');
                                 that.element.setAttribute('width', width);
                                 that.element.setAttribute('height', height);
+                                that.element.setAttribute('alt', alt);
                                 that.element.$.style.width = width + 'px';
                                 that.element.$.style.height = height + 'px';
                                 that.element.$.removeAttribute('data-cke-saved-src');
@@ -79,6 +82,7 @@
                                 var previewImg = previewContainer.find('img');
                                 txtWidth.val(previewImg.width());
                                 txtHeight.val(previewImg.height());
+                                txtAlt.val(previewImg.attr('alt'));
                                 cbbAlign.val('');
                                 addLoremText();
                             },
@@ -87,13 +91,16 @@
                                 
                                 // Extra textboxes for plugin
                                 modalBody.find('.milton-btn-upload-file').after(
-                                    '<div class="input-group" style="float: left; width: 120px; margin: 0 10px;">' +
+                                    '<div class="input-group" style="float: left; width: 130px; margin: 0 10px 10px 10px;">' +
                                     '    <input type="text" class="form-control txt-width" placeholder="Image width" title="Image height" />' +
                                     '</div>' +
-                                    '<div class="input-group" style="float: left; width: 120px; margin: 0 10px 0 0">' +
+                                    '<div class="input-group" style="float: left; width: 130px; margin: 0 10px 10px 0">' +
                                     '    <input type="text" class="form-control txt-height" placeholder="Image height" title="Image height" />' +
                                     '</div>' +
-                                    '<div class="input-group" style="float: left; width: 180px; margin: 0 10px 0 0">' +
+                                    '<div class="input-group" style="float: left; width: 270px; margin: 0 10px 10px 0">' +
+                                    '    <input type="text" class="form-control txt-alt" placeholder="Alt text" title="Alt text" />' +
+                                    '</div>' +
+                                    '<div class="input-group" style="float: left; width: 180px; margin: 0 10px 10px 0">' +
                                     '    <select class="form-control cbb-align" title="Image align">' +
                                     '        <option value="">[No align selected]</option>' +
                                     '        <option value="left">Left</option>' +
@@ -101,9 +108,10 @@
                                     '    </select>' +
                                     '</div>'
                                 );
-                                
+                                modalBody.find('.milton-file-progress, .milton-file-preview').css({top: 90});
                                 txtWidth = modalBody.find('.txt-width');
                                 txtHeight = modalBody.find('.txt-height');
+                                txtAlt = modalBody.find('.txt-alt');
                                 cbbAlign = modalBody.find('.cbb-align');
                                 var updateImageSize = function (width, height) {
                                     previewContainer.find('img').css({
@@ -123,7 +131,7 @@
                                     }
                                 })();
                                 
-                                txtWidth.on('keydown', function () {
+                                txtWidth.on('input', function () {
                                     typewatch(function () {
                                         var width = txtWidth.val();
                                         var height = txtHeight.val();
@@ -139,7 +147,7 @@
                                     }, 200);
                                 });
                                 
-                                txtHeight.on('keydown', function () {
+                                txtHeight.on('input', function () {
                                     typewatch(function () {
                                         var width = txtWidth.val();
                                         var height = txtHeight.val();
@@ -152,6 +160,13 @@
                                         } else {
                                             txtWidth.val(+width / ratio);
                                         }
+                                    }, 200);
+                                });
+
+                                txtAlt.on('input', function () {
+                                    var value = this.value;
+                                    typewatch(function () {
+                                        previewContainer.find('img').attr('alt', value);
                                     }, 200);
                                 });
                                 
@@ -269,26 +284,31 @@
         if (element) {
             element = element.getAscendant('img', true);
         }
-        
+
         if (CKEDITOR.plugins.fuseImage.isImage(element)) {
             that.insertMode = false;
             var hash = element.getAttribute('data-hash');
             var width = (element.$.style.width || '').replace('px', '') || element.getAttribute('width');
             var height = (element.$.style.height || '').replace('px', '') || element.getAttribute('height');
             var src = element.getAttribute('src');
+            var alt = element.getAttribute('alt');
+            if (!alt){
+                alt = '';
+            }
             modalBody.mselect('selectFile', hash);
             
-            $('<img />').attr('src', src).load(function () {
+            $('<img />').attr('src', src).attr('alt', alt).load(function () {
                 var realWidth = this.width;
                 var realHeight = this.height;
                 var ratio = realWidth / realHeight;
                 var align = element.getAttribute('align') || '';
                 
-                previewContainer.html('<img src="' + src + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" style="width: ' + width + 'px; height: ' + height + 'px;" align="' + align + '" />');
+                previewContainer.html('<img alt="'+alt+'" src="' + src + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" style="width: ' + width + 'px; height: ' + height + 'px;" align="' + align + '" />');
                 addLoremText();
                 txtWidth.val(width || realWidth);
                 txtHeight.val(height || realHeight);
                 cbbAlign.val(align);
+                txtAlt.val(alt);
             });
         } else {
             element = instance.document.createElement('img');
