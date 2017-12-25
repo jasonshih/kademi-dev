@@ -7,6 +7,12 @@
             return false;
         }
     });
+    
+    $('#data-query').keyup(function () {
+        typewatch(function () {
+            doHistorySearch();
+        }, 500);
+    });
 
     $('#pointsFooter a').on('click', function (e) {
         e.preventDefault();
