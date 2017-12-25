@@ -1,0 +1,8 @@
+.mtree-wrapper .mtree-toolbar {
+    margin-bottom: 15px;
+}
+
+.mtree-wrapper .mtree {
+    border: 1px solid #dcdcdc;
+    padding: 5px;
+}
