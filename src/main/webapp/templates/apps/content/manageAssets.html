@@ -9,6 +9,10 @@
             <input id="txtFileUpload" type="file" name="NewFile" />
             <input type="submit" value="Upload" />
         </form>
+        
+        #foreach( $ct in $page.contentTypes)
+        <a class="btn btn-success" href="new?type=$ct.name">New $ct.name</a>
+        #end
 
         #set( $assets = $page.search("") )
         <table class="table table-striped">

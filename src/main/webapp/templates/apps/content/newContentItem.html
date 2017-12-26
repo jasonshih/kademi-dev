@@ -1,0 +1,49 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>New item</title>
+
+    </head>
+    <body class="manageEmail">
+        <h1>new item</h1>
+
+        <form action="$page.href" method="POST" class="form-horizontal item-edit-form" role="form">
+            <input type="hidden" name="type" value="$request.params.type"/>
+            <p class="text-right">
+                <button type="submit" class="btn btn-sm btn-success">Save</button>
+            </p>
+
+            <div class="form-group">
+                <label class="control-label col-md-3" for="name">Name</label>
+
+                <div class="col-md-8">
+                    <input type="text" name="name" id="name" value="" placeholder="" class="required form-control" required="true" />
+                </div>
+            </div>
+            
+            
+            #foreach($field in $page.contentType.fields )
+            #if( $field.editable )
+            <div class="form-group">
+                <label class="control-label col-md-3" for="$field.name">$field.name</label>
+
+                <div class="col-md-8">
+                    <input type="text" name="$field.name" id="$field.name" value="" placeholder="" class="required form-control" required="true" />
+                </div>
+            </div>
+            #end
+            #end
+        </form>
+
+        <script type="text/javascript" >
+            $(function () {
+                $(".item-edit-form").forms({
+                    onSuccess: function (resp) {
+                        if (resp.status) {
+                            Msg.info(resp.messages[0]);
+                        }
+                    }                    
+                });
+            });
+        </script>
+    </body>
+</html>
