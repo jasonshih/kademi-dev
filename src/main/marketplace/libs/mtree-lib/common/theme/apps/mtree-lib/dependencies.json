@@ -1,0 +1,30 @@
+{
+    "appDependencies": [
+    ],
+    "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/mtree-lib/jstree/dist/themes/default/style.min.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/mtree-lib/jquery.mtree.css"
+            }
+        },
+        {
+            "js": {
+                "group": "admin",
+                "path": "/theme/apps/mtree-lib/jstree/dist/jstree.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "admin",
+                "path": "/theme/apps/mtree-lib/jquery.mtree.js"
+            }
+        }
+    ]
+}

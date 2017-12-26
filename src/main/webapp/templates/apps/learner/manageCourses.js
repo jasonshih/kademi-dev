@@ -270,7 +270,7 @@ function initCourseModal() {
     var modal = $('#courseModal');
 
     initFuseModal(modal, function () {
-        initHtmlEditors(modal.find('.htmleditor'), getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
+        initHtmlEditors(modal.find('.htmleditor'), 300, null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
     });
 }
 

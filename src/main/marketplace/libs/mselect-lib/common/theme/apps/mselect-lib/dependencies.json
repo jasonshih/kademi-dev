@@ -1,6 +1,14 @@
 {
     "appDependencies": [
         {
+            "appId": "mtree-lib",
+            "branch": "1.0.0"
+        },
+        {
+            "appId": "mupload-lib",
+            "branch": "1.0.0"
+        },
+        {
             "appId": "photoeditor-lib",
             "branch": "1.0.0"
         }

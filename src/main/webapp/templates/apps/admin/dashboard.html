@@ -17,16 +17,24 @@
 
             #foreach($msg in $applications.admin.adminAlerts)
                 <div class="col-sm-12">
-                    <div class="dashboard-alert alert #if($msg.type == "primary") bg-primary #else alert-${msg.type} #end">
+                    <div class="dashboard-alert alert-parent ${msg.type}-alert">
+                        <div class="col-sm-1 alert-icon">
+                          <i class="#if($msg.type == "primary") fa fa-commenting #elseif ($msg.type == "success")  fa fa-check-circle #elseif ($msg.type == "info") fa fa-info-circle #elseif ($msg.type == "warning") fa fa-exclamation-triangle #elseif ($msg.type == "danger") fa fa-times #end" aria-hidden="true"></i>                          
+                        </div>
+
+                        <div class="col-sm-10 alert-message">                 
+                            $!msg.body
+                        </div>
+                        
                         #if( $msg.id )
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            <a class="hide msg" href="$msg.id">Ack</a>
+                            <div class="col-sm-1 alert-close">
+                              <button type="button" class="close alert-close" aria-hidden="true">&times;</button>
+                              <a class="hide msg" href="$msg.id">Ack</a>
+                            </div>
                         #end
-                        $!msg.body
                     </div>
                 </div>
             #end
-
 
             #if( $page.customDashBody )
                 <div class="col-md-12">
@@ -377,6 +385,16 @@
                             ackAlert(href);
                         }
                     })
+                    
+                    $(".alert-close").click(function(){
+                        flog('aaaaaaaaaaaaa', $(this));
+                        $(this).closest('.col-sm-12').remove();
+
+                        href = $(this).closest("div").find("a.msg").attr("href");
+                        if (href) {
+                            ackAlert(href);
+                        }
+                    });
 
                 });
 
