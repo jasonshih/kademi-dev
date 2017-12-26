@@ -291,7 +291,7 @@
         }
     };
     
-    MTree.prototype.toRelativePath = function (url) {
+    MTree.prototype.getRelativePath = function (url) {
         return url.substring(this.options.basePath.length, url.length);
     };
     
@@ -303,7 +303,7 @@
         log('openPath: ' + url);
         
         var self = this;
-        var relPath = self.toRelativePath(url);
+        var relPath = self.getRelativePath(url);
         if (self.endsWith(relPath, '/')) {
             relPath = relPath.substring(0, relPath.length - 1);
         }
