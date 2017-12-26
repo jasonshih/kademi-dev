@@ -24,7 +24,7 @@
     </head>
     <body>
         #set( $website = $page.website )
-        #set( $websiteId = $website.id )
+        #set( $websiteId = $website.name )
         #if(!$websiteId)
             #set( $websiteId = "" )
         #end
@@ -46,7 +46,7 @@
                         <select name="website" id="themeSiteId" class="form-control required">
                             $formatter.option("", "[Website]", $websiteId)
                         #foreach($w in $rootFolder.websites)
-                            $formatter.option($w.id, $w.name, $websiteId)
+                            $formatter.option($w.name, $w.name, $websiteId)
                         #end
                         </select>
                         <small>Will be used for domain and theming</small>
@@ -154,7 +154,7 @@
                                             <select name="website" class="form-control required">
                                                 $formatter.option("", "[Please select]", $websiteId)
                                             #foreach($website in $rootFolder.websites)
-                                                $formatter.option($website.id, $website.name, $websiteId)
+                                                $formatter.option($website.name, $website.name, $websiteId)
                                             #end
                                             </select>
                                         </div>
