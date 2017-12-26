@@ -7,6 +7,7 @@
                 useJsonPut: true,
                 useDropzone: false,
                 buttonText: 'Add files',
+                buttonSize: 'btn-md',
                 onBeforeUpload: function (file) {
                     
                 },
@@ -38,7 +39,7 @@
                 
                 // If not using a dropzone, generate a bootstrap button
                 if (!config.useDropzone) {
-                    formHtml += '<button class="dz-message btn-milton-upload btn btn-success" type="button">' + config.buttonText + '</button>';
+                    formHtml += '<button class="dz-message btn-milton-upload btn btn-success ' + config.buttonSize + '" type="button">' + config.buttonText + '</button>';
                 }
                 formHtml += '</form>';
                 var form = $(formHtml);
