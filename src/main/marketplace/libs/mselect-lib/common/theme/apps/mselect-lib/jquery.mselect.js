@@ -37,37 +37,30 @@
         var options = self.options;
         var target = self.target;
         
-        $.getStyleOnce('/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.css');
-        $.when(
-            $.getScriptOnce('/static/js/jquery.jstree.js'),
-            $.getScriptOnce('/static/js/jquery.milton-tree.js'),
-            $.getScriptOnce('/static/milton-upload/1.0.1/jquery.milton-upload.js')
-        ).then(function () {
-            flog('[jquery.mselect] Initializing mselect', target);
+        flog('[MSelect] Initializing mselect', target);
+        
+        if (options.useModal) {
+            flog('[MSelect] Initializing button and modal...', target);
             
-            if (options.useModal) {
-                flog('[jquery.mselect] Initializing button and modal...', target);
+            self.getModal();
+            target.on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
                 
-                self.getModal();
-                target.on('click', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    options.showModal(self.modal);
-                    
-                    if (options.zIndex) {
-                        self.modal.css('z-index', options.zIndex + 1).siblings('.modal-backdrop').last().css('z-index', options.zIndex);
-                    }
-                });
-            } else {
-                flog('[jquery.mselect] Initializing mselect container only', target);
+                options.showModal(self.modal);
                 
-                target.html(self.getSelectContainer());
-                self.initSelectContainer(target);
-            }
+                if (options.zIndex) {
+                    self.modal.css('z-index', options.zIndex + 1).siblings('.modal-backdrop').last().css('z-index', options.zIndex);
+                }
+            });
+        } else {
+            flog('[MSelect] Initializing mselect container only', target);
             
-            flog('[jquery.mselect] Initialized mselect');
-        });
+            target.html(self.getSelectContainer());
+            self.initSelectContainer(target);
+        }
+        
+        flog('[MSelect] Initialized mselect');
     };
     
     MSelect.prototype.getModal = function () {
@@ -76,7 +69,7 @@
         var modalId = 'modal-milton-file-select-' + (new Date()).getTime();
         
         var modal = $(
-            '<div id="' + modalId + '" class="modal fade" aria-hidden="true" tabindex="-1" data-backdrop="static" data-keyboard="false">' +
+            '<div id="' + modalId + '" class="modal modal-mselect fade" aria-hidden="true" tabindex="-1" data-backdrop="static" data-keyboard="false">' +
             '   <div class="modal-dialog modal-lg">' +
             '       <div class="modal-content">' +
             '           <div class="modal-header">' +
@@ -187,7 +180,7 @@
     };
     
     MSelect.prototype.initTreeContainer = function (container) {
-        flog('[jquery.mselect] initTreeContainer', container);
+        flog('[MSelect] initTreeContainer', container);
         
         var self = this;
         var options = self.options;
@@ -202,99 +195,87 @@
             basePath: options.basePath,
             pagePath: options.pagePath,
             excludedEndPaths: options.excludedEndPaths,
-            onselectFolder: function (nodeFolder, selectedUrl, hash) {
-                flog('[jquery.mselect] Selected folder', nodeFolder, selectedUrl, hash);
+            onSelect: function (node, type, selectedUrl, hash) {
+                btnUpload.mupload('setUrl', this.getSelectedFolderUrl());
                 
-                if (selectedUrl.indexOf('/') !== 0) {
-                    selectedUrl = '/' + selectedUrl;
-                }
-                btnUpload.mupload('setUrl', selectedUrl);
-                previewContainer.attr('data-url', selectedUrl);
-                previewContainer.attr('data-hash', hash);
-            },
-            onselectFile: function (nodeFile, selectedUrl, hash) {
-                flog('[jquery.mselect] Selected file', nodeFile, selectedUrl, hash);
-                
-                if (selectedUrl.indexOf('/') !== 0) {
-                    selectedUrl = '/' + selectedUrl;
-                }
-                var newUrl = self.getCleanUrl(selectedUrl.substr(0, selectedUrl.lastIndexOf('/')) + '/');
-                btnUpload.mupload('setUrl', newUrl);
-                
-                var fileType = self.getFileType(selectedUrl);
-                var hashUrl = '/_hashes/files/' + hash;
-                
-                progressBar.show();
-                progressBarInner.html('Loading...');
-                
-                container.find('.btn-edit-image').hide();
-                
-                if (fileType === 'video') {
-                    previewContainer.html('<div class="jp-video" data-hash="' + hash + '"></div>');
-                    $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
-                        $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
-                            jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                            buildJWPlayer(previewContainer.find('div.jp-video'), 100, hashUrl, hashUrl + '/alt-640-360.png');
-                            
-                            if (typeof options.onPreviewFile === 'function') {
-                                options.onPreviewFile.call(container, fileType, selectedUrl, hash);
-                            }
-                        });
-                    });
-                    progressBar.hide();
-                } else if (fileType === 'audio') {
-                    previewContainer.html('<div class="jp-audio" data-hash="' + hash + '" style="padding: 15px"><div id="kaudio-player-100" /></div>');
-                    $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
-                        $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
-                            jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                            buildJWAudioPlayer(100, hashUrl, false);
-                            
-                            if (typeof options.onPreviewFile === 'function') {
-                                options.onPreviewFile.call(container, fileType, selectedUrl, hash);
-                            }
-                        });
-                    });
-                    progressBar.hide();
-                } else if (fileType === 'image') {
-                    container.find('.btn-edit-image').show();
-                    
-                    $('<img />').attr('src', hashUrl).on('load', function () {
-                        var realWidth = this.width;
-                        var realHeight = this.height;
-                        var ratio = realWidth / realHeight;
-                        
-                        previewContainer.html('<img src="' + hashUrl + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" />');
-                        
-                        if (typeof options.onPreviewFile === 'function') {
-                            options.onPreviewFile.call(container, fileType, selectedUrl, hash);
-                        }
-                        progressBar.hide();
-                    });
+                if (type === 'folder') {
+                    flog('[MSelect] Selected folder', node, selectedUrl, hash);
+                    btnUpload.mupload('setUrl', selectedUrl);
                 } else {
-                    previewContainer.html('<p class="alert alert-warning">Unsupported preview file</p>');
+                    var fileType = self.getFileType(selectedUrl);
+                    var hashUrl = '/_hashes/files/' + hash;
                     
-                    if (typeof options.onPreviewFile === 'function') {
-                        options.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                    progressBar.show();
+                    progressBarInner.html('Loading...');
+                    container.find('.btn-edit-image').hide();
+                    
+                    switch (fileType) {
+                        case 'video':
+                            previewContainer.html('<div class="jp-video" data-hash="' + hash + '"></div>');
+                            $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
+                                $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
+                                    jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
+                                    buildJWPlayer(previewContainer.find('div.jp-video'), 100, hashUrl, hashUrl + '/alt-640-360.png');
+                                    
+                                    if (typeof options.onPreviewFile === 'function') {
+                                        options.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                                    }
+                                });
+                            });
+                            progressBar.hide();
+                            break;
+                        
+                        case 'audio':
+                            previewContainer.html('<div class="jp-audio" data-hash="' + hash + '" style="padding: 15px"><div id="kaudio-player-100" /></div>');
+                            $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
+                                $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
+                                    jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
+                                    buildJWAudioPlayer(100, hashUrl, false);
+                                    
+                                    if (typeof options.onPreviewFile === 'function') {
+                                        options.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                                    }
+                                });
+                            });
+                            progressBar.hide();
+                            break;
+                        
+                        case 'image':
+                            container.find('.btn-edit-image').show();
+                            
+                            $('<img />').attr('src', hashUrl).on('load', function () {
+                                var realWidth = this.width;
+                                var realHeight = this.height;
+                                var ratio = realWidth / realHeight;
+                                
+                                previewContainer.html('<img src="' + hashUrl + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" />');
+                                
+                                if (typeof options.onPreviewFile === 'function') {
+                                    options.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                                }
+                                progressBar.hide();
+                            });
+                            break;
+                        
+                        default:
+                            previewContainer.html('<p class="alert alert-warning">Unsupported preview file</p>');
+                            
+                            if (typeof options.onPreviewFile === 'function') {
+                                options.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                            }
+                            progressBar.hide();
                     }
-                    progressBar.hide();
-                }
-                
-                previewContainer.attr('data-url', selectedUrl);
-                previewContainer.attr('data-hash', hash);
-            },
-            ondelete: function (n, isFolder) {
-                if (isFolder) {
-                    flog('Deleted folder', n, isFolder);
                     
-                    var newUrl = self.getCleanUrl(options.basePath + options.pagePath);
-                    btnUpload.mupload('setUrl', newUrl);
+                    previewContainer.attr('data-url', selectedUrl);
+                    previewContainer.attr('data-hash', hash);
                 }
             }
         };
+        
         if (!options.mselectAll) {
             mtreeOptions.includeContentTypes = options.contentTypes;
         }
-        treeContainer.mtree(mtreeOptions);
+        self.mtree = treeContainer.mtree(mtreeOptions);
     };
     
     MSelect.prototype.initUploadButton = function () {
@@ -308,10 +289,11 @@
         var muploadOptions = {
             url: options.basePath,
             buttonText: '<i class="fa fa-upload"></i>',
+            buttonSize: 'btn-sm',
             oncomplete: function (data, name, href) {
-                flog('[jquery.mselect] oncomplete', data);
+                flog('[MSelect] oncomplete', data);
                 progressBar.hide();
-                self.addFileToTree(name, href);
+                self.mtree.addFile(href);
             },
             onBeforeUpload: function () {
                 progressBar.show();
@@ -325,7 +307,7 @@
     };
     
     MSelect.prototype.initSelectContainer = function (container, onOk) {
-        flog('[jquery.mselect] initSelectContainer', container);
+        flog('[MSelect] initSelectContainer', container);
         
         var self = this;
         var options = self.options;
@@ -349,7 +331,7 @@
             if (url) {
                 if (typeof options.onSelectFile === 'function') {
                     var relUrl = url.substring(options.basePath.length, url.length);
-                    flog('[jquery.mselect] Selected', url, relUrl);
+                    flog('[MSelect] Selected', url, relUrl);
                     var fileType = self.getFileType(url);
                     
                     options.onSelectFile.call(container, url, relUrl, fileType, hash);
@@ -363,7 +345,7 @@
                     onOk.call(this);
                 }
             } else {
-                flog('[jquery.mselect] No selected file!');
+                flog('[MSelect] No selected file!');
             }
         });
         
@@ -375,7 +357,7 @@
     };
     
     MSelect.prototype.initEditZone = function (container) {
-        flog('[jquery.mselect] initEditZone', container);
+        flog('[MSelect] initEditZone', container);
         
         var self = this;
         var options = self.options;
@@ -434,24 +416,10 @@
             if (url) {
                 photoEditor.showModal();
             } else {
-                flog('[jquery.mselect] No selected file!');
+                flog('[MSelect] No selected file!');
             }
         });
     };
-    
-    MSelect.prototype.addFileToTree = function (name, href) {
-        flog('[jquery.mselect] addFileToTree', href);
-        
-        var self = this;
-        var treeContainer = self.treeContainer;
-        
-        $.ajax({
-            url: href + '/_DAV/PROPFIND?fields=milton:hash',
-            cache: false
-        }).done(function (data) {
-            treeContainer.mtree('addFile', name, href, data[0].hash);
-        });
-    }
     
     MSelect.prototype.getSelectContainer = function () {
         var self = this;
@@ -459,11 +427,11 @@
         var extraElement = '';
         
         if (options.useCrop) {
-            extraElement += '<button type="button" class="btn btn-primary btn-edit-image" title="Edit image" style="display: none;"><i class="fa fa-edit"></i></button>';
+            extraElement += '<button type="button" class="btn btn-primary btn-sm btn-edit-image" title="Edit image" style="display: none;"><i class="fa fa-edit"></i></button>';
         }
         
         if (!options.useModal) {
-            extraElement += '<button type="button" class="btn btn-primary btn-ok"><i class="fa fa-check"></i></button>';
+            extraElement += '<button type="button" class="btn btn-primary btn-sm btn-ok"><i class="fa fa-check"></i></button>';
         }
         
         return (
