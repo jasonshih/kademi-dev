@@ -111,6 +111,7 @@
                 <li><a href="#" class="btn-save-file" title="Save"><i class="fa fa-save"></i></a></li>
                 #if(!$isCustomApp)
                     <li><a href="#modal-page-properties" data-toggle="modal" title="Edit page properties" class="btn-edit-properties"><i class="fa fa-edit"></i></a></li>
+                    <li><a href="#modal-page-bg" data-toggle="modal" title="Edit page background" class="btn-edit-page-bg"><i class="fa fa-picture-o"></i></a></li>
                     <li><a href="texteditor?fileName=$!fname" title="Edit with text editor"><i class="fa fa-file-text-o"></i></a></li>
                 #end
             </ul>
@@ -203,6 +204,108 @@
                     </div>
                 </div>
             </div>
+
+        <div id="modal-page-bg" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form method="POST" action="./${fname}" class="form-horizontal">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Page background settings</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-message"></div>
+                            <div class="form-group">
+                                <label for="" class="control-label col-md-4">Use background color</label>
+                                <div class="col-md-8">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" class="bgColorEnabled">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="itemType" class="control-label col-md-4">Background color</label>
+                                <div class="col-md-8">
+                                    #set ($timestamp = $formatter.now.time)
+                                    <input type="hidden" name="paramTitle.$!{timestamp}" value="pageBgColor">
+                                    <input type="text" name="paramValue.$!{timestamp}" class="form-control pageBgColor" value="" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="itemType" class="control-label col-md-4">Background image</label>
+
+                                <div class="col-md-8">
+                                    <div class="pageBgImagePreview">
+                                        <img src="/static/images/photo_holder.png" alt="" class="img-responsive">
+                                    </div>
+                                    <br>
+                                    #set ($timestamp = $formatter.now.time + 1)
+                                    <input type="hidden" name="paramTitle.$!{timestamp}" value="pageBgImage">
+                                    <input type="hidden" class="pageBgImage" name="paramValue.$!{timestamp}">
+                                    <a href="javascript:void (0)" id="pageBgImagePicker" class="btn btn-info">Change image <i class="fa fa-picture-o"></i></a>
+                                    <a href="javascript:void (0)" id="pageBgImagePickerRemove" class="btn btn-danger">Remove image <i class="fa fa-trash"></i></a>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="itemType" class="control-label col-md-4">Background size</label>
+
+                                <div class="col-md-8">
+                                    #set ($timestamp = $formatter.now.time + 2)
+                                    <input type="hidden" name="paramTitle.$!{timestamp}" value="pageBgSize">
+                                    <select name="paramValue.$!timestamp" class="form-control pageBgSize" >
+                                        <option value="auto">Auto</option>
+                                        <option value="cover">Cover</option>
+                                        <option value="contain">Contain</option>
+                                        <option value="100%">100%</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="itemType" class="control-label col-md-4">Background Repeat</label>
+
+                                <div class="col-md-8">
+                                    #set ($timestamp = $formatter.now.time + 3)
+                                    <input type="hidden" name="paramTitle.$!{timestamp}" value="pageBgRepeat">
+                                    <select class="form-control pageBgRepeat" name="paramValue.$!timestamp">
+                                        <option value="repeat">Repeat</option>
+                                        <option value="no-repeat" selected="selected">No Repeat</option>
+                                        <option value="repeat-x">Repeat horizontal</option>
+                                        <option value="repeat-y">Repeat vertical</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="itemType" class="control-label col-md-4">Background position</label>
+
+                                <div class="col-md-8">
+                                    #set ($timestamp = $formatter.now.time + 4)
+                                    <input type="hidden" name="paramTitle.$!{timestamp}" value="pageBgPosition">
+                                    <select class="form-control pageBgPosition" name="paramValue.$!{timestamp}">
+                                        <option value="0% 0%">Top Left</option>
+                                        <option value="50% 0%">Top Center</option>
+                                        <option value="100% 0%">Top Right</option>
+                                        <option value="0% 50%">Middle Left</option>
+                                        <option value="50% 50%">Middle Center</option>
+                                        <option value="100% 50%">Middle Right</option>
+                                        <option value="0% 100%">Bottom Left</option>
+                                        <option value="50% 100%">Bottom Center</option>
+                                        <option value="100% 100%">Bottom Right</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
         #end
 
         <div id="editor-loading">
@@ -215,7 +318,7 @@
         #set($snippetsUrl = "_components?fileName=$!fname")
         #set($snippetsHandlersUrl = "${page.parent.href}_components?handlers&fileName=$!fname")
         
-        <script type="text/javascript">
+        <script type="text/javascript" id="file-jsparams">
             var useHash = "$!useHash";
             var allGroups = {
                 #foreach ($group in $page.find("/").allGroups)
@@ -248,7 +351,6 @@
                 });
             });
         </script>
-
     </body>
 </html>
 #macro( groupTitle $group )

@@ -21,6 +21,7 @@ function initContentEditorPage(options) {
     initKEditor(options);
     initSaving(options.fileName, options.originalUrl);
     initPropertiesModal();
+    initPageBgModal();
     initNavbar();
     
     // Confirm before closed tab or window
@@ -51,7 +52,7 @@ function initPropertiesModal() {
     
     modal.find('form').forms({
         onSuccess: function () {
-            $('#file-title').reloadFragment({
+            $('#file-title, #file-jsparams').reloadFragment({
                 url: window.location.href,
                 whenComplete: function () {
                     modal.modal('hide');
@@ -60,12 +61,12 @@ function initPropertiesModal() {
             });
         }
     });
-    
+
     // Load metas
     addMetaTags(metas);
-    
     // Load data/param
     addParams(params);
+
     
     modal.find('.btn-add-meta').on('click', function (e) {
         e.preventDefault();
@@ -90,6 +91,87 @@ function initPropertiesModal() {
         
         $(this).closest('.param').remove();
     });
+}
+
+function initPageBgModal() {
+    flog(params);
+    var modal = $('#modal-page-bg');
+    $.contentEditor.initColorPicker(modal.find('.pageBgColor'), function () {
+    });
+
+    modal.find('.bgColorEnabled').on('click', function () {
+        if (this.checked){
+            modal.find('.pageBgColor').prop('readonly', false);
+        } else {
+            modal.find('.pageBgColor').val('').prop('readonly', true);
+            modal.find('.input-group-addon i').css('color', 'transparent');
+        }
+    });
+
+    for(var key in params){
+        if (params.hasOwnProperty(key) && key.indexOf('pageBg') == 0){
+            modal.find('.'+key).val(params[key]);
+            if (key.indexOf('pageBgImage') == 0){
+                modal.find('.pageBgImagePreview img').attr('src', params[key]);
+                if (!params[key]){
+                    modal.find('.pageBgImagePreview img').attr('src', '/static/images/photo_holder.png');
+                }
+            }
+            if (key.indexOf('pageBgColor') == 0){
+                if (params[key]){
+                    modal.find('.bgColorEnabled').prop('checked', true);
+                } else {
+                    modal.find('.bgColorEnabled').prop('checked', false);
+                    modal.find('.pageBgColor').val('').prop('readonly', true);
+                    modal.find('.input-group-addon i').css('color', 'transparent');
+                }
+            }
+        }
+    }
+
+    modal.find('#pageBgImagePicker').mselect({
+        contentTypes: ['image'],
+        onSelectFile: function (url, relUrl, fileType, hash) {
+            var hashUrl = '/_hashes/files/'+hash;
+            modal.find('.pageBgImagePreview img').attr('src', hashUrl);
+            modal.find('.pageBgImage').val(hashUrl)
+        }
+    });
+
+    modal.find('#pageBgImagePickerRemove').on('click', function (e) {
+        e.preventDefault();
+        modal.find('.pageBgImagePreview img').attr('src', '/static/images/photo_holder.png');
+        modal.find('.pageBgImage').val('')
+    });
+
+    modal.find('form').forms({
+        onSuccess: function () {
+            $('#file-jsparams').reloadFragment({
+                url: window.location.href,
+                whenComplete: function () {
+                    Msg.success('Page background properties are saved');
+                }
+            });
+            modal.modal('hide');
+        }
+    });
+
+    // modal.find('form').on('submit', function (e) {
+    //     e.preventDefault();
+    //
+    //     var image = modal.find('#pageBgImage').val();
+    //     var pageBgSize = modal.find('#pageBgSize').val();
+    //     var pageBgRepeat = modal.find('.select-bg-repeat').val();
+    //     var pageBgPosition = modal.find('.select-bg-position').val();
+    //     var pageBgColor = modal.find('#pageBgColor').val();
+    //
+    //     var css = {};
+    //     if (image){
+    //         css = {'background-repeat': pageBgRepeat, 'background-position': pageBgPosition, 'background-size': pageBgSize};
+    //         css['background-image'] = image;
+    //     }
+    //     css['background-color'] = pageBgColor;
+    // });
 }
 
 function initKEditor(options) {
@@ -181,7 +263,7 @@ function initSaving(fileName, originalUrl) {
         $('[contenteditable]').blur();
         showLoadingIcon();
         var fileContent = $('#content-area').contentEditor('getContent');
-        
+        debugger;
         var saveUrl;
         if( fileName == "" ) {
             saveUrl = "./";
@@ -242,7 +324,7 @@ function showLoadingIcon() {
 // ============================================================
 function addParams(paramsData) {
     $.each(paramsData, function (title, value) {
-        if (paramsData.hasOwnProperty(title)) {
+        if ( paramsData.hasOwnProperty(title) && title.indexOf('pageBg') != 0 ) {
             if (title !== 'title' && title !== 'itemType' && title !== 'category' && title !== 'tags' && title !== 'metas' && title !== 'body' && title !== 'cssFiles' && title !== 'template') {
                 addParam(title, value);
             }
@@ -275,6 +357,7 @@ function addMetaTags(metasData) {
 function addMetaTag(name, content) {
     var metaWrapper = $('.meta-wrapper');
     var id = (new Date()).getTime();
+    id ++; // make sure no duplicate timestamp
     var isSeoMeta = name === 'keywords' || name === 'description';
     
     metaWrapper.append(
@@ -291,6 +374,7 @@ function addMetaTag(name, content) {
 function addParam(title, value) {
     var metaWrapper = $('.param-wrapper');
     var id = (new Date()).getTime();
+    id ++; // make sure no duplicate timestamp
     
     metaWrapper.append(
         '<div class="input-group param">' +
