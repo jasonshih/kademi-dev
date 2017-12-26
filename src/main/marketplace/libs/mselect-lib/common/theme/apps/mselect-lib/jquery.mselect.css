@@ -2,7 +2,8 @@
    Milton select container
    ============================================================================ */
 .milton-file-select-container {
-    height: 480px;
+    height: 100%;
+    min-height: 480px;
 }
 
 .milton-file-select-container > .row,
@@ -56,8 +57,7 @@
     height: 100%;
 }
 
-.milton-file-select-container .milton-tree {
-    border: 1px solid #ddd !important;
+.milton-file-select-container .mtree {
     overflow: auto !important;
     position: absolute;
     top: 45px;
@@ -67,27 +67,34 @@
     height: auto !important;
 }
 
-.milton-file-select-container .milton-tree.jstree-default a ins.jstree-icon {
-    font-family: FontAwesome !important;
-    font-style: normal !important;
-    font-variant: normal !important;
-    font-weight: normal !important;
-    line-height: 1 !important;
-    text-transform: none !important;
-    background: none !important;
-    font-size: inherit !important;
-    padding-top: 2px;
+/* ============================================================================
+   Milton modal
+   ============================================================================ */
+.modal.modal-mselect {
+    padding: 0 !important;
 }
 
-.milton-file-select-container .milton-tree.jstree-default .jstree-closed > a ins.jstree-icon.folder:before {
-    content: "\f114" !important;
+.modal.modal-mselect .modal-dialog {
+    margin: 0;
+    width: 100%;
+    height: 100%;
 }
 
-.milton-file-select-container .milton-tree.jstree-default .jstree-open > a ins.jstree-icon.folder:before,
-.milton-file-select-container .milton-tree.jstree-default .jstree-leaf > a ins.jstree-icon.folder:before {
-    content: "\f115" !important;
+.modal.modal-mselect .modal-dialog .modal-content {
+    border-radius: 0 !important;
+    height: 100%;
+    border: 0 !important;
 }
 
-.milton-file-select-container .milton-tree.jstree-default a ins.jstree-icon.file:before {
-    content: "\f016" !important;
+.modal.modal-mselect .modal-dialog .modal-content .modal-body {
+    height: calc(100% - 56px - 61px) !important;
+    overflow: auto;
+}
+
+.modal.modal-mselect.modal-no-footer .modal-dialog .modal-content .modal-body {
+    height: calc(100% - 56px) !important;
+}
+
+.modal.modal-mselect .modal-dialog .modal-content .modal-footer {
+    border-radius: 0 !important;
 }

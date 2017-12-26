@@ -18,7 +18,7 @@
             modal = $('#modal-fuse-image');
             if (modal.length === 0) {
                 $(document.body).append(
-                    '<div id="modal-fuse-image" class="modal fade" aria-hidden="true" tabindex="-1">' +
+                    '<div id="modal-fuse-image" class="modal modal-mselect modal-no-footer fade" aria-hidden="true" tabindex="-1">' +
                     '   <div class="modal-dialog modal-lg">' +
                     '       <div class="modal-content">' +
                     '           <div class="modal-header">' +
@@ -91,16 +91,16 @@
                                 
                                 // Extra textboxes for plugin
                                 modalBody.find('.milton-btn-upload-file').after(
-                                    '<div class="input-group" style="float: left; width: 130px; margin: 0 10px 10px 10px;">' +
+                                    '<div class="input-group input-group-sm" style="float: left; width: 90px; margin: 0 10px 10px 10px;">' +
                                     '    <input type="text" class="form-control txt-width" placeholder="Image width" title="Image height" />' +
                                     '</div>' +
-                                    '<div class="input-group" style="float: left; width: 130px; margin: 0 10px 10px 0">' +
+                                    '<div class="input-group input-group-sm" style="float: left; width: 95px; margin: 0 10px 10px 0">' +
                                     '    <input type="text" class="form-control txt-height" placeholder="Image height" title="Image height" />' +
                                     '</div>' +
-                                    '<div class="input-group" style="float: left; width: 270px; margin: 0 10px 10px 0">' +
+                                    '<div class="input-group input-group-sm" style="float: left; width: 240px; margin: 0 10px 10px 0">' +
                                     '    <input type="text" class="form-control txt-alt" placeholder="Alt text" title="Alt text" />' +
                                     '</div>' +
-                                    '<div class="input-group" style="float: left; width: 180px; margin: 0 10px 10px 0">' +
+                                    '<div class="input-group input-group-sm" style="float: left; width: 170px; margin: 0 10px 10px 0">' +
                                     '    <select class="form-control cbb-align" title="Image align">' +
                                     '        <option value="">[No align selected]</option>' +
                                     '        <option value="left">Left</option>' +
@@ -108,7 +108,7 @@
                                     '    </select>' +
                                     '</div>'
                                 );
-                                modalBody.find('.milton-file-progress, .milton-file-preview').css({top: 105});
+                                modalBody.find('.milton-file-progress, .milton-file-preview');
                                 txtWidth = modalBody.find('.txt-width');
                                 txtHeight = modalBody.find('.txt-height');
                                 txtAlt = modalBody.find('.txt-alt');
