@@ -196,14 +196,15 @@
             pagePath: options.pagePath,
             excludedEndPaths: options.excludedEndPaths,
             onSelect: function (node, type, selectedUrl, hash) {
+                flog('[MSelect] Select node', node, selectedUrl, hash);
                 btnUpload.mupload('setUrl', this.getSelectedFolderUrl());
                 
                 if (type === 'folder') {
-                    flog('[MSelect] Selected folder', node, selectedUrl, hash);
                     btnUpload.mupload('setUrl', selectedUrl);
                 } else {
                     var fileType = self.getFileType(selectedUrl);
                     var hashUrl = '/_hashes/files/' + hash;
+                    flog('[MSelect] File type=""' + fileType);
                     
                     progressBar.show();
                     progressBarInner.html('Loading...');

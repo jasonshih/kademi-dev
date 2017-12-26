@@ -159,7 +159,7 @@
             var hash = data.node.a_attr['data-hash'] || '';
             
             if (typeof options.onSelect === 'function') {
-                options.onSelect.call(self, '', type, url, hash);
+                options.onSelect.call(self, self.tree.find('.mtree-node[id="' + data.node.a_attr['id'] + '"]'), type, url, hash);
             }
         });
     };
