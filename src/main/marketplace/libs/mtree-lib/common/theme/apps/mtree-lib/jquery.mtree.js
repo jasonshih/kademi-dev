@@ -41,8 +41,8 @@
         htmlContent += '<div class="mtree-wrapper">';
         if (options.showToolbar) {
             htmlContent += '   <div class="mtree-toolbar">';
-            htmlContent += '       <a href="javascript:void(0)" class="btn btn-danger btn-sm mtree-btn-delete" title="Delete"><i class="fa fa-times"></i></a>';
             htmlContent += '       <a href="javascript:void(0)" class="btn btn-success btn-sm mtree-btn-add-folder" title="Add folder"><i class="fa fa-plus"></i></a>';
+            htmlContent += '       <a href="javascript:void(0)" class="btn btn-danger btn-sm mtree-btn-delete" title="Delete"><i class="fa fa-times"></i></a>';
             htmlContent += '   </div>';
         }
         htmlContent += '   <div class="mtree"></div>';
@@ -159,7 +159,7 @@
             var hash = data.node.a_attr['data-hash'] || '';
             
             if (typeof options.onSelect === 'function') {
-                options.onSelect.call(self, '', type, url, hash);
+                options.onSelect.call(self, self.tree.find('.mtree-node[id="' + data.node.a_attr['id'] + '"]'), type, url, hash);
             }
         });
     };
@@ -194,10 +194,12 @@
     };
     
     MTree.prototype.getFolderUrl = function (url) {
-        if (!this.endsWith(url, '/')) {
+        log('getFolderUrl', url);
+        
+        if (this.endsWith(url, '/')) {
             return url;
         } else {
-        
+            return url.substr(0, url.lastIndexOf('/') + 1);
         }
     };
     
@@ -291,7 +293,7 @@
         }
     };
     
-    MTree.prototype.toRelativePath = function (url) {
+    MTree.prototype.getRelativePath = function (url) {
         return url.substring(this.options.basePath.length, url.length);
     };
     
@@ -303,7 +305,7 @@
         log('openPath: ' + url);
         
         var self = this;
-        var relPath = self.toRelativePath(url);
+        var relPath = self.getRelativePath(url);
         if (self.endsWith(relPath, '/')) {
             relPath = relPath.substring(0, relPath.length - 1);
         }
