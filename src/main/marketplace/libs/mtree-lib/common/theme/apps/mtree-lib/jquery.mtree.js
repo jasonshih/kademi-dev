@@ -194,10 +194,12 @@
     };
     
     MTree.prototype.getFolderUrl = function (url) {
-        if (!this.endsWith(url, '/')) {
+        log('getFolderUrl', url);
+        
+        if (this.endsWith(url, '/')) {
             return url;
         } else {
-        
+            return url.substr(0, url.lastIndexOf('/') + 1);
         }
     };
     
