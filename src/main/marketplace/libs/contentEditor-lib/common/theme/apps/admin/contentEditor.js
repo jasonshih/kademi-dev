@@ -266,7 +266,6 @@ function initSaving(fileName, originalUrl) {
         $('[contenteditable]').blur();
         showLoadingIcon();
         var fileContent = $('#content-area').contentEditor('getContent');
-        debugger;
         var saveUrl;
         if( fileName == "" ) {
             saveUrl = "./";
