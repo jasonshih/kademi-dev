@@ -10,14 +10,32 @@ function getSurveysList(page) {
     return surveys;
 }
 
-// GET /ksurvey/getSurveys
+// GET /ksurveyJson
+function getSurveysJson(page, params) {
+    if (params.method == 'surveysList'){
+        var surveys = getSurveysList(page);
+        var arr = [];
+        for(var i in surveys){
+            arr.push({
+                id: surveys[i].name,
+                name: surveys[i].jsonObject.name,
+                title: surveys[i].jsonObject.title
+            });
+        }
+        return views.jsonObjectView(JSON.stringify({status: true, data: arr}));
+    }
+
+    return views.jsonObjectView(JSON.stringify({status: false}));
+}
+
+// GET /ksurvey/
 function getSurveys(page, params) {
     var surveys = getSurveysList(page);
     page.attributes.surveys = surveys;
     log.info('Display {} surveys(s)', page.attributes.surveys.length);
 }
 
-// GET /ksurvey/getSurvey
+// GET /ksurvey/xxx
 function getSurvey(page, params) {
     log.info('getSurvey > params ', page, params.getSurvey);
     // Get query strings

@@ -1,6 +1,13 @@
 // admin controllers
 controllerMappings
     .adminController()
+    .path('/ksurveyapi/')
+    .enabled(true)
+    .addMethod('GET', 'getSurveysJson')
+    .build();
+
+controllerMappings
+    .adminController()
     .path('/ksurvey/')
     .enabled(true)
     .defaultView(views.templateView('ksurveyapp/manageSurveys.html'))
@@ -180,7 +187,7 @@ function checkRedirect(page, params) {
     return views.redirectView(href);
 }
 
-controllerMappings.addGoalNodeType("ksurveySubmittedGoal", "ksurveyapp/ksurveySubmittedGoalNode.js", null);
+controllerMappings.addGoalNodeType("ksurveySubmittedGoal", "ksurveyapp/ksurveySubmittedGoalNode.js", "onKsurveySubmittedGoal");
 
 controllerMappings.addComponent("ksurveyapp", "ksurveyEmail", "email", "Shows button with link to survey", "Ksurvey App component");
 controllerMappings.addComponent("ksurveyapp", "ksurveyForm", "html", "Shows survey form questions", "Ksurvey App component");
@@ -316,4 +323,14 @@ function getAnswersByQuestion(questionId, surveyId) {
     }
     
     return arr;
+}
+
+function onKsurveySubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
+    log.info('onKsurveySubmittedGoal customSettings {}', customSettings);
+    log.info('onKsurveySubmittedGoal event parameters {}', event.parameters);
+
+    if (customSettings && eventParams && eventParams.survey && customSettings.survey){
+        return customSettings.survey === eventParams.survey;
+    }
+    return true;
 }
