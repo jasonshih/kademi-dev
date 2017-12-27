@@ -3,6 +3,12 @@
 #{else}
     #set ($displayNickname = $formatter.toBool($displayName))
 #end
+
+#if ($formatter.isNull($displayLabels))
+    #set ($displayLabels = true)
+#end
+
+#set ($displayLabels = $formatter.toBool($displayLabels))
 #set ($displayName = $formatter.toBool($displayName))
 #set ($displayPhone = $formatter.toBool($displayPhone))
 #set ($displayPwd = $formatter.toBool($displayPwd))
@@ -27,7 +33,7 @@
 <form data-eway-encrypt-key="$!page.find('/eway').encryptionKey" style="display: none;"></form>
 <form method="post" id="registerForm" action="$formUrl" enctype="multipart/form-data" class="form-horizontal register-form-component" >
     <div class="form-group">
-        <label class="control-label col-md-3" style="$!labelAlign" for="email">Email</label>
+        #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="email">Email</label> #end
         <div class="col-md-9">
             <input class="required form-control" required="true" type="email" name="email" id="email" placeholder="Your email address" />
         </div>
@@ -35,7 +41,8 @@
 
     #if ($displayNickname)
     <div class="form-group">
-        <label class="control-label col-md-3" style="$!labelAlign" for="nickName">Nickname</label>
+        #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="nickName">Nickname</label> #end
+        
         <div class="col-md-9">
             <input class="required form-control" type="text" name="nickName" id="nickName" placeholder="Your nickname for others to see" />
         </div>
@@ -44,7 +51,7 @@
 
     #if ($displayName)
     <div class="form-group">
-        <label class="control-label col-md-3" style="$!labelAlign" for="firstName">First name</label>
+        #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="firstName">First name</label> #end
 
         <div class="col-md-9">
             <input class="required form-control" name="firstName" placeholder="Your first name" />
@@ -52,7 +59,7 @@
     </div>
 
     <div class="form-group">
-        <label class="control-label col-md-3" style="$!labelAlign" for="surName">Surname</label>
+        #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="surName">Surname</label> #end
 
         <div class="col-md-9">
             <input class="required form-control" name="surName" placeholder="Your last name" />
@@ -62,7 +69,7 @@
 
     #if ($displayPhone)
     <div class="form-group">
-        <label class="control-label col-md-3" style="$!labelAlign" for="phone">Phone</label>
+        #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="phone">Phone</label> #end
         <div class="col-md-9">
             <input class="required form-control" type="text" name="phone" id="phone" placeholder="Your phone" />
         </div>
@@ -71,14 +78,14 @@
 
     #if ($displayPwd)
     <div class="form-group">
-        <label class="control-label col-md-3" style="$!labelAlign" for="password">Password</label>
+        #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="password">Password</label> #end
 
         <div class="col-md-9">
             <input class="required form-control" type="password" name="password" id="password" placeholder="Your preferred password" />
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-md-3" style="$!labelAlign" for="confirmPassword">Confirm</label>
+        #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="confirmPassword">Confirm</label> #end
 
         <div class="col-md-9">
             <input class="required form-control" type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password" />
@@ -89,7 +96,7 @@
     #if ($showXtraFields)
     #foreach($field in $pageExtraFields)
     <div class="form-group">
-        <label class="control-label col-md-3" style="$!labelAlign" for="confirmPassword">$field.text</label>
+        #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="confirmPassword">$field.text</label> #end
 
         <div class="col-md-9">
             $field.html
@@ -106,7 +113,7 @@
     #end
 
     <div class="form-group">
-        <label class="control-label col-md-3" style="$!labelAlign" for="orgName">$orgType</label>
+        #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="orgName">$orgType</label> #end
 
         <div class="col-md-9">
             <input type="hidden" name="orgId" id="orgId" />
@@ -117,7 +124,7 @@
 
     #if( ($page.hasOptins() || $groupSignupPage.hasOptins()) && $showOptins)
     <div class="form-group">
-        <div class="col-md-9 col-md-offset-3">
+        <div class="col-md-9 #if($displayLabels) col-md-offset-3 #end">
             #foreach($optin in $pageOptins)
             <label for="optins_${optin.optinGroup.name}">
                 <input type="checkbox" name="optins" value="$optin.optinGroup.name" id="optins_${optin.optinGroup.name}" />
@@ -142,7 +149,7 @@
     #end
 
     <div class="form-group">
-        <div class="col-md-9 col-md-offset-3" >
+        <div class="col-md-9 #if($displayLabels) col-md-offset-3 #end" >
             <button type="submit" class="btn btn-primary">Register</button>
             <a href="/index.html" class="btn">Cancel</a>
         </div>
