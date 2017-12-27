@@ -22,9 +22,8 @@ function initManageModule(baseHref, themePath) {
 
     if (isKEditor) {
         initPostMessage();
-    } else {
-        initCssForEditor(themePath);
     }
+    
     initDropdownMix();
     initImagePicker($('#thumb'), window.location.pathname, '');
     initCRUDModulePages();
@@ -122,41 +121,6 @@ function initFrequencyGroup() {
             btnText.html(value);
         });
     });
-}
-
-function initCssForEditor(themePath) {
-    flog('initCssForEditor. Themepath=', themePath);
-    var cssPath;
-    if (themePath !== "/templates/themes/fuse/") {
-        themePath = '/templates/themes/bootstrap320/'; // HACK!! Loading from an actual theme doesnt work when its not a base theme (eg united)
-        flog('initCssForEditor. Using bootstrap', themePath);
-        cssPath = themePath + 'less/bootstrap.less';
-        cssPath += ',';
-        cssPath += evaluateRelativePath(window.location.pathname, '../../../../theme/theme-params.less');
-        flog('initCssForEditor2', cssPath);
-        cssPath = cssPath.replaceAll('/', '--');
-        cssPath = '/' + cssPath + '.compile.less';
-        flog('initCssForEditor3', cssPath);
-    } else {
-        // This is the old fuse theme
-        cssPath = "/templates/themes/fuse/theme.less,";
-        cssPath += evaluateRelativePath(window.location.pathname, '../../../../theme/theme-params.less');
-        cssPath += "," + "/static/common/contentStyles.less";
-        cssPath = cssPath.replaceAll('/', '--');
-        cssPath = '/' + cssPath + '.compile.less';
-//        cssPath = ',' + themePath + 'theme.less,/static/common/contentStyles.less';
-        flog('initCssForEditor-non-bs: cssPath=', cssPath);
-    }
-
-
-    flog('push theme css file for editor', cssPath);
-    themeCssFiles.push(cssPath);
-    themeCssFiles.push('/static/editor/editor.css'); // just to format the editor itself a little
-    themeCssFiles.push('/static/prettify/prettify.css');
-
-    templatesPath = themePath + 'editor-templates.js'; // override default defined in toolbars.js
-    stylesPath = themePath + 'styles.js'; // override default defined in toolbars.js
-    flog('override default templates and styles', templatesPath, stylesPath);
 }
 
 function initPostMessage() {

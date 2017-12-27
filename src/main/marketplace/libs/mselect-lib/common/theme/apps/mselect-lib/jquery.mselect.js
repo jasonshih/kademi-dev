@@ -204,7 +204,7 @@
                 } else {
                     var fileType = self.getFileType(selectedUrl);
                     var hashUrl = '/_hashes/files/' + hash;
-                    flog('[MSelect] File type=""' + fileType);
+                    flog('[MSelect] File type="' + fileType + '"');
                     
                     progressBar.show();
                     progressBarInner.html('Loading...');

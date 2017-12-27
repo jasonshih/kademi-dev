@@ -1,0 +1,11 @@
+{
+    "appDependencies": [
+        {
+            "appId": "formBuilder",
+            "branch": "1.24.5"
+        }
+    ],
+    "dependencies": [
+    ]
+}
+
