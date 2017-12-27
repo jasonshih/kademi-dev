@@ -66,8 +66,15 @@
         #portlets("header")
     </head>
 
+    #if ($page.getParam("pageBgColor") && $page.getParam("pageBgColor") != "")
+        #set ($bodyCssBgColor = "background-color: $!page.getParam('pageBgColor');")
+    #end
+    #if ($page.getParam("pageBgImage") && $page.getParam("pageBgImage") != "")
+        #set ($bodyCssBgImg = "background-image: url($!page.getParam('pageBgImage')); background-size: $!page.getParam('pageBgSize'); background-position: $!page.getParam('pageBgPosition'); background-repeat: $!page.getParam('pageBgRepeat'); ")
+    #end
 
-    <body>
+    <body style="$!bodyCssBgColor $!bodyCssBgImg">
+
         #set ($googleMapKey = "")
 
         #set( $memberships = $userResource.primaryMemberships )

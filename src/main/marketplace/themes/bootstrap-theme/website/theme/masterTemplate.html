@@ -82,7 +82,15 @@
         <![endif]-->
         #portlets("header")
     </head>
-    <body class="is${templater.getClassName($page)} $!templater.bodyClasses">
+
+    #if ($page.getParam("pageBgColor") && $page.getParam("pageBgColor") != "")
+        #set ($bodyCssBgColor = "background-color: $!page.getParam('pageBgColor');")
+    #end
+    #if ($page.getParam("pageBgImage") && $page.getParam("pageBgImage") != "")
+        #set ($bodyCssBgImg = "background-image: url($!page.getParam('pageBgImage')); background-size: $!page.getParam('pageBgSize'); background-position: $!page.getParam('pageBgPosition'); background-repeat: $!page.getParam('pageBgRepeat'); ")
+    #end
+
+    <body style="$!bodyCssBgColor $!bodyCssBgImg" class="is${templater.getClassName($page)} $!templater.bodyClasses">
         <script src="/static/js/respond.src.js">//</script>
 
         #set( $memberships = $userResource.primaryMemberships )

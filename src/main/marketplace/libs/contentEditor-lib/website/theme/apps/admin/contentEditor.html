@@ -69,18 +69,26 @@
         <link href="/css/bootstrap-ie7.css" rel="stylesheet">
         <![endif]-->
     </head>
-    <body class="content-editor-page #if($params.url) iframe-mode #end">
-        #if(!$isCustomApp)
-            #set($fname = $params.fileName)
-            #if( $fname )
-                #set($file = $folder.child($fname))
-            #else
-                #set($file = $page)
-            #end
-            #set($fileBody = $file.body)
-        #end
-        #set($useHash = $params.useHash)
 
+    #if(!$isCustomApp)
+        #set($fname = $params.fileName)
+        #if( $fname )
+            #set($file = $folder.child($fname))
+        #else
+            #set($file = $page)
+        #end
+        #set($fileBody = $file.body)
+    #end
+    #set($useHash = $params.useHash)
+
+    #if ($file.getParam("pageBgColor") && $file.getParam("pageBgColor") != "")
+        #set ($bodyCssBgColor = "background-color: $!file.getParam('pageBgColor');")
+    #end
+    #if ($file.getParam("pageBgImage") && $file.getParam("pageBgImage") != "")
+        #set ($bodyCssBgImg = "background-image: url($!file.getParam('pageBgImage')); background-size: $!file.getParam('pageBgSize'); background-position: $!file.getParam('pageBgPosition'); background-repeat: $!file.getParam('pageBgRepeat'); ")
+    #end
+
+    <body id="contentEditorPageBody" style="$!bodyCssBgColor $!bodyCssBgImg" class="content-editor-page #if($params.url) iframe-mode #end">
         <nav class="content-editor-nav">
             <a href="" class="content-editor-toggle" title="Close navbar">
                 <i class="fa fa-angle-double-up"></i>
@@ -211,7 +219,7 @@
                     <form method="POST" action="./${fname}" class="form-horizontal">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">Page background settings</h4>
+                            <h4 class="modal-title">Page background properties</h4>
                         </div>
                         <div class="modal-body">
                             <div class="form-message"></div>
@@ -317,40 +325,44 @@
 
         #set($snippetsUrl = "_components?fileName=$!fname")
         #set($snippetsHandlersUrl = "${page.parent.href}_components?handlers&fileName=$!fname")
-        
-        <script type="text/javascript" id="file-jsparams">
-            var useHash = "$!useHash";
-            var allGroups = {
-                #foreach ($group in $page.find("/").allGroups)
-                    '$group.name': '$formatter.firstNotNull($group.title, $group.name)',
-                #end}
-            ;
-            
-            var metas = [];
-            #foreach($metaName in $file.metaNames)
-                metas.push({
-                    'name': '$metaName',
-                    'content': '$!file.getMeta($metaName)'
-                });
-            #end
-            
-            var params = {};
-            #foreach($paramName in $file.paramNames)
-                params['$paramName'] = '$!file.getParam($paramName)';
-            #end
 
-            $(function () {
-                initContentEditorPage({
-                    fileName: '$!fname',
-                    snippetsUrl: '$snippetsUrl',
-                    snippetsHandlersUrl: '$snippetsHandlersUrl',
-                    allGroups: allGroups,
-                    pagePath: '$!pagePath',
-                    isCustomApp: $isCustomApp,
-                    originalUrl: '$!params.url'
+        <div id="file-jsparams">
+            <code class="hide">$!bodyCssBgColor $!bodyCssBgImg</code>
+            <script type="text/javascript" >
+                var useHash = "$!useHash";
+                var allGroups = {
+                #foreach ($group in $page.find("/").allGroups)
+                '$group.name': '$formatter.firstNotNull($group.title, $group.name)',
+                #end}
+                ;
+
+                var metas = [];
+                #foreach($metaName in $file.metaNames)
+                    metas.push({
+                        'name': '$metaName',
+                        'content': '$!file.getMeta($metaName)'
+                    });
+                #end
+
+                    var params = {};
+                #foreach($paramName in $file.paramNames)
+                    params['$paramName'] = '$!file.getParam($paramName)';
+                #end
+
+                $(function () {
+                    initContentEditorPage({
+                        fileName: '$!fname',
+                        snippetsUrl: '$snippetsUrl',
+                        snippetsHandlersUrl: '$snippetsHandlersUrl',
+                        allGroups: allGroups,
+                        pagePath: '$!pagePath',
+                        isCustomApp: $isCustomApp,
+                        originalUrl: '$!params.url'
+                    });
                 });
-            });
-        </script>
+            </script>
+        </div>
+
     </body>
 </html>
 #macro( groupTitle $group )
