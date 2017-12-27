@@ -461,7 +461,7 @@ function initNewUserForm() {
         },
         onSuccess: function (resp) {
             flog('done new user', resp);
-
+            
             switch (nextAction) {
                 case 'view':
                     if (resp.nextHref) {
@@ -894,7 +894,6 @@ function initModalTranslate() {
         '</div>'
     );
     $(document.body).append(modal);
-    initHtmlEditors();
     
     modal.find('form').forms({
         onSuccess: function (resp) {
@@ -911,7 +910,9 @@ function initModalTranslate() {
         modal.find('[name=translated]').prop('disabled', true).removeClass('required').hide();
         modal.find('.htmleditor-wrapper').hide();
         var ckeditor = CKEDITOR.instances[modal.find('.htmleditor').attr('id')];
-        ckeditor.setReadOnly(true);
+        if (ckeditor) {
+            ckeditor.setReadOnly(true);
+        }
     });
     
     return modal;
@@ -970,8 +971,13 @@ function showModalTranslate(target) {
                 modal.find('.htmleditor-wrapper').show();
                 
                 var ckeditor = CKEDITOR.instances[destinationTextbox.attr('id')];
-                ckeditor.setReadOnly(false);
-                ckeditor.setData(translatedText);
+                if (ckeditor) {
+                    ckeditor.setReadOnly(false);
+                    ckeditor.setData(translatedText);
+                } else {
+                    destinationTextbox.val(destinationTextbox);
+                    initHtmlEditors(destinationTextbox);
+                }
             } else if (target.is('input')) {
                 destinationTextbox = translatedTextboxes.filter('input');
             } else {
