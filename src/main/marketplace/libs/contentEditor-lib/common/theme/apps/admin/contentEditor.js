@@ -148,8 +148,10 @@ function initPageBgModal() {
         onSuccess: function () {
             $('#file-jsparams').reloadFragment({
                 url: window.location.href,
-                whenComplete: function () {
+                whenComplete: function (resp) {
                     Msg.success('Page background properties are saved');
+                    var style = $(resp).find('code').text();
+                    $(document.body).attr('style', style)
                 }
             });
             modal.modal('hide');
