@@ -56,7 +56,7 @@
                 <td>
                     #if( $lead.currentGoal )
                         $!funnel.get($lead.currentGoal).title
-                        ( <a href="/funnels/$funnel.name/$lead.currentGoal">$lead.currentGoal</a> )
+                        <small class="text-muted">$lead.currentGoal</small>
                     #else
                         <span class="label label-warning">No current goal. Not being processed.</span>
                     #end
