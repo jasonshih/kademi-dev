@@ -1,4 +1,5 @@
 (function () {
+    Msg.singletonForCategory = true;
     $('#data-query').on('input', function () {
         typewatch(function () {
             doHistorySearch();
@@ -60,7 +61,7 @@
             dataType: 'html',
             success: function (content) {
                 flog('response', content);
-                Msg.info('Search complete', "manageSKUs", 2000);
+                Msg.success('Search complete', "manageSKUs", 2000);
                 var newBody = $(content).find('#pointsTable');
 
                 target.replaceWith(newBody);
