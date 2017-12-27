@@ -19,9 +19,12 @@ JBNodes['startFunnel'] = {
             onValid: function () {
                 var funnelName = form.find('[name=funnelName]').val();
                 var startGoal = form.find('[name=startGoal]').val();
+                var profile = form.find('[name=profile]').val();
+
                 JBApp.currentSettingNode.funnelName = funnelName || null;
                 JBApp.currentSettingNode.startGoal = startGoal || null;
-            
+                JBApp.currentSettingNode.profile = profile || null;
+
                 JBApp.saveFunnel('Funnel is saved');
                 JBApp.hideSettingPanel();
             }
@@ -37,10 +40,11 @@ JBNodes['startFunnel'] = {
 
         form.load(href + ' #frmDetails > *', function () {
             form.removeAttr('action');
-    
+
             form.find('[name=funnelName]').val(node.funnelName || '');
             form.find('[name=startGoal]').val(node.startGoal || '');
-    
+            form.find('[name=profile]').val(node.profile || '');
+
             JBApp.showSettingPanel(node);
         });
     }
