@@ -1,14 +1,5 @@
 (function () {
-    $(document.body).on('keypress', '#data-query', function (e) {
-        var code = e.keyCode || e.which;
-        if (code == 13) {
-            e.preventDefault();
-            doHistorySearch();
-            return false;
-        }
-    });
-    
-    $('#data-query').keyup(function () {
+    $('#data-query').on('input', function () {
         typewatch(function () {
             doHistorySearch();
         }, 500);
@@ -47,7 +38,7 @@
     function doHistorySearch() {
         flog('doHistorySearch');
 
-        Msg.info('Doing search...', 2000);
+        Msg.info('Doing search...', "manageSKUs", 2000);
 
         var data = {
             dataQuery: $('#data-query').val(),
@@ -69,7 +60,7 @@
             dataType: 'html',
             success: function (content) {
                 flog('response', content);
-                Msg.success('Search complete', 2000);
+                Msg.info('Search complete', "manageSKUs", 2000);
                 var newBody = $(content).find('#pointsTable');
 
                 target.replaceWith(newBody);
