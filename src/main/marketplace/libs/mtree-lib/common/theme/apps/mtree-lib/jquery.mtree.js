@@ -211,28 +211,48 @@
         var parentPath = self.getFolderUrl(path);
         
         self.openPath(parentPath, function (parentNode) {
-            var parentId = parentNode ? parentNode.attr('id') : '#';
+            var parentId = parentNode ? parentNode.attr('id') : null;
             
-            $.ajax({
-                url: self.getPropFindUrl(path),
-                cache: false
-            }).done(function (data) {
-                if (data && data[0]) {
-                    var item = self.generateItemData(data[0]);
-                    
-                    log('Data for new node', item);
-                    
-                    self.jstree.create_node(parentId, item, 'first', function () {
-                        var newNode = self.tree.find('#' + item.id);
+            setTimeout(function () {
+                $.ajax({
+                    url: self.getPropFindUrl(path),
+                    cache: false
+                }).done(function (data) {
+                    if (data && data[0]) {
+                        var item = self.generateItemData(data[0]);
+                        log('Data for new node', item);
                         
-                        if (typeof options.onCreate === 'function') {
-                            options.onCreate.call(self, newNode, parentNode, item.type);
+                        var newNode = parentNode ? self.tree.find('.mtree-node[data-hash="' + item.hash + '"]') : null;
+                        
+                        if (!newNode || newNode.length === 0) {
+                            log('Add new node to parent id: ' + parentId);
+                            self.jstree.create_node(parentId, item, 'first', function () {
+                                var newNode = self.tree.find('#' + item.id);
+
+                                if (typeof options.onCreate === 'function') {
+                                    options.onCreate.call(self, newNode, parentNode, item.type);
+                                }
+
+                                self.deselectNode();
+                                self.jstree.select_node(newNode);
+                            });
+                        } else {
+                            if (typeof options.onCreate === 'function') {
+                                options.onCreate.call(self, newNode, parentNode, item.type);
+                            }
+                            
+                            self.deselectNode();
+                            self.jstree.select_node(newNode);
                         }
-                    });
-                }
-            });
-        });
+                    }
+                });
+            })
+        }, 300);
     }
+    
+    MTree.prototype.deselectNode = function (node) {
+        this.jstree.deselect_node(node || this.tree.find('.mtree-node.jstree-clicked'));
+    };
     
     MTree.prototype.addFile = function (path) {
         this.addNode(path);
@@ -309,28 +329,29 @@
         if (self.endsWith(relPath, '/')) {
             relPath = relPath.substring(0, relPath.length - 1);
         }
-        relPath = relPath.split('/');
-        log('Relative path parts: ' + relPath);
+        log('Relative path: ' + relPath);
         
+        var pathParts = relPath ? relPath.split('/') : [];
         var autoOpen = function (partIndex) {
-            if (partIndex >= relPath.length) {
+            if (partIndex >= pathParts.length) {
                 return;
             }
             
-            var node = self.tree.find('.mtree-node[data-name="' + relPath[partIndex] + '"]');
+            var node = self.tree.find('.mtree-node[data-name="' + pathParts[partIndex] + '"]');
             if (node.length > 0) {
                 self.openNode(node, function () {
-                    if (partIndex < relPath.length) {
+                    if (partIndex < pathParts.length) {
                         autoOpen(partIndex + 1);
                     }
                     
-                    if (partIndex === relPath.length - 1) {
+                    if (partIndex === pathParts.length - 1) {
                         log('Last folder', node);
                         
-                        self.jstree.deselect_node(self.tree.find('.mtree-node.jstree-clicked'))
+                        self.deselectNode();
                         self.jstree.select_node(node);
                         
                         if (typeof callback === 'function') {
+                            flog('Path "' + url + '" is opened');
                             callback(node);
                         }
                     }
@@ -338,10 +359,13 @@
             }
         };
         
-        if (relPath.length > 0) {
+        if (pathParts.length > 0) {
             autoOpen(0);
         } else {
+            self.deselectNode();
+            
             if (typeof callback === 'function') {
+                flog('Path "' + url + '" is opened');
                 callback(null);
             }
         }
