@@ -20,9 +20,9 @@
                                             </button>
 
                                             #if( $page.proposal )
-                                                <a class="btn btn-sm btn-info" href="/proposals/$page.proposal.id">
-                                                    Edit Proposal
-                                                </a>
+                                            <a class="btn btn-sm btn-info" href="/proposals/$page.proposal.id">
+                                                Edit Proposal
+                                            </a>
                                             #end
 
                                             <!--
@@ -48,13 +48,13 @@
                                                         <div class="col-sm-5">
                                                             <label class="control-label" for="name">Title</label>
                                                             <input type="text" name="title" class="form-control search-input" placeholder="Quote Title" value="$formatter.ifNull($page.title,
-                                                                '')" />
+                                                                   '')" />
                                                         </div>
 
                                                         <div class="col-sm-7">
                                                             <label class="control-label" for="name">Description</label>
                                                             <input type="text" name="description" class="form-control search-input" placeholder="Quote Description" value="$formatter.ifNull($page.description,
-                                                                '')" />
+                                                                   '')" />
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -64,7 +64,7 @@
                                                             <div class="input-group col-sm-12">
                                                                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
                                                                 <input type="text" class="form-control" placeholder="Search for Vendor" name="vendorName" id="vendor-search-input" data-text="$formatter.ifNull($page.vendor.formattedName,
-                                                                    '')" value="$formatter.ifNull($page.vendor.id, '')" />
+                                                                       '')" value="$formatter.ifNull($page.vendor.id, '')" />
 
                                                             </div>
                                                         </div>
@@ -75,7 +75,7 @@
                                                             <div class="input-group col-sm-12">
                                                                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
                                                                 <input type="text" class="form-control" placeholder="Search for Customer" id="customer-search-input" name="customerName" data-text="$formatter.ifNull($page.customer.formattedName,
-                                                                    '')" value="$formatter.ifNull($page.customer.id, '')" />
+                                                                       '')" value="$formatter.ifNull($page.customer.id, '')" />
                                                             </div>
                                                         </div>
 
@@ -83,7 +83,7 @@
                                                             <label class="control-label" for="name">Issue Date</label>
                                                             <div class="input-group col-sm-12">
                                                                 <input name="issueDate" class="form-control date-pickers" value="$formatter.formatJodaDate($page.issuedDate,
-                                                                    'dd/MM/yyyy HH:mm')" />
+                                                                       'dd/MM/yyyy HH:mm')" />
                                                             </div>
                                                         </div>
 
@@ -91,7 +91,7 @@
                                                             <label class="control-label" for="name">Expiry Date</label>
                                                             <div class="input-group col-sm-12">
                                                                 <input name="expiryDate" class="form-control date-pickers" value="$formatter.formatJodaDate($page.expiryDate,
-                                                                    'dd/MM/yyyy HH:mm')" />
+                                                                       'dd/MM/yyyy HH:mm')" />
                                                             </div>
                                                         </div>
 
@@ -122,7 +122,13 @@
                                         <div id="files-body" class="form-group attachment-container">
                                             <div class="col-md-12">
                                                 #foreach($attachment in $page.attachments)
+                                                <div style="float:left" id="attachment-$attachment.id" >
                                                     <a href="/_hashes/files/$attachment.fileHash" target="_blank" class="attachment btn btn-default pull-left">$attachment.fileName</a>
+                                                    <div style="min-width: 125px;" class="btn-group" role="group">
+                                                        <a title="Download" download="$attachment.fileName" href="/_hashes/files/$attachment.fileHash" class="btn btn-info"><i class="fa fa-download"></i></a>
+                                                        <button title="Delete" type="button" data-hash="$attachment.fileHash" data-id="$attachment.id" class="btn btn-danger btn-delete-attachment"><i class="fa fa-trash"></i></button>
+                                                    </div>
+                                                </div>
                                                 #end
                                                 <button class="remove-uneditable btn btn-success pull-left upload-files" type="button">
                                                     <i class="fa fa-plus"></i>
@@ -154,37 +160,37 @@
                                                     </thead>
                                                     <tbody>
                                                         #foreach($lineItem in $page.lineItems)
-                                                            <tr data-item-id="$lineItem.id">
-                                                                <td>
-                                                                    <input name="description" placeholder="Item Description" class="form-control" type="text" value="$lineItem.description" />
-                                                                </td>
-                                                                <td>
-                                                                    <input name="account" placeholder="Account Name" class="form-control" type="text" value="$formatter.ifNull($lineItem.account,
-                                                                        '')" />
-                                                                </td>
-                                                                <td>
-                                                                    <input name="supplier" type="text" class="form-control supplier old-supplier" data-text="$formatter.ifNull($lineItem.supplier.formattedName,
-                                                                        '')" value="$formatter.ifNull($lineItem.supplier.id, '')" placeholder="Search for Supplier" />
-                                                                </td>
-                                                                <td>
-                                                                    <input name="quantity" placeholder="Quantity Taken" class="quantity-field form-control" type="number" value="$lineItem.quantity" />
-                                                                </td>
-                                                                <td>
-                                                                    <input name="unitPrice" placeholder="Price per Unit" class="price-field form-control" type="number" value="$lineItem.unitPrice" />
-                                                                </td>
-                                                                <td>
-                                                                    <input name="discountRate" placeholder="Discount if Applicable" class="discount-field form-control" value="$lineItem.discountRate" type="number" />
-                                                                </td>
-                                                                <td>
-                                                                    <select name="taxRate" class="form-control last-field">
-                                                                        <option #if ($lineItem.taxRate == 0) selected #else #end value="0">No Tax</option>
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <span data-total="$lineItem.amount" class="total-field">$lineItem.amount</span>
-                                                                    <button class="btn-remove-quote remove-uneditable"><i class="fa fa-trash"></i></button>
-                                                                </td>
-                                                            </tr>
+                                                        <tr data-item-id="$lineItem.id">
+                                                            <td>
+                                                                <input name="description" placeholder="Item Description" class="form-control" type="text" value="$lineItem.description" />
+                                                            </td>
+                                                            <td>
+                                                                <input name="account" placeholder="Account Name" class="form-control" type="text" value="$formatter.ifNull($lineItem.account,
+                                                                       '')" />
+                                                            </td>
+                                                            <td>
+                                                                <input name="supplier" type="text" class="form-control supplier old-supplier" data-text="$formatter.ifNull($lineItem.supplier.formattedName,
+                                                                       '')" value="$formatter.ifNull($lineItem.supplier.id, '')" placeholder="Search for Supplier" />
+                                                            </td>
+                                                            <td>
+                                                                <input name="quantity" placeholder="Quantity Taken" class="quantity-field form-control" type="number" value="$lineItem.quantity" />
+                                                            </td>
+                                                            <td>
+                                                                <input name="unitPrice" placeholder="Price per Unit" class="price-field form-control" type="number" value="$lineItem.unitPrice" />
+                                                            </td>
+                                                            <td>
+                                                                <input name="discountRate" placeholder="Discount if Applicable" class="discount-field form-control" value="$lineItem.discountRate" type="number" />
+                                                            </td>
+                                                            <td>
+                                                                <select name="taxRate" class="form-control last-field">
+                                                                    <option #if ($lineItem.taxRate == 0) selected #else #end value="0">No Tax</option>
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <span data-total="$lineItem.amount" class="total-field">$lineItem.amount</span>
+                                                                <button class="btn-remove-quote remove-uneditable"><i class="fa fa-trash"></i></button>
+                                                            </td>
+                                                        </tr>
                                                         #end
                                                         <tr class="new-line-add-wrapper remove-uneditable">
                                                             <td colspan="8"><a href="" class="new-line-add">Click to add a new line</a></td>
@@ -255,21 +261,21 @@
                     <h4 class="modal-title">Upload Files</h4>
                 </div>
 
-                    <div class="modal-body">
-                        <form action="$page.href" class="dropzone dropzone-fullwidth" id="uploadFileDropzone">
-                            <input type="hidden" name="addAttachment" value="addAttachment">
-                            <!--<div class="form-group">-->
-                                <!--<label>Description</label>-->
-                                <!--<input name="description" class="form-control" value="" placeholder="Leave Blank to Consider File name as description" />-->
-                            <!--</div>-->
-                        </form>
+                <div class="modal-body">
+                    <form action="$page.href" class="dropzone dropzone-fullwidth" id="uploadFileDropzone">
+                        <input type="hidden" name="addAttachment" value="addAttachment">
+                        <!--<div class="form-group">-->
+                        <!--<label>Description</label>-->
+                        <!--<input name="description" class="form-control" value="" placeholder="Leave Blank to Consider File name as description" />-->
+                        <!--</div>-->
+                    </form>
 
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
 
-                        <!--<button class="btn btn-primary" type="submit">Upload</button>-->
-                    </div>
+                    <!--<button class="btn btn-primary" type="submit">Upload</button>-->
+                </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div>

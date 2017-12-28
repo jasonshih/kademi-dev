@@ -13,6 +13,28 @@ Number.prototype.formatMoney = function (c, d, t) {
     var columnId = 0;
     var currentQuoteId = 0;
 
+    function initDeleteAttachment() {
+        $("#files-body").on("click", ".btn-delete-attachment", function (e) {
+            var hash = $(this).data("hash");
+            var id = $(this).data("id");
+
+            flog("Hash: ", hash, " Id: ", id);
+
+            $.ajax({
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    'deleteAttachment': true,
+                    'attachmentHash': hash
+                },
+                success: function (data) {
+                    $("#attachment-" + id).remove();
+                }
+            });
+
+        });
+    }
+
     function initEditQuote(editable) {
         if (editable) {
             initEditableQuote();
@@ -24,7 +46,7 @@ Number.prototype.formatMoney = function (c, d, t) {
             refreshTotals();
         }
     }
-    
+
     function initEditableQuote() {
         initEntityFinder($('#vendor-search-input, #customer-search-input'));
         initDateTimePickers();
@@ -32,31 +54,32 @@ Number.prototype.formatMoney = function (c, d, t) {
         initInvoiceDetailsForm();
         refreshTotals();
     }
-    
+
     function initEntityFinder(target) {
         target.entityFinder({
             url: '/custs',
             useActualId: true
         });
-    };
-    
+    }
+    ;
+
     function initQuoteItems() {
         var itemsWrapper = $('#line-items');
-        
+
         $('.old-supplier').each(function () {
             initEntityFinder($(this));
         });
-        
+
         itemsWrapper.find('tr .total-field').each(function () {
             $(this).html(Number($(this).html()).formatMoney(2, '.', ','));
         });
-        
+
         itemsWrapper.on({
             blur: function () {
                 var input = $(this);
                 var tr = input.closest('tr');
                 var tbody = tr.parent('tbody');
-                
+
                 setTimeout(function () {
                     tbody.find('.highlighted').removeClass('highlighted');
                     saveChangedRow(tr);
@@ -70,7 +93,7 @@ Number.prototype.formatMoney = function (c, d, t) {
             keydown: function (e) {
                 if (event.keyCode === 13) {
                     event.preventDefault();
-                    
+
                     return false;
                 }
             },
@@ -78,55 +101,55 @@ Number.prototype.formatMoney = function (c, d, t) {
                 $(this).parents('tr').addClass('highlighted');
             }
         }, 'input');
-        
+
         var btnAddLine = $('.new-line-add');
         var trAddLine = btnAddLine.closest('tr');
         btnAddLine.on('click', function (e) {
             e.preventDefault();
-            
+
             var templateHtml = $('#template-row').html();
             var template = $(templateHtml);
             template.find('input:eq(0)').focus();
             template.insertBefore(trAddLine);
-            
+
             initEntityFinder(template.find('.supplier'));
-            
+
             columnId++;
         }).trigger('click');
-        
+
         itemsWrapper.on('keyup', '.discount-field, .price-field, .quantity-field', function () {
             var parentRow = $(this).parents('tr');
-            
+
             var quantity = Number(parentRow.find('.quantity-field').val());
             var price = Number(parentRow.find('.price-field').val());
             var discount = Number(parentRow.find('.discount-field').val());
-            
+
             var amount = parentRow.find('.total-field');
-            
+
             if (isNaN(quantity) || isNaN(price)) {
                 amount.html((0).formatMoney(2, '.', ','));
                 amount.data('total', 0);
-                
+
                 refreshTotals();
-                
+
                 return;
             }
-            
+
             amount.data('total', (quantity * price) - (quantity * price * (isNaN(discount) ? 0 : (discount / 100))));
             amount.html(Number(amount.data('total')).formatMoney(2, '.', ','));
-            
+
             refreshTotals();
         });
-        
+
         itemsWrapper.on('click', '.btn-remove-quote', function (e) {
             e.preventDefault();
-            
+
             var btn = $(this);
             var tr = btn.closest('tr');
-            
+
             if (tr.data('item-id') !== 'NEW') {
                 if (confirm('Are you sure you want to delete this item?')) {
-                    
+
                     $.ajax({
                         method: 'POST',
                         dataType: 'json',
@@ -136,28 +159,28 @@ Number.prototype.formatMoney = function (c, d, t) {
                         },
                         success: function (data) {
                             tr.remove();
-                            
+
                             if (itemsWrapper.find('tbody tr').length === 1) {
                                 btnAddLine.trigger('click');
                             }
-                            
+
                             refreshTotals();
                         }
                     });
-                    
+
                 }
             } else {
                 tr.remove();
-                
+
                 if (itemsWrapper.find('tbody tr').length === 1) {
                     btnAddLine.trigger('click');
                 }
-                
+
                 refreshTotals();
             }
         });
     }
-    
+
     function initInvoiceDetailsForm() {
         $('#invoice-details-form').forms({
             onSuccess: function () {
@@ -165,7 +188,7 @@ Number.prototype.formatMoney = function (c, d, t) {
             }
         });
     }
-    
+
     function saveChangedRow(row) {
         var data = {
             'description': row.find('[name=description]').val(),
@@ -176,14 +199,14 @@ Number.prototype.formatMoney = function (c, d, t) {
             'discountRate': row.find('[name=discountRate]').val(),
             'taxRate': row.find('[name=taxRate] :selected').val(),
         };
-        
+
         if (row.data('item-id') === 'NEW') {
             data['addLineItem'] = currentQuoteId;
         } else {
             data['modifyLineItem'] = currentQuoteId;
             data['lineItemId'] = row.data('item-id');
         }
-        
+
         $.ajax({
             method: 'POST',
             dataType: 'json',
@@ -197,22 +220,22 @@ Number.prototype.formatMoney = function (c, d, t) {
             }
         });
     }
-    
+
     function refreshTotals() {
         var total = 0;
-        
+
         $('#line-items tbody tr').each(function () {
             var totalField = $(this).find('.total-field');
-            
+
             if (totalField.length > 0) {
                 total += Number(totalField.data('total'));
             }
-            
+
             $('.subtotal-field').text(total.formatMoney(2, '.', ','));
             $('.global-total-field').text(total.formatMoney(2, '.', ','));
         });
     }
-    
+
     function initDateTimePickers() {
         var date = new Date();
         date.setDate(date.getDate() - 1);
@@ -221,9 +244,9 @@ Number.prototype.formatMoney = function (c, d, t) {
             widgetParent: 'body',
             format: 'DD/MM/YYYY HH:mm'
         };
-        
+
         $('.date-pickers').datetimepicker(opts);
-        
+
         $('.date-pickers').on('dp.show', function () {
             var datepicker = $('body').find('.bootstrap-datetimepicker-widget:last');
             if (datepicker.hasClass('bottom')) {
@@ -289,14 +312,15 @@ Number.prototype.formatMoney = function (c, d, t) {
     }
 
     initializeQuoteComponent = function (quoteId, quoteLevel) {
-        currentQuoteId = quoteId; 
+        currentQuoteId = quoteId;
         initEditQuote(quoteLevel === "New" || quoteLevel === "Assigned");
         initModalForm();
+        initDeleteAttachment();
     };
 
-    $(document).ready(function(){
+    $(document).ready(function () {
         var editQuote = $('.edit-quote-component');
-        if(editQuote.length > 0) {
+        if (editQuote.length > 0) {
             var quoteId = editQuote.data('page-name');
             var state = editQuote.data('quote-state');
 
