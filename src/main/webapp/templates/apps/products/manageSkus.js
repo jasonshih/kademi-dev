@@ -1,5 +1,6 @@
 (function () {
     Msg.singletonForCategory = true;
+    var skuCodeSubmitted = false;
     $('#data-query').on('input', function () {
         typewatch(function () {
             doHistorySearch();
@@ -127,8 +128,10 @@
             var productId = td.data('productid');
             var skuId = td.data('skuid');
             var options = td.data('options');
-
-            updateSku(productId, options, skuId, newSku, rowId);
+            if (!skuCodeSubmitted){
+                skuCodeSubmitted = true;
+                updateSku(productId, options, skuId, newSku, rowId);
+            }
         });
 
         $('#productsTableBody').on('keyup', '.input-sku', function (e) {
@@ -142,8 +145,10 @@
                 var productId = td.data('productid');
                 var skuId = td.data('skuid');
                 var options = td.data('options');
-
-                updateSku(productId, options, skuId, newSku, rowId);
+                if (!skuCodeSubmitted) {
+                    skuCodeSubmitted = true;
+                    updateSku(productId, options, skuId, newSku, rowId);
+                }
             }
         });
     }
@@ -404,9 +409,11 @@
                 } else {
                     Msg.error(resp.messages);
                 }
+                skuCodeSubmitted = false;
             },
             error: function (resp) {
                 Msg.error('An error occured setting the SKU');
+                skuCodeSubmitted = false;
             }
         });
     }
