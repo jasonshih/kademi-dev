@@ -5,9 +5,34 @@
     </head>
     <body class="manageEmail">
 
-        IMAGE - $page.asset
+        <div class="lead">$page.asset.name</div>
 
-        <img src="/assets/$page.asset.uniqueId"/>
+        <div class="memberships-wrapper" id="membershipsContainer">
+            <div class="dropdown pull-left" style="margin-right: 15px">
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#" style="text-decoration: none;">
+                    <i class="clip-plus-circle fa-2x"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    #foreach($type in $page.parent.assetTypes)
+                    <li class="addGroup">
+                        <a href="$type.name" class="add-type">
+                            <i class="fa-cog"></i> $type.name
+                        </a>
+                    </li>
+                    #end
+                </ul>
+            </div>
+            <div id="user-membership" class="blocks-wrapper memberships-list membershipsDiv">
+                #foreach( $type in $page.asset.assetTypes )
+                <span class="label label-info">$type</span>
+                #end
+            </div>
+            <div style="clear: both"></div>
+        </div>
+
+        <div class="col-md-12">
+            <img class="img img-responsive" src="/assets/$page.asset.uniqueId"/>
+        </div>
 
 
         <script type="text/javascript" >
@@ -19,6 +44,23 @@
                             Msg.info(resp.messages[0]);
                         }
                     }
+                });
+
+                flog("init: add type");
+                $(".add-type").click(function (e) {
+                    flog("click");
+                    e.preventDefault();
+                    $.ajax({
+                        url: window.location.pathname,
+                        type: 'post',
+                        dataType: 'json',
+                        data : {
+                            "assetType" : $(e.target).closest("a").attr("href")
+                        },
+                        success: function (resp) {
+                            Msg.info("Done");
+                        }
+                    });
                 });
             });
         </script>
