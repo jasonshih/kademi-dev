@@ -1,0 +1,24 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Content Item</title>
+
+    </head>
+    <body class="manageEmail">
+
+        TEXT
+
+
+        <script type="text/javascript" >
+            $(function () {
+
+                $(".form-edit").forms({
+                    onSuccess: function (resp) {
+                        if (resp.status) {
+                            Msg.info(resp.messages[0]);
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
