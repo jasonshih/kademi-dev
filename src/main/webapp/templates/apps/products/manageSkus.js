@@ -398,7 +398,9 @@
                 if (resp.status) {
                     flog('newSku', newSku);
                     Msg.success(resp.messages);
-                    reloadRow(rowId, productId);
+                    setTimeout(function () {
+                        reloadRow(rowId, productId);
+                    }, 800)
                 } else {
                     Msg.error(resp.messages);
                 }
