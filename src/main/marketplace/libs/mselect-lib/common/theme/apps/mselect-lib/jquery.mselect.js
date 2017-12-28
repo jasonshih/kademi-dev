@@ -197,11 +197,10 @@
             excludedEndPaths: options.excludedEndPaths,
             onSelect: function (node, type, selectedUrl, hash) {
                 flog('[MSelect] Select node', node, selectedUrl, hash);
-                btnUpload.mupload('setUrl', this.getSelectedFolderUrl());
+                var selectFolder = this.getSelectedFolderUrl();
+                btnUpload.mupload('setUrl', selectFolder);
                 
-                if (type === 'folder') {
-                    btnUpload.mupload('setUrl', selectedUrl);
-                } else {
+                if (type === 'file') {
                     var fileType = self.getFileType(selectedUrl);
                     var hashUrl = '/_hashes/files/' + hash;
                     flog('[MSelect] File type="' + fileType + '"');

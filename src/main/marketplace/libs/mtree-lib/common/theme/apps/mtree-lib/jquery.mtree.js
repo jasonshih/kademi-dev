@@ -180,13 +180,19 @@
         
         var self = this;
         var selectedNode = self.getSelectedNode();
+        log('Selected node', selectedNode);
         
         if (selectedNode) {
             if (selectedNode.attr('data-type') === 'folder') {
                 return selectedNode;
             } else {
                 var folder = selectedNode.closest('.mtree-folder-wrapper');
-                return folder.children('.mtree-node.mtree-folder');
+                
+                if (folder.length > 0) {
+                    return folder.children('.mtree-node.mtree-folder');
+                } else {
+                    return null;
+                }
             }
         } else {
             return null;
@@ -222,28 +228,24 @@
                         var item = self.generateItemData(data[0]);
                         log('Data for new node', item);
                         
-                        var newNode = parentNode ? self.tree.find('.mtree-node[data-hash="' + item.hash + '"]') : null;
+                        var existingNode = self.tree.find('.mtree-node[href="' + path + '"]');
                         
-                        if (!newNode || newNode.length === 0) {
-                            log('Add new node to parent id: ' + parentId);
-                            self.jstree.create_node(parentId, item, 'first', function () {
-                                var newNode = self.tree.find('#' + item.id);
-
-                                if (typeof options.onCreate === 'function') {
-                                    options.onCreate.call(self, newNode, parentNode, item.type);
-                                }
-
-                                self.deselectNode();
-                                self.jstree.select_node(newNode);
-                            });
-                        } else {
+                        if (existingNode && existingNode.length > 0) {
+                            log('Delete old node', existingNode);
+                            self.jstree.delete_node(existingNode);
+                        }
+                        
+                        log('Add new node to parent id: ' + parentId);
+                        self.jstree.create_node(parentId, item, 'first', function () {
+                            var newNode = self.tree.find('#' + item.id);
+                            
                             if (typeof options.onCreate === 'function') {
                                 options.onCreate.call(self, newNode, parentNode, item.type);
                             }
                             
                             self.deselectNode();
                             self.jstree.select_node(newNode);
-                        }
+                        });
                     }
                 });
             })
@@ -292,13 +294,16 @@
     };
     
     MTree.prototype.getSelectedFolderUrl = function () {
+        log('getSelectedFolderUrl');
+        
         var self = this;
         var selectedFolder = self.getSelectedFolder();
+        log('Selected folder', selectedFolder);
         
         if (selectedFolder) {
             return selectedFolder.attr('href');
         } else {
-            return self.options.basePath
+            return self.options.basePath;
         }
     };
     
