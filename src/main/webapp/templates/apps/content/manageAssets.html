@@ -9,7 +9,7 @@
             <input id="txtFileUpload" type="file" name="NewFile" />
             <input type="submit" value="Upload" />
         </form>
-        
+
         #foreach( $ct in $page.contentTypes)
         <a class="btn btn-success" href="new?type=$ct.name">New $ct.name</a>
         #end
@@ -24,8 +24,13 @@
             </tr>
             #foreach( $asset in $assets )
             <tr>
-                <td>$asset.name</td>
-                <td>$asset.format</td>
+                <td><a href="$asset.uniqueId">$asset.name</a></td>
+                <td>
+                    $!asset.format
+                    #foreach($ct in $asset.contentTypes)
+                        $ct
+                    #end
+                </td>
                 <td>$asset.createdDate</td>
                 <td>$asset.modifiedDate</td>
             </tr>
