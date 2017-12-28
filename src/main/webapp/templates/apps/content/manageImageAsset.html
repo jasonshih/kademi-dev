@@ -34,6 +34,9 @@
             <img class="img img-responsive" src="/assets/$page.asset.uniqueId"/>
         </div>
 
+        #foreach($view in $page.viewHrefs.entrySet() )
+        <a href="/assets/$view.key">$view.value</a>
+        #end
 
         <script type="text/javascript" >
             $(function () {
