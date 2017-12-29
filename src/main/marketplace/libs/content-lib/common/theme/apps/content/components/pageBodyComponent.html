@@ -1,7 +1,12 @@
+XXXXXXXXXXXXXX
 <div class="content-page">
 <div class="page-body htmleditor" style="">
 	#if( $page )
 		$!page.body
+
+		#if( $request.attributes.genContent )
+		    $request.attributes.genContent
+		#end
 	#else
         <p class="text-center">
             <i>Page content will go here</i>
