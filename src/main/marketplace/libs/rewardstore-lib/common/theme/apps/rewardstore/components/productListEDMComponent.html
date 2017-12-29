@@ -8,7 +8,11 @@
 #set( $userBalance = $applications.rewardStore.pointsBalance($pointsBucket.name, $user) )
 
 #set ($numberOfProducts = $formatter.toInteger($numberOfProducts))
-#set( $prods = $applications.rewardStore.productSearch($store, null, $category, $userBalance, 0, $numberOfProducts, 'finalPoints', false) )
+#set ($maxPoints = $userBalance)
+#if ($regardlessUserBalance == "true")
+#set ($maxPoints = $formatter.toLong(99999999))
+#end
+#set( $prods = $applications.rewardStore.productSearch($store, null, $category, $maxPoints, 0, $numberOfProducts, 'finalPoints', false) )
 
 #if( $prods.hits.totalHits > 0 )
 
