@@ -93,6 +93,8 @@
 
 .kchat-media-box a {
     display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .kchat-media-box .glyphicon {
