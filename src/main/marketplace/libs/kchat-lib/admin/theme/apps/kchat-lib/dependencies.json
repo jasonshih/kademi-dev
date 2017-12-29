@@ -27,6 +27,12 @@
                 "media": "all",
                 "path": "/theme/apps/kchat/kchatAdmin.css"
             }
+        },
+        {
+            "css": {
+                "media": "all",
+                "path": "/theme/apps/kchat/kchatCommon.css"
+            }
         }
     ]
 }

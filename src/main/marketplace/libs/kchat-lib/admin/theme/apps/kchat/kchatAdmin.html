@@ -1,100 +1,94 @@
-<div id="page-sidebar" data-cid="$page.organisation.id">
-    <a class="sidebar-toggler sb-toggle" href="#"><i class="fa fa-indent"></i></a>
-    <div class="sidebar-wrapper">
-        <ul class="nav nav-tabs nav-justified" id="sidebar-tab">
-            <li class="active">
-                <a href="#users" role="tab" data-toggle="tab"><i class="fa fa-users"></i></a>
-            </li>
+<div id="page-sidebar" data-cid="$page.organisation.id" class="kchat-admin-container" data-cid="$page.organisation.id">
+    <div class="users-list">
+        <ul class="media-list">
+        
         </ul>
-        <div class="tab-content">
-            <div class="tab-pane active kchat-admin-container" id="users" data-cid="$page.organisation.id">
-                <div class="users-list">
-                    <ul class="media-list">
-                        
-                    </ul>
-                </div>
-                <div class="user-chat">
-                    <div class="sidebar-content">
-                        <a class="sidebar-back" href="#"><i class="fa fa-chevron-circle-left"></i> Back</a>
-                    </div>
-                </div>
-
-                <script class="kchat-user-chatlist-template" type="text/html">
-                    <div id="chat-{{visitorId}}" data-visitorid="{{visitorId}}" class="discussion sidebar-content">
-                        <div class="user-chat-form sidebar-content">
-                            <div class="input-group">
-                                <input type="text" placeholder="Type a message here..." class="form-control kchat-msg-input">
-                                <div class="input-group-btn">
-                                    <button data-visitorid="{{visitorId}}" class="btn btn-success btn-send-msg" type="button">
-                                        <i class="fa fa-chevron-right"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <ol class="kchat-client-msg-list"></ol>
-                    </div>
-                </script>
-                <script class="kchat-user-template" type="text/html">
-                    <li id="user-{{visitorId}}" class="media">
-                        <a href="{{visitorId}}">
-                            <i class="fa fa-circle status-online"></i>
-                            <img alt="{{profile.name}}" src="{{profilePic}}" class="media-object">
-                            <div class="media-body">
-                                <h4 class="media-heading">{{profile.name}}</h4>
-                            </div>
-                        </a>
-                    </li>
-                </script>
-                <script class="kchat-msg-template" type="text/html">
-                    <li class="other" data-timestamp="{{timestamp}}" data-messageid="{{id}}">
-                        <div class="avatar">
-                            <img src="{{profilePic}}" alt="{{profile.name}}">
-                        </div>
-                        <div class="messages">
-                            {{\#if fileHash}}
-                            <div class="kchat-media-box">
-                                {{#_ifImage contentType}}
-                                <a href="/_hashes/files/{{fileHash}}" target="_target">
-                                    <img src="/_hashes/files/{{fileHash}}" />
-                                </a>
-                                {{else}}
-                                <a href="/_hashes/files/{{fileHash}}{{_getExtension fileName}}" download="{{fileName}}">
-                                    <span class="glyphicon glyphicon-file" aria-hidden="true"></span><br/>{{fileName}}
-                                </a>
-                                {{/_ifImage}}
-                            </div>
-                            {{/if}}
-                            <p>{{message}}</p>
-                            <span class="time"> {{time}} </span>
-                        </div>
-                    </li>
-                </script>
-                <script class="kchatadmin-msg-template" type="text/html">
-                    <li class="self" data-timestamp="{{timestamp}}" data-messageid="{{id}}">
-                        <div class="avatar">
-                            <img src="/manageUsers/${user.id}/pic" alt="${user.formattedName}" />
-                        </div>
-                        <div class="messages">
-                            {{\#if fileHash}}
-                            <div class="kchat-media-box">
-                                {{#_ifImage contentType}}
-                                <a href="/_hashes/files/{{fileHash}}" target="_target">
-                                    <img src="/_hashes/files/{{fileHash}}" />
-                                </a>
-                                {{else}}
-                                <a href="/_hashes/files/{{fileHash}}{{_getExtension fileName}}" download="{{fileName}}">
-                                    <span class="glyphicon glyphicon-file" aria-hidden="true"></span><br/>{{fileName}}
-                                </a>
-                                {{/_ifImage}}
-                            </div>
-                            {{/if}}
-                            <p>{{message}}</p>
-                            <span class="time"> {{time}} </span>
-                        </div>
-                    </li>
-                </script>
-                
-            </div>
+    </div>
+    <div class="user-chat">
+        <div class="sidebar-content">
+            <a class="sidebar-back" href="#"><i class="fa fa-chevron-circle-left"></i> Back</a>
         </div>
     </div>
+    
+    <script class="kchat-user-chatlist-template" type="text/html">
+        <div id="chat-{{visitorId}}" data-visitorid="{{visitorId}}" class="discussion">
+            <div class="user-chat-form">
+                <div class="input-group">
+                    <input type="text" placeholder="Type a message here..." class="form-control kchat-msg-input">
+                    <div class="input-group-btn">
+                        <button data-visitorid="{{visitorId}}" class="btn btn-success btn-send-msg" type="button">
+                            <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="kchat-msg-list-wrapper">
+                <ol class="kchat-msg-list"></ol>
+            </div>
+        </div>
+    </script>
+    
+    <script class="kchat-user-template" type="text/html">
+        <li id="user-{{visitorId}}" class="media">
+            <a href="{{visitorId}}">
+                <span class="status-online"></span>
+                <div class="media-left">
+                    <span class="media-object" style="background-image: url('{{profilePic}}')"></span>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">{{profile.name}}</h4>
+                </div>
+            </a>
+        </li>
+    </script>
+    
+    <script class="kchat-msg-template" type="text/html">
+        <li class="kchat-msg kchat-msg-other" data-timestamp="{{timestamp}}" data-messageid="{{id}}">
+            <div class="kchat-msg-user clearfix">
+                <b>{{profile.name}}</b>
+                <small class="kchat-msg-time">{{time}}</small>
+            </div>
+            <div class="kchat-msg-content">
+                {{\#if fileHash}}
+                <div class="kchat-media-box">
+                    {{#_ifImage contentType}}
+                    <a href="/_hashes/files/{{fileHash}}" target="_target">
+                        <img src="/_hashes/files/{{fileHash}}" />
+                    </a>
+                    {{else}}
+                    <a href="/_hashes/files/{{fileHash}}{{_getExtension fileName}}" download="{{fileName}}">
+                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span><br />{{fileName}}
+                    </a>
+                    {{/_ifImage}}
+                </div>
+                {{/if}}
+                <p>{{message}}</p>
+            </div>
+        </li>
+    </script>
+    
+    <script class="kchatadmin-msg-template" type="text/html">
+        <li class="kchat-msg kchat-msg-self" data-timestamp="{{timestamp}}" data-messageid="{{id}}">
+            <div class="kchat-msg-user clearfix">
+                <small class="kchat-msg-time">{{time}}</small>
+                <b>Me</b>
+            </div>
+            <div class="kchat-msg-content">
+                {{\#if fileHash}}
+                <div class="kchat-media-box">
+                    {{#_ifImage contentType}}
+                    <a href="/_hashes/files/{{fileHash}}" target="_target">
+                        <img src="/_hashes/files/{{fileHash}}" />
+                    </a>
+                    {{else}}
+                    <a href="/_hashes/files/{{fileHash}}{{_getExtension fileName}}" download="{{fileName}}">
+                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span><br />{{fileName}}
+                    </a>
+                    {{/_ifImage}}
+                </div>
+                {{/if}}
+                <p>{{message}}</p>
+            </div>
+        </li>
+    </script>
 </div>

@@ -25,45 +25,6 @@
 }
 
 /* ======================================================================
-   Chat section
-   ====================================================================== */
-.kchat-chat-container .chat {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.kchat-chat-container .chat li {
-    margin-bottom: 10px;
-    padding-bottom: 5px;
-    border-bottom: 1px dotted #b3a9a9;
-}
-
-.kchat-chat-container .chat li .chat-body p {
-    margin: 0;
-    color: #777;
-}
-
-.kchat-chat-container .chat .glyphicon {
-    margin-right: 5px;
-}
-
-.kchat-chat-container .kchat-media-box {
-    padding: 14px;
-    background-color: #d6d6d6;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.kchat-chat-container .kchat-media-box .glyphicon {
-    font-size: 3em;
-}
-
-.kchat-chat-container .kchat-media-box img {
-    max-width: 100%;
-}
-
-/* ======================================================================
    Chat panel
    ====================================================================== */
 .kchat-chat-container .panel-kchat {
@@ -99,6 +60,9 @@
     display: inline-block;
 }
 
+/* ======================================================================
+   Upload
+   ====================================================================== */
 .kchat-chat-container .kchat-fileUpload-wrapper {
     text-align: center;
 }

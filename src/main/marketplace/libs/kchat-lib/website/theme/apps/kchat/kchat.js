@@ -172,7 +172,7 @@
             var html = $.parseHTML($this.$msgr(c));
 
             $(html).find('.timeago').timeago();
-            $this.$elem.find('.chat').append($(html));
+            $this.$elem.find('.kchat-msg-list').append($(html));
             var panel = $this.$elem.find('.panel-body');
             panel.scrollTop(panel.find('ul').height());
         },
@@ -276,7 +276,7 @@
             if ($this.$elem.find('[data-messageid=' + cm.id + ']').length < 1) {
                 var html = $.parseHTML((cm.fromAdmin ? $this.$msgl(cm) : $this.$msgr(cm)));
                 $(html).find('.timeago').timeago();
-                $this.$elem.find('.chat').append($(html));
+                $this.$elem.find('.kchat-msg-list').append($(html));
                 var panel = $this.$elem.find('.panel-body');
                 panel.scrollTop(panel.find('ul').height());
             }
@@ -294,7 +294,7 @@
                 return result * 1;
             });
 
-            $this.$elem.find('.chat').empty().append(chats);
+            $this.$elem.find('.kchat-msg-list').empty().append(chats);
         },
         _kchatUploadFile: function (file) {
             var $this = this;
@@ -423,4 +423,5 @@
     $(function () {
         $('.kchat-chat-container').KChat();
     });
+    
 })(jQuery);

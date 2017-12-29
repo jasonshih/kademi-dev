@@ -5,12 +5,13 @@
                 <div class="kchat-upload-popover">
                     <div>
                         <span class="glyphicon glyphicon-open-file"></span>
-                        <br/>
+                        <br />
                         Drop file to upload...
                     </div>
                 </div>
-                <ul class="chat">
-                </ul>
+                <div class="kchat-msg-list-wrapper">
+                    <ol class="kchat-msg-list"></ol>
+                </div>
             </div>
             <div class="panel-footer">
                 <div class="kchat-fileUpload-wrapper" style="display: none;">
@@ -26,7 +27,7 @@
                 <div class="input-group input-group-sm">
                     <input id="btn-input" type="text" class="form-control input-sm kchat-msg-input" placeholder="Type your message here..." />
                     <span class="input-group-btn">
-                        <button class="btn btn-xs btn-primary btn-sm" data-action="kchat-send" >Send</button>
+                        <button class="btn btn-xs btn-primary btn-sm" data-action="kchat-send">Send</button>
                     </span>
                 </div>
             </div>
@@ -41,14 +42,14 @@
             </div>
         </div>
     </div>
-
+    
     <script class="kchat-msgl-template" type="text/html">
-        <li class="left clearfix" data-messageid="{{id}}" data-timestamp="{{timestamp}}">
-            <div class="chat-body clearfix">
-                <div class="header">
-                    <small class="pull-right text-muted"><span class="glyphicon glyphicon-time"></span><abbr class="timeago" title="{{timestamp}}">{{timestamp}}</abbr></small>
-                    <strong class="primary-font">{{profile.name}}</strong>
-                </div>
+        <li class="kchat-msg kchat-msg-other" data-timestamp="{{timestamp}}" data-messageid="{{id}}">
+            <div class="kchat-msg-user clearfix">
+                <b>{{profile.name}}</b>
+                <small class="kchat-msg-time">{{time}}</small>
+            </div>
+            <div class="kchat-msg-content">
                 {{\#if fileHash}}
                 <div class="kchat-media-box">
                     {{#_ifImage contentType}}
@@ -57,7 +58,7 @@
                     </a>
                     {{else}}
                     <a href="/_hashes/files/{{fileHash}}{{_getExtension fileName}}" download="{{fileName}}">
-                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span><br/>{{fileName}}
+                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span><br />{{fileName}}
                     </a>
                     {{/_ifImage}}
                 </div>
@@ -66,28 +67,28 @@
             </div>
         </li>
     </script>
-
+    
     <script class="kchat-msgr-template" type="text/html">
-        <li class="right clearfix" data-messageid="{{id}}" data-timestamp="{{timestamp}}">
-            <div class="chat-body clearfix">
-                <div class="header">
-                    <small class="text-muted"><span class="glyphicon glyphicon-time"></span><abbr class="timeago" title="{{timestamp}}">{{timestamp}}</abbr></small>
-                    <strong class="pull-right primary-font">Me</strong>
-                </div>
+        <li class="kchat-msg kchat-msg-self" data-timestamp="{{timestamp}}" data-messageid="{{id}}">
+            <div class="kchat-msg-user clearfix">
+                <small class="kchat-msg-time">{{time}}</small>
+                <b>Me</b>
+            </div>
+            <div class="kchat-msg-content">
                 {{\#if fileHash}}
                 <div class="kchat-media-box">
                     {{#_ifImage contentType}}
-                    <a href="/_hashes/files/{{fileHash}}{{_getExtension fileName}}" target="_target">
-                        <img src="/_hashes/files/{{fileHash}}{{_getExtension fileName}}" />
+                    <a href="/_hashes/files/{{fileHash}}" target="_target">
+                        <img src="/_hashes/files/{{fileHash}}" />
                     </a>
                     {{else}}
                     <a href="/_hashes/files/{{fileHash}}{{_getExtension fileName}}" download="{{fileName}}">
-                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span><br/>{{fileName}}
+                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span><br />{{fileName}}
                     </a>
                     {{/_ifImage}}
                 </div>
                 {{/if}}
-                <p class="pull-right">{{message}}</p>
+                <p>{{message}}</p>
             </div>
         </li>
     </script>

@@ -1,0 +1,104 @@
+/* =================================================================== */
+/*	Msg list
+/* =================================================================== */
+.kchat-msg-list {
+    padding: 0;
+}
+
+.kchat-msg-list .kchat-msg {
+    padding: 0;
+    display: block;
+}
+
+.kchat-msg-list .kchat-msg + .kchat-msg {
+    margin-top: 5px;
+}
+
+.kchat-msg-list .kchat-msg .kchat-msg-user {
+    font-size: 13px;
+    line-height: 15px;
+}
+
+.kchat-msg-list .kchat-msg .kchat-msg-time {
+    color: #aaa;
+}
+
+.kchat-msg-list .kchat-msg .kchat-msg-content {
+    padding: 5px;
+    background: #f0f0f0;
+    position: relative;
+    margin-top: 10px;
+}
+
+.kchat-msg-list .kchat-msg .kchat-msg-content:before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 8px;
+    border-bottom: 8px solid #f0f0f0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+}
+
+.kchat-msg-list .kchat-msg .kchat-msg-content p {
+    margin: 0;
+}
+
+/* Self chat */
+.kchat-msg-list .kchat-msg.kchat-msg-self {
+    text-align: right;
+}
+
+.kchat-msg-list .kchat-msg.kchat-msg-self .kchat-msg-content {
+    background: #dfeaf1;
+}
+
+.kchat-msg-list .kchat-msg.kchat-msg-self .kchat-msg-content:before {
+    right: 8px;
+    left: auto;
+    border-bottom-color: #dfeaf1;
+}
+
+/* Other chat */
+.kchat-msg-list .kchat-msg.kchat-msg-other {
+    text-align: left;
+}
+
+/* All chat */
+.kchat-msg-list .kchat-msg.kchat-msg-other + .kchat-msg-other .kchat-msg-user,
+.kchat-msg-list .kchat-msg.kchat-msg-self + .kchat-msg-self .kchat-msg-user {
+    display: none;
+}
+
+.kchat-msg-list .kchat-msg.kchat-msg-other + .kchat-msg-other .kchat-msg-content,
+.kchat-msg-list .kchat-msg.kchat-msg-self + .kchat-msg-self .kchat-msg-content {
+    margin-top: 0;
+}
+
+.kchat-msg-list .kchat-msg.kchat-msg-other + .kchat-msg-other .kchat-msg-content:before,
+.kchat-msg-list .kchat-msg.kchat-msg-self + .kchat-msg-self .kchat-msg-content:before {
+    display: none;
+    margin-top: 0;
+}
+
+.kchat-msg-list .kchat-msg.kchat-msg-other + .kchat-msg-self,
+.kchat-msg-list .kchat-msg.kchat-msg-self + .kchat-msg-other {
+    margin-top: 15px;
+}
+
+.kchat-media-box {
+    padding: 5px;
+    text-align: center;
+}
+
+.kchat-media-box a {
+    display: block;
+}
+
+.kchat-media-box .glyphicon {
+    font-size: 3em;
+}
+
+.kchat-media-box img {
+    max-width: 100%;
+}
