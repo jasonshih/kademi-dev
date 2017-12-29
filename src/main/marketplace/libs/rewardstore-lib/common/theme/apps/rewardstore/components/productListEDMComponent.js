@@ -44,6 +44,14 @@
                         form.find('.grid-only').css('display', this.value === 'grid' ? 'block' : 'none');
                     });
 
+                    form.find('.regardlessUserBalance').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-regardless-user-balance', this.checked);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
                     form.find('.number-of-products').on('change', function () {
                         var number = this.value;
 
@@ -97,6 +105,7 @@
             form.find('.items-per-row').val(dataAttributes['data-items-per-row']);
             form.find('.grid-only').css('display', dataAttributes['data-layout'] === 'grid' ? 'block' : 'none');
             form.find('.color-picker').val(dataAttributes['data-bgcolor'] || '').trigger('update');
+            form.find('.regardlessUserBalance').prop('checked', dataAttributes['data-regardless-user-balance'] == "true");
         }
     };
 

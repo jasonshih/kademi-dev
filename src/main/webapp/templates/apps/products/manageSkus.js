@@ -1,6 +1,5 @@
 (function () {
     Msg.singletonForCategory = true;
-    var skuCodeSubmitted = false;
     $('#data-query').on('input', function () {
         typewatch(function () {
             doHistorySearch();
@@ -118,24 +117,16 @@
     }
 
     function initUpdateSku() {
-        $('#productsTableBody').on('change', '.input-sku', function (e) {
-            var target = $(e.target);
-            var newSku = target.val();
-
-            var row = target.closest('tr');
-            var td = row.find('td:first-child');
-            var rowId = row.attr('id');
-            var productId = td.data('productid');
-            var skuId = td.data('skuid');
-            var options = td.data('options');
-            if (!skuCodeSubmitted){
-                skuCodeSubmitted = true;
-                updateSku(productId, options, skuId, newSku, rowId);
+        $('#productsTableBody').on('input', '.input-sku', function (e) {
+            if ((e.keyCode || e.which) == keymap.ENTER){
+                doUpdateSkuCode();
+                return false;
             }
-        });
+            typewatch(function () {
+                doUpdateSkuCode()
+            }, 1000);
 
-        $('#productsTableBody').on('keyup', '.input-sku', function (e) {
-            if ((e.keyCode || e.which) == keymap.ENTER) {
+            function doUpdateSkuCode() {
                 var target = $(e.target);
                 var newSku = target.val();
 
@@ -145,29 +136,16 @@
                 var productId = td.data('productid');
                 var skuId = td.data('skuid');
                 var options = td.data('options');
-                if (!skuCodeSubmitted) {
-                    skuCodeSubmitted = true;
-                    updateSku(productId, options, skuId, newSku, rowId);
-                }
+
+                updateSku(productId, options, skuId, newSku, rowId);
             }
         });
     }
 
     function initUpdateSkuTitle() {
-        $('#productsTableBody').on('change', '.input-sku-Title', function (e) {
+        $('#productsTableBody').on('input', '.input-sku-Title', function (e) {
             var target = $(this);
-            var newSkuTitle = target.val();
-            var row = target.closest('tr');
-            var td = row.find('td:first-child');
-            var rowId = row.attr('id');
-            var skuId = td.data('skuid');
-
-            updateSkuTitle(skuId, newSkuTitle, rowId);
-        });
-
-        $('#productsTableBody').on('keyup', '.input-sku-Title', function (e) {
-            if ((e.keyCode || e.which) == keymap.ENTER) {
-                var target = $(e.target);
+            typewatch(function () {
                 var newSkuTitle = target.val();
                 var row = target.closest('tr');
                 var td = row.find('td:first-child');
@@ -175,7 +153,7 @@
                 var skuId = td.data('skuid');
 
                 updateSkuTitle(skuId, newSkuTitle, rowId);
-            }
+            }, 1000)
         });
     }
 
@@ -409,16 +387,17 @@
                 } else {
                     Msg.error(resp.messages);
                 }
-                skuCodeSubmitted = false;
             },
             error: function (resp) {
                 Msg.error('An error occured setting the SKU');
-                skuCodeSubmitted = false;
             }
         });
     }
 
     function updateSkuTitle(skuId, newSkuTitle, rowId) {
+        if (!newSkuTitle){
+            return Msg.error('Title must not be blank');
+        }
         $.ajax({
             type: 'POST',
             url: window.href,
