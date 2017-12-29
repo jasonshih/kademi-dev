@@ -105,6 +105,7 @@
             form.find('.items-per-row').val(dataAttributes['data-items-per-row']);
             form.find('.grid-only').css('display', dataAttributes['data-layout'] === 'grid' ? 'block' : 'none');
             form.find('.color-picker').val(dataAttributes['data-bgcolor'] || '').trigger('update');
+            form.find('.regardlessUserBalance').prop('checked', dataAttributes['data-regardless-user-balance'] == "true");
         }
     };
 
