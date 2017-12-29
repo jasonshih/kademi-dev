@@ -1,39 +1,40 @@
 (function ($) {
     var KChat = function (element, options) {
-        var $this = this;
-        $this.$elem = $(element);
-        $this.$maxFileSize = 1000000 * 10; // 10 MB
-
+        var self = this;
+        self.$elem = $(element);
+        self.$maxFileSize = 1000000 * 10; // 10 MB
+        
         // Create a logger
         if (typeof window.flog === 'function') {
-            $this.$log = window.flog.bind($this, '[ KChat ] ::');
+            self.$log = window.flog.bind(self, '[ KChat ] ::');
         } else if (window.console && typeof console.log === 'function') {
-            $this.$log = window.console.log.bind($this, '[ KChat ] ::');
+            self.$log = window.console.log.bind(self, '[ KChat ] ::');
         } else {
-            $this.$log = function () {};
+            self.$log = function () {
+            };
         }
-
+        
         // Check if WebSockets is supported, And only init if it is...
-        $this.$supportsWebSockets = 'WebSocket' in window || 'MozWebSocket' in window;
-        if ($this.$supportsWebSockets) {
-            $this.$WebSocket = window.WebSocket || window.MozWebSocket;
+        self.$supportsWebSockets = 'WebSocket' in window || 'MozWebSocket' in window;
+        if (self.$supportsWebSockets) {
+            self.$WebSocket = window.WebSocket || window.MozWebSocket;
         } else {
-            $this.$log('Error: WebSocket not supported...');
-
-            $this.$elem.hide();
+            self.$log('Error: WebSocket not supported...');
+            
+            self.$elem.hide();
         }
-
+        
         // Init Handlebars Helpers
         Handlebars.registerHelper('_ifImage', function (contentType, options) {
             contentType = Handlebars.Utils.escapeExpression(contentType);
-
+            
             if (contentType.contains('image/')) {
                 return options.fn(this);
             } else {
                 return options.inverse(this);
             }
         });
-
+        
         Handlebars.registerHelper('_getExtension', function (fileName) {
             if (typeof fileName === 'string' && fileName.lastIndexOf('.') > -1) {
                 return fileName.substring(fileName.lastIndexOf('.'));
@@ -41,297 +42,299 @@
                 return '';
             }
         });
-
+        
         // Init Handlebars Templates
-        var msgr_templ = $this.$elem.find('.kchat-msgr-template').html();
-        $this.$msgr = Handlebars.compile(msgr_templ);
-
-        var msgl_templ = $this.$elem.find('.kchat-msgl-template').html();
-        $this.$msgl = Handlebars.compile(msgl_templ);
-
+        var msgr_templ = self.$elem.find('.kchat-msgr-template').html();
+        self.$msgr = Handlebars.compile(msgr_templ);
+        
+        var msgl_templ = self.$elem.find('.kchat-msgl-template').html();
+        self.$msgl = Handlebars.compile(msgl_templ);
+        
         // Register send button listener
-        $this.$elem.on('click', '[data-action=kchat-send]', function (e) {
+        self.$elem.on('click', '[data-action=kchat-send]', function (e) {
             e.preventDefault();
-
-            var inp = $this.$elem.find('.kchat-msg-input');
+            
+            var inp = self.$elem.find('.kchat-msg-input');
             var value = inp.val().trim();
-
-            $this.sendMsg(value);
-
+            
+            self.sendMsg(value);
+            
             inp.val('');
         });
-
-        $this.$elem.on('keypress', '.kchat-msg-input', function (e) {
+        
+        self.$elem.on('keypress', '.kchat-msg-input', function (e) {
             if (e.which === 13) { // Enter key pressed
-                var inp = $this.$elem.find('.kchat-msg-input');
+                var inp = self.$elem.find('.kchat-msg-input');
                 var value = inp.val().trim();
-                $this.sendMsg(value);
+                self.sendMsg(value);
                 inp.val('');
             }
         });
-        $this.$elem.find('#kchat-accordion-collapse').on('shown.bs.collapse', function () {
-            var panel = $this.$elem.find('.panel-body');
-            panel.scrollTop(panel.find('ul').height());
-
-            $this.$log('Scroll to the top!!', $this, panel);
+        self.$elem.find('#kchat-accordion-collapse').on('shown.bs.collapse', function () {
+            self.scrollToBottom();
         });
-
+        
         // Check if formData is supported
-        $this.$supportFormData = 'FormData' in window;
-
-        if ($this.$supportFormData) {
-
+        self.$supportFormData = 'FormData' in window;
+        
+        if (self.$supportFormData) {
+            
             // Init support for image pasting
-            $this.$elem.on('paste', function (e) {
-                $this.$log('On Paste: ', this, e);
-
+            self.$elem.on('paste', function (e) {
+                self.$log('On Paste: ', this, e);
+                
                 var items = (e.clipboardData || e.originalEvent.clipboardData).items;
                 console.log(JSON.stringify(items));
-
+                
                 for (var index in items) {
                     var item = items[index];
                     if (item.kind === 'file') {
                         var blob = item.getAsFile();
-
-                        $this._kchatUploadFile(blob);
+                        
+                        self._kchatUploadFile(blob);
                     }
                 }
             });
-
+            
             // Init Drag-Drop file uploader
-            if ('draggable' in $this.$elem[0] || ('ondragstart' in $this.$elem[0] && 'ondrop' in $this.$elem[0])) {
-                var elm = $this.$elem.find('#kchat-accordion-collapse .panel-body');
-
+            if ('draggable' in self.$elem[0] || ('ondragstart' in self.$elem[0] && 'ondrop' in self.$elem[0])) {
+                var elm = self.$elem.find('#kchat-accordion-collapse .panel-body');
+                
                 elm.on('drag dragstart dragend dragover dragenter dragleave drop', function (e) {
-                    $this.$log('Drag Event', e);
+                    self.$log('Drag Event', e);
                     e.preventDefault();
                     e.stopPropagation();
                 }).on('dragstart drag dragover dragenter', function (e) {
-                    $this.$log('Drag Event 1', e);
+                    self.$log('Drag Event 1', e);
                     elm.addClass('is-dragover');
                 }).on('dragleave dragend drop', function (e) {
-                    $this.$log('Drag Event 2', e);
+                    self.$log('Drag Event 2', e);
                     elm.removeClass('is-dragover');
                 }).on('drop', function (e) {
                     elm.removeClass('is-dragover');
                     var droppedFiles = e.originalEvent.dataTransfer.files;
                     if (droppedFiles && droppedFiles.length > 0) {
-                        $this._kchatUploadFile(droppedFiles[0]);
+                        self._kchatUploadFile(droppedFiles[0]);
                     }
                 });
             }
         }
-
+        
         // Init Websockets URL
-        $this.$cid = $this.$elem.data('cid');
-        $this.$b64ContentId = Base64.encode($this.$cid.toString());
-        $this.$port = parseInt(window.location.port || 80) + 1;
-        $this.$proto = 'ws://';
+        self.$cid = self.$elem.data('cid');
+        self.$b64ContentId = Base64.encode(self.$cid.toString());
+        self.$port = parseInt(window.location.port || 80) + 1;
+        self.$proto = 'ws://';
         if (window.location.protocol === 'https:') {
-            $this.$proto = 'wss://';
-            $this.$port = parseInt(window.location.port || 443) + 1;
+            self.$proto = 'wss://';
+            self.$port = parseInt(window.location.port || 443) + 1;
         }
-        $this.$wsUrl = $this.$proto + window.location.hostname + ':' + $this.$port + '/ws/' + window.location.hostname + '/kchat/' + $this.$b64ContentId;
-
+        self.$wsUrl = self.$proto + window.location.hostname + ':' + self.$port + '/ws/' + window.location.hostname + '/kchat/' + self.$b64ContentId;
+        
         // Start it
-        if ($this.$supportsWebSockets) {
-            $this._kchatConnectWs();
+        if (self.$supportsWebSockets) {
+            self._kchatConnectWs();
         }
     };
-
+    
     KChat.prototype = {
         show: function () {
-            var $this = this;
-
-            $this.$elem.find('#kchat-accordion-collapse').collapse('show');
+            var self = this;
+            
+            self.$elem.find('#kchat-accordion-collapse').collapse('show');
         },
         hide: function () {
-            var $this = this;
-
-            $this.$elem.find('#kchat-accordion-collapse').collapse('hide');
+            var self = this;
+            
+            self.$elem.find('#kchat-accordion-collapse').collapse('hide');
         },
         toggle: function () {
-            var $this = this;
-
-            $this.$elem.find('#kchat-accordion-collapse').collapse('toggle');
+            var self = this;
+            
+            self.$elem.find('#kchat-accordion-collapse').collapse('toggle');
         },
         sendMsg: function (msg) {
-            var $this = this;
-
+            var self = this;
+            
             var c = {
                 action: "msg",
                 message: msg
             };
-
-            $this._kchatSend(c);
-
+            
+            self._kchatSend(c);
+            
             c.timestamp = (new moment()).toISOString();
             c.profile = {
                 name: "Me"
             };
-            var html = $.parseHTML($this.$msgr(c));
-
+            var html = $.parseHTML(self.$msgr(c));
+            
             $(html).find('.timeago').timeago();
-            $this.$elem.find('.kchat-msg-list').append($(html));
-            var panel = $this.$elem.find('.panel-body');
-            panel.scrollTop(panel.find('ul').height());
+            self.$elem.find('.kchat-msg-list').append($(html));
+            self.scrollToBottom();
+        },
+        scrollToBottom: function () {
+            var self = this;
+            
+            var panelBody = self.$elem.find('.panel-body').get(0);
+            panelBody.scrollTop = panelBody.scrollHeight;
         },
         isConnected: function () {
-            var $this = this;
-
-            if ($this.$ws !== null && typeof $this.$ws !== 'undefined' && $this.$ws instanceof $this.$WebSocket) {
-                return $this.$ws.readyState === $this.$ws.OPEN;
+            var self = this;
+            
+            if (self.$ws !== null && typeof self.$ws !== 'undefined' && self.$ws instanceof self.$WebSocket) {
+                return self.$ws.readyState === self.$ws.OPEN;
             }
-
+            
             return false;
         },
         _kchatSend: function (d) {
-            var $this = this;
-
-            if ($this.isConnected()) {
+            var self = this;
+            
+            if (self.isConnected()) {
                 var msg;
                 if (typeof d === 'string') {
                     msg = d;
                 } else {
                     msg = JSON.stringify(d);
                 }
-
-                $this.$ws.send(msg);
+                
+                self.$ws.send(msg);
             } else {
-                $this.$log('Not Connected, So Queueing message to be sent...');
+                self.$log('Not Connected, So Queueing message to be sent...');
             }
         },
         _kchatWSTimeout: function () {
-            var $this = this;
-
-            $this.$log('Connection timed out, Attempt to reconnect...');
-
-            $this._kchatConnectWs();
+            var self = this;
+            
+            self.$log('Connection timed out, Attempt to reconnect...');
+            
+            self._kchatConnectWs();
         },
         _kchatCheckWS: function () {
-            var $this = this;
-
-            if ($this.$pollTimer) {
-                $this.$pollTimer = window.clearTimeout($this.$pollTimer);
+            var self = this;
+            
+            if (self.$pollTimer) {
+                self.$pollTimer = window.clearTimeout(self.$pollTimer);
             }
-
-            if ($this.isConnected()) {
-                $this._kchatSend({action: 'ping'});
+            
+            if (self.isConnected()) {
+                self._kchatSend({action: 'ping'});
             }
-
-            if ($this.$timeoutTimer) {
-                $this.$timeoutTimer = window.clearTimeout($this.$timeoutTimer);
+            
+            if (self.$timeoutTimer) {
+                self.$timeoutTimer = window.clearTimeout(self.$timeoutTimer);
             }
-
-            $this.$timeoutTimer = window.setTimeout($this._kchatWSTimeout.bind($this), 4000);
+            
+            self.$timeoutTimer = window.setTimeout(self._kchatWSTimeout.bind(self), 4000);
         },
         _kchatStartCheckWS: function () {
-            var $this = this;
-
-            if ($this.$pollTimer) {
-                $this.$pollTimer = window.clearTimeout($this.$pollTimer);
+            var self = this;
+            
+            if (self.$pollTimer) {
+                self.$pollTimer = window.clearTimeout(self.$pollTimer);
             }
-            if ($this.$timeoutTimer) {
-                $this.$timeoutTimer = window.clearTimeout($this.$timeoutTimer);
+            if (self.$timeoutTimer) {
+                self.$timeoutTimer = window.clearTimeout(self.$timeoutTimer);
             }
-
-            $this.$pollTimer = window.setTimeout($this._kchatCheckWS.bind($this), 5000);
+            
+            self.$pollTimer = window.setTimeout(self._kchatCheckWS.bind(self), 5000);
         },
         _kchatOnMessage: function (evt) {
-            var $this = this;
-
+            var self = this;
+            
             var c = $.parseJSON(evt.data);
             if (c.action === 'msg') {
-                $this._kchatStartCheckWS();
-
-                $this._processMessage.call($this, c.chatMessage);
-
-                $this._kchatStartCheckWS();
+                self._kchatStartCheckWS();
+                
+                self._processMessage.call(self, c.chatMessage);
+                
+                self._kchatStartCheckWS();
             } else if (c.action === 'history') {
-                $this._kchatStartCheckWS();
-
+                self._kchatStartCheckWS();
+                
                 if (c.data) {
                     c.data.sort(function (a, b) {
                         var result = (a['timestamp'] < b['timestamp']) ? -1 : (a['timestamp'] > b['timestamp']) ? 1 : 0;
                         return result * 1;
                     });
-
+                    
                     for (var i = 0; i < c.data.length; i++) {
                         var cm = c.data[i];
-
-                        $this._processMessage.call($this, cm);
+                        
+                        self._processMessage.call(self, cm);
                     }
-
-                    $this._sortChatList();
+                    
+                    self._sortChatList();
                 }
-
-                $this._kchatStartCheckWS();
+                
+                self._kchatStartCheckWS();
             } else if (c.action === 'pong') {
-                $this._kchatStartCheckWS();
+                self._kchatStartCheckWS();
             }
         },
         _processMessage: function (cm) {
-            var $this = this;
-
-            if ($this.$elem.find('[data-messageid=' + cm.id + ']').length < 1) {
-                var html = $.parseHTML((cm.fromAdmin ? $this.$msgl(cm) : $this.$msgr(cm)));
+            var self = this;
+            
+            if (self.$elem.find('[data-messageid=' + cm.id + ']').length < 1) {
+                var html = $.parseHTML((cm.fromAdmin ? self.$msgl(cm) : self.$msgr(cm)));
                 $(html).find('.timeago').timeago();
-                $this.$elem.find('.kchat-msg-list').append($(html));
-                var panel = $this.$elem.find('.panel-body');
-                panel.scrollTop(panel.find('ul').height());
+                self.$elem.find('.kchat-msg-list').append($(html));
+                self.scrollToBottom();
             }
         },
         _sortChatList: function () {
-            var $this = this;
-
-            var chats = $this.$elem.find('li');
-
+            var self = this;
+            
+            var chats = self.$elem.find('li');
+            
             chats.sort(function (a, b) {
                 var aVal = $(a).data('timestamp');
                 var bVal = $(b).data('timestamp');
-
+                
                 var result = (aVal < bVal) ? -1 : (aVal > bVal) ? 1 : 0;
                 return result * 1;
             });
-
-            $this.$elem.find('.kchat-msg-list').empty().append(chats);
+            
+            self.$elem.find('.kchat-msg-list').empty().append(chats);
+            self.scrollToBottom();
         },
         _kchatUploadFile: function (file) {
-            var $this = this;
-
-            if (file.size > $this.$maxFileSize) {
-                $this.$elem.find('.kchat-fileUpload-title').text('File too large to upload');
-                $this.$elem.find('.progress').hide();
-                $this.$elem.find('.kchat-fileUpload-wrapper').show();
+            var self = this;
+            
+            if (file.size > self.$maxFileSize) {
+                self.$elem.find('.kchat-fileUpload-title').text('File too large to upload');
+                self.$elem.find('.progress').hide();
+                self.$elem.find('.kchat-fileUpload-wrapper').show();
             } else {
-                $this.$elem.find('.kchat-fileUpload-title').text('Uploading ' + file.name + '...');
-                $this.$elem.find('.progress').show();
-                $this.$elem.find('.kchat-fileUpload-wrapper').show();
-
+                self.$elem.find('.kchat-fileUpload-title').text('Uploading ' + file.name + '...');
+                self.$elem.find('.progress').show();
+                self.$elem.find('.kchat-fileUpload-wrapper').show();
+                
                 var fd = new FormData();
-
+                
                 fd.append('file', file, file.name);
-
+                
                 $.ajax({
                     type: 'POST',
                     url: '/kchat',
                     dataType: 'JSON',
                     success: function (data, textStatus, jqXHR) {
                         flog('success', data);
-
+                        
                         if (data.status) {
-                            $this._processMessage(data.data);
-                            $this.$elem.find('.kchat-fileUpload-wrapper').hide();
+                            self._processMessage(data.data);
+                            self.$elem.find('.kchat-fileUpload-wrapper').hide();
                         } else {
-                            $this.$elem.find('.kchat-fileUpload-title').text('Error uploading file: ' + (data.messages || ''));
-                            $this.$elem.find('.progress').hide();
-                            $this.$elem.find('.kchat-fileUpload-wrapper').show();
+                            self.$elem.find('.kchat-fileUpload-title').text('Error uploading file: ' + (data.messages || ''));
+                            self.$elem.find('.progress').hide();
+                            self.$elem.find('.kchat-fileUpload-wrapper').show();
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        $this.$elem.find('.kchat-fileUpload-title').text('Error uploading file');
-                        $this.$elem.find('.progress').hide();
-                        $this.$elem.find('.kchat-fileUpload-wrapper').show();
+                        self.$elem.find('.kchat-fileUpload-title').text('Error uploading file');
+                        self.$elem.find('.progress').hide();
+                        self.$elem.find('.kchat-fileUpload-wrapper').show();
                     },
                     processData: false,
                     contentType: false,
@@ -349,76 +352,76 @@
             }
         },
         _kchatOnClose: function () {
-            var $this = this;
-
-            if (!$this.$wsConnecting) {
-                $this.$log('WS Connection Closed, Re-attempt soon...');
-
-                $this._kchatStartCheckWS();
+            var self = this;
+            
+            if (!self.$wsConnecting) {
+                self.$log('WS Connection Closed, Re-attempt soon...');
+                
+                self._kchatStartCheckWS();
             }
         },
         _kchatOnOpen: function () {
-            var $this = this;
-
-            $this.$log('WS Connection Opened...');
+            var self = this;
+            
+            self.$log('WS Connection Opened...');
             // Check history
-
-            $this._kchatSend({action: 'history'});
-            $this.$elem.show();
+            
+            self._kchatSend({action: 'history'});
+            self.$elem.show();
         },
         _kchatOnError: function () {
-            var $this = this;
-
-            if (!$this.$wsConnecting) {
-                $this.$log('Error connecting to WS, Re-attempt soon...');
-
-                $this._kchatStartCheckWS();
+            var self = this;
+            
+            if (!self.$wsConnecting) {
+                self.$log('Error connecting to WS, Re-attempt soon...');
+                
+                self._kchatStartCheckWS();
             }
         },
         _kchatConnectWs: function () {
-            var $this = this;
-            $this.$wsConnecting = true;
-
-            $this.$log('Connecting to ' + $this.$wsUrl);
-
-            if ($this.$ws !== null && typeof $this.$ws !== 'undefined') {
+            var self = this;
+            self.$wsConnecting = true;
+            
+            self.$log('Connecting to ' + self.$wsUrl);
+            
+            if (self.$ws !== null && typeof self.$ws !== 'undefined') {
                 try {
-                    $this.ws.close();
+                    self.ws.close();
                 } catch (err) {
                 }
             }
-
+            
             try {
-                $this.$ws = new $this.$WebSocket($this.$wsUrl);
-                $this.$ws.onmessage = $this._kchatOnMessage.bind($this);
-                $this.$ws.onclose = $this._kchatOnClose.bind($this);
-                $this.$ws.onopen = $this._kchatOnOpen.bind($this);
-                $this.$ws.onerror = $this._kchatOnError.bind($this);
+                self.$ws = new self.$WebSocket(self.$wsUrl);
+                self.$ws.onmessage = self._kchatOnMessage.bind(self);
+                self.$ws.onclose = self._kchatOnClose.bind(self);
+                self.$ws.onopen = self._kchatOnOpen.bind(self);
+                self.$ws.onerror = self._kchatOnError.bind(self);
             } catch (err) {
-                $this.$log('Error Connecting to ' + $this.$wsUrl);
+                self.$log('Error Connecting to ' + self.$wsUrl);
             }
-
-            $this._kchatStartCheckWS();
-            $this.$wsConnecting = false;
+            
+            self._kchatStartCheckWS();
+            self.$wsConnecting = false;
         }
     };
-
+    
     $.fn.KChat = function (options) {
         if (typeof options === 'string' && this.data('kademi_kchat')) {
             var data = this.data('kademi_kchat');
             return data[options]();
         }
-
+        
         return this.each(function () {
-            var $this = $(this),
-                    data = $this.data('kademi_kchat');
+            var self = $(this),
+                data = self.data('kademi_kchat');
             if (!data)
-                $this.data('kademi_kchat', (data = new KChat(this, options)));
+                self.data('kademi_kchat', (data = new KChat(this, options)));
             if (typeof options === 'string')
                 return data[options]();
         });
     };
-
+    
     // Auto Init windows...
     $(function () {
         $('.kchat-chat-container').KChat();

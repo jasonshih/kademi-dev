@@ -108,6 +108,7 @@
             };
             var html = self.$kchatadmin_msg_templ(c);
             self._getMsgList(visitorId).append(html);
+            self.scrollToBottom(visitorId);
         });
         
         self.$elem.on('keypress', '.kchat-msg-input', function (e) {
@@ -357,12 +358,24 @@
                 }
             }
             
+            self.scrollToBottom(c.visitorId);
             self._kchatStartCheckWS();
         },
         _getMsgList: function (visitorId) {
             var self = this;
             
             return self.sidebar.find('.user-chat').find('#chat-' + visitorId).find('.kchat-msg-list');
+        },
+        scrollToBottom: function (visitorId) {
+            var self = this;
+            
+            try {
+                var wrapper = self._getMsgList(visitorId).parent();
+                var _wrapper = wrapper.get(0);
+                _wrapper.scrollTop = _wrapper.scrollHeight;
+                wrapper.perfectScrollbar('update');
+            } catch (e) {
+            }
         },
         _kchatOnClose: function () {
             var self = this;
