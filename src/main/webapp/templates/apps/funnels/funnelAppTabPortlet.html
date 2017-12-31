@@ -128,6 +128,63 @@
                     #end
                 </td>
             </tr>
+            
+            <tr>
+                <td>Forks</td>
+                <td>
+                    #set( $forks = $applications.funnels.getForksForLead($lead) )
+                    
+                    #if( $forks.size() > 0 )
+                        <table class="table">
+                            <tr>
+                                <th>Current Goal</th>
+                                <th>Last Attained Goal</th>
+                                <th>Timer</th>
+                            </tr>
+                            #foreach($fork in $forks )
+                            <tr>
+                                <td>
+                                    #if( $fork.currentGoal )
+                                        $!funnel.get($fork.currentGoal).title
+                                        <small class="text-muted">$fork.currentGoal</small>
+                                    #else
+                                        <span class="label label-warning">No current goal. Not being processed.</span>
+                                    #end
+                                </td>
+                                <td>
+                                    #if( $fork.lastAttainedGoal )
+                                        $fork.lastAttainedGoal
+                                        -
+                                        <abbr title="$formatter.formatDateISO8601($fork.lastAttainedDate, $page.organisation.timezone)" class="timeago">
+                                            $formatter.formatDateTime($fork.lastAttainedDate, $page.organisation.timezone)
+                                        </abbr>
+                                    #else
+                                    #if( $fork.lastAttainedDate )
+                                        Unknown last goal attained. Transitioned at
+                                        <abbr title="$formatter.formatDateISO8601($fork.lastAttainedDate, $page.organisation.timezone)" class="timeago">
+                                            $formatter.formatDateTime($fork.lastAttainedDate, $page.organisation.timezone)
+                                        </abbr>
+                                    #end
+                                    #end
+                                </td>
+                                <td>
+                                    #if( $fork.timerDate )
+                                        <abbr title="$formatter.formatDateISO8601($fork.timerDate, $page.organisation.timezone)" class="timeago">
+                                            $formatter.formatDateTime($fork.timerDate, $page.organisation.timezone)
+                                        </abbr>
+                                        (<small class="text-muted">Current time: $formatter.formatDateTime($formatter.now, $page.organisation.timezone)</small>)
+                                    #else
+                                        No current timer
+                                    #end
+                                </td>
+                            </tr>
+                            #end
+                        </table>
+                    #else
+                        No forks
+                    #end
+                </td>
+            </tr>
             #end
 
 
