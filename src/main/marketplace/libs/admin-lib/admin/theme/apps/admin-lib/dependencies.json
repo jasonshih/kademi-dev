@@ -11,6 +11,10 @@
         {
             "appId": "mselect-lib",
             "branch": "1.0.1"
+        },
+        {
+            "appId": "email-lib",
+            "branch": "1.0.9"
         }
     ],
     "dependencies": [
