@@ -3,23 +3,74 @@
         <title>Audit Records</title>
     </head>
     <body>
+        <div class="btn-group" role="group">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="fa fa-plus"></span>
+                    New type
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu new-asset-type">
+                    <li><a href="content">Content type</a></li>
+                    <li><a href="asset">Media type</a></li>
+                </ul>
+            </div>
+            #if( $page.contentTypeRepo )
+            <a class="btn btn-info pull-right" href="/repositories/$page.contentTypeRepo.name">
+                <span class="fa fa-folder"></span>
+            </a>
+            #end
+        </div>
 
-        HELLO WORLD
-<br/>
-        #if( $page.contentTypeRepo )
-        I HAZ REPO
-        #else
-        NO REPO
-        #end
+        <h1>Asset types</h1>
 
-        
-        #foreach( $contentType in $page.children )
-        $contentType.link
-        #end
+        <table class="table table-striped">
+            #foreach( $contentType in $page.children )
+            <tr>
+                <td>$contentType.link</td>
+                <td>
+                    #if( $contentType.class.name.contains("ContentTypeFolder" ) )
+                    Content asset
+                    #else
+                    Media asset
+                    #end
+                </td>
+            </tr>
+            #end
+        </table>
+
 
         <script>
             $(function () {
+                $("body").on("click", ".new-asset-type", function(e) {
+                    e.preventDefault();
+                    var link = $(e.target).closest("a");
+                    var name = prompt("Please enter a name for the new asset type");
+                    var type = link.attr("href");
+                    if( name ) {
+                    $.ajax({
+                        url: window.location.pathname,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            newAssetTypeName : name,
+                            assetType : type
+                        },
+                        success: function (resp) {
+                            if (resp.status) {
+                                Msg.info("Created new type");
+                                window.location = name;
+                            } else {
+                                Msg.error("Sorry, an error occured creating the type");
+                            }
+                        },
+                        error: function () {
+                            Msg.error("Sorry, an error occured creating the type");
+                        }
+                    });
 
+                    }
+                });
             });
         </script>
     </body>

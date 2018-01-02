@@ -5,21 +5,23 @@
     </head>
     <body class="manageEmail">
 
-        VIDEO
+        #parse("/theme/apps/content/assetsCommon.html")
 
-        <video src="/assets/$page.asset.uniqueId" controls="true" />
+        #assetHeader()
 
-        <script type="text/javascript" >
-            $(function () {
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div align="center" class="embed-responsive embed-responsive-16by9">
+                        <video class="embed-responsive-item" controls="true" >
+                            <source src="/assets/$page.asset.uniqueId" />
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                $(".form-edit").forms({
-                    onSuccess: function (resp) {
-                        if (resp.status) {
-                            Msg.info(resp.messages[0]);
-                        }
-                    }
-                });
-            });
-        </script>
+        #assetCommonScripts()
+
     </body>
 </html>

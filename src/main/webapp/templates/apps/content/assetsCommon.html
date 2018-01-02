@@ -1,0 +1,167 @@
+<html>
+    <head>
+        <title>Manage Assets Include files</title>
+    </head>
+    <body>
+        #macro (assetHeader)
+        <p class="lead">$page.title</p>
+
+        <div class="memberships-wrapper" id="membershipsContainer">
+            <div class="dropdown pull-left" style="margin-right: 15px">
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#" style="text-decoration: none;">
+                    <i class="clip-plus-circle fa-2x"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    #foreach($type in $page.parent.assetTypes)
+                    <li class="addGroup">
+                        <a href="$type.name" class="add-type">
+                            <i class="fa-cog"></i> $type.name
+                        </a>
+                    </li>
+                    #end
+                </ul>
+            </div>
+            <div id="user-membership" class="blocks-wrapper memberships-list membershipsDiv">
+                #foreach( $type in $page.asset.assetTypes )
+                <div class="label label-info" style="margin: 5px">
+                    $type
+                    <a href="$type" class="btn btn-xs text-muted btn-edit-type" title="Edit type" style="padding-left: 5px">
+                        <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                </div>
+                #end
+            </div>
+            <div style="clear: both"></div>
+        </div>
+
+        <table class="table table-striped">
+            <tr>
+                <th>Created</th>
+                <td>$page.asset.createdDate</td>
+            </tr>
+            <tr>
+                <th>Modified</th>
+                <td>$page.asset.modifiedDate</td>
+            </tr>
+            <tr>
+                <th>Format</th>
+                <td>$!page.asset.format</td>
+            </tr>
+            <tr>
+                <th>Views</th>
+                <td>
+                    #foreach($view in $page.viewHrefs.entrySet() )
+                    <a href="/assets/$view.key" class="btn btn-info">$view.value</a>
+                    #end
+
+                </td>
+            </tr>
+        </table>
+        #end
+
+        #macro( replaceBinaryAsset )
+                <form id="frmUpload" action="$page.href" method="post" enctype="multipart/form-data">
+                    File Upload<br />
+                    <input id="txtFileUpload" type="file" name="NewFile" />
+                    <button type="submit" value="Upload" class="btn btn-success" >Upload</button>
+                </form>
+        #end
+
+        #macro( assetCommonScripts )
+        <div id="modal-edit-type" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Content type</h4>
+                    </div>
+                    <div class="modal-body">
+                        <a class="btn btn-warning remove-type" href="#">
+                            <span class="fa fa-trash"></span>
+                            Remove type
+                        </a>
+                        <a href="#" class="btn btn-info">Edit type properties</a>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" >
+            $(function () {
+
+                $(".form-edit").forms({
+                    onSuccess: function (resp) {
+                        if (resp.status) {
+                            Msg.info(resp.messages[0]);
+                        }
+                    }
+                });
+
+                $("#frmUpload").forms({
+                    onSuccess: function (resp) {
+                        if (resp.status) {
+                            Msg.info(resp.messages[0]);
+                        }
+                    }
+                });
+
+                flog("init: add type");
+                $(".add-type").click(function (e) {
+                    flog("click");
+                    e.preventDefault();
+                    $.ajax({
+                        url: window.location.pathname,
+                        type: 'post',
+                        dataType: 'json',
+                        data: {
+                            "assetType": $(e.target).closest("a").attr("href")
+                        },
+                        success: function (resp) {
+                            Msg.info("Done");
+                        }
+                    });
+                });
+
+                $("body").on("click", ".btn-edit-type", function (e) {
+                    e.preventDefault();
+                    var link = $(e.target).closest("a");
+                    var modal = $("#modal-edit-type");
+                    modal.find("a.btn-info").attr("href", "/content/" + link.attr("href"));
+                    modal.find("a.remove-type").attr("href", link.attr("href"));
+                    modal.modal("show");
+                });
+
+                $("body").on("click", ".remove-type", function (e) {
+                    e.preventDefault();
+                    var link = $(e.target).closest("a");
+                    var modal = $("#modal-edit-type");
+                    var contentTypeName = link.attr("href");
+                    modal.modal("hide");
+
+                    $.ajax({
+                        url: window.location.pathname,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            removeAssetType : contentTypeName
+                        },
+                        success: function (resp) {
+                            if (resp.status) {
+                                Msg.info("Removed content type");
+                            } else {
+                                Msg.error("Sorry, an error occured removing the content type");
+                            }
+                        },
+                        error: function () {
+                            Msg.error("Sorry, an error occured removing the content type");
+                        }
+                    });
+                });
+            });
+        </script>
+        #end
+    </body>
+</html>

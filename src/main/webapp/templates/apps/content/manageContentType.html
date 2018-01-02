@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>Manage Content Type</title>
+    </head>
+    <body>
+
+        #parse("/theme/apps/content/assetTypesCommon.html")
+
+        #assetTypeHeader()
+
+        <h3>Fields</h3>
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fa fa-plus"></span>
+                New field
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu new-view">
+                <li><a href="typedField" data-target="#modal-field-typed" data-toggle="modal">Typed field</a></li>
+                <li><a href="derived" data-target="#modal-field-derived" data-toggle="modal">derived field</a></li>
+                <li><a href="relation" data-target="#modal-field-relation" data-toggle="modal">relation field</a></li>
+                <li><a href="stored" data-target="#modal-field-stored" data-toggle="modal">Simple stored field</a></li>
+            </ul>
+        </div>
+
+
+        <table class="table table-striped">
+            <tr>
+                <th>Name</th>
+                <th>Text</th>
+                <th>Editable</th>
+            </tr>
+            #foreach($field in $page.assetType.fields)
+            <tr>
+                <td>$field.name</td>
+                <td>$!field.text</td>
+                <td>
+                    #if( $field.editable )
+                    <div class="label label-success"><span class="fa fa-check"></span></div>
+                    #end
+                </td>
+            </tr>
+            #end
+        </table>
+
+
+        #assetTypeScripts()
+
+    </body>
+</html>
