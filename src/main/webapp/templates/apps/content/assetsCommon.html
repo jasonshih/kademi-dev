@@ -15,7 +15,7 @@
                     #foreach($type in $page.parent.assetTypes)
                     <li class="addGroup">
                         <a href="$type.name" class="add-type">
-                            <i class="fa-cog"></i> $type.name
+                            <i class="fa fa-cog"></i> $type.name
                         </a>
                     </li>
                     #end
@@ -47,6 +47,11 @@
                 <th>Format</th>
                 <td>$!page.asset.format</td>
             </tr>
+            <tr>
+                <th>UniqueId</th>
+                <td>$page.asset.uniqueId</td>
+            </tr>
+
             <tr>
                 <th>Views</th>
                 <td>
