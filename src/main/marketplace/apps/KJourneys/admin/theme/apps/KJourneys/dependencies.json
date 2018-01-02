@@ -7,7 +7,7 @@
         {
             "appId": "userDashboardApp",
             "branch" : ""
-        },                
+        },
         {
             "appId": "alerts",
             "branch" : ""
@@ -19,6 +19,10 @@
         {
             "appId": "leadMan",
             "branch" : ""
-        }        
+        },
+        {
+            "appId": "email-lib",
+            "branch": "1.0.9"
+        }
   ]
 }
