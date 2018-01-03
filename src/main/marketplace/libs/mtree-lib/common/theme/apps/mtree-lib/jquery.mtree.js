@@ -1,4 +1,15 @@
-(function ($) {
+(function (factory) {
+	"use strict";
+	if (typeof define === 'function' && define.amd) {
+		define(['jquery'], factory);
+	}
+	else if(typeof module !== 'undefined' && module.exports) {
+		module.exports = factory(require('jquery'));
+	}
+	else {
+		factory(jQuery);
+	}
+}(function ($, undefined) {
     var log = function () {
         var args = Array.prototype.slice.apply(arguments);
         args[0] = '[MTree] ' + args[0];
@@ -484,4 +495,5 @@
     
     $.fn.mtree.constructor = MTree;
     
-})(jQuery);
+
+}));
