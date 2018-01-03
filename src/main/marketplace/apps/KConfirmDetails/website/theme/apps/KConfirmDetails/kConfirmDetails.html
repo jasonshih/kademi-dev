@@ -29,7 +29,7 @@
 #set( $rightKindOfPage = $page.is("dashboard") )
 
 #if( $rightKindOfPage )
-#set($isInGroup = $currentUser.isInGroup($groupName, $org))
+#set($isInGroup = $userResource.isInGroup($groupName))
 #if( $isInGroup == false )
 <div id="modal-confirm-details" class="modal fade" aria-hidden="true">
     <div class="modal-dialog modal-lg">
