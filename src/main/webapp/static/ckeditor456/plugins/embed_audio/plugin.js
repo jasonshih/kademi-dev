@@ -2,7 +2,7 @@
     CKEDITOR.plugins.add('embed_audio', {
         init: function (editor) {
             var that = this;
-            $.getScriptOnce('/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.js');
+            $.getScriptOnce('/static/jquery.mselect/1.1.1/jquery.mselect-1.1.1.js');
             
             // ===========================================================
             // Init modal for plugin

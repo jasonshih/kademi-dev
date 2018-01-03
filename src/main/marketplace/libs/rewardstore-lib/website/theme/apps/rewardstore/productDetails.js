@@ -11,7 +11,7 @@ $(function () {
             flog('New uri', href);
             history.pushState(null, null, href);
             
-            $('#product-images, #product-price, #btn-add-to-cart-wrapper').reloadFragment({
+            $('#product-images, #product-price, #btn-add-to-cart-wrapper, #product-actions').reloadFragment({
                 url: href
             });
         });

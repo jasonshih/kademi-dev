@@ -1,0 +1,198 @@
+<html>
+    <head>
+        <title>Manage Asset Types Include files</title>
+    </head>
+    <body>
+        #macro (assetTypeHeader)
+        <h1>$page.title</h1>
+
+        <h3>Views</h3>
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fa fa-plus"></span>
+                New view
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu new-view">
+                <li><a href="altFormat" data-target="#modal-view-altformat" data-toggle="modal">Alternate format view (resized)</a></li>
+                <li><a href="mvelTemplate" data-target="#modal-view-mveltemplate" data-toggle="modal">Template view (MVEL)</a></li>
+                <li><a href="pageTemplate" data-target="#modal-view-pagetemplate" data-toggle="modal">Template view (page)</a></li>
+                <li><a href="standardBinary" data-target="#modal-view-standardbinary" data-toggle="modal">Binary file view</a></li>
+            </ul>
+        </div>
+
+        <table class="table table-striped" id="tableViews">
+            #foreach( $view in $page.assetType.views )
+            <tr>
+                <td>$view.text</td>
+            </tr>
+            #end
+        </table>
+        #end
+
+
+        #macro (assetTypeScripts)
+
+        <div class="new-view-modals">
+            <div id="modal-view-altformat" class="modal fade" aria-hidden="true" tabindex="-1">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">Alt format view</h4>
+                        </div>
+                        <form class="form-horizontal" action="$page.href" method="POST">
+                            <input type="hidden" name="newViewType" value="altFormat"/>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="height" class="control-label col-md-4">Height</label>
+
+                                    <div class="col-md-8">
+                                        <input type="number" class="form-control required" name="height" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="width" class="control-label col-md-4">Width</label>
+
+                                    <div class="col-md-8">
+                                        <input type="number" class="form-control required" name="width" value="" />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modal-view-mveltemplate" class="modal fade" aria-hidden="true" tabindex="-1">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">MVEL Template view</h4>
+                        </div>
+                        <form class="form-horizontal" action="$page.href" method="POST">
+                            <input type="hidden" name="newViewType" value="mvelTemplate"/>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="template" class="control-label col-md-4">template</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="template" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="paramName" class="control-label col-md-4">paramName</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="paramName" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="paramValue" class="control-label col-md-4">paramValue</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="paramValue" value="" />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modal-view-pagetemplate" class="modal fade" aria-hidden="true" tabindex="-1">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">Page template view</h4>
+                        </div>
+                        <form class="form-horizontal" action="$page.href" method="POST">
+                            <input type="hidden" name="newViewType" value="pageTemplate"/>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="template" class="control-label col-md-4">template</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="template" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="paramName" class="control-label col-md-4">paramName</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="paramName" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="paramValue" class="control-label col-md-4">paramValue</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="paramValue" value="" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modal-view-standardbinary" class="modal fade" aria-hidden="true" tabindex="-1">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">Standard binary file view</h4>
+                        </div>
+                        <form class="form-horizontal" action="$page.href" method="POST">
+                            <input type="hidden" name="newViewType" value="standardBinary"/>
+                            <div class="modal-body">
+                                No configuration required
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(function () {
+                flog("init forms");
+                $(".new-view-modals .modal").each(function (i, n) {
+                    var modal = $(n);
+                    flog("init form", modal);
+                    modal.find("form").forms({
+                        onSuccess: function (resp) {
+                            if (resp.status) {
+                                Msg.info("Addew view");
+                                $("#tableViews").reloadFragment();
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
+        #end
+    </body>
+</html>
