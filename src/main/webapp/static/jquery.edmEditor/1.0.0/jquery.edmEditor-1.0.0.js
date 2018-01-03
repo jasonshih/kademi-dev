@@ -58,7 +58,7 @@
         '/static/ckeditor456/adapters/jquery.js',
         '/static/keditor/dist/js/keditor-0.0.0.min.js',
         '/static/keditor/dist/js/keditor-edm-components-0.0.0.js',
-        '/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.js',
+        '/static/jquery.mselect/1.1.1/jquery.mselect-1.1.1.js',
         '/static/bootstrap-colorpicker/2.5.1/js/bootstrap-colorpicker.min.js'
     ];
     
