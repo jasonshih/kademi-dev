@@ -1,0 +1,40 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Content Item</title>
+
+    </head>
+    <body class="manageEmail">
+        #parse("/theme/apps/content/assetsCommon.html")
+
+        #assetHeader()
+
+        <form action="$page.href" method="POST">
+            <input type="hidden" name="saveQueryAsset"/>
+            <div class="form-group">
+                <label class="control-label col-md-3" for="target.1">Target</label>
+
+                <div class="col-md-4">
+                    <input type="text" name="target.1" value="" placeholder="" class="form-control" required="true" />
+                </div>
+            </div>
+            <textarea class="form-control" name="rules.1" style="height: 200px; width: 100%"></textarea>
+
+            <hr/>
+
+            <div class="form-group">
+                <label class="control-label col-md-3" for="target.2">Target</label>
+
+                <div class="col-md-4">
+                    <input type="text" name="target.2" value="" placeholder="" class="form-control" required="true" />
+                </div>
+            </div>
+            <textarea class="form-control" name="rules.2" style="height: 200px; width: 100%"></textarea>
+
+            <hr/>
+
+            <button type="submit" class="btn btn-success">Save</button>
+        </form>
+
+        #assetCommonScripts()
+    </body>
+</html>
