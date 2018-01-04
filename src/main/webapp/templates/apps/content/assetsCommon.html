@@ -4,8 +4,8 @@
     </head>
     <body>
         #macro (assetHeader)
-        <p class="lead">$page.title</p>
-
+        <h2>$page.title</h2>
+        
         <div class="memberships-wrapper" id="membershipsContainer">
             <div class="dropdown pull-left" style="margin-right: 15px">
                 <a data-toggle="dropdown" class="dropdown-toggle" href="#" style="text-decoration: none;">
@@ -33,45 +33,60 @@
             </div>
             <div style="clear: both"></div>
         </div>
-
-        <table class="table table-striped">
-            <tr>
-                <th>Created</th>
-                <td>$page.asset.createdDate</td>
-            </tr>
-            <tr>
-                <th>Modified</th>
-                <td>$page.asset.modifiedDate</td>
-            </tr>
-            <tr>
-                <th>Format</th>
-                <td>$!page.asset.format</td>
-            </tr>
-            <tr>
-                <th>UniqueId</th>
-                <td>$page.asset.uniqueId</td>
-            </tr>
-
-            <tr>
-                <th>Views</th>
-                <td>
-                    #foreach($view in $page.viewHrefs.entrySet() )
-                    <a href="/assets/$view.key" class="btn btn-info">$view.value</a>
-                    #end
-
-                </td>
-            </tr>
-        </table>
+        <br /><br />
         #end
-
+        
+        #macro (assetInfo)
+            <table class="table table-striped">
+                <tr>
+                    <th>Created</th>
+                    <td>$page.asset.createdDate</td>
+                </tr>
+                <tr>
+                    <th>Modified</th>
+                    <td>$page.asset.modifiedDate</td>
+                </tr>
+                <tr>
+                    <th>Format</th>
+                    <td>$!page.asset.format</td>
+                </tr>
+                <tr>
+                    <th>UniqueId</th>
+                    <td>$page.asset.uniqueId</td>
+                </tr>
+                
+                <tr>
+                    <th>Views</th>
+                    <td>
+                        #foreach($view in $page.viewHrefs.entrySet() )
+                        <a href="/assets/$view.key" class="btn btn-info">$view.value</a>
+                        #end
+                    
+                    </td>
+                </tr>
+            </table>
+        #end
+        
         #macro( replaceBinaryAsset )
-                <form id="frmUpload" action="$page.href" method="post" enctype="multipart/form-data">
-                    File Upload<br />
-                    <input id="txtFileUpload" type="file" name="NewFile" />
-                    <button type="submit" value="Upload" class="btn btn-success" >Upload</button>
-                </form>
+            <form id="frmUpload" action="$page.href" method="post" enctype="multipart/form-data" class="form-horizontal">
+                <legend>Change file</legend>
+                <div class="progress" style="display: none;">
+                    <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: 100%">Uploading...</div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input id="txtFileUpload" type="file" name="NewFile" class="form-control" />
+                            <span class="input-group-btn">
+                                <button type="submit" value="Upload" class="btn btn-success">Upload</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <br />
         #end
-
+        
         #macro( assetCommonScripts )
         <div id="modal-edit-type" class="modal fade" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog modal-sm">
@@ -93,10 +108,9 @@
                 </div>
             </div>
         </div>
-
-        <script type="text/javascript" >
+        
+        <script type="text/javascript">
             $(function () {
-
                 $(".form-edit").forms({
                     onSuccess: function (resp) {
                         if (resp.status) {
@@ -104,15 +118,25 @@
                         }
                     }
                 });
-
-                $("#frmUpload").forms({
+                
+                var formUpload = $("#frmUpload");
+                var uploadProgress = formUpload.find('.progress');
+                formUpload.forms({
+                    onValid: function () {
+                        uploadProgress.show();
+                    },
                     onSuccess: function (resp) {
-                        if (resp.status) {
-                            Msg.info(resp.messages[0]);
+                        if (resp && resp.status) {
+                            $('#asset-previewer, #asset-info').reloadFragment({
+                                whenComplete: function () {
+                                    uploadProgress.hide();
+                                    Msg.info(resp.messages[0]);
+                                }
+                            });
                         }
                     }
                 });
-
+                
                 flog("init: add type");
                 $(".add-type").click(function (e) {
                     flog("click");
@@ -129,7 +153,7 @@
                         }
                     });
                 });
-
+                
                 $("body").on("click", ".btn-edit-type", function (e) {
                     e.preventDefault();
                     var link = $(e.target).closest("a");
@@ -138,20 +162,20 @@
                     modal.find("a.remove-type").attr("href", link.attr("href"));
                     modal.modal("show");
                 });
-
+                
                 $("body").on("click", ".remove-type", function (e) {
                     e.preventDefault();
                     var link = $(e.target).closest("a");
                     var modal = $("#modal-edit-type");
                     var contentTypeName = link.attr("href");
                     modal.modal("hide");
-
+                    
                     $.ajax({
                         url: window.location.pathname,
                         type: 'POST',
                         dataType: 'json',
                         data: {
-                            removeAssetType : contentTypeName
+                            removeAssetType: contentTypeName
                         },
                         success: function (resp) {
                             if (resp.status) {
