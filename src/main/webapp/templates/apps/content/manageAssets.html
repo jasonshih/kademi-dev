@@ -79,9 +79,22 @@
                         <h4 class="modal-title">Upload File</h4>
                     </div>
                     <form id="frmUpload" action="$page.href" method="post" enctype="multipart/form-data">
-                        File Upload<br />
-                        <input id="txtFileUpload" type="file" name="NewFile" />
-                        <input type="submit" value="Upload" />
+
+                        <input id="txtFileUpload" type="file" name="NewFile" class="form-control" />
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="name">Notes</label>
+
+                            <div class="col-md-8">
+                                <textarea name="notes" class="form-control"></textarea>
+                            </div>
+                        </div>
+
+
+                        <button type="submit" value="Upload" class="btn btn-success">
+                            <span class="fa fa-upload"></span>
+                            Upload
+                        </button>
                     </form>
                 </div>
             </div>
@@ -93,7 +106,9 @@
                 $("#frmUpload").forms({
                     onSuccess: function (resp) {
                         if (resp.status) {
-                            Msg.info(resp.messages[0]);
+                            Msg.info("Uploaded ok");
+                        } else {
+                            Msg.error("An error occured uploading the resource");
                         }
                     }
                 });

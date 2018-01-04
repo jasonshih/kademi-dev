@@ -8,33 +8,88 @@
 
         #assetHeader()
 
-        <form action="$page.href" method="POST">
+        <hr/>
+
+        <form action="$page.href" method="POST" class="form-rules">
             <input type="hidden" name="saveQueryAsset"/>
-            <div class="form-group">
-                <label class="control-label col-md-3" for="target.1">Target</label>
-
-                <div class="col-md-4">
-                    <input type="text" name="target.1" value="" placeholder="" class="form-control" required="true" />
-                </div>
-            </div>
-            <textarea class="form-control" name="rules.1" style="height: 200px; width: 100%"></textarea>
-
-            <hr/>
-
-            <div class="form-group">
-                <label class="control-label col-md-3" for="target.2">Target</label>
-
-                <div class="col-md-4">
-                    <input type="text" name="target.2" value="" placeholder="" class="form-control" required="true" />
-                </div>
-            </div>
-            <textarea class="form-control" name="rules.2" style="height: 200px; width: 100%"></textarea>
-
-            <hr/>
 
             <button type="submit" class="btn btn-success">Save</button>
+
+            <button class="btn btn-success btn-add-rule">
+                <span class="fa fa-plus"></span>
+                Add
+            </button>
+
+
+            <div class="rules-container">
+                #foreach( $rule in $page.asset.rules)
+                #showRuleTemplate( $rule, $foreach.count )
+                #end
+            </div>
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+
+
         </form>
 
+        <div class="hide" id="new-rule-template">
+            #showRuleTemplate( false, "new" )
+        </div>
+
         #assetCommonScripts()
+
+        #macro( showRuleTemplate $rule $count )
+        <div class="rule-container">
+            <button class="btn btn-warning pull-right btn-remove-rule">
+                <span class="fa fa-remove"></span>
+                Remove
+            </button>
+
+            <div class="form-group">
+                <label class="control-label col-md-3" for="target.$count">Target</label>
+
+                <div class="col-md-4">
+                    <input type="text" name="target.$count" value="$!rule.asset.uniqueId" placeholder="" class="form-control" required="true" />
+                </div>
+            </div>
+            <textarea class="form-control" name="rules.$count" style="height: 200px; width: 100%">$!rule.rules</textarea>
+
+            <hr/>
+        </div>
+
+        #end
+
+        <script>
+            $(function () {
+
+               $(".form-rules").forms({
+                    onSuccess: function (resp) {
+                        if (resp.status) {
+                            Msg.info("Saved");
+                        } else {
+                            Msg.error("There was an error saving the rules");
+                        }
+                    }
+                });
+                $("body").on("click", ".btn-add-rule", function (e) {
+                    e.preventDefault();
+                    var templateHtml = $("#new-rule-template").html();
+                    var rndNum = parseInt(Math.random() * 1000);
+                    templateHtml = templateHtml.replace(".new", ".new" + rndNum);
+                    $(".rules-container").append(templateHtml);
+                });
+                $("body").on("click", ".btn-remove-rule", function (e) {
+                    e.preventDefault();
+                    var btn = $(e.target).closest("button");
+                    var ruleContainer = btn.closest(".rule-container");
+                    ruleContainer.hide(500, function() {
+                        ruleContainer.remove();
+                    });
+
+                });
+
+
+            });
+        </script>
     </body>
 </html>
