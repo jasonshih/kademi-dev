@@ -1,4 +1,15 @@
-(function ($) {
+(function (factory) {
+	"use strict";
+	if (typeof define === 'function' && define.amd) {
+		define(['jquery'], factory);
+	}
+	else if(typeof module !== 'undefined' && module.exports) {
+		module.exports = factory(require('jquery'));
+	}
+	else {
+		factory(jQuery);
+	}
+}(function ($, undefined) {
     var DEFAULTS = {
         btnClass: 'btn btn-success',
         btnOkClass: 'btn btn-sm btn-primary',
@@ -15,7 +26,7 @@
         onSelectFile: function (selectedUrl, selectedRelUrl) {
         },
         onSelectFolder: function (selectedUrl, selectedRelUrl) {
-            
+        
         },
         onPreviewFile: function (type, selectedUrl, hash) {
         },
@@ -470,5 +481,4 @@
     };
     
     $.fn.mselect.constructor = MSelect;
-    
-})(jQuery);
+}));

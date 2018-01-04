@@ -862,8 +862,7 @@
                 
                 var basePath = window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1);
                 var that = this;
-                $.getStyleOnce('/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.css');
-                $.getScriptOnce('/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.js', function () {
+                $.getScriptOnce('/static/jquery.mselect/1.1.1/jquery.mselect-1.1.1.js', function () {
                     $('.btnBrowseFiles').mselectAll({
                         pagePath: basePath,
                         basePath: basePath,
