@@ -806,20 +806,22 @@ function initMultiLingual() {
     });
     
     var timer;
-    CKEDITOR.on('instanceReady', function (e) {
-        var editor = e.editor;
-        
-        var element = $(editor.element.$);
-        if (element.hasClass('translatable')) {
-            editor.on('focus', function () {
-                showTranslateButton(element, timer);
-            });
+    if (window.CKEDITOR) {
+        CKEDITOR.on('instanceReady', function (e) {
+            var editor = e.editor;
             
-            editor.on('blur', function () {
-                hideTranslateButton(timer);
-            });
-        }
-    });
+            var element = $(editor.element.$);
+            if (element.hasClass('translatable')) {
+                editor.on('focus', function () {
+                    showTranslateButton(element, timer);
+                });
+                
+                editor.on('blur', function () {
+                    hideTranslateButton(timer);
+                });
+            }
+        });
+    }
     
     $(document.body).on({
         focus: function () {

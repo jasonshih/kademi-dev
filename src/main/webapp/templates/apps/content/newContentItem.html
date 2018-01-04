@@ -20,13 +20,13 @@
                 </div>
             </div>
 
-            #foreach($field in $page.contentType.fields )
+            #foreach($field in $page.allFields )
             #if( $field.editable )
             <div class="form-group">
                 <label class="control-label col-md-3" for="$field.name">$field.name</label>
 
                 <div class="col-md-8">
-                    <input type="text" name="$field.name" id="$field.name" value="" placeholder="" class="required form-control" required="true" />
+                    $page.renderFieldInput($field)
                 </div>
             </div>
             #end

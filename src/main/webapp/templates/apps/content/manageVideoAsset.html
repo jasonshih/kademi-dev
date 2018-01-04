@@ -1,27 +1,29 @@
+#
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Content Item</title>
-
+    
     </head>
     <body class="manageEmail">
-
+        
         #parse("/theme/apps/content/assetsCommon.html")
-
+        
         #assetHeader()
-
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <div align="center" class="embed-responsive embed-responsive-16by9">
-                        <video class="embed-responsive-item" controls="true" >
-                            <source src="/assets/$page.asset.uniqueId" />
-                        </video>
-                    </div>
+        
+        <div class="row">
+            <div class="col-sm-4" id="asset-previewer">
+                <div align="center" class="embed-responsive embed-responsive-16by9">
+                    <video class="embed-responsive-item" controls="true">
+                        <source src="/assets/$page.asset.uniqueId" />
+                    </video>
                 </div>
             </div>
+            <div class="col-sm-8">
+                #assetInfo()
+            </div>
         </div>
-
+        
         #assetCommonScripts()
-
+    
     </body>
 </html>

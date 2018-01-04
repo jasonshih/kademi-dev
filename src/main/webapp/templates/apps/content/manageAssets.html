@@ -1,26 +1,29 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Contact Requests</title>
-
     </head>
     <body class="manageEmail">
-
+        
         <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-upload-file">
             <span class="fa fa-plus"></span>
             Upload
         </button>
-
-
-
+        
+        <a class="btn btn-success" href="new-query">
+            <span class="fa fa-plus"></span>
+            Content query
+        </a>
+        
+        
         #foreach( $ct in $page.contentTypes)
         <a class="btn btn-success" href="new?type=$ct.name">
             <span class="fa fa-plus"></span>
             New: $ct.name
         </a>
         #end
-
-        <hr/>
-
+        
+        <hr />
+        
         <div class="row">
             <div class="col-lg-5">
                 <p class="input-group search-user input-group-sm">
@@ -38,7 +41,7 @@
                 </div>
             </div>
         </div>
-
+        
         #set( $assets = $page.search($request.params.q) )
         <table class="table table-striped" id="table-assets">
             <tr>
@@ -46,7 +49,7 @@
                 <th>Format</th>
                 <th>Created</th>
                 <th>Modified</th>
-                <th width="40"><input type="checkbox" class="chk-all" ></th>
+                <th width="40"><input type="checkbox" class="chk-all"></th>
             </tr>
             #foreach( $asset in $assets )
             <tr>
@@ -57,16 +60,16 @@
                     $ct
                     #end
                 </td>
-                <td>$asset.createdDate</td>
-                <td>$asset.modifiedDate</td>
+                <td><abbr class="timeago" title="$asset.createdDate">$asset.createdDate</abbr></td>
+                <td><abbr class="timeago" title="$asset.modifiedDate">$asset.modifiedDate</abbr></td>
                 <td>
-                    <input type="checkbox" data-id="$asset.uniqueId" class="asset-check" >
+                    <input type="checkbox" data-id="$asset.uniqueId" class="asset-check">
                 </td>
             </tr>
             #end
         </table>
-
-
+        
+        
         <div id="modal-upload-file" class="modal fade" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -74,111 +77,41 @@
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                         <h4 class="modal-title">Upload File</h4>
                     </div>
-                    <form id="frmUpload" action="$page.href" method="post" enctype="multipart/form-data">
-                        File Upload<br />
-                        <input id="txtFileUpload" type="file" name="NewFile" />
-                        <input type="submit" value="Upload" />
+                    <form id="frmUpload" action="$page.href" method="post" enctype="multipart/form-data" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="progress" style="display: none;">
+                                <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: 100%">Uploading...</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="newFile">File</label>
+                                
+                                <div class="col-md-8">
+                                    <input id="newFile" type="file" name="NewFile" class="form-control" />
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="notes">Notes</label>
+                                
+                                <div class="col-md-8">
+                                    <textarea name="notes" class="form-control" id="notes"></textarea>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="modal-footer">
+                            
+                            <button type="submit" value="Upload" class="btn btn-success">
+                                <span class="fa fa-upload"></span>
+                                Upload
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
-
-        <script type="text/javascript" >
-            $(function () {
-                initSearchUser();
-                $("#frmUpload").forms({
-                    onSuccess: function (resp) {
-                        if (resp.status) {
-                            Msg.info(resp.messages[0]);
-                        }
-                    }
-                });
-            });
-            function initSearchUser() {
-                flog("initSearchUser.1");
-                $('#query').keyup(function () {
-                    typewatch(function () {
-                        flog('initSearchUser: do search');
-                        doSearch();
-                    }, 500);
-                });
-            }
-
-            function doSearch() {
-                var query = $('#query').val();
-
-                var uri = URI(window.location);
-
-                uri.setSearch('q', query);
-                var newHref = uri.toString();
-
-                window.history.pushState('', newHref, newHref);
-
-                $.ajax({
-                    type: 'GET',
-                    url: newHref,
-                    success: function (data) {
-                        var table = $('#table-assets');
-
-                        var newDom = $(data);
-
-                        var $fragment = newDom.find('#table-assets');
-
-                        table.replaceWith($fragment);
-
-                    },
-                    error: function (resp) {
-                        Msg.error('An error occured doing the user search. Please check your internet connection and try again', 'search');
-                    }
-                });
-            }
-
-            function initDeleteAssets() {
-                $('body').on('click', '.btn-delete-assets', function (e) {
-                    e.preventDefault();
-                    var listToDelete = [];
-                    $('body').find(':checkbox.asset-check:checked').each(function () {
-                        var s = $(this);
-                        var id = s.data('id');
-                        listToDelete.push(id);
-                    });
-                    flog('List To Delete', listToDelete.join(','));
-                    if (listToDelete.length > 0 && confirm('Are you sure you want to delete ' + listToDelete.length + ' assets?')) {
-                        $('body').find('.check-all').check(false).change();
-                        deleteElements(listToDelete.join(','), function (data) {
-                            flog(data);
-                            if (data.status) {
-                                Msg.info(data.messages);
-                                $('#table-asets').reloadFragment();
-                            } else {
-                                Msg.error('An error occured deleting the assets. Please check your internet connection');
-                            }
-                        });
-                    } else {
-                        Msg.error('Please select the assets you want to remove by clicking the checkboxes on the right');
-                    }
-                });
-            }
-
-            function deleteElements(listToDelete, callback) {
-                var oldUrl = window.location.pathname;
-                var newUrl = oldUrl.substr(0, oldUrl.lastIndexOf('/'));
-
-                $.ajax({
-                    type: 'POST',
-                    dataType: 'json',
-                    url: window.location.pathname,
-                    data: {
-                        toDelete: listToDelete,
-                    },
-                    success: function (resp) {
-                        callback(resp);
-                    },
-                    error: function (resp) {
-                        Msg.error('An error occured on the delete.');
-                    }
-                });
-            }
-        </script>
+        
+        <script type="text/javascript" src="/theme/apps/content/manageAssets.js"></script>
     </body>
 </html>
