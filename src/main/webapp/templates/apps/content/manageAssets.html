@@ -42,7 +42,7 @@
             </div>
         </div>
         
-        #set( $assets = $page.search($request.params.q) )
+        #set( $assets = $page.search($request.params.q, $request.params.type) )
         <table class="table table-striped" id="table-assets">
             <tr>
                 <th>Name</th>
