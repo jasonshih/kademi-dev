@@ -177,6 +177,7 @@ function initUploads() {
                 }
             });
             form.find('#noValidRow').addClass('hide');
+            form.find('#reachedMax').hide();
             form.find('[type=submit]').addClass('hide');
 
             $('#processing').show();
@@ -226,17 +227,26 @@ function initUploads() {
 
                         $('#result').show();
                         $('#processing').hide();
-                        if ((importTotalCount == 0 && importTotalDeleteCount == 0) || resp.data.toManyErrors) {
+
+                        form.find('#noValidRow').addClass('hide');
+                        form.find('#reachedMax').hide();
+                        form.find('#toManyErrors').hide();
+
+                        if ((importTotalCount == 0 && importTotalDeleteCount == 0) || resp.data.toManyErrors || resp.data.reachedMax) {
                             form.find('[type=submit]').attr('disabled', true);
 
                             if (resp.data.toManyErrors) {
-                                $('#toManyErrors').show();
+                                form.find('#toManyErrors').show();
+                            } else if (resp.data.reachedMax) {
+                                form.find('#reachedMax').show();
+                                form.find('[type=submit]').attr('disabled', false);
                             } else {
                                 form.find('#noValidRow').removeClass('hide');
                             }
                         } else {
                             $('#toManyErrors').hide();
                             form.find('#noValidRow').addClass('hide');
+                            form.find('#reachedMax').hide();
                             form.find('[type=submit]').attr('disabled', false);
                         }
                     } else if (!resp.status && resp.messages) {
