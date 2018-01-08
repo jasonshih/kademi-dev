@@ -71,7 +71,7 @@ JBNodes['ksurveySubmittedGoal'] = {
             node.customSettings = {};
         }
         JBApp.showStandardGoalSettingControls(form, node);
-        form.find('.ksurvey-list').val(node.customSettings.survey !== null ? node.customSettings.survey : '').trigger("change");
+        form.find('.ksurvey-list').val(node.customSettings !== null && node.customSettings.survey !== null ? node.customSettings.survey : '').trigger("change");
         JBApp.showSettingPanel(node);
     }
 };

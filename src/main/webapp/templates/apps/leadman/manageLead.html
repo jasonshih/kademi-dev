@@ -248,40 +248,86 @@
 
                             </div>
                             <div class="col-sm-4">
-                                #if( !$page.currentGoalIsTask && !$page.completed )
-                                <div class="timeline-panel">
-                                    <div class="timeline-heading">
-                                        #if( $page.timerDate )
-                                        <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>
-                                            <abbr title="$formatter.formatDateISO8601($page.timerDate)" class="info timeago">$page.timerDate</abbr>
-                                        </small>
-                                        #else
-                                        <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>
-                                            <span class="label label-warning">No current timer</span>
-                                        </small>
-                                        #end
-                                        <h4 class="timeline-title">Waiting for <i class="fa fa-refresh"></i></h4>
-                                    </div>
-                                    <div class="timeline-body">
-                                        <p>$!page.nodeTitle($page.currentGoal) </p>
-                                        <br>
-                                        <div class="btn-group">
-                                            <button class="timer-btn-go btn btn-success" data-toggle="modal" data-target="#goNextNodeModal" title="Mark this goal as attained">
-                                                <span class="fa fa-play"></span>
-                                            </button>
-                                            <button class="timer-btn-stop btn btn-danger" title="Stop this timer, can be rescheduled later">
-                                                <span class="fa fa-pause"></span>
-                                            </button>
-                                            <button class="timer-btn-resched btn btn-info" data-toggle="modal" data-target="#rescheduleModal" title="Reschedule this timer">
-                                                <span class="fa fa-clock-o"></span>
-                                            </button>
+                                #if( !$page.completed )
+                                    #if( !$page.currentGoalIsTask)
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            #if( $page.timerDate )
+                                            <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>
+                                                <abbr title="$formatter.formatDateISO8601($page.timerDate)" class="info timeago">$page.timerDate</abbr>
+                                            </small>
+                                            #else
+                                            <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>
+                                                <span class="label label-warning">No current timer</span>
+                                            </small>
+                                            #end
+                                            <h4 class="timeline-title">Waiting for <i class="fa fa-refresh"></i></h4>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <p>$!page.nodeTitle($page.currentGoal) </p>
+                                            <br>
+                                            <div class="btn-group">
+                                                <button class="timer-btn-go btn btn-success" data-toggle="modal" data-target="#goNextNodeModal" title="Mark this goal as attained">
+                                                    <span class="fa fa-play"></span>
+                                                </button>
+                                                <button class="timer-btn-stop btn btn-danger" title="Stop this timer, can be rescheduled later">
+                                                    <span class="fa fa-pause"></span>
+                                                </button>
+                                                <button class="timer-btn-resched btn btn-info" data-toggle="modal" data-target="#rescheduleModal" title="Reschedule this timer">
+                                                    <span class="fa fa-clock-o"></span>
+                                                </button>
 
-                                            <button class="timer-btn-goal btn btn-info" data-toggle="modal" data-target="#switchGoalModal" title="Switch to a different goal">
-                                                <span class="fa fa-pencil"></span>
-                                            </button>
+                                                <button class="timer-btn-goal btn btn-info" data-toggle="modal" data-target="#switchGoalModal" title="Switch to a different goal">
+                                                    <span class="fa fa-pencil"></span>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                    #end
+                                    
+                                    #set ( $forks = $page.leadForks )
+                                    #set ( $forkExists = false )
+                                    
+                                    <h3>Fork Timers</h3>
+                                    
+                                    #foreach($fork in $forks)
+                                        #if( $fork.timerDate && $fork.currentGoal )
+                                        #set ( $forkExists = true )
+                                        <div class="timeline-panel">
+                                            <div class="timeline-body">
+                                                <p>$!page.nodeTitle($fork.currentGoal) 
+                                                <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>
+                                                    <abbr title="$formatter.formatDateISO8601($fork.timerDate)" class="info timeago">$fork.timerDate</abbr>
+                                                </small>
+                                                </p>
+                                                <br>
+                                                <div class="btn-group">
+                                                    <button class="timer-btn-go btn btn-success" data-toggle="modal" data-target="#goNextNodeModal$fork.id" title="Mark this goal as attained">
+                                                        <span class="fa fa-play"></span>
+                                                    </button>
+                                                    <button class="timer-btn-stop btn btn-danger" title="Stop this timer, can be rescheduled later">
+                                                        <span class="fa fa-pause"></span>
+                                                    </button>
+                                                    <button class="timer-btn-resched btn btn-info" data-toggle="modal" data-target="#rescheduleModal$fork.id" title="Reschedule this timer">
+                                                        <span class="fa fa-clock-o"></span>
+                                                    </button>
+
+                                                    <button class="timer-btn-goal btn btn-info" data-toggle="modal" data-target="#switchGoalModal$fork.id" title="Switch to a different goal">
+                                                        <span class="fa fa-pencil"></span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        #end
+                                    #end
+                                    
+                                    #if ( !$forkExists )
+                                        <div class="timeline-panel">
+                                            <div class="timeline-body">
+                                                <p>No pending forks
+                                            </div>
+                                        </div>
+                                    #end
                                 #end
                             </div>
                         </div>
@@ -1253,7 +1299,58 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div>
+    
+    
+    #foreach($fork in $forks)
+        #if( $fork.timerDate && $fork.currentGoal )
+        <div class="modal fade" id="goNextNodeModal$fork.id" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Complete goal - $!page.nodeTitle( $fork.currentGoal )</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="lead">Please select the another goal in the journey you would like to progress to</p>
 
+                        #foreach($nextNodeId in $page.getForkNextNodeIds($fork))
+                        #if ($nextNodeId)
+                        <a class="btn btn-success timer-btn-go-next" href="$nextNodeId" data-fork-id="$fork.id">$page.nodeTitle($nextNodeId)</a>
+                        #end
+                        #end
+                    </div>
+
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
+        <div class="modal fade" id="rescheduleModal$fork.id" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Reschedule goal - $!page.nodeTitle( $fork.currentGoal )</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="lead">Please select a new date and time for this goal</p>
+                        <div class="input-group">
+                            <input type="text" name="timerDate" id="timerDate" class="form-control date-time" value=" $formatter.formatDateTime( $!fork.timerDate )" />
+                            <span class="input-group-addon">
+                                <span class="fa fa-calendar"></span>
+                            </span>
+                        </div>
+                        <br>
+                        <button class="btn btn-success timer-btn-do-resched" data-fork-id="$fork.id">
+                            <span></span>
+                            Reschedule
+                        </button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+        #end
+    #end
+    
     #macro(genFileIcon $file)
     #set($fIcon = "fa-file")
 
