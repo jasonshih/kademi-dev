@@ -25,7 +25,7 @@
         <hr />
         
         <div class="row">
-            <div class="col-lg-5">
+            <div class="col-sm-6">
                 <p class="input-group search-user input-group-sm">
                     <input type="text" id="query" class="form-control" placeholder="Search for asset here" value="" />
                     <span class="input-group-btn">
@@ -35,7 +35,7 @@
                     </span>
                 </p>
             </div>
-            <div class="col-lg-7">
+            <div class="col-sm-6">
                 <div class="btn-group pull-right" role="group">
                     <a href="#" class="btn btn-danger btn-delete-assets" role="button"><i class="fa fa-times"></i> Delete</a>
                 </div>
@@ -43,6 +43,7 @@
         </div>
         
         #set( $assets = $page.search($request.params.q, $request.params.type) )
+        
         <table class="table table-striped" id="table-assets">
             <tr>
                 <th>Name</th>
@@ -60,8 +61,8 @@
                     $ct
                     #end
                 </td>
-                <td><abbr class="timeago" title="$asset.createdDate">$asset.createdDate</abbr></td>
-                <td><abbr class="timeago" title="$asset.modifiedDate">$asset.modifiedDate</abbr></td>
+                <td><abbr class="timeago" title="$formatter.formatDateISO8601($asset.createdDate, $page.parent.organisation.timezone)">$formatter.formatDateTime($asset.createdDate, $page.parent.organisation.timezone)</abbr></td>
+                <td><abbr class="timeago" title="$formatter.formatDateISO8601($asset.modifiedDate, $page.parent.organisation.timezone)">$formatter.formatDateTime($asset.modifiedDate, $page.parent.organisation.timezone)</abbr></td>
                 <td>
                     <input type="checkbox" data-id="$asset.uniqueId" class="asset-check">
                 </td>
