@@ -11,10 +11,15 @@
         var modal = $('#modal-upload-file');
         var form = modal.find('form');
         var progress = form.find('.progress');
+        var progressBar = progress.find('.progress-bar');
         
         form.forms({
             onValid: function () {
                 progress.show();
+            },
+            onProgress: function (percentage) {
+                var percentageStr = Math.round(percentage) + '%';
+                progressBar.html(percentageStr).css('width', percentageStr);
             },
             onSuccess: function (resp) {
                 if (resp && resp.status) {
@@ -32,6 +37,7 @@
         
         modal.on('hidden.bs.modal', function () {
             progress.hide();
+            progressBar.html('0%').css('width', 0);
             form.find('input').val('');
         });
     }
