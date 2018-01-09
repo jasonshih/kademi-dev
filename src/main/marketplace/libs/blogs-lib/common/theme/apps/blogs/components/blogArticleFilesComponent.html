@@ -1,7 +1,7 @@
 #if ($page)
     <div class="blog-article-files">
         #foreach($f in $page.blogFiles)
-            <a class="btn btn-default blog-article-file" target="_blank" href="/_hashes/files/${f.fileHash}"><i class="fa fa-fw fa-file-o"></i> $f.fileName</a>
+            <a class="btn btn-default blog-article-file" target="_blank" href="/_hashes/files/${f.fileHash}" download="${f.fileName}"><i class="fa fa-fw fa-file-o"></i> $f.fileName</a>
         #end
     </div>
 #else
