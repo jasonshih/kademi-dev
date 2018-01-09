@@ -144,7 +144,7 @@ function showKpiLeaderboard(resp, container, visType, config) {
     
     $.each(leaderboardAgg.buckets, function (i, leader) {
         var tr = $("<tr>");
-        tr.append("<td>#" + i + "</td>");
+        tr.append("<td>#" + (i + 1) + "</td>");
         var td = $("<td>");
         td.html(leader.key);
         tr.append(td);
