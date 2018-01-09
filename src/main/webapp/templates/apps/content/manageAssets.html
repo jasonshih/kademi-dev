@@ -3,29 +3,34 @@
         <title>Manage Contact Requests</title>
     </head>
     <body class="manageEmail">
-        
+        <div class="btn-group" role="group">
         <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-upload-file">
             <span class="fa fa-plus"></span>
             Upload
         </button>
-        
+
         <a class="btn btn-success" href="new-query">
             <span class="fa fa-plus"></span>
             Content query
         </a>
-        
-        
+
         #foreach( $ct in $page.contentTypes)
         <a class="btn btn-success" href="new?type=$ct.name">
             <span class="fa fa-plus"></span>
-            New: $ct.name
+            New <b>$ct.name</b>
         </a>
         #end
-        
+
+        <a class="btn btn-info" href="/content/">
+            <span class="fa fa-cogs"></span>
+            Manage types
+        </a>
+        </div>
+
         <hr />
-        
+
         <div class="row">
-            <div class="col-lg-5">
+            <div class="col-sm-6">
                 <p class="input-group search-user input-group-sm">
                     <input type="text" id="query" class="form-control" placeholder="Search for asset here" value="" />
                     <span class="input-group-btn">
@@ -35,14 +40,15 @@
                     </span>
                 </p>
             </div>
-            <div class="col-lg-7">
+            <div class="col-sm-6">
                 <div class="btn-group pull-right" role="group">
                     <a href="#" class="btn btn-danger btn-delete-assets" role="button"><i class="fa fa-times"></i> Delete</a>
                 </div>
             </div>
         </div>
-        
+
         #set( $assets = $page.search($request.params.q, $request.params.type) )
+        
         <table class="table table-striped" id="table-assets">
             <tr>
                 <th>Name</th>
@@ -60,16 +66,16 @@
                     $ct
                     #end
                 </td>
-                <td><abbr class="timeago" title="$asset.createdDate">$asset.createdDate</abbr></td>
-                <td><abbr class="timeago" title="$asset.modifiedDate">$asset.modifiedDate</abbr></td>
+                <td><abbr class="timeago" title="$formatter.formatDateISO8601($asset.createdDate, $page.parent.organisation.timezone)">$formatter.formatDateTime($asset.createdDate, $page.parent.organisation.timezone)</abbr></td>
+                <td><abbr class="timeago" title="$formatter.formatDateISO8601($asset.modifiedDate, $page.parent.organisation.timezone)">$formatter.formatDateTime($asset.modifiedDate, $page.parent.organisation.timezone)</abbr></td>
                 <td>
                     <input type="checkbox" data-id="$asset.uniqueId" class="asset-check">
                 </td>
             </tr>
             #end
         </table>
-        
-        
+
+
         <div id="modal-upload-file" class="modal fade" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -84,24 +90,24 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-3" for="newFile">File</label>
-                                
+
                                 <div class="col-md-8">
                                     <input id="newFile" type="file" name="NewFile" class="form-control" />
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label class="control-label col-md-3" for="notes">Notes</label>
-                                
+
                                 <div class="col-md-8">
                                     <textarea name="notes" class="form-control" id="notes"></textarea>
                                 </div>
                             </div>
-                            
+
                         </div>
-                        
+
                         <div class="modal-footer">
-                            
+
                             <button type="submit" value="Upload" class="btn btn-success">
                                 <span class="fa fa-upload"></span>
                                 Upload
@@ -111,7 +117,7 @@
                 </div>
             </div>
         </div>
-        
+
         <script type="text/javascript" src="/theme/apps/content/manageAssets.js"></script>
     </body>
 </html>

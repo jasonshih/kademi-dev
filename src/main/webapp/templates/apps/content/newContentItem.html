@@ -35,15 +35,6 @@
 
         <script type="text/javascript" >
             $(function () {
-                $('.select-asset').each(function () {
-                    var input = $(this);
-                    var type = input.hasClass('select-asset-image') ? 'image': 'video';
-                    
-                    input.assetFinder({
-                        type: type
-                    });
-                });
-                
                 $(".item-edit-form").forms({
                     onSuccess: function (resp) {
                         if (resp.status) {
