@@ -17,7 +17,8 @@
     AssetFinder.DEFAULTS = {
         url: '/assets/',
         maxResults: 5,
-        type: ''
+        type: '',
+        assetType: ''
     };
     
     AssetFinder.prototype.init = function () {
@@ -27,8 +28,36 @@
         var options = self.options;
         var element = self.element;
         
-        var holder = self.holder = $('<input type="text" class="form-control " value="" />');
+        var holder = self.holder = $('<input type="text" class="form-control " value="' + (element.attr('data-asset-name') || '') + '" />');
         element.css('display', 'none').after(holder);
+        
+        var type = options.type || '';
+        if (!type) {
+            flog('[AssetFinder] Type is empty. Check classes for type', element.attr('class'));
+            
+            if (element.hasClass('select-asset-image')) {
+                type = 'image';
+            }
+            
+            if (element.hasClass('select-asset-video')) {
+                type = 'video';
+            }
+            
+            if (element.hasClass('select-asset-content')) {
+                type = 'content';
+            }
+        } else {
+            flog('[AssetFinder] Type is ' + type);
+        }
+        
+        var assetType = options.assetType || '';
+        if (!assetType) {
+            flog('[AssetFinder] Asset type is empty. Check data attribute "data-asset-type" for asset type', element.attr('data-asset-type'));
+            
+            assetType = element.attr('data-asset-type') || '';
+        } else {
+            flog('[AssetFinder] Asset type is ' + assetType);
+        }
         
         holder.typeahead({
             highlight: true,
@@ -45,7 +74,8 @@
                     dataType: 'json',
                     data: {
                         q: holder.val(),
-                        type: options.type
+                        type: type,
+                        assetType: assetType
                     },
                     success: function (resp) {
                         if (resp && resp.status) {
@@ -92,5 +122,13 @@
     };
     
     $.fn.assetFinder.constructor = AssetFinder;
+    
+    // Init asset finder for every class `select-asset`
+    $(function () {
+        $('.select-asset').each(function () {
+            var input = $(this);
+            input.assetFinder();
+        });
+    });
     
 })(jQuery);
