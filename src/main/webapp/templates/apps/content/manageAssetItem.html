@@ -54,16 +54,6 @@
         <script type="text/javascript" >
             $(function () {
                 flog("init content item page");
-                $('.select-asset').each(function () {
-                    var input = $(this);
-                    flog("classes", input.attr("class"));
-                    var type = input.hasClass('select-asset-image') ? 'image': 'video';
-                    
-                    flog("asset selector", type, input.hasClass('select-asset-image'), input);
-                    input.assetFinder({
-                        type: type
-                    });
-                });
                                 
                 $(".form-edit").forms({
                     onSuccess: function (resp) {
