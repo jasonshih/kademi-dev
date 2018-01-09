@@ -1,12 +1,16 @@
 {
-  "appDependencies": [
+    "appDependencies": [
         {
             "appId": "auctionApp",
-            "branch" : ""
+            "branch": ""
         },
         {
             "appId": "user-lib",
             "branch": "1.1.3"
+        },
+        {
+            "appId": "KRewardStore",
+            "branch": "1.0.6"
         }
-  ]
+    ]
 }
