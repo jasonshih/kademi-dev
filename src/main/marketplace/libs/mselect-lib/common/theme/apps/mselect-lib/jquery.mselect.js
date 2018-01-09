@@ -14,8 +14,7 @@
         btnClass: 'btn btn-success',
         btnOkClass: 'btn btn-sm btn-primary',
         modalTitle: 'Select file',
-        contentTypes: ['image', 'video', 'audio'],
-        mselectAll: false, // when true, all file types are allowed so contentTypes is ignored
+        contentType: null,
         excludedEndPaths: ['.mil/'],
         basePath: '/',
         pagePath: window.location.pathname,
@@ -180,10 +179,8 @@
         return fileType;
     };
     
-    MSelect.prototype.getAcceptedFiles = function (contentTypes) {
-        return contentTypes.map(function (a) {
-            return a + '/*'
-        }).join(',');
+    MSelect.prototype.getAcceptedFile = function (contentType) {
+        return contentType + '/*';
     };
     
     MSelect.prototype.getCleanUrl = function (url) {
@@ -205,15 +202,16 @@
         var mtreeOptions = {
             basePath: options.basePath,
             pagePath: options.pagePath,
+            includeContentType: options.contentType,
             excludedEndPaths: options.excludedEndPaths,
-            onSelect: function (node, type, selectedUrl, hash) {
+            onSelect: function (node, type, selectedUrl, hash, isAsset) {
                 flog('[MSelect] Select node', node, selectedUrl, hash);
                 var selectFolder = this.getSelectedFolderUrl();
                 btnUpload.mupload('setUrl', selectFolder);
                 
                 if (type === 'file') {
                     var fileType = self.getFileType(selectedUrl);
-                    var hashUrl = '/_hashes/files/' + hash;
+                    var hashUrl = isAsset ? selectedUrl : '/_hashes/files/' + hash;
                     flog('[MSelect] File type="' + fileType + '"');
                     
                     progressBar.show();
@@ -283,9 +281,6 @@
             }
         };
         
-        if (!options.mselectAll) {
-            mtreeOptions.includeContentTypes = options.contentTypes;
-        }
         self.mtree = treeContainer.mtree(mtreeOptions);
     };
     
@@ -311,8 +306,9 @@
                 progressBarInner.html('Uploading...');
             }
         };
-        if (!options.mselectAll) {
-            muploadOptions.acceptedFiles = self.getAcceptedFiles(options.contentTypes);
+        
+        if (options.contentType) {
+            muploadOptions.acceptedFiles = [self.getAcceptedFile(options.contentType)];
         }
         btnUpload.mupload(muploadOptions);
     };

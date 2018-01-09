@@ -15,6 +15,10 @@
         flog.apply(null, args);
     };
     
+    var ASSETS_ID = 'kademi-asset-folder';
+    var ASSETS_NAME = 'Assets';
+    var ASSETS_HREF = '/assets/';
+    
     var DEFAULTS = {
         pagePath: window.location.href,
         basePath: window.location.href,
@@ -22,8 +26,8 @@
         onlyFolders: false,
         theme: 'default',
         excludedEndPaths: [],
-        includeContentTypes: [],
-        onSelect: function (node, type, url, hash) {
+        includeContentType: null,
+        onSelect: function (node, type, url, hash, isAsset) {
             
         },
         onDelete: function (node, parentFolder, type) {
@@ -51,8 +55,8 @@
         htmlContent += '<div class="mtree-wrapper">';
         if (options.showToolbar) {
             htmlContent += '   <div class="mtree-toolbar">';
-            htmlContent += '       <a href="javascript:void(0)" class="btn btn-success btn-sm mtree-btn-add-folder" title="Add folder"><i class="fa fa-plus"></i></a>';
-            htmlContent += '       <a href="javascript:void(0)" class="btn btn-danger btn-sm mtree-btn-delete" title="Delete"><i class="fa fa-times"></i></a>';
+            htmlContent += '       <button type="button" class="btn btn-success btn-sm mtree-btn-add-folder" title="Add folder"><i class="fa fa-plus"></i></button>';
+            htmlContent += '       <button type="button" class="btn btn-danger btn-sm mtree-btn-delete" title="Delete"><i class="fa fa-times"></i></button>';
             htmlContent += '   </div>';
         }
         htmlContent += '   <div class="mtree"></div>';
@@ -64,7 +68,7 @@
         
         if (options.showToolbar) {
             self.toolbar = target.find('.mtree-toolbar');
-            self.toolbar.find('.mtree-btn-delete').on('click', function (e) {
+            self.btnDelete = self.toolbar.find('.mtree-btn-delete').on('click', function (e) {
                 e.preventDefault();
                 
                 var selectedNode = self.getSelectedNode();
@@ -74,7 +78,7 @@
                 }
             });
             
-            self.toolbar.find('.mtree-btn-add-folder').on('click', function (e) {
+            self.btnAddFolder = self.toolbar.find('.mtree-btn-add-folder').on('click', function (e) {
                 e.preventDefault();
                 
                 self.addFolder(prompt('Please enter name of new folder'));
@@ -91,9 +95,9 @@
         var name = node.attr('data-name');
         var href = node.attr('href');
         var type = node.attr('data-type');
+        var isAsset = node.attr('data-asset');
         var nodeWrapper = node.parent();
-        
-        confirmDelete(href, name, function () {
+        var callbackAfterDeleted = function () {
             log('Node is deleted');
             
             var parentFolders = nodeWrapper.parents('.mtree-folder-wrapper');
@@ -108,7 +112,25 @@
             
             self.jstree.delete_node([node.attr('id')]);
             self.jstree.select_node(parentFolder);
-        });
+        };
+        
+        if (isAsset) {
+            if (confirm('Are you sure you want to delete ' + name + '?')) {
+                $.ajax({
+                    type: 'DELETE',
+                    url: href,
+                    success: function () {
+                        callbackAfterDeleted();
+                    },
+                    error: function (resp) {
+                        log('Error in deleting asset', resp);
+                        alert('Sorry, an error occured deleting ' + href + '. Please check your internet connection');
+                    }
+                });
+            }
+        } else {
+            confirmDelete(href, name, callbackAfterDeleted);
+        }
     };
     
     MTree.prototype.initTree = function () {
@@ -123,24 +145,58 @@
                 'data': function (node, callback) {
                     log('Load data for folder node', node);
                     
-                    var loadUrl = options.basePath;
-                    if (node.id !== '#') {
-                        loadUrl = node.a_attr.href;
+                    var isAssetsFolder = node.id === ASSETS_ID;
+                    var loadUrl;
+                    var dataRequest;
+                    if (isAssetsFolder) {
+                        loadUrl = ASSETS_HREF;
+                        dataRequest = {
+                            q: '',
+                            type: options.includeContentType
+                        }
+                    } else {
+                        if (node.id === '#') {
+                            loadUrl = options.basePath;
+                        } else {
+                            loadUrl = node.a_attr.href;
+                        }
+                        
+                        loadUrl = self.getPropFindUrl(loadUrl);
                     }
                     log('Load url: ' + loadUrl);
                     
                     $.ajax({
-                        url: self.getPropFindUrl(loadUrl),
+                        url: loadUrl,
                         dataType: 'json',
                         type: 'get',
-                        success: function (data) {
-                            log('Tree data from server', data);
+                        data: dataRequest,
+                        success: function (resp) {
+                            log('Tree data from server', resp);
                             
                             var treeData = [];
+                            
+                            if (node.id === '#') {
+                                treeData.push(self.generateItemData({
+                                    iscollection: true,
+                                    id: ASSETS_ID,
+                                    href: ASSETS_HREF,
+                                    name: ASSETS_NAME
+                                }));
+                            }
+                            
+                            var data = resp;
+                            if (isAssetsFolder) {
+                                data = resp.data;
+                            }
+                            
                             $.each(data, function (index, item) {
-                                if (item.iscollection || !options.onlyFolders) {
-                                    if (index > 0 && self.isDisplayable(item)) {
-                                        treeData.push(self.generateItemData(item, index));
+                                if (isAssetsFolder) {
+                                    treeData.push(self.generateItemData(item, index));
+                                } else {
+                                    if (item.iscollection || !options.onlyFolders) {
+                                        if (index > 0 && self.isDisplayable(item)) {
+                                            treeData.push(self.generateItemData(item, index));
+                                        }
                                     }
                                 }
                             });
@@ -167,9 +223,36 @@
             var type = data.node.a_attr['data-type'];
             var url = data.node.a_attr['href'];
             var hash = data.node.a_attr['data-hash'] || '';
+            var selectedNode = self.tree.find('.mtree-node[id="' + data.node.a_attr['id'] + '"]');
+            
+            var isAsset = data.node.id === ASSETS_ID;
+            if (!isAsset) {
+                if (self.getSelectedFolderUrl() === ASSETS_HREF) {
+                    isAsset = true;
+                }
+            }
+            
+            if (isAsset) {
+                if (self.btnAddFolder) {
+                    self.btnAddFolder.prop('disabled', true).attr('title', 'You can not create sub folder in ' + ASSETS_NAME + ' folder');
+                }
+                
+                if (self.btnDelete) {
+                    if (data.node.id === ASSETS_ID) {
+                        self.btnDelete.prop('disabled', true).attr('title', 'You can not delete ' + ASSETS_NAME + ' folder');
+                    } else {
+                        self.btnDelete.prop('disabled', false).attr('title', '');
+                    }
+                }
+            } else {
+                if (self.btnAddFolder) {
+                    self.btnAddFolder.prop('disabled', false).attr('title', '');
+                    self.btnDelete.prop('disabled', false).attr('title', '');
+                }
+            }
             
             if (typeof options.onSelect === 'function') {
-                options.onSelect.call(self, self.tree.find('.mtree-node[id="' + data.node.a_attr['id'] + '"]'), type, url, hash);
+                options.onSelect.call(self, selectedNode, type, url, hash, isAsset);
             }
         });
     };
@@ -275,16 +358,17 @@
         
         var type = item.iscollection ? 'folder' : 'file';
         item.type = type;
-        item.id = self.generateId(type, itemIndex);
+        item.id = item.id || self.generateId(type, itemIndex);
         item.icon = 'fa fa-' + type + '-o';
         item.text = item.name;
         item.state = {
             opened: false
         };
+        
         item.a_attr = {
             class: 'mtree-node mtree-' + type,
             id: item.id,
-            href: item.href,
+            href: item.href || ASSETS_HREF + item.uniqueId,
             'data-name': item.name,
             'data-type': type
         };
@@ -298,6 +382,10 @@
         
         if (item.iscollection) {
             item.children = true;
+        }
+        
+        if (item.uniqueId) {
+            item.a_attr['data-asset'] = true;
         }
         
         return item;
@@ -400,14 +488,10 @@
         var options = self.options;
         
         if (!item.iscollection) {
-            if (options.includeContentTypes.length > 0) {
+            if (options.includeContentType) {
                 var isCorrectType;
-                for (var i = 0; i < options.includeContentTypes.length; i++) {
-                    var ct = options.includeContentTypes[i];
-                    if (item.contentType && item.contentType.contains(ct)) {
-                        isCorrectType = true;
-                        break;
-                    }
+                if (item.contentType && item.contentType.contains(options.includeContentType)) {
+                    isCorrectType = true;
                 }
                 
                 if (!isCorrectType) {
