@@ -1,6 +1,6 @@
-Content query - $applications.content.assetManager
 #set( $queryAsset = $applications.content.assetManager.find("4573919a-cca5-4d1e-8619-f39e2589238b") )
-<br/>
-query - $queryAsset
-<br/>
-$applications.content.assetManager.evaluateAssetQuery($queryAsset)
+#set( $queryResult = $applications.content.assetManager.evaluateAssetQuery($queryAsset) )
+
+#foreach( $asset in $queryResult )
+<a href="/assets/$asset.uniqueId">$asset.name</a>
+#end

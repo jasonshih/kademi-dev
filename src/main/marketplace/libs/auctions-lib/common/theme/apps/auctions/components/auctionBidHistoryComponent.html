@@ -1,4 +1,5 @@
 #if($page)
+    #if($page.auctionType == "HBA")
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title">Bid History</div>
@@ -21,6 +22,7 @@
             </tbody>
         </table>
     </div>
+    #end
 #else
     <div class="panel panel-default">
         <div class="panel-heading">

@@ -1069,6 +1069,7 @@
             var btn = $(e.target).closest("button");
             var modal = btn.closest(".modal");
             var dateControl = modal.find(".date-time");
+            var forkId = btn.attr("data-fork-id");
 
             var timerDate = dateControl.val();
             flog("reschdule", dateControl, timerDate);
@@ -1077,7 +1078,8 @@
                 dataType: 'json',
                 data: {
                     "timerCmd": "resched",
-                    "timerDate": timerDate
+                    "timerDate": timerDate,
+                    "forkId": forkId
                 },
                 success: function () {
                     Msg.info("Recheduled timer. Reloading page");
@@ -1093,12 +1095,15 @@
             e.preventDefault();
             var btn = $(e.target).closest("a");
             var nextNodeId = btn.attr("href");
+            var forkId = btn.attr("data-fork-id");
+            
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
                 data: {
                     "timerCmd": "go",
-                    "nextNodeId": nextNodeId
+                    "nextNodeId": nextNodeId,
+                    "forkId": forkId
                 },
                 success: function () {
                     Msg.info("Done. Reloading page");

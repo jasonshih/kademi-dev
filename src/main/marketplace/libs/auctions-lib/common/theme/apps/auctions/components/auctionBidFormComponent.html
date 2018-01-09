@@ -9,13 +9,18 @@
                 #end
             </div>
         </div>
+        #if($page.auctionType == "HBA")
+            #set($actionCurrVal = $page.currentBidValue)
+        #else
+            #set($actionCurrVal = $page.auctionStartValue)
+        #end
         <div class="panel-body">
             #if(!$page.auctionClosed)
                 <form method="POST" action="." class="form-horizontal">
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input class="regex required form-control" type="number" size="5" name="auctionBidValue" value="$!page.currentBidValue" data-regex="^[0-9-.]+$" data-message="Amount bid must be digits" />
+                                <input class="regex required form-control" type="number" size="5" name="auctionBidValue" value="$!actionCurrVal" data-regex="^[0-9-.]+$" data-message="Amount bid must be digits" />
                                 <span class="input-group-btn">
                                     <button type="submit" class="btn btn-md btn-primary">
                                         Place Bid
@@ -26,6 +31,7 @@
                     </div>
                 </form>
     
+                #if($page.auctionType == "HBA")
                 <p><i class="fa fa-dollar fa-fw"></i>
                     #if($page.currentBidValue)
                         Current Bid: $<span id="auction-current-bid-value">$!page.currentBidValue</span>
@@ -33,6 +39,7 @@
                         Current Bid: $<span id="auction-current-bid-value">$!page.auctionStartValue</span>
                     #end
                 </p>
+                #end
     
                 <p><i class="fa fa-list-ol fa-fw"></i> Bid Count: <span id="auction-bid-count">$!page.auctionBidCount</span></p>
     
