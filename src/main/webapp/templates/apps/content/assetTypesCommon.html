@@ -28,10 +28,116 @@
             </tr>
             #end
         </table>
+
+        <h3>Permissions</h3>
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-new-asset-permission" ><span class="fa fa-plus"></span>&nbsp;New permission</button>
+        <br/><br/>
+        <table class="table table-striped" id="tablePermissions">
+            <thead>
+                <tr>
+                    <th>Website</th>
+                    <th>Group</th>
+                    <th>Permissions</th>
+                </tr>
+            </thead>
+            <tbody>
+                #foreach($permission in $page.assetType.permissions)
+                <tr>
+                    <td>$permission.websiteName</td>
+                    <td>$permission.groupName</td>
+                    <td>
+                        #foreach($p in $permission.priviledges)
+                        #if($p == "READ_CONTENT")
+                        Can read/view<br/>
+                        #elseif($p == "WRITE_CONTENT")
+                        Can write<br/>
+                        #end
+                        #end
+                        #if($permission.allowCreation)
+                        Can create<br/>
+                        #end
+                    </td>
+                </tr>
+                #end
+            </tbody>
+        </table>
         #end
 
 
         #macro (assetTypeScripts)
+
+        <div id="modal-new-asset-permission" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Asset Permission</h4>
+                    </div>
+                    <form class="form-horizontal" action="$page.href" method="POST">
+                        <input type="hidden" name="newAssetPermission" value="true"/>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="height" class="control-label col-md-3">Website</label>
+
+                                <div class="col-md-8">
+                                    <select class="form-control required" name="websiteName">
+                                        <option value="">[ NONE ]</option>
+                                        #foreach($w in $rootFolder.websites)
+                                        #if(!$w.deleted())
+                                        <option value="$w.name">$formatter.firstNotNull($w.title, $w.name)</option>
+                                        #end
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="width" class="control-label col-md-3">Group</label>
+
+                                <div class="col-md-8">
+                                    <select class="form-control required" name="groupName">
+                                        <option value="">[ NONE ]</option>
+                                        #foreach($g in $rootFolder.groups)
+                                        #if(!$g.deleted())
+                                        <option value="$g.name">$formatter.firstNotNull($g.title, $g.name)</option>
+                                        #end
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="width" class="control-label col-md-3">Permission</label>
+
+                                <div class="col-md-8">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input name="permissions" type="checkbox" value="READ">
+                                            Read
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input name="permissions" type="checkbox" value="WRITE">
+                                            Write
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input name="createPermission" type="checkbox" value="CREATE">
+                                            Create
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <div class="new-view-modals">
             <div id="modal-view-altformat" class="modal fade" aria-hidden="true" tabindex="-1">
@@ -177,21 +283,42 @@
         </div>
 
         <script>
-            $(function () {
-                flog("init forms");
-                $(".new-view-modals .modal").each(function (i, n) {
-                    var modal = $(n);
-                    flog("init form", modal);
-                    modal.find("form").forms({
-                        onSuccess: function (resp) {
-                            if (resp.status) {
-                                Msg.info("Addew view");
-                                $("#tableViews").reloadFragment();
+            (function ($) {
+                function initViewModals() {
+                    $(".new-view-modals .modal").each(function (i, n) {
+                        var modal = $(n);
+                        flog("init form", modal);
+                        modal.find("form").forms({
+                            onSuccess: function (resp) {
+                                if (resp.status) {
+                                    Msg.info(resp.messages);
+                                    $("#tableViews").reloadFragment();
+                                }
                             }
+                        });
+                    });
+                }
+
+                function initPermissionModal() {
+                    var modal = $('#modal-new-asset-permission');
+                    var form = modal.find('form');
+
+                    form.forms({
+                        onSuccess: function (resp) {
+                            modal.modal('hide');
+                            form.trigger('reset');
+                            Msg.info(resp.messages);
+                            $("#tablePermissions").reloadFragment();
                         }
                     });
+                }
+
+                $(function () {
+                    flog("init forms");
+                    initViewModals();
+                    initPermissionModal();
                 });
-            });
+            })(jQuery);
         </script>
         #end
     </body>
