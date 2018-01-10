@@ -4,56 +4,70 @@
         <script type="text/javascript" src="/static/jquery.assetFinder/1.0.0/jquery.assetFinder-1.0.0.js"></script>
     </head>
     <body class="manageEmail">
+
+        #parse("/theme/apps/content/assetsCommon.html")
+
+        #assetHeader()
+
         <form action="$page.href" method="POST" class="form-horizontal form-edit" role="form">
             <p class="text-right">
-                <button type="submit" class="btn btn-sm btn-success">Save</button>
+                <button type="submit" class="btn btn-lg btn-success">Save</button>
             </p>
-            
+
             <div class="form-group">
                 <label class="control-label col-md-3" for="name">Name</label>
-                
+
                 <div class="col-md-8">
                     <input type="text" name="name" id="name" value="$page.asset.name" placeholder="" class="required form-control" required="true" />
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label class="control-label col-md-3" for="name">Created</label>
-                
+
                 <div class="col-md-8">
                     <p class="form-control-static">$page.asset.createdDate</p>
                 </div>
             </div>
-            
+
             #foreach($field in $page.allFields )
                 #if( $field.editable )
                     <div class="form-group">
                         <label class="control-label col-md-3" for="$field.name">$field.name</label>
-                        
+
                         <div class="col-md-8">
                             $page.renderFieldInput($field)
                         </div>
                     </div>
                 #end
             #end
+
+            <hr/>
+            <h3>Calculated fields</h3>
+                #foreach($field in $page.allFields )
+                #if( !$field.editable )
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="$field.name">$field.name</label>
+
+                        <div class="col-md-8">
+                            $page.renderFieldInput($field)
+                        </div>
+                    </div>
+                #end
+                #end
+
         </form>
-        
-        <table class="table table-striped">
-            #foreach($field in $page.allFields )
-            #if( !$field.editable )
-            <tr>
-                <th>$field.name</th>
-                <td>$page.renderField($field)</td>
-            </tr>
-            #end
-            #end
-        </table>
-        
-        
+
+        <hr/>
+        <h2>Asset information</h2>
+        #assetInfo()
+
+            #assetCommonScripts()
+
         <script type="text/javascript">
             $(function () {
                 flog("init content item page");
-                
+
                 $(".form-edit").forms({
                     onSuccess: function (resp) {
                         if (resp.status) {

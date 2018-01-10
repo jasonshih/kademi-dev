@@ -48,7 +48,7 @@
         </div>
 
         #set( $assets = $page.search($request.params.q, $request.params.type) )
-        
+
         <table class="table table-striped" id="table-assets">
             <tr>
                 <th>Name</th>
@@ -62,8 +62,8 @@
                 <td><a href="$asset.uniqueId">$asset.name</a></td>
                 <td>
                     $!asset.format
-                    #foreach($ct in $asset.contentTypes)
-                    $ct
+                    #foreach($ct in $asset.assetTypes)
+                    <a href="/content/$ct" class="label label-info">$ct</a>
                     #end
                 </td>
                 <td><abbr class="timeago" title="$formatter.formatDateISO8601($asset.createdDate, $page.parent.organisation.timezone)">$formatter.formatDateTime($asset.createdDate, $page.parent.organisation.timezone)</abbr></td>

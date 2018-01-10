@@ -10,6 +10,22 @@
 
         <hr/>
 
+        <div class="well">
+            <div class="pull-left" style="padding-right: 15px">
+                <span class="fa fa-lightbulb-o fa-4x text-success"></span>
+            </div>
+
+            <p>
+                Content queries allow you to select which content to target to different
+                user segments
+            </p>
+            <p>
+                Specify each segment with the query builder below, and then select whether
+                to target a single asset or a list of assets by type.
+            </p>
+
+        </div>
+
         <form action="$page.href" method="POST" class="form-rules form form-horizontal">
             <input type="hidden" name="saveQueryAsset"/>
 
@@ -41,16 +57,28 @@
 
         #macro( showRuleTemplate $rule $count )
         <div class="rule-container">
-            <div class="form-group">
-                <button class="btn btn-warning pull-right btn-remove-rule">
-                    <span class="fa fa-remove"></span>
-                    Remove
-                </button>
+            <button class="btn btn-warning btn-remove-rule">
+                <span class="fa fa-remove"></span>
+                Remove
+            </button>
 
-                <label class="control-label col-md-3" for="target.$count">Target</label>
+            <div class="form-group">
+                <label class="control-label col-md-3" for="target.$count">Target asset</label>
 
                 <div class="col-md-4">
                     <input type="text" name="target.$count" value="$!rule.asset.uniqueId" placeholder="" class="form-control select-asset" required="true" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-3" for="targettype.$count">Target asset type</label>
+
+                <div class="col-md-4">
+                    <select name="targettype.$count" class="form-control">
+                        #foreach( $assetType in $page.find("/content" ).children )
+                        <option>$assetType.name</option>
+                        #end
+                    </select>
                 </div>
             </div>
 

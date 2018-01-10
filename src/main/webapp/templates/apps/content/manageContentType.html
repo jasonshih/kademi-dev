@@ -25,24 +25,248 @@
 
 
         <table class="table table-striped">
-            <tr>
-                <th>Name</th>
-                <th>Text</th>
-                <th>Editable</th>
-            </tr>
-            #foreach($field in $page.assetType.fields)
-            <tr>
-                <td>$field.name</td>
-                <td>$!field.text</td>
-                <td>
-                    #if( $field.editable )
-                    <div class="label label-success"><span class="fa fa-check"></span></div>
-                    #end
-                </td>
-            </tr>
-            #end
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Text</th>
+                    <th>Editable</th>
+                </tr>
+            </thead>
+            <tbody id="tableBodyFields">
+                #foreach($field in $page.assetType.fields)
+                <tr>
+                    <td>$field.name</td>
+                    <td>$!field.text</td>
+                    <td>
+                        #if( $field.editable )
+                        <div class="label label-success"><span class="fa fa-check"></span></div>
+                        #end
+                    </td>
+                </tr>
+                #end
+            </tbody>
         </table>
 
+        <div class="new-field-modals">
+            <div id="modal-field-typed" class="modal fade" aria-hidden="true" tabindex="-1">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">New field</h4>
+                        </div>
+                        <form class="form-horizontal" action="$page.href" method="POST">
+                            <input type="hidden" name="newFieldType" value="typedField"/>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="name" class="control-label col-md-4">Name</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="name" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="title" class="control-label col-md-4">title</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="title" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="text" class="control-label col-md-4">Text</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="text" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="type" class="control-label col-md-4">type</label>
+
+                                    <div class="col-md-8">
+                                        <select name="type" class="form-control">
+                                            <option>date</option>
+                                            <option>datetime-local</option>
+                                            <option>text</option>
+                                            <option>integer</option>
+                                            <option>decimal</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modal-field-derived" class="modal fade" aria-hidden="true" tabindex="-1">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">New derived field</h4>
+                        </div>
+                        <form class="form-horizontal" action="$page.href" method="POST">
+                            <input type="hidden" name="newFieldType" value="derived"/>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="name" class="control-label col-md-4">name</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="name" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="mvelExpr" class="control-label col-md-4">Expression</label>
+
+                                    <div class="col-md-8">
+                                        <textarea class="form-control" name="mvelExpr"></textarea>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modal-field-relation" class="modal fade" aria-hidden="true" tabindex="-1">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">New relation field</h4>
+                        </div>
+                        <form class="form-horizontal" action="$page.href" method="POST">
+                            <input type="hidden" name="newFieldType" value="relation"/>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="name" class="control-label col-md-4">Name</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="name" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="title" class="control-label col-md-4">title</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="title" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="text" class="control-label col-md-4">Text</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="text" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contentType" class="control-label col-md-4">Asset type</label>
+
+                                    <div class="col-md-8">
+                                        <select name="contentType" class="form-control">
+                                            #foreach( $assetType in $page.parent.children )
+                                            <option>$assetType.name</option>
+                                            #end
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="required" class="control-label col-md-4">Required</label>
+
+                                    <div class="col-md-8">
+                                        <input type="checkbox" class="form-control" name="required" value="true" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="allowMany" class="control-label col-md-4">allowMany</label>
+
+                                    <div class="col-md-8">
+                                        <input type="checkbox" class="form-control" name="allowMany" value="true" />
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modal-field-stored" class="modal fade" aria-hidden="true" tabindex="-1">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">New simple field</h4>
+                        </div>
+                        <form class="form-horizontal" action="$page.href" method="POST">
+                            <input type="hidden" name="newFieldType" value="stored"/>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="name" class="control-label col-md-4">Name</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="name" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="title" class="control-label col-md-4">title</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="title" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="text" class="control-label col-md-4">Text</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="text" value="" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(function () {
+                flog("init field  forms");
+                $(".new-field-modals .modal").each(function (i, n) {
+                    var modal = $(n);
+                    flog("init form", modal);
+                    modal.find("form").forms({
+                        onSuccess: function (resp) {
+                            if (resp.status) {
+                                Msg.info("Addew view");
+                                $("#tableBodyFields").reloadFragment();
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
 
         #assetTypeScripts()
 
