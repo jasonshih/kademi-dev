@@ -38,7 +38,8 @@
 
 .milton-file-select-container .milton-file-preview {
     position: absolute;
-    border: 1px solid #ddd !important;
+    border-radius: 0;
+    margin: 0;
     overflow: auto !important;
     position: absolute;
     top: 45px;
@@ -46,11 +47,16 @@
     right: 0px;
     bottom: 0;
     height: auto !important;
+    box-shadow: none;
 }
 
 /* ============================================================================
    Milton tree
    ============================================================================ */
+.milton-tree-wrapper .mtree-wrapper {
+    height: 100%;
+}
+
 .milton-file-select-container .milton-tree-wrapper {
     position: relative;
     height: 100%;
@@ -64,6 +70,19 @@
     right: 0;
     bottom: 0;
     height: auto !important;
+}
+
+.milton-tree-wrapper .mtree-wrapper .tab-content {
+    top: 83px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.milton-tree-wrapper .mtree-wrapper .tab-content .mtree {
+    top: 0;
+    border: 0;
 }
 
 /* ============================================================================

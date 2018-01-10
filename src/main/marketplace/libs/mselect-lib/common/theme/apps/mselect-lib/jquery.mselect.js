@@ -451,7 +451,7 @@
             '                <div class="milton-file-progress progress" style="display: none;">' +
             '                    <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: 100%"></div>' +
             '                </div>' +
-            '                <div class="milton-file-preview"></div>' +
+            '                <div class="milton-file-preview panel panel-default"></div>' +
             '            </div>' +
             '        </div>' +
             '    </div>' +
