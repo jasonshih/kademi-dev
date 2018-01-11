@@ -66,7 +66,8 @@
                 <label class="control-label col-md-3" for="target.$count">Target asset</label>
 
                 <div class="col-md-4">
-                    <input type="text" name="target.$count" value="$!rule.asset.uniqueId" placeholder="" class="form-control select-asset" required="true" />
+                    #set($selectAsset = $formatter.ifEqual("", "select-asset", $count, "new"))
+                    <input type="text" name="target.$count" data-asset-name="$!rule.asset.name" value="$!rule.asset.uniqueId" placeholder="" class="form-control $!selectAsset" required="true" />
                 </div>
             </div>
 
@@ -74,9 +75,11 @@
                 <label class="control-label col-md-3" for="targettype.$count">Target asset type</label>
 
                 <div class="col-md-4">
+                    <!-- TODO: allow selection of multiple types -->
                     <select name="targettype.$count" class="form-control">
+                        <option value="">[None]</option>
                         #foreach( $assetType in $page.find("/content" ).children )
-                        <option>$assetType.name</option>
+                        $formatter.option($assetType.name, $assetType.name, $rule.assetTypes)
                         #end
                     </select>
                 </div>
