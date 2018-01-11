@@ -1,6 +1,37 @@
-#set( $queryAsset = $applications.content.assetManager.find("4573919a-cca5-4d1e-8619-f39e2589238b") )
+#set( $queryAsset = $applications.content.assetManager.find($query) )
 #set( $queryResult = $applications.content.assetManager.evaluateAssetQuery($queryAsset) )
 
-#foreach( $asset in $queryResult )
-<a href="/assets/$asset.uniqueId">$asset.name</a>
-#end
+#set( $assetsFolder = $rootFolder.find("/assets") )
+
+<!-- todo: these should come from settings -->
+#set( $thumbProp = "thumb" )
+#set( $captionProp = "petName" )
+
+<div style="min-height: 200px">
+    <div class="row">
+        #if( $page.is("editor") && $queryResult.isEmpty() )
+        <div class="col-xs-6 col-md-3">
+            <a href="#" class="thumbnail">
+                Example asset
+            </a>
+        </div>
+        #else
+        #foreach( $asset in $queryResult )
+        <div class="col-xs-6 col-md-3">
+            #set( $assetRes = $assetsFolder.assetResource($asset ) )
+            #if( $thumbProp )
+            <a href="/assets/$asset.uniqueId" class="thumbnail">
+                <img src="$assetRes.data.get($thumbProp).href" alt="$asset.name"/>
+            </a>
+            #end
+            
+            #if( $captionProp )
+            <div class="caption">
+                <h3>$assetRes.data.get($captionProp)</h3>
+            </div>
+            #end
+        </div>
+        #end
+        #end
+    </div>
+</div>

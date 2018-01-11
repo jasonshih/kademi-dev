@@ -75,10 +75,11 @@
                 <label class="control-label col-md-3" for="targettype.$count">Target asset type</label>
 
                 <div class="col-md-4">
+                    <!-- TODO: allow selection of multiple types -->
                     <select name="targettype.$count" class="form-control">
                         <option value="">[None]</option>
                         #foreach( $assetType in $page.find("/content" ).children )
-                        <option>$assetType.name</option>
+                        $formatter.option($assetType.name, $assetType.name, $rule.assetTypes)
                         #end
                     </select>
                 </div>
