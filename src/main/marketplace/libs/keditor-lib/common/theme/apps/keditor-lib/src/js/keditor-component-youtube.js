@@ -3,6 +3,12 @@
     var flog = KEditor.log;
     
     KEditor.components['youtube'] = {
+        init: function (contentArea, container, component, keditor) {
+            flog('init "youtube" component', component);
+            
+            component.find('iframe').attr('allowfullscreen', 'allowfullscreen');
+        },
+        
         getContent: function (component, keditor) {
             flog('getContent "youtube" component', component);
             
