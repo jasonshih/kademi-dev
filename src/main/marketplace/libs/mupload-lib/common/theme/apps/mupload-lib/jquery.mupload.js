@@ -15,6 +15,7 @@
                     flog('[jquery.milton-upload] finished upload', data);
                 },
                 isFullWidth: true,
+                method: 'post',
                 acceptedFiles: ''  // To filter which file type should be uploaded
             }, options);
             
@@ -81,6 +82,7 @@
                 addRemoveLinks: true,
                 parallelUploads: 1,
                 uploadMultiple: false,
+                method: config.method,
                 init: function () {
                     this.on("processing", function (file) {
                         this.options.url = form.attr('action');
@@ -188,6 +190,7 @@
                 var fileUpload = button.fileupload({
                     url: actionUrl,
                     dataType: 'json',
+                    type: config.method,
                     done: function (e, data) {
                         button.find('.fallback-progress').hide();
                         flog(data);

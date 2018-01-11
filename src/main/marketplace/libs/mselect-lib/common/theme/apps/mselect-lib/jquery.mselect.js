@@ -1,14 +1,14 @@
 (function (factory) {
-	"use strict";
-	if (typeof define === 'function' && define.amd) {
-		define(['jquery'], factory);
-	}
-	else if(typeof module !== 'undefined' && module.exports) {
-		module.exports = factory(require('jquery'));
-	}
-	else {
-		factory(jQuery);
-	}
+    "use strict";
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery'], factory);
+    }
+    else if (typeof module !== 'undefined' && module.exports) {
+        module.exports = factory(require('jquery'));
+    }
+    else {
+        factory(jQuery);
+    }
 }(function ($, undefined) {
     var DEFAULTS = {
         btnClass: 'btn btn-success',
@@ -33,7 +33,8 @@
         
         },
         useModal: true,
-        useCrop: true
+        useCrop: true,
+        showAssets: true
     };
     
     function MSelect(target, options) {
@@ -163,17 +164,28 @@
         return false;
     };
     
-    MSelect.prototype.getFileType = function (fileUrl) {
+    MSelect.prototype.getFileType = function (fileUrl, isFormat) {
         // Remove '/_DAV/....' before checking file type
         fileUrl = fileUrl.replace(/^(.+)(\/_DAV\/.+)$/, '$1')
+        flog('[MSelect] getFileType', fileUrl, isFormat);
         
         var fileType = 'other';
-        if (this.isVideo(fileUrl)) {
-            fileType = 'video';
-        } else if (this.isImage(fileUrl)) {
-            fileType = 'image';
-        } else if (this.isAudio(fileUrl)) {
-            fileType = 'audio';
+        
+        if (isFormat) {
+            var indexOfSlash = fileUrl.indexOf('/');
+            if (indexOfSlash !== -1) {
+                fileType = fileUrl.substr(0, indexOfSlash);
+            } else {
+                fileType = fileUrl;
+            }
+        } else {
+            if (this.isVideo(fileUrl)) {
+                fileType = 'video';
+            } else if (this.isImage(fileUrl)) {
+                fileType = 'image';
+            } else if (this.isAudio(fileUrl)) {
+                fileType = 'audio';
+            }
         }
         
         return fileType;
@@ -197,7 +209,7 @@
         var progressBar = self.progressBar;
         var progressBarInner = self.progressBarInner;
         var previewContainer = self.previewContainer;
-        var btnUpload = self.btnUpload;
+        var btnUploadFile = self.btnUploadFile;
         
         var mtreeOptions = {
             basePath: options.basePath,
@@ -207,16 +219,24 @@
             onSelect: function (node, type, selectedUrl, hash, isAsset) {
                 flog('[MSelect] Select node', node, selectedUrl, hash);
                 var selectFolder = this.getSelectedFolderUrl();
-                btnUpload.mupload('setUrl', selectFolder);
+                
+                if (!isAsset) {
+                    btnUploadFile.mupload('setUrl', selectFolder);
+                }
                 
                 if (type === 'file') {
                     var fileType = self.getFileType(selectedUrl);
-                    var hashUrl = isAsset ? selectedUrl : '/_hashes/files/' + hash;
+                    if (isAsset) {
+                        fileType = self.getFileType(node.attr('data-format'), true);
+                    }
+                    
+                    var previewUrl = isAsset ? selectedUrl : '/_hashes/files/' + hash;
                     flog('[MSelect] File type="' + fileType + '"');
                     
                     progressBar.show();
                     progressBarInner.html('Loading...');
                     container.find('.btn-edit-image').hide();
+                    previewContainer.attr('data-file-type', fileType);
                     
                     switch (fileType) {
                         case 'video':
@@ -224,7 +244,7 @@
                             $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
                                 $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
                                     jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                                    buildJWPlayer(previewContainer.find('div.jp-video'), 100, hashUrl, hashUrl + '/alt-640-360.png');
+                                    buildJWPlayer(previewContainer.find('div.jp-video'), 100, previewUrl, previewUrl + '/alt-640-360.png');
                                     
                                     if (typeof options.onPreviewFile === 'function') {
                                         options.onPreviewFile.call(container, fileType, selectedUrl, hash);
@@ -239,7 +259,7 @@
                             $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
                                 $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
                                     jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                                    buildJWAudioPlayer(100, hashUrl, false);
+                                    buildJWAudioPlayer(100, previewUrl, false);
                                     
                                     if (typeof options.onPreviewFile === 'function') {
                                         options.onPreviewFile.call(container, fileType, selectedUrl, hash);
@@ -252,12 +272,12 @@
                         case 'image':
                             container.find('.btn-edit-image').show();
                             
-                            $('<img />').attr('src', hashUrl).on('load', function () {
+                            $('<img />').attr('src', previewUrl).on('load', function () {
                                 var realWidth = this.width;
                                 var realHeight = this.height;
                                 var ratio = realWidth / realHeight;
                                 
-                                previewContainer.html('<img src="' + hashUrl + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" />');
+                                previewContainer.html('<img src="' + previewUrl + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" />');
                                 
                                 if (typeof options.onPreviewFile === 'function') {
                                     options.onPreviewFile.call(container, fileType, selectedUrl, hash);
@@ -281,16 +301,28 @@
             }
         };
         
+        if (options.showAssets) {
+            mtreeOptions.onTabSwitch = function (tabType) {
+                if (tabType === 'assets') {
+                    self.btnUploadAsset.show();
+                    self.btnUploadFile.hide();
+                } else {
+                    self.btnUploadAsset.hide();
+                    self.btnUploadFile.show();
+                }
+            }
+        }
+        
         self.mtree = treeContainer.mtree(mtreeOptions);
     };
     
-    MSelect.prototype.initUploadButton = function () {
+    MSelect.prototype.initUploadButtons = function () {
         var self = this;
         var options = self.options;
         
         var progressBar = self.progressBar;
         var progressBarInner = self.progressBarInner;
-        var btnUpload = self.btnUpload;
+        var btnUploadFile = self.btnUploadFile;
         
         var muploadOptions = {
             url: options.basePath,
@@ -310,7 +342,12 @@
         if (options.contentType) {
             muploadOptions.acceptedFiles = [self.getAcceptedFile(options.contentType)];
         }
-        btnUpload.mupload(muploadOptions);
+        btnUploadFile.mupload(muploadOptions);
+        
+        if (options.showAssets) {
+            muploadOptions.url = '/assets/';
+            self.btnUploadAsset.mupload(muploadOptions);
+        }
     };
     
     MSelect.prototype.initSelectContainer = function (container, onOk) {
@@ -326,10 +363,12 @@
         var progressBar = self.progressBar = container.find('.milton-file-progress');
         var progressBarInner = self.progressBarInner = progressBar.find('.progress-bar');
         var previewContainer = self.previewContainer = container.find('.milton-file-preview');
-        var btnUpload = self.btnUpload = container.find('.milton-btn-upload-file');
+        
+        var btnUploadFile = self.btnUploadFile = container.find('.milton-btn-upload-file');
+        var btnUploadAsset = self.btnUploadAsset = container.find('.milton-btn-upload-asset');
         
         self.initTreeContainer(container);
-        self.initUploadButton(container);
+        self.initUploadButtons(container);
         
         container.find('.btn-ok').click(function () {
             var url = previewContainer.attr('data-url');
@@ -337,11 +376,12 @@
             
             if (url) {
                 if (typeof options.onSelectFile === 'function') {
-                    var relUrl = url.substring(options.basePath.length, url.length);
+                    var isAssets = url.indexOf('/assets/') === 0;
+                    var fileType = previewContainer.attr('data-file-type');
+                    var relUrl = isAssets ? url : url.substring(options.basePath.length, url.length);
                     flog('[MSelect] Selected', url, relUrl);
-                    var fileType = self.getFileType(url);
                     
-                    options.onSelectFile.call(container, url, relUrl, fileType, hash);
+                    options.onSelectFile.call(container, url, relUrl, fileType, hash, isAssets);
                 }
                 
                 if (typeof options.onSelectFolder === 'function') {
@@ -447,7 +487,7 @@
             '        <div class="col-xs-3"><div class="milton-tree-wrapper"></div></div>' +
             '        <div class="col-xs-9">' +
             '            <div class="milton-file-preview-wrapper">' +
-            '                <div class="milton-btn-upload-file"></div>' + extraElement +
+            '                <div class="milton-btn-upload-file"></div>' + (options.showAssets ? '<div class="milton-btn-upload-asset" style="display: none;"></div>' : '') + extraElement +
             '                <div class="milton-file-progress progress" style="display: none;">' +
             '                    <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: 100%"></div>' +
             '                </div>' +

@@ -274,11 +274,11 @@
         if (isAssets) {
             self.jstreeAssets = self.treeAssets.jstree(true);
             
-            self.treeFiles.on('select_node.jstree', function (e, data) {
+            self.treeAssets.on('select_node.jstree', function (e, data) {
                 var type = data.node.a_attr['data-type'];
                 var url = data.node.a_attr['href'];
                 var hash = data.node.a_attr['data-hash'] || '';
-                var selectedNode = self.treeFiles.find('.mtree-node[id="' + data.node.a_attr['id'] + '"]');
+                var selectedNode = self.treeAssets.find('.mtree-node[id="' + data.node.a_attr['id'] + '"]');
                 
                 if (typeof options.onSelect === 'function') {
                     options.onSelect.call(self, selectedNode, type, url, hash, true);
@@ -406,6 +406,7 @@
         if (item.uniqueId) {
             item.a_attr['data-asset'] = true;
             item.a_attr['class'] += ' mtree-asset';
+            item.a_attr['data-format'] = item.format;
         }
         
         return item;
