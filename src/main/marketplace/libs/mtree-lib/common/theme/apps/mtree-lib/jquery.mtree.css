@@ -3,6 +3,8 @@
 }
 
 .mtree-wrapper .mtree {
-    border: 1px solid #dcdcdc;
+    border-radius: 0;
+    margin: 0;
     padding: 5px;
+    box-shadow: none;
 }
