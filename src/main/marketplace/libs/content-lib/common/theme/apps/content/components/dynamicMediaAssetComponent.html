@@ -1,0 +1,16 @@
+#set( $mediaRes = $page.data.get($assetField) )
+
+#if( $mediaRes )
+
+<!-- TODO: properly style img/video -->
+#if( $mediaRes.is("image") )
+<img src="$mediaRes.href" alt="$mediaRes.name"/>
+#elseif( $mediaRes.is("video") )
+<video src="$mediaRes.href"></video>
+#else
+
+#end
+#elseif( $page )
+#else
+<div style="height: 100px; width: 100px">Media will appear here</div>
+#end
