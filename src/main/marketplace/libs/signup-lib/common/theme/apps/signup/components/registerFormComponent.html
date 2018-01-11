@@ -8,10 +8,15 @@
     #set ($displayLabels = true)
 #end
 
+#if ($formatter.isNull($displayCancel))
+    #set ($displayCancel = true)
+#end
+
 #set ($displayLabels = $formatter.toBool($displayLabels))
 #set ($displayName = $formatter.toBool($displayName))
 #set ($displayPhone = $formatter.toBool($displayPhone))
 #set ($displayPwd = $formatter.toBool($displayPwd))
+#set ($displayCancel = $formatter.toBool($displayCancel))
 #set ($showOrgs = $formatter.toBool($showOrgs))
 #set ($showOptins = $formatter.toBool($showOptins))
 #set ($showXtraFields = $formatter.toBool($showXtraFields))
@@ -34,7 +39,7 @@
 <form method="post" id="registerForm" action="$formUrl" enctype="multipart/form-data" class="form-horizontal register-form-component" >
     <div class="form-group">
         #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="email">Email</label> #end
-        <div class="col-md-9">
+        <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
             <input class="required form-control" required="true" type="email" name="email" id="email" placeholder="Your email address" />
         </div>
     </div>
@@ -43,7 +48,7 @@
     <div class="form-group">
         #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="nickName">Nickname</label> #end
         
-        <div class="col-md-9">
+        <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
             <input class="required form-control" type="text" name="nickName" id="nickName" placeholder="Your nickname for others to see" />
         </div>
     </div>
@@ -53,7 +58,7 @@
     <div class="form-group">
         #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="firstName">First name</label> #end
 
-        <div class="col-md-9">
+        <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
             <input class="required form-control" name="firstName" placeholder="Your first name" />
         </div>
     </div>
@@ -61,7 +66,7 @@
     <div class="form-group">
         #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="surName">Surname</label> #end
 
-        <div class="col-md-9">
+        <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
             <input class="required form-control" name="surName" placeholder="Your last name" />
         </div>
     </div>
@@ -70,7 +75,7 @@
     #if ($displayPhone)
     <div class="form-group">
         #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="phone">Phone</label> #end
-        <div class="col-md-9">
+        <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
             <input class="required form-control" type="text" name="phone" id="phone" placeholder="Your phone" />
         </div>
     </div>
@@ -80,14 +85,14 @@
     <div class="form-group">
         #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="password">Password</label> #end
 
-        <div class="col-md-9">
+        <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
             <input class="required form-control" type="password" name="password" id="password" placeholder="Your preferred password" />
         </div>
     </div>
     <div class="form-group">
         #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="confirmPassword">Confirm</label> #end
 
-        <div class="col-md-9">
+        <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
             <input class="required form-control" type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password" />
         </div>
     </div>
@@ -98,7 +103,7 @@
     <div class="form-group">
         #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="confirmPassword">$field.text</label> #end
 
-        <div class="col-md-9">
+        <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
             $field.html
         </div>
     </div>
@@ -115,7 +120,7 @@
     <div class="form-group">
         #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="orgName">$orgType</label> #end
 
-        <div class="col-md-9">
+        <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
             <input type="hidden" name="orgId" id="orgId" />
             <input class="required form-control" type="text" name="orgName" id="orgName" autocomplete="off" placeholder="Choose your $orgType" />
         </div>
@@ -151,7 +156,7 @@
     <div class="form-group">
         <div class="col-md-9 #if($displayLabels) col-md-offset-3 #end" >
             <button type="submit" class="btn btn-primary">Register</button>
-            <a href="/index.html" class="btn">Cancel</a>
+            #if($displayCancel) <a href="/index.html" class="btn">Cancel</a> #end
         </div>
     </div>
 

@@ -54,6 +54,13 @@
                         component.attr('data-display-pwd', this.value === 'true');
                         keditor.initDynamicContent(dynamicElement);
                     });
+                    
+                    form.find('[name=displayCancel]').on('click', function(e){
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-display-cancel', this.value === 'true');
+                        keditor.initDynamicContent(dynamicElement);
+                    });
 
                     form.find('[name=showOptins]').on('click', function(e){
                         var component = keditor.getSettingComponent();
@@ -122,6 +129,7 @@
             form.find('[name=displayNickname][value='+showDisplayNickname+']').prop('checked', true);
             form.find('[name=displayPhone][value='+showDisplayPhone+']').prop('checked', true);
             form.find('[name=displayPwd][value='+dataAttributes['data-display-pwd']+']').prop('checked', true);
+            form.find('[name=displayCancel][value='+dataAttributes['data-display-cancel']+']').prop('checked', true);
             form.find('[name=showOptins][value='+dataAttributes['data-show-optins']+']').prop('checked', true);
             form.find('[name=showOrgs][value='+dataAttributes['data-show-orgs']+']').prop('checked', true);
             form.find('[name=showXtraFields][value='+dataAttributes['data-show-xtra-fields']+']').prop('checked', true);
