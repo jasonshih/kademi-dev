@@ -149,6 +149,12 @@
                         inputWidth.val(newWidth);
                     });
                     
+                    form.find('#photo-alt-text').on('change', function () {
+                        var img = keditor.getSettingComponent().find('img');
+                        
+                        img.attr('alt', this.value);
+                    });
+                    
                     initMSelectImage(form.find('#photo-edit'), keditor, function (url, relUrl, type, hash) {
                         var img = keditor.getSettingComponent().find('img');
                         var src = '/_hashes/files/' + hash;
@@ -183,6 +189,7 @@
             var txtLink = form.find('#photo-link');
             var cbbTarget = form.find('#photo-target');
             var chkLinkable = form.find('#photo-linkable');
+            var txtAltText = form.find('#photo-alt-text');
             
             var panel = component.find('.photo-panel');
             var img = panel.find('img');
@@ -219,6 +226,7 @@
             inputResponsive.prop('checked', img.hasClass('img-responsive'));
             inputWidth.val(img.width());
             inputHeight.val(img.height());
+            txtAltText.val(img.attr('alt') || '');
             
             $('<img />').attr('src', img.attr('src')).load(function () {
                 self.ratio = this.width / this.height;
