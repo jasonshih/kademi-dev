@@ -10,19 +10,18 @@
         #assetHeader()
 
         #@assetMainForm()
+            #set( $format = $page.asset.format )
+            #set( $format = $request.params.format )
 
-        <div class="form-group">
-            <label class="control-label col-md-3" for="format">Format</label>
+            <input type="hidden" name="format" value="$format" />
 
-            <div class="col-md-8">
-                <select name="format" class="required form-control" required="true" >
-                    $formatter.option("text/plain", "Plain text", $page.asset.format)
-                    $formatter.option("text/html", "HTML", $page.asset.format)
-                </select>
-            </div>
-        </div>
+            #if( $format == "text/html" )
+            TODO: use keditor
+            <textarea name="text" class="form-control" style="height: 400px">$!page.text</textarea>
+            #else
+            <textarea name="text" class="form-control" style="height: 400px">$!page.text</textarea>
+            #end
 
-        <textarea name="text" class="form-control" style="height: 400px">$!page.text</textarea>
         #end
 
 

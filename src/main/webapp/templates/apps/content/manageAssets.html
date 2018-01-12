@@ -4,33 +4,43 @@
     </head>
     <body class="manageEmail">
         <div class="btn-group" role="group">
-        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-upload-file">
-            <span class="fa fa-plus"></span>
-            Upload
-        </button>
+            <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-upload-file">
+                <span class="fa fa-plus"></span>
+                Upload
+            </button>
 
-        <a class="btn btn-success" href="new-text">
-            <span class="fa fa-plus"></span>
-            New text
-        </a>
+            <div class="btn-group">
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="fa fa-plus"></span>
+                    New text <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="new-text?format=text/plain">Plain text</a></li>
+                    <li><a href="new-text?format=text/html">HTML</a></li>
+                </ul>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    New content item <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    #foreach( $ct in $page.contentTypes)
+                    <li><a href="new?type=$ct.name">$ct.name</a></li>
+                    #end
+                </ul>
+            </div>
 
 
-        <a class="btn btn-success" href="new-query">
-            <span class="fa fa-plus"></span>
-            Content query
-        </a>
+            <a class="btn btn-success" href="new-query">
+                <span class="fa fa-plus"></span>
+                Content query
+            </a>
 
-        #foreach( $ct in $page.contentTypes)
-        <a class="btn btn-success" href="new?type=$ct.name">
-            <span class="fa fa-plus"></span>
-            New <b>$ct.name</b>
-        </a>
-        #end
-
-        <a class="btn btn-info" href="/content/">
-            <span class="fa fa-cogs"></span>
-            Manage types
-        </a>
+            <a class="btn btn-info" href="/content/">
+                <span class="fa fa-cogs"></span>
+                Manage types
+            </a>
         </div>
 
         <hr />
