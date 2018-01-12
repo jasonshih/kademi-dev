@@ -8,23 +8,41 @@
 
         #assetHeader()
 
-        <hr/>
+        #@assetMainForm()
 
-        <div class="well">
-            <div class="pull-left" style="padding-right: 15px">
-                <span class="fa fa-lightbulb-o fa-4x text-success"></span>
+            <div class="form-group">
+                <label class="control-label col-md-3" for="name">Target type</label>
+
+                <div class="col-md-8">
+                    <select name="targetAssetType" class="form-control" >
+                        <option value="">[Please select]</option>
+                        #foreach( $assetType in $page.find("/content" ).children )
+                        $formatter.option($assetType.name, $assetType.name, $page.asset.targetAssetType)
+                        #end
+                    </select>
+                    <i>Choose the type of asset returned from this query</i>
+                </div>
             </div>
 
-            <p>
-                Content queries allow you to select which content to target to different
-                user segments
-            </p>
-            <p>
-                Specify each segment with the query builder below, and then select whether
-                to target a single asset or a list of assets by type.
-            </p>
+            <div class="well">
+                <div class="pull-left" style="padding-right: 15px">
+                    <span class="fa fa-lightbulb-o fa-4x text-success"></span>
+                </div>
 
-        </div>
+                <p>
+                    Content queries allow you to select which content to target to different
+                    user segments
+                </p>
+                <p>
+                    Specify each segment with the query builder below, and then select whether
+                    to target a single asset or a list of assets by type.
+                </p>
+            </div>
+        #end
+
+        <hr/>
+        <h2>Content rules</h2>
+
 
         <form action="$page.href" method="POST" class="form-rules form form-horizontal">
             <input type="hidden" name="saveQueryAsset"/>
