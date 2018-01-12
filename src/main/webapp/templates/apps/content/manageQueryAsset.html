@@ -5,7 +5,7 @@
     </head>
     <body class="manageEmail">
         #parse("/theme/apps/content/assetsCommon.html")
-
+        
         #assetHeader()
 
         #@assetMainForm()
@@ -45,17 +45,17 @@
 
 
         <form action="$page.href" method="POST" class="form-rules form form-horizontal">
-            <input type="hidden" name="saveQueryAsset"/>
-
+            <input type="hidden" name="saveQueryAsset" />
+            
             <button type="submit" class="btn btn-success">Save</button>
-
+            
             <button class="btn btn-success btn-add-rule">
                 <span class="fa fa-plus"></span>
                 Add
             </button>
-
-            <hr/>
-
+            
+            <hr />
+            
             <div class="rules-container">
                 #foreach( $rule in $page.asset.rules)
                 #showRuleTemplate( $rule, $foreach.count )
@@ -63,71 +63,77 @@
             </div>
             <div class="clearfix"></div>
             <div class="clearfix"></div>
-
-
+        
+        
         </form>
-
+        
         <div class="hide" id="new-rule-template">
             #showRuleTemplate( false, "new" )
         </div>
-
+        
         #assetCommonScripts()
-
+        
         #macro( showRuleTemplate $rule $count )
         <div class="rule-container">
             <button class="btn btn-warning btn-remove-rule">
                 <span class="fa fa-remove"></span>
                 Remove
             </button>
-
-            <div class="form-group">
-                <label class="control-label col-md-3" for="target.$count">Target asset</label>
-
-                <div class="col-md-4">
-                    #set($selectAsset = $formatter.ifEqual("", "select-asset", $count, "new"))
-                    <input type="text" name="target.$count" data-asset-name="$!rule.asset.name" value="$!rule.asset.uniqueId" placeholder="" class="form-control $!selectAsset" required="true" />
+            <div class="rule-switcher-container">
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="target.$count"><input type="radio" name="rule.$count" class="rule-switcher" id="target.$count" checked="checked" /></label>
+                    
+                    <div class="col-md-6">
+                        #set($selectAsset = $formatter.ifEqual("", "select-asset", $count, "new"))
+                        <div class="input-group">
+                            <span class="input-group-addon"><span style="display: block; width: 120px; text-align: left;">Target asset </span></span>
+                            <input type="text" name="target.$count" data-asset-name="$!rule.asset.name" value="$!rule.asset.uniqueId" placeholder="" class="form-control $!selectAsset" required="true" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="targettype.$count"><input type="radio" name="rule.$count" class="rule-switcher" id="targettype.$count" /></label>
+                    
+                    <div class="col-md-6">
+                        <!-- TODO: allow selection of multiple types -->
+                        <div class="input-group">
+                            <span class="input-group-addon"><span style="display: block; width: 120px; text-align: left;">Target asset type</span></span>
+                            <select name="targettype.$count" class="form-control" disabled="disabled">
+                                <option value="">[None]</option>
+                                #foreach( $assetType in $page.find("/content" ).children )
+                                $formatter.option($assetType.name, $assetType.name, $rule.assetTypes)
+                                #end
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label class="control-label col-md-3" for="targettype.$count">Target asset type</label>
-
-                <div class="col-md-4">
-                    <!-- TODO: allow selection of multiple types -->
-                    <select name="targettype.$count" class="form-control">
-                        <option value="">[None]</option>
-                        #foreach( $assetType in $page.find("/content" ).children )
-                        $formatter.option($assetType.name, $assetType.name, $rule.assetTypes)
-                        #end
-                    </select>
-                </div>
-            </div>
-
+            
             <div class="rulesBuilder"></div>
-            <br/>
-
+            <br />
+            
             <textarea class="form-control rulesInput" name="rules.$count" style="width: 100%; min-height: 300px; display: none">$formatter.firstNotNull($rule.rules, "{}")</textarea>
-            <hr/>
+            <hr />
         </div>
-
+        
         #end
-
+        
         <script>
             $(function () {
-
+                
                 $(".form-rules").forms({
                     onValid: function () {
                         //var rulesBuilders = $('.rulesBuilder:not(#new-rule-template .rulesBuilder)');
-
+                        
                         var ruleContainers = $('.rules-container > .rule-container:not(#new-rule-template .rule-container)');
-
+                        
                         ruleContainers.each(function (i, item) {
                             var c = $(item);
                             var builder = c.find('.rulesBuilder');
                             var inp = c.find('.rulesInput');
-
-
-
+                            
+                            
                             var rules = builder.queryBuilder('getRules');
                             rules = checkRuleType(rules);
                             inp.val(JSON.stringify(rules));
@@ -148,9 +154,9 @@
                     var rndNum = parseInt(Math.random() * 1000);
                     templateHtml = templateHtml.replaceAll(".new", ".new" + rndNum);
                     $(".rules-container").append(templateHtml);
-
+                    
                     $('[name="target.new' + rndNum + '"]').addClass('select-asset').assetFinder();
-
+                    
                     initQueryBuilder($('[name="target.new' + rndNum + '"]').closest('.rule-container'));
                 });
                 $("body").on("click", ".btn-remove-rule", function (e) {
@@ -160,11 +166,19 @@
                     ruleContainer.hide(500, function () {
                         ruleContainer.remove();
                     });
-
+                    
                 });
-
+                
+                $(document.body).on('click', '.rule-switcher', function () {
+                    var radio = $(this);
+                    var container = radio.closest('.rule-switcher-container');
+                    
+                    container.find('input, select').not('.rule-switcher').prop('disabled', true);
+                    radio.closest('.form-group').find('input, select').not('.rule-switcher').prop('disabled', false);
+                });
+                
                 $('.select-asset:not(#new-rule-template .select-asset)').assetFinder();
-
+                
                 function checkRuleType(rules) {
                     if (rules.condition) {
                         rules.ruleType = 'ruleList';
@@ -180,19 +194,19 @@
                             }
                         }
                     }
-
+                    
                     return rules;
                 }
-
+                
                 function initQueryBuilder(wrapper) {
                     var builder = wrapper.find('.rulesBuilder');
                     if (builder.length == 0) {
                         flog('Not init query builder');
                         return;
                     }
-
+                    
                     var rulesInput = wrapper.find(".rulesInput");
-
+                    
                     $.getScriptOnce('/static/query-builder/2.3.3/js/query-builder.standalone.min.js', function () {
                         $.ajax({
                             url: window.location.pathname + '?fields',
@@ -214,7 +228,7 @@
                     });
                     $.getStyleOnce('/static/query-builder/2.3.3/css/query-builder.default.min.css');
                 }
-
+                
                 $('.rule-container:not(#new-rule-template .rule-container)').each(function (i, item) {
                     initQueryBuilder($(item));
                 });
