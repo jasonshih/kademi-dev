@@ -5,20 +5,28 @@
     </head>
     <body class="manageEmail">
 
-        TEXT
+        #parse("/theme/apps/content/assetsCommon.html")
+
+        #assetHeader()
+
+        #@assetMainForm()
+
+        <div class="form-group">
+            <label class="control-label col-md-3" for="format">Format</label>
+
+            <div class="col-md-8">
+                <select name="format" class="required form-control" required="true" >
+                    <option value="text/plain">Plain text</option>
+                    <option value="text/html">HTML</option>
+                </select>
+            </div>
+        </div>
+
+        <textarea name="text" class="form-control" style="height: 400px">$!page.text</textarea>
+        #end
 
 
-        <script type="text/javascript" >
-            $(function () {
+        #assetCommonScripts()
 
-                $(".form-edit").forms({
-                    onSuccess: function (resp) {
-                        if (resp.status) {
-                            Msg.info(resp.messages[0]);
-                        }
-                    }
-                });
-            });
-        </script>
     </body>
 </html>

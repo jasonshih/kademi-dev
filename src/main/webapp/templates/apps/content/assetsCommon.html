@@ -6,6 +6,7 @@
         #macro (assetHeader)
         <h2>$page.title</h2>
 
+        #if( $page.asset )
         <div class="memberships-wrapper" id="membershipsContainer">
             <div class="dropdown pull-left" style="margin-right: 15px">
                 <a data-toggle="dropdown" class="dropdown-toggle" href="#" style="text-decoration: none;">
@@ -35,16 +36,50 @@
         </div>
         <br /><br />
         #end
+        #end
+
+        #macro (assetMainForm)
+        <form action="$page.href" method="POST" class="form-asset-main form form-horizontal">
+
+            <button type="submit" class="btn btn-success">Save</button>
+
+            <div class="row">
+                <div class="col-sm-7">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="name">Name</label>
+
+                        <div class="col-md-8">
+                            <input type="text" name="name" id="name" value="$!page.asset.name" placeholder="" class="required form-control" required="true" />
+                        </div>
+                    </div>
+
+                    $!bodyContent
+                </div>
+                <div class="col-sm-5">
+                    <div id="asset-info">
+                        #assetInfo()
+
+                        <hr/>
+
+                        <h3>Notes</h3>
+                        <textarea class="form-control" name="notes" style="height: 200px">$!page.asset.notes</textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+        #end
 
         #macro (assetInfo)
+
+            #if( $page.asset )
             <table class="table table-striped">
                 <tr>
                     <th>Created</th>
-                    <td>$page.asset.createdDate</td>
+                    <td>$!page.asset.createdDate</td>
                 </tr>
                 <tr>
                     <th>Modified</th>
-                    <td>$page.asset.modifiedDate</td>
+                    <td>$!page.asset.modifiedDate</td>
                 </tr>
                 <tr>
                     <th>Format</th>
@@ -52,7 +87,7 @@
                 </tr>
                 <tr>
                     <th>UniqueId</th>
-                    <td>$page.asset.uniqueId</td>
+                    <td>$!page.asset.uniqueId</td>
                 </tr>
 
                 <tr>
@@ -65,6 +100,7 @@
                     </td>
                 </tr>
             </table>
+            #end
         #end
 
         #macro( replaceBinaryAsset )
@@ -118,6 +154,18 @@
                         }
                     }
                 });
+
+                $(".form-asset-main").forms({
+                    onSuccess: function (resp) {
+                        if (resp.status) {
+                            Msg.info(resp.messages[0]);
+                            if( resp.nextHref ) {
+                                window.location = resp.nextHref;
+                            }
+                        }
+                    }
+                });
+
 
                 var formUpload = $("#frmUpload");
                 var uploadProgress = formUpload.find('.progress');
