@@ -53,13 +53,13 @@ $.fn.exist = function (whenExist, whenNotExist) {
 
 (function ($) {
     var oldModal = $.fn.modal;
-    
+
     function checkModal(modal) {
         var modalDialog = modal.find('.modal-dialog');
-        
+
         if (modalDialog.length === 0) {
             flog('Modal has old structure. Modifying structure...');
-            
+
             var modalContent = modal.html();
             var sizeClass = '';
             if (modal.hasClass('modal-lg')) {
@@ -78,38 +78,38 @@ $.fn.exist = function (whenExist, whenNotExist) {
                 sizeClass = 'modal-xss';
                 modal.removeClass('modal-xss');
             }
-            
+
             modal.html('<div class="modal-dialog ' + sizeClass + '"><div class="modal-content">' + modalContent + '</div></div>');
             flog('Modifying structure is DONE');
-            
+
             modal.trigger('modal.bs.done');
-            
+
             if (console && console.log) {
                 console.log('%cHey! You\'re using old modal structure of Bootstrap2. You SHOULD change your modal structure! \n%c- url="' + window.location.href + '" \n- id="' + modal.attr('id') + '" \n%cMessage from duc@kademi.co', 'font-size: 24px; color: blue;', 'font-size: 16px; color: #000;', 'font-size: 11px; color: #aaa;');
             }
         }
     }
-    
+
     $.fn.modal = function (option, _relatedTarget) {
         var targets = $(this);
         targets.each(function () {
             checkModal($(this));
         });
-        
+
         return oldModal.call(targets, option, _relatedTarget);
     };
-    
+
     $(function () {
         $('.modal').each(function () {
             checkModal($(this));
         });
     });
-    
+
 })(jQuery);
 
 function initToggled() {
     flog('initToggled');
-    
+
     $('[data-toggled=display]').exist(function () {
         this.each(function () {
             var panel = $(this);
@@ -123,9 +123,9 @@ function initToggled() {
                     actor.trigger('unchecked.toggled', panel);
                 }
             };
-            
+
             actor.addClass('toggler');
-            
+
             actor.on('click', function () {
                 checkActor();
             });
@@ -138,23 +138,23 @@ function initToggled() {
 
 function doMasonryPanel() {
     flog('doMasonryPanel');
-    
+
     $('.masonry-panel').each(function () {
         var panel = $(this);
-        
+
         // Bind event listener
         panel.on('layoutComplete', function () {
             var items = panel.find(".masonry-item");
-            
+
             flog("onlayout", items);
-            
+
             items.animate({
                 opacity: 1
             }, 1000, function () {
                 flog("complete");
             });
         });
-        
+
         panel.masonry({
             columnWidth: ".masonry-sizer",
             percentPosition: true
@@ -164,7 +164,7 @@ function doMasonryPanel() {
 
 function initMasonryPanel() {
     flog('initMasonryPanel');
-    
+
     if (typeof window.Masonry === 'function') {
         doMasonryPanel();
     } else {
@@ -176,14 +176,14 @@ function initMasonryPanel() {
 
 function initDatePicker() {
     flog('initDatePicker');
-    
+
     $('.date-picker').exist(function () {
         var datePicker = this;
         var container = 'body';
         var inputGroup = datePicker.closest('.input-group');
         var formGroup = datePicker.closest('.form-group');
         var id = 'date-picker-wrapper' + (new Date()).getTime();
-        
+
         if (inputGroup.length > 0) {
             inputGroup.attr('id', id);
             container = '#' + id;
@@ -191,18 +191,18 @@ function initDatePicker() {
             formGroup.attr('id', id);
             container = '#' + id;
         }
-        
+
         datePicker.datepicker({
             autoclose: true,
             format: 'dd/mm/yyyy',
             container: container
         });
-        
+
         var impactedTargetSelector = datePicker.attr('data-impacted');
-        
+
         if (impactedTargetSelector) {
             var changedOption = datePicker.attr('data-impact') === 'startDate' ? 'StartDate' : 'EndDate';
-            
+
             datePicker.on('changeDate', function (ev) {
                 flog(ev);
                 var impactedTarget = $(impactedTargetSelector);
@@ -211,17 +211,17 @@ function initDatePicker() {
             });
         }
     });
-    
+
     $(document.body).on('click', '[data-role="date-picker-trigger"]', function (e) {
         e.preventDefault();
-        
+
         var trigger = $(this);
         var datePickerId = trigger.attr('href');
         var datePicker = $(datePickerId);
-        
+
         datePicker.datepicker('show');
     });
-    
+
     $('.date-time-picker').exist(function () {
         flog('Found date-time-picker', this);
         var options = {};
@@ -234,7 +234,7 @@ function initDatePicker() {
 
 function initTabbable() {
     flog('initTabbable');
-    
+
     $('.tabbable').exist(function () {
         this.each(function () {
             var wrapper = $(this);
@@ -242,27 +242,27 @@ function initTabbable() {
             var tabHeader = wrapper.find('.nav-tabs');
             var links = tabHeader.find('a');
             var hash = window.location.hash;
-            
+
             links.each(function () {
                 var link = $(this);
                 link.on('click', function (e) {
                     e.preventDefault();
-                    
+
                     if (!isModal) {
                         window.location.hash = $(this).attr('href') + '-tab';
                     }
                 });
             });
-            
+
             if (hash === '') {
                 links.eq(0).trigger('click');
             }
         });
-        
+
         $(window).on('hashchange', function () {
             var hash = window.location.hash.replace('-tab', '');
             flog('hashchanged', hash);
-            
+
             var tabbable = $('.tabbable .nav-tabs a[href="' + hash + '"]');
             tabbable.trigger('click');
         }).trigger('hashchange');
@@ -271,7 +271,7 @@ function initTabbable() {
 
 function initChkAll() {
     flog('initChkAll');
-    
+
     $(document.body).on('click', '.chk-all', function () {
         $(this).closest('table').find('tbody input:checkbox').prop('checked', this.checked);
     });
@@ -279,12 +279,12 @@ function initChkAll() {
 
 function initClearer() {
     flog('initClearer');
-    
+
     var body = $(document.body);
-    
+
     body.on('click', '[data-type=clearer]', function (e) {
         e.preventDefault();
-        
+
         var target = $($(this).data('target'));
         flog("clearer click", target);
         target.val('');
@@ -296,11 +296,11 @@ function initClearer() {
 function initSwitch() {
     flog("kademi.js: make switch");
     if ($(document).bootstrapSwitch) {
-        
+
         $(".make-switch input[type=checkbox], input.make-switch").each(function () {
             var target = $(this);
             var dataHolder = target.is('.make-switch') ? target : target.closest('.make-switch');
-            
+
             target.bootstrapSwitch({
                 onColor: dataHolder.attr('data-on-color') || 'info',
                 offColor: dataHolder.attr('data-off-color') || 'default',
@@ -317,38 +317,38 @@ function initSwitch() {
 
 function validateFuseEmail(emailAddress) {
     var pattern = /^(("[\w-\s]+")|([\w-'']+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,66}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i;
-    
+
     if (pattern.test(emailAddress)) {
         return true;
     } else {
         emailAddress = (emailAddress || '').replace(/^.*\<(.*)\>$/, '$1');
-        
+
         return pattern.test(emailAddress);
     }
 }
 
 function initFuseModals() {
     flog("initFuseModal");
-    
+
     $(document.body).on('click', '[data-toggle=modal]', function (e) {
         e.preventDefault();
     });
-    
+
     $(document.body).on('click', '[data-type=form-submit]', function (e) {
         e.preventDefault();
         flog("click submit");
         $(this).closest('.modal').find('form').not('.dz-clickable').trigger('submit');
-        
+
         if (console && console.log) {
             console.log('%cHey! You\'re using data-type="form-submit" button. You SHOULD change it to type="submit" and move this button inside your form.\n%cMessage from duc@kademi.co', 'font-size: 24px; color: blue;', 'font-size: 11px; color: #aaa;');
         }
     });
-    
+
     $(document.body).on('shown.bs.modal loaded.bs.modal', '.modal', function () {
         var textbox = $(this).find('input, textarea').filter(':visible');
         textbox.eq(0).focus();
     });
-    
+
     $(document).on({
         'show.bs.modal': function () {
             var zIndex = 1040 + (10 * $('.modal:visible').length);
@@ -365,11 +365,11 @@ function initFuseModals() {
 
 function initFuseModal(modal, callback) {
     flog('initFuseModal', modal, callback);
-    
+
     modal.modal({
         show: false
     });
-    
+
     if (typeof callback === 'function') {
         callback.apply(this);
     }
@@ -382,18 +382,18 @@ function initNewUserForm() {
     var existingOrganisationBtn = modal.find(".existingOrganisation");
     var orgIdTxt = modal.find("#newOrgId");
     var nextAction = 'view';
-    
+
     $(newOrganisationBtn).click(function () {
         $("#existingOrganisation").addClass("hide");
         $("#createNewOrganisation").removeClass("hide");
     });
-    
+
     $(existingOrganisationBtn).click(function () {
         $("#existingOrganisation").removeClass("hide");
         $("#createNewOrganisation").addClass("hide");
     });
-    
-    
+
+
     form.on("input", ".orgTitle", function (e) {
         var inp = $(e.target);
         var val = inp.val();
@@ -411,85 +411,85 @@ function initNewUserForm() {
             orgIdTxt.val(newVal);
         }
     });
-    
+
     $('.btn-add-user').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
-        
+
         modal.modal('show');
     });
-    
+
     $('.btn-add-and-view').on('click', function (e) {
         nextAction = 'view';
     });
-    
+
     $('.btn-add-and-add').on('click', function (e) {
         nextAction = 'add';
     });
-    
+
     $('.btn-add-and-close').on('click', function (e) {
         nextAction = 'close';
     });
-    
+
     modal.on('hidden.bs.modal', function () {
         resetForm(form);
     });
-    
+
     form.forms({
         validate: function () {
             var newUserEmail = $('#newUserEmail');
             var newUserEmailStr = newUserEmail.val();
-            
+
             if (newUserEmailStr == null || newUserEmailStr == "") {
                 return true; // blank is ok now!
             }
-            
+
             var error = 0;
-            
+
             if (!validateFuseEmail(newUserEmailStr)) {
                 error++;
                 showErrorField(newUserEmail);
             }
-            
+
             if (error === 0) {
                 return true;
             } else {
                 showMessage('Email address is invalid!', form);
-                
+
                 return false;
             }
         },
         onSuccess: function (resp) {
             flog('done new user', resp);
-            
+
             switch (nextAction) {
                 case 'view':
                     if (resp.nextHref) {
                         window.location.href = resp.nextHref;
                     }
-                    
+
                     modal.modal('hide');
                     break;
-                
+
                 case 'close':
                     setTimeout(function () {
                         $('#table-users-body,#searchStats').reloadFragment();
                     }, 600);
                     modal.modal('hide');
                     break;
-                
+
                 case 'add':
                     $('#table-users-body').reloadFragment();
                     $("#newUserEmail, #newUserSurName, #newUserFirstName, #newUserNickName").val("");
                     break;
             }
-            
+
             Msg.info('Saved');
         }
     });
-    
+
     initOrgFinder();
-    
+
 }
 
 function initOrgFinder() {
@@ -497,16 +497,24 @@ function initOrgFinder() {
         useActualId: true,
         type: 'organisation'
     });
+    $("input.entity-select").each(function(i, n) {
+        var inp = $(n);
+        var entityType = inp.data("entity-type");
+        inp.entityFinder({
+            useActualId: true,
+            type: entityType
+        });
+    });
 }
 
 function initEntityFinder(targets) {
     if (!targets) {
         targets = $('.entity-finder');
     }
-    
+
     targets.each(function () {
         var input = $(this);
-        
+
         input.entityFinder({
             useActualId: input.attr('data-use-actual-id') === 'true'
         });
@@ -515,9 +523,9 @@ function initEntityFinder(targets) {
 
 function openFuseModal(modal, callback, time) {
     flog("openFuseModal");
-    
+
     modal.modal('show');
-    
+
     if (typeof callback === 'function') {
         callback.apply(this);
     }
@@ -525,7 +533,7 @@ function openFuseModal(modal, callback, time) {
 
 function closeFuseModal(modal, callback) {
     modal.modal('hide');
-    
+
     if (typeof callback === 'function') {
         callback.apply(this);
     }
@@ -585,7 +593,7 @@ function formatDateTime(l) {
 
 function runPageInitFunctions() {
     flog('runPageInitFunctions');
-    
+
     $.each(window.pageInitFunctions, function (i) {
         log('runPageInitFunctions | Run function #' + i);
         pageInitFunctions[i]();
@@ -600,7 +608,7 @@ function initAjaxStatus() {
         flog('Ajax started', depth);
         $('#mainSpinner').show();
     });
-    
+
     $(document).ajaxComplete(function () {
         depth--;
         flog('Ajax stopped', depth);
@@ -610,7 +618,7 @@ function initAjaxStatus() {
         if (depth == 0) {
             $('#mainSpinner').hide();
         }
-        
+
         // Init time ago after Ajax is completed
         initTimeago();
     });
@@ -618,14 +626,14 @@ function initAjaxStatus() {
 
 function initAdminTopNavSearch() {
     flog('initAdminTopNavSearch');
-    
+
     var txt = $('#top-nav-search-input');
     txt.omniSearch();
 }
 
 function drawPieChart(chart, options, padding, isFirstTime) {
     flog('drawPieChart', chart, options, padding, isFirstTime);
-    
+
     var wrapper = chart.closest('.col-sm-6');
     var canvas = chart.find('canvas');
     var sizeChart = wrapper.width() - padding;
@@ -634,22 +642,22 @@ function drawPieChart(chart, options, padding, isFirstTime) {
     }
     var currentSize = +chart.attr('data-size');
     flog("got size", sizeChart, chart);
-    
+
     // Hide canvas
     canvas.hide();
-    
+
     if (currentSize !== sizeChart || isFirstTime) {
         flog('Render new chart', sizeChart);
-        
+
         // Clear data pf easyPieChart
         if (!isFirstTime) {
             chart.data('easy-pie-chart', null);
             chart.data('size', sizeChart);
         }
-        
+
         // Remove the chart
         canvas.remove();
-        
+
         // Render new chart
         options.size = sizeChart;
         flog("chart size", sizeChart);
@@ -666,7 +674,7 @@ function drawPieChart(chart, options, padding, isFirstTime) {
 
 function initPieChart(target, options, padding) {
     drawPieChart(target, options, padding, true);
-    
+
     var timer = null;
     $(window).on('resize', function () {
         clearTimeout(timer);
@@ -678,7 +686,7 @@ function initPieChart(target, options, padding) {
 
 function initPageDatePicker() {
     flog('initPageDatePicker');
-    
+
     var range = $('#commonControlsRange');
     if (range.length > 0) {
         var extraClass = range.attr('data-class') || '';
@@ -704,7 +712,7 @@ function initTimeago() {
 
 $(function () {
     flog("Fuse init");
-    
+
     initAdminTopNavSearch();
     initSwitch();
     initToggled();
@@ -723,7 +731,7 @@ $(function () {
     initCreateAccount();
     initAddWebsite();
     initRepoSwitcher();
-    
+
     $('.main-navigation-menu').children('li').children('a[href=#]').on('click', function (e) {
         e.preventDefault();
     });
@@ -731,9 +739,9 @@ $(function () {
 
 function initRepoSwitcher() {
     flog('initRepoSwitcher');
-    
+
     var switchers = $('.repo-switcher');
-    
+
     if (switchers.length > 0) {
         $.getStyleOnce('/theme/assets/plugins/bootstrap-chosen/1.0.1/bootstrap-chosen.css');
         $.getScriptOnce('/static/chosen/1.1.0/chosen.jquery.js', function () {
@@ -741,19 +749,19 @@ function initRepoSwitcher() {
                 var switcher = $(this);
                 var btn = switcher.find('.btn');
                 var selector = switcher.find('.repo-switcher-selector');
-                
+
                 selector.chosen({
                     search_contains: true
                 });
-                
+
                 btn.on('click', function (e) {
                     e.preventDefault();
-                    
+
                     setTimeout(function () {
                         switcher.find('.chosen-container-single').trigger('mousedown');
                     }, 50);
                 });
-                
+
                 selector.trigger('chosen:updated').on('change', function () {
                     window.location.href = this.value;
                 });
@@ -792,37 +800,37 @@ $(window).load(function () {
 
 function initMultiLingual() {
     initModalTranslate();
-    
+
     $('.select-lang').on('click', function (e) {
         e.preventDefault();
-        
+
         var langCode = $(this).attr('href');
         flog('Selected lang: ' + langCode);
-        
+
         $.cookie('selectedLangCode', langCode, {
             expires: 360, path: '/'
         });
         window.location.reload();
     });
-    
+
     var timer;
     if (window.CKEDITOR) {
         CKEDITOR.on('instanceReady', function (e) {
             var editor = e.editor;
-            
+
             var element = $(editor.element.$);
             if (element.hasClass('translatable')) {
                 editor.on('focus', function () {
                     showTranslateButton(element, timer);
                 });
-                
+
                 editor.on('blur', function () {
                     hideTranslateButton(timer);
                 });
             }
         });
     }
-    
+
     $(document.body).on({
         focus: function () {
             showTranslateButton($(this), timer);
@@ -835,28 +843,28 @@ function initMultiLingual() {
 
 function showTranslateButton(target, timer) {
     flog(showTranslateButton, target, timer);
-    
+
     clearTimeout(timer);
-    
+
     var btn = $('#btn-translate');
     if (btn.length === 0) {
         btn = $('<button class="btn btn-warning btn-sm" id="btn-translate"><i class="fa fa-language"></i></button>');
         $(document.body).append(btn);
     }
-    
+
     btn.off('click').on('click', function (e) {
         e.preventDefault();
-        
+
         showModalTranslate(target);
     });
-    
+
     var position;
     if (target.is('.htmleditor')) {
         position = $('#cke_' + target.attr('id')).offset();
     } else {
         position = target.offset();
     }
-    
+
     position.top = position.top - 30;
     btn.css(position).show();
 }
@@ -896,7 +904,7 @@ function initModalTranslate() {
         '</div>'
     );
     $(document.body).append(modal);
-    
+
     modal.find('form').forms({
         onSuccess: function (resp) {
             if (resp.status) {
@@ -907,7 +915,7 @@ function initModalTranslate() {
             }
         }
     });
-    
+
     modal.on('hidden.bs.modal', function () {
         modal.find('[name=translated]').prop('disabled', true).removeClass('required').hide();
         modal.find('.htmleditor-wrapper').hide();
@@ -916,18 +924,18 @@ function initModalTranslate() {
             ckeditor.setReadOnly(true);
         }
     });
-    
+
     return modal;
 }
 
 function showModalTranslate(target) {
     flog('showTranslateButton', target);
-    
+
     var modal = $('#modal-translate');
     if (modal.length === 0) {
         modal = initModalTranslate();
     }
-    
+
     var sourceType = target.data("source-type");
     if (sourceType == null) {
         sourceType = target.closest("form").data("source-type");
@@ -938,12 +946,12 @@ function showModalTranslate(target) {
     }
     var sourceField = target.data("source-field");
     var langCode = $.cookie('selectedLangCode');
-    
+
     modal.find('[name=sourceType]').val(sourceType);
     modal.find('[name=sourceId]').val(sourceId);
     modal.find('[name=sourceField]').val(sourceField);
     modal.find('[name=langCode]').val(langCode);
-    
+
     $.ajax({
         url: '/translations',
         dataType: 'json',
@@ -963,7 +971,7 @@ function showModalTranslate(target) {
             if (resp && resp.status && resp.data.length > 0) {
                 translatedText = resp.data[0].translated || '';
             }
-            
+
             var modalSize = 'modal-sm';
             var translatedTextboxes = modal.find('[name=translated]');
             var destinationTextbox;
@@ -971,7 +979,7 @@ function showModalTranslate(target) {
                 modalSize = 'modal-lg';
                 destinationTextbox = translatedTextboxes.filter('textarea.htmleditor');
                 modal.find('.htmleditor-wrapper').show();
-                
+
                 var ckeditor = CKEDITOR.instances[destinationTextbox.attr('id')];
                 if (ckeditor) {
                     ckeditor.setReadOnly(false);
@@ -985,10 +993,10 @@ function showModalTranslate(target) {
             } else {
                 destinationTextbox = translatedTextboxes.filter('textarea').not('.htmleditor');
             }
-            
+
             destinationTextbox.prop('disabled', false).addClass('required').not('.htmleditor').show();
             destinationTextbox.val(translatedText);
-            
+
             modal.find('.modal-dialog').attr('class', 'modal-dialog ' + modalSize);
             modal.modal('show');
         }
@@ -1052,7 +1060,7 @@ function setRecentItem(title, url) {
         if (recentList == null) {
             recentList = new Array();
         } else {
-        
+
         }
         flog("recent", recentList);
         var item = {
@@ -1093,11 +1101,11 @@ function initCreateAccount() {
 
 function initAddWebsite() {
     flog('initAddWebsite');
-    
+
     var modal = $("#addWebsiteModal");
     if (modal.length > 0) {
         var form = modal.find("form");
-        
+
         form.forms({
             onSuccess: function (resp) {
                 flog("done", resp);
@@ -1105,7 +1113,7 @@ function initAddWebsite() {
                 Msg.success(form.find('[name=newName]').val() + ' has been created, going to the website manager...');
                 var nextHref = "/websites/" + resp.nextHref + "/";
                 window.location = nextHref;
-                
+
             }
         });
     }
@@ -1115,20 +1123,20 @@ function initBackgroundJobStatus(options) {
     // Find divs which need to reload to get job status. For each div get the current
     // job status and then apply data to the handlebars template in the div
     flog("initBackgroundJobStatus", options);
-    
+
     options = $.extend({}, options);
-    
+
     Handlebars.registerHelper('formatISODate', function (millis) {
         if (millis) {
             var m = millis;
             var date = new Date(m);
-            
+
             return date.toISOString();
         } else {
             return "";
         }
     });
-    
+
     Handlebars.registerHelper('formatDate', function (millis) {
         if (millis) {
             return moment(millis).format('DD/MM/YYYY');
@@ -1136,14 +1144,14 @@ function initBackgroundJobStatus(options) {
             return "";
         }
     });
-    
+
     Handlebars.registerHelper('notRunning', function (data, options) {
         var b = (data == null || data.statusInfo.complete);
         var out = options.fn(data);
-        
+
         return out;
     });
-    
+
     $(".backgroundTask").each(function () {
         var div = $(this);
         var href = div.data("task-href");
@@ -1155,20 +1163,20 @@ function initBackgroundJobStatus(options) {
 
 function checkBackgroundJobStatus(href, div, template, options) {
     flog('checkBackgroundJobStatus', href, div, template, options);
-    
+
     $.ajax({
         url: href,
         method: "GET",
         dataType: 'json',
         success: function (resp) {
             flog('Success in checking background task', resp);
-            
+
             if (resp.status) {
                 var htmlStr = template(resp);
                 flog('Background task status HTML:', htmlStr);
                 div.html(htmlStr);
                 div.show(400);
-                
+
                 if (resp.data.statusInfo.complete) {
                     if (typeof options.onComplete === 'function') {
                         options.onComplete.call(this, resp);
@@ -1179,7 +1187,7 @@ function checkBackgroundJobStatus(href, div, template, options) {
                     window.setTimeout(function () {
                         checkBackgroundJobStatus(href, div, template, options);
                     }, 3000);
-                    
+
                     if (typeof options.onRunning === 'function') {
                         options.onRunning.call(this, resp);
                     }
@@ -1189,7 +1197,7 @@ function checkBackgroundJobStatus(href, div, template, options) {
                 flog('Background task status HTML:', htmlStr);
                 div.html(htmlStr);
                 div.show(400);
-                
+
                 if (typeof options.onError === 'function') {
                     options.onError.call(this, resp);
                 }
@@ -1198,12 +1206,12 @@ function checkBackgroundJobStatus(href, div, template, options) {
         error: function (jqXHR) {
             // probably a 404, which is fine, show the template with no data so it can render a run form
             flog("No task resource, thats cool, means not running and hasnt been run");
-            
+
             var htmlStr = template(null);
             flog('Background task status HTML:', htmlStr);
             div.html(htmlStr);
             div.show(400);
-            
+
             if (typeof options.onError === 'function') {
                 options.onError.call(this, jqXHR);
             }
@@ -1215,7 +1223,7 @@ function getParam(name) {
     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
     var value = regex.exec(window.location.href) || '';
     value = decodeURIComponent(value[1]);
-    
+
     return value;
 }
 
@@ -1225,7 +1233,7 @@ function initColorPicker(target, onChangeHandle) {
             var colorPicker = $(this);
             var input = colorPicker.find('input');
             var previewer = colorPicker.find('.input-group-addon i');
-            
+
             colorPicker.colorpicker({
                 format: 'hex',
                 container: colorPicker.parent(),
@@ -1236,12 +1244,12 @@ function initColorPicker(target, onChangeHandle) {
                 }
             }).on('changeColor.colorpicker', function (e) {
                 var colorHex = e.color.toHex();
-                
+
                 if (!input.val() || input.val().trim().length === 0) {
                     colorHex = '';
                     previewer.css('background-color', '');
                 }
-                
+
                 if (typeof onChangeHandle === 'function') {
                     onChangeHandle(colorHex);
                 }
@@ -1254,12 +1262,12 @@ function initColorPicker(target, onChangeHandle) {
 
 function initImagePicker(target, basePath, pagePath) {
     flog('initImagePicker', target, basePath, pagePath);
-    
+
     target.hide();
     target.wrap('<div class="image-picker-wrapper"></div>');
-    
+
     var imgSrc = target.val() || target.attr('src') || target.attr('data-src') || '/static/images/photo_holder.png';
-    
+
     var wrapper = target.parent();
     wrapper.append(
         '<div class="thumbnail">' +
@@ -1270,23 +1278,23 @@ function initImagePicker(target, basePath, pagePath) {
         '   <a href="#" class="btn btn-danger image-picker-clear" role="button"><i class="fa fa-times"></i> Clear</a>' +
         '</div>'
     );
-    
+
     var preview = wrapper.find('.image-picker-previewer');
-    
+
     wrapper.find('.image-picker-upload').mselect({
         basePath: basePath,
         pagePath: pagePath,
         onSelectFile: function (selectedUrl, relativeUrl, type, hash) {
             var newUrl = '/_hashes/files/' + hash;
-            
+
             target.val(newUrl);
             preview.attr('src', newUrl);
         }
     });
-    
+
     wrapper.find('.image-picker-clear').on('click', function (e) {
         e.preventDefault();
-        
+
         target.val('');
         preview.attr('src', '/static/images/photo_holder.png');
     });
@@ -1338,7 +1346,7 @@ function initImagePicker(target, basePath, pagePath) {
     };
     Kalert.confirm = function (title, message, type, btnClass, btnText, callback) {
         var option = {};
-        
+
         if (arguments.length > 3) {
             option = {
                 title: title,
@@ -1371,7 +1379,7 @@ function initImagePicker(target, basePath, pagePath) {
         } else {
             return;
         }
-        
+
         swal({
             title: option.title || 'Are you sure?',
             text: option.message,
@@ -1383,10 +1391,10 @@ function initImagePicker(target, basePath, pagePath) {
             showLoaderOnConfirm: false
         }, typeof option.callback === 'function' ? option.callback : null);
     };
-    
+
     Kalert.confirmWait = function (title, message, type, btnClass, btnText, callback) {
         var option = {};
-        
+
         if (arguments.length > 3) {
             option = {
                 title: title,
@@ -1419,7 +1427,7 @@ function initImagePicker(target, basePath, pagePath) {
         } else {
             return;
         }
-        
+
         swal({
             title: option.title || 'Are you sure?',
             text: option.message,
@@ -1431,13 +1439,13 @@ function initImagePicker(target, basePath, pagePath) {
             showLoaderOnConfirm: true
         }, typeof option.callback === 'function' ? option.callback : null);
     };
-    
+
     Kalert.close = function () {
         swal.close();
     };
-    
+
     window.Kalert = Kalert;
-    
+
 })(jQuery, window);
 
 // ========================================================================
@@ -1445,7 +1453,7 @@ function initImagePicker(target, basePath, pagePath) {
 // ========================================================================
 (function ($, window) {
     var iframeUrl;
-    
+
 })(jQuery, window);
 
 // ========================================================================
@@ -1458,7 +1466,7 @@ function initImagePicker(target, basePath, pagePath) {
         var isEdmEditor = target.hasClass('edmeditor');
         var previewLink = target.attr('data-preview');
         target.addClass('fullscreen-editor').removeClass('contenteditor htmleditor edmeditor').hide();
-        
+
         if (isContentEditor || isEdmEditor) {
             if (allGroups === null) {
                 $.ajax({
@@ -1482,7 +1490,7 @@ function initImagePicker(target, basePath, pagePath) {
             initFullscreenEditorPreview(target, previewLink);
         }
     };
-    
+
     function initKeditor(target, isContentEditor, isEdmEditor, allGroups) {
         var previewLink = target.attr('data-preview');
         if (isContentEditor) {
@@ -1497,14 +1505,14 @@ function initImagePicker(target, basePath, pagePath) {
             });
         }
     }
-    
+
     function initFullscreenEditorPreview(target, previewLink) {
         var iframe = $('<iframe border="0" class="fullscreen-editor-preview"></iframe>');
-        
+
         target.after(iframe);
         iframe.attr('src', previewLink);
     }
-    
+
     function initFullscreenEditorModal(target, isContentEditor, isEdmEditor, allGroups) {
         var content = target.html() || '';
         var id = target.attr('id');
@@ -1539,18 +1547,18 @@ function initImagePicker(target, basePath, pagePath) {
             '</div>'
         );
         modal.appendTo(document.body);
-        
+
         var textarea = modal.find('textarea');
         var textareaId = 'modal-fullscreen-textarea-' + id;
         textarea.attr('id', textareaId);
-        
+
         var ckeditor;
         var editorLoading = modal.find('.editor-loading');
         if (isContentEditor || isEdmEditor) {
             var pageName = getFileName(window.location.href);
             var pagePath = target.attr('data-page-path') || '';
             var basePath = target.attr('data-base-path') || '';
-            
+
             textarea[isContentEditor ? 'contentEditor' : 'edmEditor']({
                 iframeMode: true,
                 snippetsUrl: './_components?fileName=' + pageName,
@@ -1568,36 +1576,36 @@ function initImagePicker(target, basePath, pagePath) {
                 editorLoading.hide();
             });
         }
-        
+
         var btnEdit = $('<button type="button" class="btn btn-sm btn-info fullscreen-editor-edit">Edit content</button>');
         target.before(btnEdit);
         btnEdit.wrap('<p class="fullscreen-editor-actions"></p>');
-        
+
         btnEdit.on('click', function (e) {
             e.preventDefault();
-            
+
             modal.modal('show');
         });
-        
+
         modal.find('.fullscreen-editor-save').on('click', function (e) {
             e.preventDefault();
-            
+
             var content;
             if (isContentEditor || isEdmEditor) {
                 content = textarea[isContentEditor ? 'contentEditor' : 'edmEditor']('getContent');
             } else {
                 content = ckeditor.getData();
             }
-            
+
             target.val(content);
             target.closest('form').trigger('submit');
             modal.modal('hide');
         });
     }
-    
+
     window.reloadFullscreenEditorPreview = function (target) {
         var preview = target.attr('data-preview');
         target.siblings('.fullscreen-editor-preview').attr('src', preview);
     };
-    
+
 })(jQuery, window);
