@@ -1,0 +1,12 @@
+#set( $relations = $asset.getRelations($fieldDef.name) )
+
+#if( $fieldDef.allowMany )
+    #foreach($relation in $relations)
+    #set( $asset = $services.assetManager.find($relation.objectId) )
+    <input type="text" name="$fieldDef.name" class="form-control select-asset select-asset-$fieldDef.contentType" value="$relAsset.uniqueId" data-asset-name="$relAsset.name"/>
+    #end
+#else
+    #set( $relation = $relations[0] )
+    #set( $relAsset = $services.assetManager.find($relation.objectId) )
+    <input type="text" name="$fieldDef.name" class="form-control select-asset select-asset-$fieldDef.contentType" value="$relAsset.uniqueId" data-asset-name="$relAsset.name"/>
+#end
