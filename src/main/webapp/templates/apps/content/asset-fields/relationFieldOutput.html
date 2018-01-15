@@ -1,0 +1,5 @@
+#set( $relations = $asset.getRelations($fieldDef.name) )
+<!-- TODO -->
+#foreach( $relation in $relations )
+<a href="/assets/$relation.objectId">$relation.objectId</a>
+#end
