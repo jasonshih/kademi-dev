@@ -24,17 +24,26 @@
             inputGroup.find('input, button').not(':radio').prop('disabled', false);
         });
         
-        $('.btn-upload-image').each(function () {
+        $('.btn-upload-file').each(function () {
             var btn = $(this);
             var mupload = $('<div style="display: none;"></div>');
             var inputGroup = btn.closest('.input-group');
             var realInput = inputGroup.find('.relation-field-input');
             var fakeInput = inputGroup.find('.relation-field-placeholder');
+            var acceptedFiles = '*/*';
+            
+            if (btn.hasClass('btn-upload-image')) {
+                acceptedFiles = 'image/*';
+            }
+            
+            if (btn.hasClass('btn-upload-video')) {
+                acceptedFiles = 'video/*';
+            }
             
             mupload.mupload({
                 url: '/assets/',
                 buttonText: '<i class="fa fa-upload"></i> Upload',
-                acceptedFiles: 'image/*',
+                acceptedFiles: acceptedFiles,
                 oncomplete: function (data, name, href) {
                     realInput.val(data.result.href.replace('/assets/', ''));
                     fakeInput.val(data.name);
@@ -46,6 +55,12 @@
                 
                 mupload.find('.btn').trigger('click');
             });
+        });
+        
+        $('.btn-edit-text').each(function () {
+            var btn = $(this);
+            
+            // TODO: Continue when contentType="text" works
         });
     }
     
