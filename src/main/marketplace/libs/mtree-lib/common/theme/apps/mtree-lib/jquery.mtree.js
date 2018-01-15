@@ -75,8 +75,13 @@
             htmlContent += '        <li><a href="#' + assetsTabId + '" data-toggle="tab" data-type="assets">Assets</a></li>';
             htmlContent += '    </ul>';
             htmlContent += '    <div class="tab-content mtree-tab-contents">';
-            htmlContent += '        <div class="tab-pane active mtree mtree-files" id="' + filesTabId + '"></div>';
-            htmlContent += '        <div class="tab-pane mtree mtree-assets" id="' + assetsTabId + '"></div>';
+            htmlContent += '        <div class="tab-pane tab-pane-files active" id="' + filesTabId + '">';
+            htmlContent += '            <div class="mtree mtree-files"></div>';
+            htmlContent += '        </div>';
+            htmlContent += '        <div class="tab-pane tab-pane-assets" id="' + assetsTabId + '">';
+            htmlContent += '            <p><input type="text" class="form-control mtree-assets-finder" /></p>';
+            htmlContent += '            <div class="mtree mtree-assets"></div>';
+            htmlContent += '        </div>';
             htmlContent += '    </div>';
         } else {
             htmlContent += '    <div class="mtree mtree-files panel panel-default"></div>';
@@ -122,10 +127,18 @@
         
         if (options.showAssets) {
             self.treeAssets = target.find('.mtree-assets');
+            self.txtAssetsFinder = self.target.find('.mtree-assets-finder');
             self.tabs = target.find('.mtree-tabs a[data-toggle="tab"]');
             self.initTree(true);
             self.initTabs();
+            self.adjustTabHeight();
         }
+    };
+    
+    MTree.prototype.adjustTabHeight = function () {
+        var self = this;
+        var tabsWrapper = self.target.find('.mtree-tabs');
+        self.target.find('.mtree-tab-contents').css('top', tabsWrapper.outerHeight() + tabsWrapper.position().top - 1);
     };
     
     MTree.prototype.initTabs = function () {
@@ -220,7 +233,7 @@
                     if (isAssets) {
                         loadUrl = ASSETS_HREF;
                         dataRequest = {
-                            q: '',
+                            q: self.txtAssetsFinder.val() || '',
                             type: options.includeContentType
                         }
                     } else {
@@ -284,6 +297,14 @@
                     options.onSelect.call(self, selectedNode, type, url, hash, true);
                 }
             });
+            
+            var timer = null;
+            self.txtAssetsFinder.on('keydown', function () {
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    self.jstreeAssets.load_node('#');
+                }, 250);
+            });
         } else {
             self.jstreeFiles = self.treeFiles.jstree(true);
             
@@ -325,46 +346,71 @@
     };
     
     MTree.prototype.addNode = function (path) {
-        log('addNode', path);
-        
         var self = this;
         var options = self.options;
-        var parentPath = self.getParentFolderUrl(path);
+        var isAsset = path.indexOf('/assets/') === 0;
         
-        self.openPath(parentPath, function (parentNode) {
-            var parentId = parentNode ? parentNode.attr('id') : null;
-            
-            setTimeout(function () {
-                $.ajax({
-                    url: self.getPropFindUrl(path),
-                    cache: false
-                }).done(function (data) {
-                    if (data && data[0]) {
-                        var item = self.generateItemData(data[0]);
-                        log('Data for new node', item);
+        log('addNode', path, isAsset);
+        
+        if (isAsset) {
+            $.ajax({
+                url: self.getPropFindUrl(path),
+                cache: false
+            }).done(function (data) {
+                if (data && data[0]) {
+                    var item = self.generateItemData(data[0]);
+                    log('Data for new node', item);
+                    
+                    self.jstreeAssets.load_node('#', function () {
+                        var newNode = self.treeAssets.find('.mtree-node[href="' + path + '"]');
                         
-                        var existingNode = self.treeFiles.find('.mtree-node[href="' + escape(path) + '"]');
-                        
-                        if (existingNode && existingNode.length > 0) {
-                            log('Delete old node', existingNode);
-                            self.jstreeFiles.delete_node(existingNode);
+                        if (typeof options.onCreate === 'function') {
+                            options.onCreate.call(self, newNode, null, item.type);
                         }
                         
-                        log('Add new node to parent id: ' + parentId);
-                        self.jstreeFiles.create_node(parentId, item, 'first', function () {
-                            var newNode = self.treeFiles.find('#' + item.id);
+                        self.deselectNode();
+                        self.jstreeAssets.select_node(newNode);
+                    });
+                }
+            });
+        } else {
+            var parentPath = self.getParentFolderUrl(path);
+            
+            self.openPath(parentPath, function (parentNode) {
+                var parentId = parentNode ? parentNode.attr('id') : null;
+                
+                setTimeout(function () {
+                    $.ajax({
+                        url: self.getPropFindUrl(path),
+                        cache: false
+                    }).done(function (data) {
+                        if (data && data[0]) {
+                            var item = self.generateItemData(data[0]);
+                            log('Data for new node', item);
                             
-                            if (typeof options.onCreate === 'function') {
-                                options.onCreate.call(self, newNode, parentNode, item.type);
+                            var existingNode = self.treeFiles.find('.mtree-node[href="' + escape(path) + '"]');
+                            
+                            if (existingNode && existingNode.length > 0) {
+                                log('Delete old node', existingNode);
+                                self.jstreeFiles.delete_node(existingNode);
                             }
                             
-                            self.deselectNode();
-                            self.jstreeFiles.select_node(newNode);
-                        });
-                    }
-                });
-            })
-        }, 300);
+                            log('Add new node to parent id: ' + parentId);
+                            self.jstreeFiles.create_node(parentId, item, 'first', function () {
+                                var newNode = self.treeFiles.find('#' + item.id);
+                                
+                                if (typeof options.onCreate === 'function') {
+                                    options.onCreate.call(self, newNode, parentNode, item.type);
+                                }
+                                
+                                self.deselectNode();
+                                self.jstreeFiles.select_node(newNode);
+                            });
+                        }
+                    });
+                })
+            }, 300);
+        }
     };
     
     MTree.prototype.generateId = function (type, suffix) {

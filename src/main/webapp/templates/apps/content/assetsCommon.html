@@ -205,7 +205,7 @@
                     e.preventDefault();
                     var link = $(e.target).closest("a");
                     var modal = $("#modal-edit-type");
-                    modal.find("a.btn-info").attr("href", "/content/" + link.attr("href"));
+                    modal.find("a.btn-info").attr("href", "/content-types/" + link.attr("href"));
                     modal.find("a.remove-type").attr("href", link.attr("href"));
                     modal.modal("show");
                 });
