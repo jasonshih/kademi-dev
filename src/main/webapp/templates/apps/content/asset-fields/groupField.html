@@ -1,0 +1,22 @@
+#if( $fieldDef.allowMany )
+    #foreach( $group in $fieldDef.findAvailableGroups() )
+    <label>
+        #set( $checked = $fieldValue.contains($group.name) )
+        <input type="checkbox" name="$fieldDef.name" value="$group.name"
+        #if( $checked )
+        checked="true"
+        #end
+               />
+        #if( $group.title )
+        $group.title
+        #else
+        $group.name
+        #end
+    </label>
+    #end
+#else
+<select class="form-control" name="$fieldDef.name">
+    #foreach( $group in $fieldDef.findAvailableGroups() )
+    #end
+</select>
+#end
