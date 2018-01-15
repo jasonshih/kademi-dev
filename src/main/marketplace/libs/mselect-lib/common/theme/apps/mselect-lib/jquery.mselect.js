@@ -103,6 +103,10 @@
         });
         
         self.modal = modal;
+        
+        self.modal.on('shown.bs.modal', function () {
+           self.mtree.adjustTabHeight();
+        });
     };
     
     MSelect.prototype.selectFile = function (hash, callback) {
