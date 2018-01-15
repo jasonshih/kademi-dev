@@ -61,21 +61,9 @@
         <hr/>
         <h2>Asset information</h2>
         #assetInfo()
+        #assetCommonScripts()
 
-            #assetCommonScripts()
-
-        <script type="text/javascript">
-            $(function () {
-                flog("init content item page");
-
-                $(".form-edit").forms({
-                    onSuccess: function (resp) {
-                        if (resp.status) {
-                            Msg.info(resp.messages[0]);
-                        }
-                    }
-                });
-            });
-        </script>
+        <script type="text/javascript" src="/static/milton-upload/1.0.1/jquery.milton-upload.js"></script>
+        <script type="text/javascript" src="/theme/apps/content/manageAssetItem.js"></script>
     </body>
 </html>

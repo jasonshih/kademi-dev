@@ -28,7 +28,7 @@
         var options = self.options;
         var element = self.element;
         
-        var holder = self.holder = $('<input type="text" class="form-control " value="' + (element.attr('data-asset-name') || '') + '" />');
+        var holder = self.holder = $('<input type="text" class="form-control " value="' + (element.attr('data-asset-name') || '') + '" placeholder="' + (element.attr('placeholder') || '') + '" />');
         element.css('display', 'none').after(holder);
         
         var type = options.type || '';
