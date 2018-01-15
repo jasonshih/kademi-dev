@@ -16,16 +16,22 @@
             <input type="hidden" name="format" value="$format" />
 
             #if( $format == "text/html" )
-            TODO: use keditor
-            <textarea name="text" class="form-control" style="height: 400px">$!page.text</textarea>
+                <!-- TODO Preview link for it -->
+                <textarea name="text" class="form-control contenteditor" style="height: 400px">$!page.text</textarea>
+                <iframe srcdoc="$!page.text"></iframe>
             #else
-            <textarea name="text" class="form-control" style="height: 400px">$!page.text</textarea>
+                <textarea name="text" class="form-control" style="height: 400px">$!page.text</textarea>
             #end
 
         #end
 
-
         #assetCommonScripts()
+        
+        <script type="text/javascript">
+            $(function () {
+                initFullscreenEditor($('.contenteditor'));
+            });
+        </script>
 
     </body>
 </html>
