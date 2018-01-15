@@ -80,7 +80,7 @@
                 <td>
                     $!asset.format
                     #foreach($ct in $asset.assetTypes)
-                    <a href="/content/$ct" class="label label-info">$ct</a>
+                    <a href="/content-types/$ct" class="label label-info">$ct</a>
                     #end
                 </td>
                 <td><abbr class="timeago" title="$formatter.formatDateISO8601($asset.createdDate, $page.parent.organisation.timezone)">$formatter.formatDateTime($asset.createdDate, $page.parent.organisation.timezone)</abbr></td>

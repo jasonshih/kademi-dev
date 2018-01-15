@@ -3,50 +3,69 @@
         <title>Manage Content Type</title>
     </head>
     <body>
-
+        
         #parse("/theme/apps/content/assetTypesCommon.html")
-
+        
         #assetTypeHeader()
-
-        <h3>Fields</h3>
-        <div class="btn-group" role="group">
-            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="fa fa-plus"></span>
-                New field
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu new-view">
-                <li><a href="typedField" data-target="#modal-field-typed" data-toggle="modal">Typed field</a></li>
-                <li><a href="derived" data-target="#modal-field-derived" data-toggle="modal">derived field</a></li>
-                <li><a href="relation" data-target="#modal-field-relation" data-toggle="modal">relation field</a></li>
-                <li><a href="stored" data-target="#modal-field-stored" data-toggle="modal">Simple stored field</a></li>
-            </ul>
-        </div>
-
-
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Text</th>
-                    <th>Editable</th>
-                </tr>
-            </thead>
-            <tbody id="tableBodyFields">
-                #foreach($field in $page.assetType.fields)
-                <tr>
-                    <td>$field.name</td>
-                    <td>$!field.text</td>
-                    <td>
-                        #if( $field.editable )
-                        <div class="label label-success"><span class="fa fa-check"></span></div>
+        
+        
+        <div class="panel panel-default panel-no-icon">
+            <div class="panel-heading">
+                <h3 class="panel-title">Fields</h3>
+                <div class="panel-tools">
+                    <div class="btn-group btn-group-xs" role="group">
+                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="fa fa-plus"></span>
+                            New field
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right new-view">
+                            <li><a href="typedField" data-target="#modal-field-typed" data-toggle="modal">Typed field</a></li>
+                            <li><a href="derived" data-target="#modal-field-derived" data-toggle="modal">derived field</a></li>
+                            <li><a href="relation" data-target="#modal-field-relation" data-toggle="modal">relation field</a></li>
+                            <li><a href="stored" data-target="#modal-field-stored" data-toggle="modal">Simple stored field</a></li>
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-xs btn-danger btn-delete-fields"><i class="fa fa-times"></i> Delete fields</button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <colgroup>
+                        <col />
+                        <col />
+                        <col />
+                        <col style="width: 20px;" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Text</th>
+                            <th>Editable</th>
+                            <th><input type="checkbox" class="chk-all" /></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBodyFields">
+                        #foreach($field in $page.assetType.fields)
+                        <tr>
+                            <td>$field.name</td>
+                            <td>$!field.text</td>
+                            <td>
+                                #if( $field.editable )
+                                <div class="label label-success"><span class="fa fa-check"></span></div>
+                                #end
+                            </td>
+                            <td>
+                                <input type="checkbox" class="chk-field-name" value="$field.name" />
+                            </td>
+                        </tr>
                         #end
-                    </td>
-                </tr>
-                #end
-            </tbody>
-        </table>
-
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        
         <div class="new-field-modals">
             <div id="modal-field-typed" class="modal fade" aria-hidden="true" tabindex="-1">
                 <div class="modal-dialog modal-sm">
@@ -56,32 +75,32 @@
                             <h4 class="modal-title">New field</h4>
                         </div>
                         <form class="form-horizontal" action="$page.href" method="POST">
-                            <input type="hidden" name="newFieldType" value="typedField"/>
+                            <input type="hidden" name="newFieldType" value="typedField" />
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="name" class="control-label col-md-4">Name</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="name" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="title" class="control-label col-md-4">title</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="title" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="text" class="control-label col-md-4">Text</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="text" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="type" class="control-label col-md-4">type</label>
-
+                                    
                                     <div class="col-md-8">
                                         <select name="type" class="form-control">
                                             <option>date</option>
@@ -92,7 +111,7 @@
                                         </select>
                                     </div>
                                 </div>
-
+                            
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
@@ -102,7 +121,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <div id="modal-field-derived" class="modal fade" aria-hidden="true" tabindex="-1">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
@@ -111,24 +130,24 @@
                             <h4 class="modal-title">New derived field</h4>
                         </div>
                         <form class="form-horizontal" action="$page.href" method="POST">
-                            <input type="hidden" name="newFieldType" value="derived"/>
+                            <input type="hidden" name="newFieldType" value="derived" />
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="name" class="control-label col-md-4">name</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="name" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="mvelExpr" class="control-label col-md-4">Expression</label>
-
+                                    
                                     <div class="col-md-8">
                                         <textarea class="form-control" name="mvelExpr"></textarea>
                                     </div>
                                 </div>
-
-
+                            
+                            
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
@@ -138,7 +157,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <div id="modal-field-relation" class="modal fade" aria-hidden="true" tabindex="-1">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
@@ -147,32 +166,32 @@
                             <h4 class="modal-title">New relation field</h4>
                         </div>
                         <form class="form-horizontal" action="$page.href" method="POST">
-                            <input type="hidden" name="newFieldType" value="relation"/>
+                            <input type="hidden" name="newFieldType" value="relation" />
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="name" class="control-label col-md-4">Name</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="name" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="title" class="control-label col-md-4">title</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="title" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="text" class="control-label col-md-4">Text</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="text" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="contentType" class="control-label col-md-4">Asset type</label>
-
+                                    
                                     <div class="col-md-8">
                                         <select name="contentType" class="form-control">
                                             #foreach( $assetType in $page.parent.children )
@@ -183,20 +202,20 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="required" class="control-label col-md-4">Required</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="checkbox" class="form-control" name="required" value="true" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="allowMany" class="control-label col-md-4">allowMany</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="checkbox" class="form-control" name="allowMany" value="true" />
                                     </div>
                                 </div>
-
-
+                            
+                            
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
@@ -206,7 +225,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <div id="modal-field-stored" class="modal fade" aria-hidden="true" tabindex="-1">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
@@ -215,31 +234,31 @@
                             <h4 class="modal-title">New simple field</h4>
                         </div>
                         <form class="form-horizontal" action="$page.href" method="POST">
-                            <input type="hidden" name="newFieldType" value="stored"/>
+                            <input type="hidden" name="newFieldType" value="stored" />
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="name" class="control-label col-md-4">Name</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="name" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="title" class="control-label col-md-4">title</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="title" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="text" class="control-label col-md-4">Text</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="text" value="" />
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
                                 <button class="btn btn-sm btn-primary" type="submit">Save</button>
@@ -249,7 +268,7 @@
                 </div>
             </div>
         </div>
-
+        
         <script>
             $(function () {
                 flog("init field  forms");
@@ -265,10 +284,48 @@
                         }
                     });
                 });
+                
+                $(document.body).on('click', '.btn-delete-fields', function (e) {
+                    e.preventDefault();
+                    
+                    var toDelete = [];
+                    $('.chk-field-name:checked').each(function () {
+                        toDelete.push(this.value);
+                    });
+                    
+                    if (toDelete.length > 0) {
+                        Kalert.confirm('You want to delete ' + toDelete.length + ' fields?', 'Delete', function () {
+                            $.ajax({
+                                url: '.',
+                                type: 'post',
+                                dataType: 'json',
+                                data: {
+                                    toDelete: toDelete.join(',')
+                                },
+                                success: function (resp) {
+                                    if (resp && resp.status) {
+                                        $('#tableBodyFields').reloadFragment({
+                                            whenComplete: function () {
+                                                Msg.success('Fields are deleted');
+                                                this.find('.chk-all').prop('checked', false);
+                                            }
+                                        });
+                                    } else {
+                                        Msg.error('Error in deleting fields. Please contact your administrator to resolve this issue');
+                                    }
+                                },
+                                error: function (jqXhr, statusText, error) {
+                                    flog('Error in deleting field', jqXhr, statusText, error);
+                                    Msg.error('Error in deleting fields. Please contact your administrator to resolve this issue');
+                                }
+                            });
+                        });
+                    }
+                });
             });
         </script>
-
+        
         #assetTypeScripts()
-
+    
     </body>
 </html>

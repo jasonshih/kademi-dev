@@ -5,67 +5,101 @@
     <body>
         #macro (assetTypeHeader)
         <h1>$page.title</h1>
-
-        <h3>Views</h3>
-        <div class="btn-group" role="group">
-            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="fa fa-plus"></span>
-                New view
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu new-view">
-                <li><a href="altFormat" data-target="#modal-view-altformat" data-toggle="modal">Alternate format view (resized)</a></li>
-                <li><a href="mvelTemplate" data-target="#modal-view-mveltemplate" data-toggle="modal">Template view (MVEL)</a></li>
-                <li><a href="pageTemplate" data-target="#modal-view-pagetemplate" data-toggle="modal">Template view (page)</a></li>
-                <li><a href="standardBinary" data-target="#modal-view-standardbinary" data-toggle="modal">Binary file view</a></li>
-            </ul>
+        
+        <div class="panel panel-default panel-no-icon">
+            <div class="panel-heading">
+                <h3 class="panel-title">Views</h3>
+                <div class="panel-tools">
+                    <div class="btn-group btn-group-xs" role="group">
+                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="fa fa-plus"></span>
+                            New view
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right new-view">
+                            <li><a href="altFormat" data-target="#modal-view-altformat" data-toggle="modal">Alternate format view (resized)</a></li>
+                            <li><a href="mvelTemplate" data-target="#modal-view-mveltemplate" data-toggle="modal">Template view (MVEL)</a></li>
+                            <li><a href="pageTemplate" data-target="#modal-view-pagetemplate" data-toggle="modal">Template view (page)</a></li>
+                            <li><a href="standardBinary" data-target="#modal-view-standardbinary" data-toggle="modal">Binary file view</a></li>
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-xs btn-danger btn-delete-views"><i class="fa fa-times"></i> Delete views</button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped" id="tableViews">
+                    <colgroup>
+                        <col />
+                        <col style="width: 20px;" />
+                    </colgroup>
+                    #foreach( $view in $page.assetType.views )
+                    <tr>
+                        <td>$view.text</td>
+                        <td>
+                            <input type="checkbox" class="chk-view-id" value="$view.viewId" />
+                        </td>
+                    </tr>
+                    #end
+                </table>
+            </div>
         </div>
-
-        <table class="table table-striped" id="tableViews">
-            #foreach( $view in $page.assetType.views )
-            <tr>
-                <td>$view.text</td>
-            </tr>
-            #end
-        </table>
-
-        <h3>Permissions</h3>
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-new-asset-permission" ><span class="fa fa-plus"></span>&nbsp;New permission</button>
-        <br/><br/>
-        <table class="table table-striped" id="tablePermissions">
-            <thead>
-                <tr>
-                    <th>Website</th>
-                    <th>Group</th>
-                    <th>Permissions</th>
-                </tr>
-            </thead>
-            <tbody>
-                #foreach($permission in $page.assetType.permissions)
-                <tr>
-                    <td>$permission.websiteName</td>
-                    <td>$permission.groupName</td>
-                    <td>
-                        #foreach($p in $permission.priviledges)
-                        #if($p == "READ_CONTENT")
-                        Can read/view<br/>
-                        #elseif($p == "WRITE_CONTENT")
-                        Can write<br/>
+        
+        <div class="panel panel-default panel-no-icon">
+            <div class="panel-heading">
+                <h3 class="panel-title">Permissions</h3>
+                <div class="panel-tools">
+                    <button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal-new-asset-permission">
+                        <span class="fa fa-plus"></span>&nbsp;New permission
+                    </button>
+                    <button type="button" class="btn btn-xs btn-danger btn-delete-permissions"><i class="fa fa-times"></i> Delete permissions</button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped" id="tablePermissions">
+                    <colgroup>
+                        <col />
+                        <col />
+                        <col />
+                        <col style="width: 20px;" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Website</th>
+                            <th>Group</th>
+                            <th>Permissions</th>
+                            <th><input type="checkbox" class="chk-all" /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #foreach($permission in $page.assetType.permissions)
+                        <tr>
+                            <td>$permission.websiteName</td>
+                            <td>$permission.groupName</td>
+                            <td>
+                                #foreach($p in $permission.priviledges)
+                                #if($p == "READ_CONTENT")
+                                Can read/view<br />
+                                #elseif($p == "WRITE_CONTENT")
+                                Can write<br />
+                                #end
+                                #end
+                                #if($permission.allowCreation)
+                                Can create<br />
+                                #end
+                            </td>
+                            <td>
+                                <input type="checkbox" class="chk-permission-id" value="$permission.id" />
+                            </td>
+                        </tr>
                         #end
-                        #end
-                        #if($permission.allowCreation)
-                        Can create<br/>
-                        #end
-                    </td>
-                </tr>
-                #end
-            </tbody>
-        </table>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         #end
-
-
+        
+        
         #macro (assetTypeScripts)
-
         <div id="modal-new-asset-permission" class="modal fade" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -74,11 +108,11 @@
                         <h4 class="modal-title">Asset Permission</h4>
                     </div>
                     <form class="form-horizontal" action="$page.href" method="POST">
-                        <input type="hidden" name="newAssetPermission" value="true"/>
+                        <input type="hidden" name="newAssetPermission" value="true" />
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="height" class="control-label col-md-3">Website</label>
-
+                                
                                 <div class="col-md-8">
                                     <select class="form-control required" name="websiteName">
                                         <option value="">[ NONE ]</option>
@@ -92,7 +126,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="width" class="control-label col-md-3">Group</label>
-
+                                
                                 <div class="col-md-8">
                                     <select class="form-control required" name="groupName">
                                         <option value="">[ NONE ]</option>
@@ -104,10 +138,10 @@
                                     </select>
                                 </div>
                             </div>
-
+                            
                             <div class="form-group">
                                 <label for="width" class="control-label col-md-3">Permission</label>
-
+                                
                                 <div class="col-md-8">
                                     <div class="checkbox">
                                         <label>
@@ -138,7 +172,7 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="new-view-modals">
             <div id="modal-view-altformat" class="modal fade" aria-hidden="true" tabindex="-1">
                 <div class="modal-dialog modal-sm">
@@ -148,23 +182,23 @@
                             <h4 class="modal-title">Alt format view</h4>
                         </div>
                         <form class="form-horizontal" action="$page.href" method="POST">
-                            <input type="hidden" name="newViewType" value="altFormat"/>
+                            <input type="hidden" name="newViewType" value="altFormat" />
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="height" class="control-label col-md-4">Height</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="number" class="form-control required" name="height" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="width" class="control-label col-md-4">Width</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="number" class="form-control required" name="width" value="" />
                                     </div>
                                 </div>
-
+                            
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
@@ -174,7 +208,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <div id="modal-view-mveltemplate" class="modal fade" aria-hidden="true" tabindex="-1">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
@@ -183,30 +217,30 @@
                             <h4 class="modal-title">MVEL Template view</h4>
                         </div>
                         <form class="form-horizontal" action="$page.href" method="POST">
-                            <input type="hidden" name="newViewType" value="mvelTemplate"/>
+                            <input type="hidden" name="newViewType" value="mvelTemplate" />
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="template" class="control-label col-md-4">template</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="template" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="paramName" class="control-label col-md-4">paramName</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="paramName" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="paramValue" class="control-label col-md-4">paramValue</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="paramValue" value="" />
                                     </div>
                                 </div>
-
+                            
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
@@ -216,7 +250,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <div id="modal-view-pagetemplate" class="modal fade" aria-hidden="true" tabindex="-1">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
@@ -225,32 +259,32 @@
                             <h4 class="modal-title">Page template view</h4>
                         </div>
                         <form class="form-horizontal" action="$page.href" method="POST">
-                            <input type="hidden" name="newViewType" value="pageTemplate"/>
+                            <input type="hidden" name="newViewType" value="pageTemplate" />
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="template" class="control-label col-md-4">template</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="template" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="paramName" class="control-label col-md-4">paramName</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="paramName" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="paramValue" class="control-label col-md-4">paramValue</label>
-
+                                    
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="paramValue" value="" />
                                     </div>
                                 </div>
-
+                            
                             </div>
-
+                            
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
                                 <button class="btn btn-sm btn-primary" type="submit">Save</button>
@@ -259,7 +293,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <div id="modal-view-standardbinary" class="modal fade" aria-hidden="true" tabindex="-1">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
@@ -268,7 +302,7 @@
                             <h4 class="modal-title">Standard binary file view</h4>
                         </div>
                         <form class="form-horizontal" action="$page.href" method="POST">
-                            <input type="hidden" name="newViewType" value="standardBinary"/>
+                            <input type="hidden" name="newViewType" value="standardBinary" />
                             <div class="modal-body">
                                 No configuration required
                             </div>
@@ -281,7 +315,7 @@
                 </div>
             </div>
         </div>
-
+        
         <script>
             (function ($) {
                 function initViewModals() {
@@ -298,11 +332,11 @@
                         });
                     });
                 }
-
+                
                 function initPermissionModal() {
                     var modal = $('#modal-new-asset-permission');
                     var form = modal.find('form');
-
+                    
                     form.forms({
                         onSuccess: function (resp) {
                             modal.modal('hide');
@@ -312,11 +346,92 @@
                         }
                     });
                 }
-
+                
+                function initDelete() {
+                    flog('initDelete');
+                    
+                    $(document.body).on('click', '.btn-delete-views', function (e) {
+                        e.preventDefault();
+                        
+                        var toDeleteViews = [];
+                        $('.chk-view-id:checked').each(function () {
+                            toDeleteViews.push(this.value);
+                        });
+                        
+                        if (toDeleteViews.length > 0) {
+                            Kalert.confirm('You want to delete ' + toDeleteViews.length + ' views?', 'Delete', function () {
+                                $.ajax({
+                                    url: '.',
+                                    type: 'post',
+                                    dataType: 'json',
+                                    data: {
+                                        toDeleteViews: toDeleteViews.join(',')
+                                    },
+                                    success: function (resp) {
+                                        if (resp && resp.status) {
+                                            $('#tableViews').reloadFragment({
+                                                whenComplete: function () {
+                                                    Msg.success('Views are deleted');
+                                                    this.find('.chk-all').prop('checked', false);
+                                                }
+                                            });
+                                        } else {
+                                            Msg.error('Error in deleting views. Please contact your administrator to resolve this issue');
+                                        }
+                                    },
+                                    error: function (jqXhr, statusText, error) {
+                                        flog('Error in deleting views', jqXhr, statusText, error);
+                                        Msg.error('Error in deleting views. Please contact your administrator to resolve this issue');
+                                    }
+                                });
+                            });
+                        }
+                    });
+                    
+                    $(document.body).on('click', '.btn-delete-permissions', function (e) {
+                        e.preventDefault();
+                        
+                        var toDeletePermissions = [];
+                        $('.chk-permission-id:checked').each(function () {
+                            toDeletePermissions.push(this.value);
+                        });
+                        
+                        if (toDeletePermissions.length > 0) {
+                            Kalert.confirm('You want to delete ' + toDeletePermissions.length + ' permissions?', 'Delete', function () {
+                                $.ajax({
+                                    url: '.',
+                                    type: 'post',
+                                    dataType: 'json',
+                                    data: {
+                                        toDeletePermissions: toDeletePermissions.join(',')
+                                    },
+                                    success: function (resp) {
+                                        if (resp && resp.status) {
+                                            $('#tablePermissions').reloadFragment({
+                                                whenComplete: function () {
+                                                    Msg.success('Permission are deleted');
+                                                    this.find('.chk-all').prop('checked', false);
+                                                }
+                                            });
+                                        } else {
+                                            Msg.error('Error in deleting permissions. Please contact your administrator to resolve this issue');
+                                        }
+                                    },
+                                    error: function (jqXhr, statusText, error) {
+                                        flog('Error in deleting permissions', jqXhr, statusText, error);
+                                        Msg.error('Error in deleting permissions. Please contact your administrator to resolve this issue');
+                                    }
+                                });
+                            });
+                        }
+                    });
+                }
+                
                 $(function () {
                     flog("init forms");
                     initViewModals();
                     initPermissionModal();
+                    initDelete();
                 });
             })(jQuery);
         </script>
