@@ -16,7 +16,9 @@
     #end
 #else
 <select class="form-control" name="$fieldDef.name">
+    <option value="">[Not selected]</option>
     #foreach( $group in $fieldDef.findAvailableGroups() )
+    $formatter.option($group.name, $group.title, $fieldValue)
     #end
 </select>
 #end
