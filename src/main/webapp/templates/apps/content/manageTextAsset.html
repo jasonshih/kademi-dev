@@ -1,30 +1,57 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Content Item</title>
-
+    
     </head>
     <body class="manageEmail">
-
+        
         #parse("/theme/apps/content/assetsCommon.html")
-
+        
         #assetHeader()
         
-        #@assetMainForm()
-            #set( $format = $page.asset.format )
-            #set( $format = $request.params.format )
-
-            <input type="hidden" name="format" value="$format" />
-
-            #if( $format == "text/html" )
-                <!-- TODO Preview link for it -->
+        <div id="main-asset">
+            <form action="$page.href" method="POST" class="form-asset-main form form-horizontal">
+                
+                <button type="submit" class="btn btn-success">Save</button>
+                
+                <div class="row">
+                    <div class="col-sm-7">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="name">Name</label>
+                            
+                            <div class="col-md-8">
+                                <input type="text" name="name" id="name" value="$!page.asset.name" placeholder="" class="required form-control" required="true" />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="name">Notes</label>
+                            
+                            <div class="col-md-8">
+                                <textarea class="form-control" name="notes" rows="6">$!page.asset.notes</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div id="asset-info">
+                            #assetInfo()
+                        </div>
+                    </div>
+                </div>
+                #set( $format = $page.asset.format )
+                #set( $format = $request.params.format )
+                
+                <input type="hidden" name="format" value="$format" />
+                
+                #if( $format == "text/html" )
                 <textarea name="text" class="form-control contenteditor" style="height: 400px">$!page.text</textarea>
-            #else
+                #else
                 <textarea name="text" class="form-control" style="height: 400px">$!page.text</textarea>
-            #end
-
-        #end
-
+                #end
+            </form>
+        </div>
+        
         #assetCommonScripts()
-
+    
     </body>
 </html>

@@ -175,7 +175,7 @@ function initEditRelations() {
         var link = $(this);
         var inputGroup = link.closest('.input-group');
         var realInput = inputGroup.find('.select-asset');
-        var modal = $(link.data('target'));
+        var modal = $(link.attr('data-target'));
         var href = link.attr('href');
         
         modal.find('.modal-body').load(href + ' .main-content-inner', function () {
@@ -191,7 +191,7 @@ function initEditRelations() {
         var link = $(this);
         var inputGroup = link.closest('.input-group');
         var realInput = inputGroup.find('.select-asset');
-        var modal = $(link.data('target'));
+        var modal = $(link.attr('data-target'));
         var href = link.attr('href');
         
         modal.find('.modal-body').load(href + ' .main-content-inner', function () {
