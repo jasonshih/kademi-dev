@@ -19,7 +19,7 @@
     <div class="relation-field-wrapper">
         #if ($fieldDef.contentType == "image" || $fieldDef.contentType == "video" || $fieldDef.contentType == "binary")
             <p class="input-group input-group-sm">
-                <input type="text" name="$fieldDef.name" class="form-control select-asset select-asset-$fieldDef.contentType" placeholder="Type to search" value="$!asset.uniqueId" data-asset-name="$!asset.name" />
+                <input type="text" name="$fieldDef.name" class="form-control select-asset select-asset-$fieldDef.contentType" data-asset-type="$fieldDef.contentType" placeholder="Type to search" value="$!asset.uniqueId" data-asset-name="$!asset.name" />
                 <a target="_blank" class="input-group-addon" href="/assets/$asset.uniqueId">
                     <span class="fa fa-eye"></span>
                 </a>
@@ -35,7 +35,7 @@
 
         #elseif ($fieldDef.contentType.startsWith("text"))
             <p class="input-group input-group-sm">
-                <input type="text" name="$fieldDef.name" class="form-control select-asset select-asset-$fieldDef.contentType" placeholder="Type to search" value="$!asset.uniqueId" data-asset-name="$!asset.name" />
+                <input type="text" name="$fieldDef.name" class="form-control select-asset select-asset-$fieldDef.contentType" data-asset-type="$fieldDef.contentType" placeholder="Type to search" value="$!asset.uniqueId" data-asset-name="$!asset.name" />
                 <a target="_blank" class="input-group-addon" href="/assets/$asset.uniqueId">
                     <span class="fa fa-eye"></span>
                 </a>
@@ -51,7 +51,7 @@
 
         #else
             <p class="input-group input-group-sm">
-                <input type="text" name="$fieldDef.name" class="form-control select-asset select-asset-$fieldDef.contentType" placeholder="Type to search" value="$!asset.uniqueId" data-asset-name="$!asset.name" />
+                <input type="text" name="$fieldDef.name" class="form-control select-asset select-asset-$fieldDef.contentType" data-asset-type="$fieldDef.contentType" placeholder="Type to search" value="$!asset.uniqueId" data-asset-name="$!asset.name" />
                 <a target="_blank" class="input-group-addon" href="/assets/$asset.uniqueId">
                     <span class="fa fa-eye"></span>
                 </a>
