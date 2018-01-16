@@ -1,46 +1,46 @@
 $(function () {
-    var mainAssetContainer = $("#main-asset");
+    var mainAssetContainer = $('#main-asset');
     
     // these need to be loaded for each asset, eg when modals are opened
     initAssetContainer(mainAssetContainer);
     
     // These only need to be initialised once
-    $(document.body).on("click", ".btn-edit-type", function (e) {
+    $(document.body).on('click', '.btn-edit-type', function (e) {
         e.preventDefault();
-        var link = $(e.target).closest("a");
-        var modal = $("#modal-edit-type");
-        modal.find("a.btn-info").attr("href", "/content-types/" + link.attr("href"));
-        modal.find("a.remove-type").attr("href", link.attr("href"));
-        modal.modal("show");
+        var link = $(e.target).closest('a');
+        var modal = $('#modal-edit-type');
+        modal.find('a.btn-info').attr('href', '/content-types/' + link.attr('href'));
+        modal.find('a.remove-type').attr('href', link.attr('href'));
+        modal.modal('show');
     });
     
-    flog("init: add type");
-    $(document.body).on("click", ".add-type", function (e) {
-        flog("click");
+    flog('init: add type');
+    $(document.body).on('click', '.add-type', function (e) {
+        flog('click');
         e.preventDefault();
         
-        var link = $(e.target).closest("a");
-        var contentTypeName = link.attr("href");
+        var link = $(e.target).closest('a');
+        var contentTypeName = link.attr('href');
         $.ajax({
             url: window.location.pathname,
             type: 'post',
             dataType: 'json',
             data: {
-                "assetType": contentTypeName
+                'assetType': contentTypeName
             },
             success: function (resp) {
-                Msg.info("Added");
-                $("#asset-types").reloadFragment();
+                Msg.info('Added');
+                $('#asset-types').reloadFragment();
             }
         });
     });
     
-    $(document.body).on("click", ".remove-type", function (e) {
+    $(document.body).on('click', '.remove-type', function (e) {
         e.preventDefault();
-        var link = $(e.target).closest("a");
-        var modal = $("#modal-edit-type");
-        var contentTypeName = link.attr("href");
-        modal.modal("hide");
+        var link = $(e.target).closest('a');
+        var modal = $('#modal-edit-type');
+        var contentTypeName = link.attr('href');
+        modal.modal('hide');
         
         $.ajax({
             url: window.location.pathname,
@@ -51,14 +51,14 @@ $(function () {
             },
             success: function (resp) {
                 if (resp.status) {
-                    Msg.info("Removed content type");
-                    $("#asset-types").reloadFragment();
+                    Msg.info('Removed content type');
+                    $('#asset-types').reloadFragment();
                 } else {
-                    Msg.error("Sorry, an error occured removing the content type");
+                    Msg.error('Sorry, an error occured removing the content type');
                 }
             },
             error: function () {
-                Msg.error("Sorry, an error occured removing the content type");
+                Msg.error('Sorry, an error occured removing the content type');
             }
         });
     });
@@ -71,9 +71,13 @@ $(function () {
  * called when an asset is loaded into a modal
  */
 function initAssetContainer(container) {
+    var isAddModal = container.is('#modal-add-relation');
+    var isModal = container.hasClass('modal');
+    flog('initAssetContainer', container, 'isAddModal=' + isAddModal);
+    
     initIframeContentEditor(container.find('.contenteditor'));
     
-    container.find(".form-edit").forms({
+    container.find('.form-edit').forms({
         onValid: function (form) {
             form.find('.contenteditor').each(function () {
                 var contentEditor = $(this);
@@ -84,11 +88,23 @@ function initAssetContainer(container) {
         onSuccess: function (resp) {
             if (resp.status) {
                 Msg.info(resp.messages[0]);
+                
+                if (isModal) {
+                    container.modal('hide');
+                }
+                
+                if (isAddModal) {
+                    var realInput = $('[name="' + container.attr('data-name') + '"]');
+                    var fakeInput = realInput.siblings('.twitter-typeahead').find('.tt-input');
+                    
+                    realInput.val(resp.data.assetUniqueName);
+                    fakeInput.val(resp.data.assetName);
+                }
             }
         }
     });
     
-    container.find(".form-asset-main").forms({
+    container.find('.form-asset-main').forms({
         onValid: function (form) {
             form.find('.contenteditor').each(function () {
                 var contentEditor = $(this);
@@ -99,15 +115,28 @@ function initAssetContainer(container) {
         onSuccess: function (resp) {
             if (resp.status) {
                 Msg.info(resp.messages[0]);
-                if (resp.nextHref) {
-                    window.location = resp.nextHref;
+                
+                if (isModal) {
+                    container.modal('hide');
+                }
+                
+                if (isAddModal) {
+                    var realInput = $('[name="' + container.attr('data-name') + '"]');
+                    var fakeInput = realInput.siblings('.twitter-typeahead').find('.tt-input');
+                    
+                    realInput.val(resp.data.assetUniqueName);
+                    fakeInput.val(resp.data.assetName);
+                } else {
+                    if (resp.nextHref) {
+                        window.location = resp.nextHref;
+                    }
                 }
             }
         }
     });
     
     
-    var formUpload = container.find(".frmUpload");
+    var formUpload = container.find('.frmUpload');
     var uploadProgress = formUpload.find('.progress');
     formUpload.forms({
         onValid: function () {
@@ -128,21 +157,41 @@ function initAssetContainer(container) {
 
 
 function initEditRelations() {
-    $(document.body).on("click", ".btn-edit-relation", function (e) {
+    $(document.body).on('click', '.btn-edit-relation', function (e) {
         e.preventDefault();
-        var link = $(e.target).closest("a");
-        var modal = $(link.data("target"));
-        var href = link.attr("href");
-        //modal.removeData('bs.modal');
-        modal.find(".modal-body").load(href + " .main-content-inner", function () {
+        
+        var link = $(this);
+        var inputGroup = link.closest('.input-group');
+        var realInput = inputGroup.find('.select-asset');
+        var modal = $(link.data('target'));
+        var href = link.attr('href');
+        
+        modal.find('.modal-body').load(href + ' .main-content-inner', function () {
             initAssetContainer(modal); // init js handlers
+            modal.attr('data-name', realInput.attr('name'));
+            modal.modal('show');
+        });
+    });
+    
+    $(document.body).on('click', '.btn-add-relation', function (e) {
+        e.preventDefault();
+        
+        var link = $(this);
+        var inputGroup = link.closest('.input-group');
+        var realInput = inputGroup.find('.select-asset');
+        var modal = $(link.data('target'));
+        var href = link.attr('href');
+        
+        modal.find('.modal-body').load(href + ' .main-content-inner', function () {
+            initAssetContainer(modal); // init js handlers
+            modal.attr('data-name', realInput.attr('name'));
             modal.modal('show');
         });
     });
 }
 
 function initForm(redirectOnCreated) {
-    $(".form-edit").forms({
+    $('.form-edit').forms({
         onValid: function (form) {
             form.find('.contenteditor').each(function () {
                 var contentEditor = $(this);
@@ -162,7 +211,7 @@ function initForm(redirectOnCreated) {
         }
     });
     
-    $(".form-asset-main").forms({
+    $('.form-asset-main').forms({
         onValid: function (form) {
             form.find('.contenteditor').each(function () {
                 var contentEditor = $(this);
@@ -213,7 +262,7 @@ function initRelationFields() {
             buttonText: '<i class="fa fa-upload"></i> Upload',
             acceptedFiles: acceptedFiles,
             oncomplete: function (data, name, href) {
-                flog("uploadcomplete", href);
+                flog('uploadcomplete', href);
                 
                 var uniqueId = data.result.href.replace('/assets/', '');
                 var realInput = inputGroup.find('.select-asset');
@@ -224,9 +273,9 @@ function initRelationFields() {
                 btnView.attr('href', data.result.href);
                 btnEdit.attr('href', '/asset-manager/' + uniqueId);
                 
-                flog("uploadcomplete2", data.name);
-                flog("real inp", realInput[0]);
-                flog("fake inp", fakeInput[0]);
+                flog('uploadcomplete2', data.name);
+                flog('real inp', realInput[0]);
+                flog('fake inp', fakeInput[0]);
             }
         });
         
@@ -240,6 +289,6 @@ function initRelationFields() {
     $('.btn-edit-text').each(function () {
         var btn = $(this);
         
-        // TODO: Continue when contentType="text" works
+        // TODO: Continue when contentType='text' works
     });
 }

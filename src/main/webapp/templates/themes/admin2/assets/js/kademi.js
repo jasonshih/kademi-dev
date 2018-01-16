@@ -1475,20 +1475,24 @@ function initImagePicker(target, basePath, pagePath) {
     };
     
     function initKeditor(target, allGroups) {
-        target.wrap('<div class="editor-wrapper"></div>');
-        
         var wrapper = target.parent();
-        var editorLoading = $(
-            '<div class="editor-loading">' +
-            '    <span>' +
-            '        <span class="loading-icon">' +
-            '            <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i>' +
-            '        </span>' +
-            '        <span class="loading-text">Initializing editor...</span>' +
-            '    </span>' +
-            '</div>'
-        );
-        wrapper.prepend(editorLoading);
+        var editorLoading = wrapper.find('.editor-loading');
+        
+        if (!wrapper.hasClass('editor-wrapper')) {
+            target.wrap('<div class="editor-wrapper"></div>');
+            wrapper = target.parent();
+            editorLoading = $(
+                '<div class="editor-loading">' +
+                '    <span>' +
+                '        <span class="loading-icon">' +
+                '            <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i>' +
+                '        </span>' +
+                '        <span class="loading-text">Initializing editor...</span>' +
+                '    </span>' +
+                '</div>'
+            );
+            wrapper.prepend(editorLoading);
+        }
         
         $.getScriptOnce('/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js', function () {
             var pageName = getFileName(window.location.href);
