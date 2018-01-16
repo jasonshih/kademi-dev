@@ -141,15 +141,6 @@ function initForm(redirectOnCreated) {
 }
 
 function initRelationFields() {
-    $(document.body).on('click', '.relation-field-switcher', function (e) {
-        var radio = $(this);
-        var inputGroup = radio.closest('.input-group');
-        var wrapper = inputGroup.closest('.relation-field-wrapper');
-
-        wrapper.find('input, button').not(':radio').prop('disabled', true);
-        inputGroup.find('input, button').not(':radio').prop('disabled', false);
-    });
-
     $('.btn-upload-file').each(function () {
         var btn = $(this);
         var mupload = $('<div style="display: none;"></div>');

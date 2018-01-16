@@ -5,6 +5,7 @@
         #set( $asset = $services.assetManager.find($relation.objectId) )
         #renderFieldInput($asset $fieldDef)
     #end
+    #renderFieldInput(false $fieldDef)
 #else
     #set( $relation = false )
     #if(!$relations.isEmpty() )
@@ -16,7 +17,7 @@
 
 #macro (renderFieldInput $asset $fieldDef)
     <div class="relation-field-wrapper">
-        #if ($fieldDef.contentType == "image")
+        #if ($fieldDef.contentType == "image" || $fieldDef.contentType == "video" || $fieldDef.contentType == "binary")
             <p class="input-group input-group-sm">
                 <input type="text" name="$fieldDef.name" class="form-control select-asset select-asset-$fieldDef.contentType" placeholder="Type to search" value="$!asset.uniqueId" data-asset-name="$!asset.name" />
                 <a target="_blank" class="input-group-addon" href="/assets/$asset.uniqueId">
@@ -32,41 +33,36 @@
                 </span>
             </p>
 
-        #elseif ($fieldDef.contentType == "video")
+        #elseif ($fieldDef.contentType.startsWith("text"))
             <p class="input-group input-group-sm">
-                <label class="input-group-addon"><input type="radio" name="${fieldDef.name}-switcher" class="relation-field-switcher" checked="checked" /></label>
                 <input type="text" name="$fieldDef.name" class="form-control select-asset select-asset-$fieldDef.contentType" placeholder="Type to search" value="$!asset.uniqueId" data-asset-name="$!asset.name" />
+                <a target="_blank" class="input-group-addon" href="/assets/$asset.uniqueId">
+                    <span class="fa fa-eye"></span>
+                </a>
+                <a class="input-group-addon btn-edit-relation" href="/asset-manager/$asset.uniqueId" data-target="#modal-edit-relation">
+                    <span class="fa fa-pencil"></span>
+                </a>
+                <span class="input-group-btn">
+                    <a class="btn btn-success" href="/asset-manager/new-text?format=text/plain" data-target="#modal-edit-relation">
+                        <span class="fa fa-plus"></span>
+                    </a>
+                </span>
             </p>
-            <div class="input-group input-group-sm">
-                <label class="input-group-addon"><input type="radio" name="${fieldDef.name}-switcher" class="relation-field-switcher" /></label>
-                <input type="hidden" name="$fieldDef.name" value="" disabled="disabled" class="relation-field-input" />
-                <input type="text" class="form-control relation-field-placeholder" readonly="readonly" value="" disabled="disabled" placeholder="Upload new video file" />
-                <span class="input-group-btn"><button type="button" disabled="disabled" class="btn btn-success btn-upload-video btn-upload-file">Upload</button></span>
-            </div>
-        #elseif ($fieldDef.contentType == "binary")
-            <p class="input-group input-group-sm">
-                <label class="input-group-addon"><input type="radio" name="${fieldDef.name}-switcher" class="relation-field-switcher" checked="checked" /></label>
-                <input type="text" name="$fieldDef.name" class="form-control select-asset select-asset-$fieldDef.contentType" placeholder="Type to search" value="$!asset.uniqueId" data-asset-name="$!asset.name" />
-            </p>
-            <div class="input-group input-group-sm">
-                <label class="input-group-addon"><input type="radio" name="${fieldDef.name}-switcher" class="relation-field-switcher" /></label>
-                <input type="hidden" name="$fieldDef.name" value="" disabled="disabled" class="relation-field-input" />
-                <input type="text" class="form-control relation-field-placeholder" readonly="readonly" value="" disabled="disabled" placeholder="Upload new binary file" />
-                <span class="input-group-btn"><button type="button" disabled="disabled" class="btn btn-success btn-upload-binary btn-upload-file">Upload</button></span>
-            </div>
-        #elseif ($fieldDef.contentType == "text")
-            <p class="input-group input-group-sm">
-                <label class="input-group-addon"><input type="radio" name="${fieldDef.name}-switcher" class="relation-field-switcher" checked="checked" /></label>
-                <input type="text" name="$fieldDef.name" class="form-control select-asset select-asset-$fieldDef.contentType" placeholder="Type to search" value="$!asset.uniqueId" data-asset-name="$!asset.name" />
-            </p>
-            <div class="input-group input-group-sm">
-                <label class="input-group-addon"><input type="radio" name="${fieldDef.name}-switcher" class="relation-field-switcher" /></label>
-                <button type="button" disabled="disabled" class="btn btn-block btn-success btn-edit-text">Edit text</button>
-            </div>
+
         #else
             <p class="input-group input-group-sm">
-                <label class="input-group-addon"><input type="radio" name="${fieldDef.name}-switcher" class="relation-field-switcher" checked="checked" /></label>
                 <input type="text" name="$fieldDef.name" class="form-control select-asset select-asset-$fieldDef.contentType" placeholder="Type to search" value="$!asset.uniqueId" data-asset-name="$!asset.name" />
+                <a target="_blank" class="input-group-addon" href="/assets/$asset.uniqueId">
+                    <span class="fa fa-eye"></span>
+                </a>
+                <a class="input-group-addon btn-edit-relation" href="/asset-manager/$asset.uniqueId" data-target="#modal-edit-relation">
+                    <span class="fa fa-pencil"></span>
+                </a>
+                <span class="input-group-btn">
+                    <a class="btn btn-success btn-edit-relation" href="/asset-manager/new?type=$fieldDef.contentType" data-target="#modal-edit-relation">
+                        <span class="fa fa-plus"></span>
+                    </a>
+                </span>
             </p>
         #end
     </div>
