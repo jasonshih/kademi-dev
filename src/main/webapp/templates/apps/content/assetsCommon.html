@@ -39,32 +39,34 @@
         #end
 
         #macro (assetMainForm)
-        <form action="$page.href" method="POST" class="form-asset-main form form-horizontal">
-
-            <button type="submit" class="btn btn-success">Save</button>
-
-            <div class="row">
-                <div class="col-sm-7">
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="name">Name</label>
-
-                        <div class="col-md-8">
-                            <input type="text" name="name" id="name" value="$!page.asset.name" placeholder="" class="required form-control" required="true" />
+            <div id="main-asset">
+                <form action="$page.href" method="POST" class="form-asset-main form form-horizontal">
+        
+                    <button type="submit" class="btn btn-success">Save</button>
+        
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="name">Name</label>
+        
+                                <div class="col-md-8">
+                                    <input type="text" name="name" id="name" value="$!page.asset.name" placeholder="" class="required form-control" required="true" />
+                                </div>
+                            </div>
+        
+                            $!bodyContent
+                        </div>
+                        <div class="col-sm-5">
+                            <div id="asset-info">
+                                #assetInfo()
+        
+                                <h3>Notes</h3>
+                                <textarea class="form-control" name="notes" style="height: 200px">$!page.asset.notes</textarea>
+                            </div>
                         </div>
                     </div>
-
-                    $!bodyContent
-                </div>
-                <div class="col-sm-5">
-                    <div id="asset-info">
-                        #assetInfo()
-
-                        <h3>Notes</h3>
-                        <textarea class="form-control" name="notes" style="height: 200px">$!page.asset.notes</textarea>
-                    </div>
-                </div>
+                </form>
             </div>
-        </form>
         #end
 
         #macro (assetInfo)

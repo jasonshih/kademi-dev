@@ -5,7 +5,7 @@ $(function () {
     initAssetContainer(mainAssetContainer);
     
     // These only need to be initialised once
-    $("body").on("click", ".btn-edit-type", function (e) {
+    $(document.body).on("click", ".btn-edit-type", function (e) {
         e.preventDefault();
         var link = $(e.target).closest("a");
         var modal = $("#modal-edit-type");
@@ -15,7 +15,7 @@ $(function () {
     });
     
     flog("init: add type");
-    $("body").on("click", ".add-type", function (e) {
+    $(document.body).on("click", ".add-type", function (e) {
         flog("click");
         e.preventDefault();
         
@@ -35,7 +35,7 @@ $(function () {
         });
     });
     
-    $("body").on("click", ".remove-type", function (e) {
+    $(document.body).on("click", ".remove-type", function (e) {
         e.preventDefault();
         var link = $(e.target).closest("a");
         var modal = $("#modal-edit-type");
@@ -71,6 +71,8 @@ $(function () {
  * called when an asset is loaded into a modal
  */
 function initAssetContainer(container) {
+    initIframeContentEditor(container.find('.contenteditor'));
+    
     container.find(".form-edit").forms({
         onValid: function (form) {
             form.find('.contenteditor').each(function () {
@@ -126,7 +128,7 @@ function initAssetContainer(container) {
 
 
 function initEditRelations() {
-    $("body").on("click", ".btn-edit-relation", function (e) {
+    $(document.body).on("click", ".btn-edit-relation", function (e) {
         e.preventDefault();
         var link = $(e.target).closest("a");
         var modal = $(link.data("target"));

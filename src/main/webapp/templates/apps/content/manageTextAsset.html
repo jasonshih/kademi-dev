@@ -8,7 +8,7 @@
         #parse("/theme/apps/content/assetsCommon.html")
 
         #assetHeader()
-
+        
         #@assetMainForm()
             #set( $format = $page.asset.format )
             #set( $format = $request.params.format )
@@ -25,13 +25,6 @@
         #end
 
         #assetCommonScripts()
-        
-        <script type="text/javascript">
-            $(function () {
-                initForm();
-                initIframeContentEditor($('.contenteditor'));
-            });
-        </script>
 
     </body>
 </html>
