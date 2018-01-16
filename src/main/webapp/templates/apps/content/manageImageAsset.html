@@ -1,15 +1,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Content Item</title>
-    
+
     </head>
     <body class="manageEmail">
-        
+
         #parse("/theme/apps/content/assetsCommon.html")
-        
+
         #assetHeader()
-        
-        <div class="row">
+
+        <div class="row" id="main-asset">
             <div class="col-sm-4" id="asset-previewer">
                 <div class="thumbnail">
                     <img class="img img-responsive" src="/assets/$page.asset.uniqueId" />
@@ -22,8 +22,8 @@
                 </div>
             </div>
         </div>
-        
+
         #assetCommonScripts()
-    
+
     </body>
 </html>

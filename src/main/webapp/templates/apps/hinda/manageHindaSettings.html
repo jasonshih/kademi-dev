@@ -103,6 +103,36 @@
                     </div>
                 </div>
 
+                <hr/>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="hindaPorcentage">Percentage %</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="hindaPorcentage" value="$!page.porcentage" />
+                        <i>For each product imported it'd calculate it's percentage value of the everyday retail compared with the base cost.</i>
+                    </div>
+                </div>  
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="hindaCategory">Category</label>
+                    <div class="col-sm-9">
+                        <select name="hindaCategory" class="form-control">
+                            #genCategories($page.categoryBeans)
+                        </select>
+                        <i>For any product exceeding the configured percentage it will add the product to the configured category.</i>
+                    </div>
+                </div>  
+
+                #macro(genCategories $categories)
+                #foreach($cat in $categories)
+                #set( $size = $cat.childCategories.size())
+                $formatter.option($cat.name, "$formatter.padWith('-', '', $cat.level) $cat.title", $page.category)
+                #if( $size > 0 )
+                #genCategories($cat.childCategories)
+                #end
+                #end
+                #end
+
+
                 <p class="pull-right">
                     <button class="btn btn-success" type="submit"><i class="fa fa-save"></i> Save</button>
                 </p>

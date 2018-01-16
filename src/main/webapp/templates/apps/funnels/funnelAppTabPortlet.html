@@ -276,7 +276,7 @@
                                         #if($entry.value.name == $request.params.leadName)
                                         #set ($sl = "selected")
                                         #end
-                                        <option $!sl value="$entry.key">$entry.value.title</option>
+                                        <option $!sl value="$entry.key">$formatter.firstNotNull($entry.value.title, $entry.value.name)</option>
                                         #end
                                     </select>
                                 </div>
