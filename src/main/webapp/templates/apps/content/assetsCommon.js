@@ -96,6 +96,12 @@ function initAssetContainer(container) {
                 if (isAddModal) {
                     var realInput = $('[name="' + container.attr('data-name') + '"]');
                     var fakeInput = realInput.siblings('.twitter-typeahead').find('.tt-input');
+                    var inputGroup = realInput.closest('.input-group');
+                    var btnView = inputGroup.find('.btn-view-relation');
+                    var btnEdit = inputGroup.find('.btn-edit-relation');
+                    
+                    btnView.attr('href', '/assets/' + resp.data.assetUniqueName);
+                    btnEdit.attr('href', '/asset-manager/' + resp.data.assetUniqueName);
                     
                     realInput.val(resp.data.assetUniqueName);
                     fakeInput.val(resp.data.assetName);
@@ -123,6 +129,12 @@ function initAssetContainer(container) {
                 if (isAddModal) {
                     var realInput = $('[name="' + container.attr('data-name') + '"]');
                     var fakeInput = realInput.siblings('.twitter-typeahead').find('.tt-input');
+                    var inputGroup = realInput.closest('.input-group');
+                    var btnView = inputGroup.find('.btn-view-relation');
+                    var btnEdit = inputGroup.find('.btn-edit-relation');
+                    
+                    btnView.attr('href', '/assets/' + resp.data.assetUniqueName);
+                    btnEdit.attr('href', '/asset-manager/' + resp.data.assetUniqueName);
                     
                     realInput.val(resp.data.assetUniqueName);
                     fakeInput.val(resp.data.assetName);
