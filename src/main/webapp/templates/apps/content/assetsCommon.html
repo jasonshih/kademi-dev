@@ -147,6 +147,13 @@
         <script type="text/javascript">
             $(function () {
                 $(".form-edit").forms({
+                    onValid: function (form) {
+                          form.find('.contenteditor').each(function () {
+                              var contentEditor = $(this);
+                              
+                              contentEditor.val(contentEditor.contentEditor('getContent') || '');
+                          });
+                    },
                     onSuccess: function (resp) {
                         if (resp.status) {
                             Msg.info(resp.messages[0]);
@@ -155,6 +162,13 @@
                 });
 
                 $(".form-asset-main").forms({
+                    onValid: function (form) {
+                          form.find('.contenteditor').each(function () {
+                              var contentEditor = $(this);
+                              
+                              contentEditor.val(contentEditor.contentEditor('getContent') || '');
+                          });
+                    },
                     onSuccess: function (resp) {
                         if (resp.status) {
                             Msg.info(resp.messages[0]);
