@@ -1452,7 +1452,62 @@ function initImagePicker(target, basePath, pagePath) {
 // KEditor iframe mode
 // ========================================================================
 (function ($, window) {
-    var iframeUrl;
+    var allGroups = null;
+    
+    window.initIframeContentEditor = function (target) {
+        if (allGroups === null) {
+            $.ajax({
+                url: '/groups/_DAV/PROPFIND?fields=name,milton:groupTitle',
+                dataType: 'json',
+                type: 'get',
+                success: function (resp) {
+                    allGroups = {};
+                    $.each(resp, function (i, group) {
+                        allGroups[group.name] = group.groupTitle || group.name;
+                    });
+                }, complete: function () {
+                    initKeditor(target, allGroups);
+                }
+            });
+        } else {
+            initKeditor(target, allGroups);
+        }
+    };
+    
+    function initKeditor(target, allGroups) {
+        target.wrap('<div class="editor-wrapper"></div>');
+        
+        var wrapper = target.parent();
+        var editorLoading = $(
+            '<div class="editor-loading">' +
+            '    <span>' +
+            '        <span class="loading-icon">' +
+            '            <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i>' +
+            '        </span>' +
+            '        <span class="loading-text">Initializing editor...</span>' +
+            '    </span>' +
+            '</div>'
+        );
+        wrapper.prepend(editorLoading);
+        
+        $.getScriptOnce('/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js', function () {
+            var pageName = getFileName(window.location.href);
+            var pagePath = target.attr('data-page-path') || '';
+            var basePath = target.attr('data-base-path') || '';
+            
+            target.contentEditor({
+                iframeMode: true,
+                snippetsUrl: './_components?fileName=' + pageName,
+                snippetsHandlersUrl: './_components?handlers&fileName=' + pageName,
+                basePath: basePath,
+                pagePath: pagePath,
+                allGroups: allGroups,
+                onReady: function () {
+                    editorLoading.hide();
+                }
+            });
+        });
+    }
     
 })(jQuery, window);
 

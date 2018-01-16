@@ -14,6 +14,8 @@
                 display: block;
             }
         </style>
+        <script type="text/javascript" src="/static/chosen/1.1.0/chosen.jquery.js">//</script>
+        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-chosen/1.0.1/bootstrap-chosen.css" />
         <link href="https://gitcdn.github.io/bootstrap-toggle/2.1.0/css/bootstrap-toggle.min.css" rel="stylesheet" />
         <script src="https://gitcdn.github.io/bootstrap-toggle/2.1.0/js/bootstrap-toggle.min.js">//</script>
     </head>
@@ -40,9 +42,9 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="search-group" class="col-sm-2 control-label">Category</label>
-                                <div class="col-sm-10">
-                                    <select name="categoryName" class="category form-control input-sm">
+                                <label for="search-group" class="col-sm-3 control-label">Categories:</label>
+                                <div class="col-sm-9">
+                                    <select name="categoryName" class="category form-control input-sm chosen-select">
                                         <option value="">[Any category]</option>
                                         #genCategories($page.categoryBeans)
                                     </select>
@@ -51,23 +53,25 @@
                         </div>
 
                         #macro(genCategories $categories)
-                            #foreach($cat in $categories)
-                                #set( $size = $cat.childCategories.size())
-                                $formatter.option($cat.name, "$formatter.padWith('-', '', $cat.level) $cat.title", $request.params.categoryName)
-                                #if( $size > 0 )
-                                    #genCategories($cat.childCategories)
-                                #end
-                            #end
+                        #foreach($cat in $categories)
+                        #set( $size = $cat.childCategories.size())
+                        $formatter.option($cat.name, "$formatter.padWith('-', '', $cat.level) $cat.title", $request.params.categoryName)
+                        #if( $size > 0 )
+                        #genCategories($cat.childCategories)
                         #end
-
+                        #end
+                        #end
+                        
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="search-group" class="col-sm-2 control-label">Library:</label>
                                 <div class="col-sm-10">
-                                    <select name="searchOrg" id="search-library" class="form-control input-sm">
+                                    <select name="searchOrg" id="search-library" class="form-control input-sm chosen-select">
                                         <option value="">My library</option>
                                         #foreach($org in $page.parentOrgsWithProducts)
+                                        #if($org.id != $rootFolder.organisation.id)
                                         $formatter.option($org.id, $org.title, $request.params.l)
+                                        #end
                                         #end
                                     </select>
                                 </div>
@@ -183,153 +187,6 @@
             </div>
         </div>
 
-        <script type="text/javascript">
-            $(function () {
-                initSearchProduct();
-                initAddProducts();
-                initSortable();
-            });
-
-            function initAddProducts() {
-                flog("add prods", $('#addProducts'));
-                $('#addSelected').click(function (e) {
-                    e.preventDefault();
-                    Msg.info('Adding selected', 'manageAddProducts');
-                    var checks = $("#products-list").find('input:checked');
-                    var ids = [];
-                    checks.each(function (count, item) {
-                        ids.push($(item).data('pid'));
-                    });
-
-                    updateProductSelected(ids.join(','));
-                });
-
-                $(".addAllMatched").click(function (e) {
-                    e.preventDefault();
-                    Kalert.confirm('This will add all products matching the current criteria to the reward store. Do you want to proceed?', 'Yes', function () {
-                        $.ajax({
-                            url: window.location,
-                            type: 'POST',
-                            dataType: 'JSON',
-                            data: {
-                                addAllMatched: true
-                            },
-                            success: function (data, textStatus, jqXHR) {
-                                window.location.reload();
-                            },
-                            error: function () {
-                                Msg.error('Oh No! Something went wrong!', 'manageAddProducts');
-                            }
-                        });
-                    });
-
-                });
-            }
-
-            function initSearchProduct() {
-                $("#product-query").keyup(function () {
-                    typewatch(function () {
-                        flog("do search");
-                        doProductSearch();
-                    }, 500);
-                });
-                $('body').on('change', '.category, #search-library', function (e) {
-                    doProductSearch();
-                });
-            }
-
-            function doProductSearch() {
-                flog("doProductSearch");
-                var query = $("#product-query").val();
-                var orgId = $("#search-library").val();
-                var categoryName = $(".category").val();
-                flog("doSearch", query, orgId);
-                var newUrl = window.location.pathname + "?addProducts&q=" + query + "&l=" + orgId + "&categoryName=" + categoryName;
-
-                var sortfield = getSearchValue(window.location.search, 'sortfield');
-                var sortdir = getSearchValue(window.location.search, 'sortdir');
-
-                if (sortfield && sortdir) {
-                    newUrl += "&sortfield=" + sortfield + "&sortdir=" + sortdir;
-                }
-
-                window.history.replaceState("", "", newUrl);
-                $.ajax({
-                    type: 'GET',
-                    url: newUrl,
-                    success: function (data) {
-                        flog("success", data);
-                        var fragment = $(data).find("#searchResults");
-                        $("#searchResults").replaceWith(fragment);
-                    },
-                    error: function (resp) {
-                        Msg.error("An error occured doing the search. Please check your internet connection and try again", 'manageAddProducts');
-                    }
-                });
-            }
-
-
-            function updateProductSelected(productIds) {
-                var data = {};
-                data['addProductIds'] = productIds;
-
-                $.ajax({
-                    type: "POST",
-                    url: window.location.pathname,
-                    datatype: "json",
-                    data: data,
-                    success: function (response) {
-                        flog("response", response, response.status);
-                        if (response.status) {
-                            Msg.info(response.messages[0], 'manageAddProducts');
-                            window.location.reload();
-                        } else {
-                            Msg.error("There was an error changing the product status", 'manageAddProducts');
-                        }
-                    },
-                    error: function (event, XMLHttpRequest, ajaxOptions, thrownError) {
-                        flog('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
-                        Msg.error("There was an error changing the product inclusion status", 'manageAddProducts');
-                    }
-                });
-            }
-
-            function initSortable() {
-                $('body').on('click', '.sort-field', function (e) {
-                    e.preventDefault();
-                    var a = $(e.target);
-                    var uri = URI(window.location);
-                    var field = a.attr('id');
-
-                    var dir = 'asc';
-                    if (field == getSearchValue(window.location.search, 'sortfield')
-                            && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
-                        dir = 'desc';
-                    }
-                    uri.setSearch('sortfield', field);
-                    uri.setSearch('sortdir', dir);
-
-                    window.history.pushState('', '', uri.toString());
-
-                    doProductSearch();
-                });
-            }
-
-            function getSearchValue(search, key) {
-                if (search.charAt(0) == '?') {
-                    search = search.substr(1);
-                }
-                parts = search.split('&');
-                if (parts) {
-                    for (var i = 0; i < parts.length; i++) {
-                        entry = parts[i].split('=');
-                        if (entry && key == entry[0]) {
-                            return entry[1];
-                        }
-                    }
-                }
-                return '';
-            }
-        </script>
+        <script src="/theme/apps/rewardstore/manageAddProducts.js?v=0001" type="text/javascript">//</script>
     </body>
 </html>
