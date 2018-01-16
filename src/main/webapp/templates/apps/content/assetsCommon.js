@@ -80,13 +80,6 @@ function initAssetContainer(container) {
     });
     
     container.find(".form-asset-main").forms({
-        onValid: function (form) {
-            form.find('.contenteditor').each(function () {
-                var contentEditor = $(this);
-                
-                contentEditor.val(contentEditor.contentEditor('getContent') || '');
-            });
-        },
         onSuccess: function (resp) {
             if (resp.status) {
                 Msg.info(resp.messages[0]);
@@ -148,6 +141,24 @@ function initForm(redirectOnCreated) {
                     if (resp.nextHref) {
                         window.location = resp.nextHref;
                     }
+                }
+            }
+        }
+    });
+    
+    $(".form-asset-main").forms({
+        onValid: function (form) {
+            form.find('.contenteditor').each(function () {
+                var contentEditor = $(this);
+                
+                contentEditor.val(contentEditor.contentEditor('getContent') || '');
+            });
+        },
+        onSuccess: function (resp) {
+            if (resp.status) {
+                Msg.info(resp.messages[0]);
+                if (resp.nextHref) {
+                    window.location = resp.nextHref;
                 }
             }
         }
