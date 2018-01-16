@@ -22,7 +22,7 @@
                     #end
                 </ul>
             </div>
-            <div id="user-membership" class="blocks-wrapper memberships-list membershipsDiv">
+            <div id="asset-types" class="blocks-wrapper memberships-list membershipsDiv">
                 #foreach( $type in $page.asset.assetTypes )
                 <div class="label label-info" style="margin: 5px">
                     $type
@@ -69,57 +69,57 @@
 
         #macro (assetInfo)
 
-            #if( $page.asset )
-            <table class="table table-striped">
-                <tr>
-                    <th>Created</th>
-                    <td>$!page.asset.createdDate</td>
-                </tr>
-                <tr>
-                    <th>Modified</th>
-                    <td>$!page.asset.modifiedDate</td>
-                </tr>
-                <tr>
-                    <th>Format</th>
-                    <td>$!page.asset.format</td>
-                </tr>
-                <tr>
-                    <th>UniqueId</th>
-                    <td>$!page.asset.uniqueId</td>
-                </tr>
+        #if( $page.asset )
+        <table class="table table-striped">
+            <tr>
+                <th>Created</th>
+                <td>$!page.asset.createdDate</td>
+            </tr>
+            <tr>
+                <th>Modified</th>
+                <td>$!page.asset.modifiedDate</td>
+            </tr>
+            <tr>
+                <th>Format</th>
+                <td>$!page.asset.format</td>
+            </tr>
+            <tr>
+                <th>UniqueId</th>
+                <td>$!page.asset.uniqueId</td>
+            </tr>
 
-                <tr>
-                    <th>Views</th>
-                    <td>
-                        #foreach($view in $page.viewHrefs.entrySet() )
-                        <a href="/assets/$view.key" class="btn btn-info">$view.value</a>
-                        #end
+            <tr>
+                <th>Views</th>
+                <td>
+                    #foreach($view in $page.viewHrefs.entrySet() )
+                    <a href="/assets/$view.key" class="btn btn-info">$view.value</a>
+                    #end
 
-                    </td>
-                </tr>
-            </table>
-            <hr/>
-            #end
+                </td>
+            </tr>
+        </table>
+        <hr/>
+        #end
         #end
 
         #macro( replaceBinaryAsset )
-            <form id="frmUpload" action="$page.href" method="post" enctype="multipart/form-data" class="form-horizontal">
-                <legend>Change file</legend>
-                <div class="progress" style="display: none;">
-                    <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: 100%">Uploading...</div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <input id="txtFileUpload" type="file" name="NewFile" class="form-control" />
-                            <span class="input-group-btn">
-                                <button type="submit" value="Upload" class="btn btn-success">Upload</button>
-                            </span>
-                        </div>
+        <form action="$page.href" method="post" enctype="multipart/form-data" class="form-horizontal frmUpload">
+            <legend>Change file</legend>
+            <div class="progress" style="display: none;">
+                <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: 100%">Uploading...</div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <input id="txtFileUpload" type="file" name="NewFile" class="form-control" />
+                        <span class="input-group-btn">
+                            <button type="submit" value="Upload" class="btn btn-success">Upload</button>
+                        </span>
                     </div>
                 </div>
-            </form>
-            <br />
+            </div>
+        </form>
+        <br />
         #end
 
         #macro( assetCommonScripts )
@@ -144,114 +144,21 @@
             </div>
         </div>
 
-        <script type="text/javascript">
-            $(function () {
-                $(".form-edit").forms({
-                    onValid: function (form) {
-                          form.find('.contenteditor').each(function () {
-                              var contentEditor = $(this);
-                              
-                              contentEditor.val(contentEditor.contentEditor('getContent') || '');
-                          });
-                    },
-                    onSuccess: function (resp) {
-                        if (resp.status) {
-                            Msg.info(resp.messages[0]);
-                        }
-                    }
-                });
+        <div id="modal-edit-relation" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Content type</h4>
+                    </div>
+                    <div class="modal-body">
 
-                $(".form-asset-main").forms({
-                    onValid: function (form) {
-                          form.find('.contenteditor').each(function () {
-                              var contentEditor = $(this);
-                              
-                              contentEditor.val(contentEditor.contentEditor('getContent') || '');
-                          });
-                    },
-                    onSuccess: function (resp) {
-                        if (resp.status) {
-                            Msg.info(resp.messages[0]);
-                            if( resp.nextHref ) {
-                                window.location = resp.nextHref;
-                            }
-                        }
-                    }
-                });
+                    </div>
+                </div>
+            </div>
+        </div>
 
-
-                var formUpload = $("#frmUpload");
-                var uploadProgress = formUpload.find('.progress');
-                formUpload.forms({
-                    onValid: function () {
-                        uploadProgress.show();
-                    },
-                    onSuccess: function (resp) {
-                        if (resp && resp.status) {
-                            $('#asset-previewer, #asset-info').reloadFragment({
-                                whenComplete: function () {
-                                    uploadProgress.hide();
-                                    Msg.info(resp.messages[0]);
-                                }
-                            });
-                        }
-                    }
-                });
-
-                flog("init: add type");
-                $(".add-type").click(function (e) {
-                    flog("click");
-                    e.preventDefault();
-                    $.ajax({
-                        url: window.location.pathname,
-                        type: 'post',
-                        dataType: 'json',
-                        data: {
-                            "assetType": $(e.target).closest("a").attr("href")
-                        },
-                        success: function (resp) {
-                            Msg.info("Done");
-                        }
-                    });
-                });
-
-                $("body").on("click", ".btn-edit-type", function (e) {
-                    e.preventDefault();
-                    var link = $(e.target).closest("a");
-                    var modal = $("#modal-edit-type");
-                    modal.find("a.btn-info").attr("href", "/content-types/" + link.attr("href"));
-                    modal.find("a.remove-type").attr("href", link.attr("href"));
-                    modal.modal("show");
-                });
-
-                $("body").on("click", ".remove-type", function (e) {
-                    e.preventDefault();
-                    var link = $(e.target).closest("a");
-                    var modal = $("#modal-edit-type");
-                    var contentTypeName = link.attr("href");
-                    modal.modal("hide");
-
-                    $.ajax({
-                        url: window.location.pathname,
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {
-                            removeAssetType: contentTypeName
-                        },
-                        success: function (resp) {
-                            if (resp.status) {
-                                Msg.info("Removed content type");
-                            } else {
-                                Msg.error("Sorry, an error occured removing the content type");
-                            }
-                        },
-                        error: function () {
-                            Msg.error("Sorry, an error occured removing the content type");
-                        }
-                    });
-                });
-            });
-        </script>
+        <script type="text/javascript" src="/theme/apps/content/assetsCommon.js"></script>
         #end
     </body>
 </html>

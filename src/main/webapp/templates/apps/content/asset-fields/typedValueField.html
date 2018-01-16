@@ -1,0 +1,13 @@
+#if( $fieldDef.options.length() > 0 )
+<select name="$fieldDef.name" class="form-control">
+
+</select>
+#else
+
+#set( $displayVal = $renderer.formatValueForInput($fieldValue, $fieldDef) )
+<input name="$fieldDef.name" class="form-control" type="$fieldDef.type" placeholder="$!fieldDef.text" value="$!displayVal"
+    #if( $fieldDef.required)
+    required="true"
+    #end
+       />
+#end

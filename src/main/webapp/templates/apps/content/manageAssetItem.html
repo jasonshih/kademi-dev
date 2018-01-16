@@ -10,6 +10,7 @@
         #assetHeader()
 
         <form action="$page.href" method="POST" class="form-horizontal form-edit" role="form">
+
             <p class="text-right">
                 <button type="submit" class="btn btn-lg btn-success">Save</button>
             </p>
@@ -18,10 +19,11 @@
                 <label class="control-label col-md-3" for="name">Name</label>
 
                 <div class="col-md-8">
-                    <input type="text" name="name" id="name" value="$page.asset.name" placeholder="" class="required form-control" required="true" />
+                    <input type="text" name="name" id="name" value="$!page.asset.name" placeholder="" class="required form-control" required="true" />
                 </div>
             </div>
 
+            #if( $page.asset )
             <div class="form-group">
                 <label class="control-label col-md-3" for="name">Created</label>
 
@@ -29,38 +31,49 @@
                     <p class="form-control-static">$page.asset.createdDate</p>
                 </div>
             </div>
+            #else
+            <input name="type" type="hidden" value="$request.params.type" />
+            #end
 
+            #set( $hasCalcFields = false )
             #foreach($field in $page.allFields )
                 #if( $field.editable )
                     <div class="form-group">
-                        <label class="control-label col-md-3" for="$field.name">$field.name</label>
+                        <label class="control-label col-md-3" for="$field.name">$field.title</label>
 
                         <div class="col-md-8">
                             $page.renderFieldInput($field)
                         </div>
                     </div>
+                #else
+                #set( $hasCalcFields = true )
                 #end
             #end
 
+            #if( $page.asset && $hasCalcFields )
             <hr/>
             <h3>Calculated fields</h3>
-                #foreach($field in $page.allFields )
-                #if( !$field.editable )
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="$field.name">$field.name</label>
+            #foreach($field in $page.allFields )
+            #if( !$field.editable )
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="$field.name">$field.name</label>
 
-                        <div class="col-md-8">
-                            $page.renderFieldInput($field)
-                        </div>
+                    <div class="col-md-8">
+                        $page.renderFieldInput($field)
                     </div>
-                #end
-                #end
+                </div>
+            #end
+            #end
+            #end
 
         </form>
 
+        #if( $page.asset )
         <hr/>
         <h2>Asset information</h2>
         #assetInfo()
+        #end
+
         #assetCommonScripts()
 
         <script type="text/javascript" src="/static/milton-upload/1.0.1/jquery.milton-upload.js"></script>
