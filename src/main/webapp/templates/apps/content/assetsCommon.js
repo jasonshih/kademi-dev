@@ -72,6 +72,13 @@ $(function () {
  */
 function initAssetContainer(container) {
     container.find(".form-edit").forms({
+        onValid: function (form) {
+            form.find('.contenteditor').each(function () {
+                var contentEditor = $(this);
+                
+                contentEditor.val(contentEditor.contentEditor('getContent') || '');
+            });
+        },
         onSuccess: function (resp) {
             if (resp.status) {
                 Msg.info(resp.messages[0]);
@@ -80,6 +87,13 @@ function initAssetContainer(container) {
     });
     
     container.find(".form-asset-main").forms({
+        onValid: function (form) {
+            form.find('.contenteditor').each(function () {
+                var contentEditor = $(this);
+                
+                contentEditor.val(contentEditor.contentEditor('getContent') || '');
+            });
+        },
         onSuccess: function (resp) {
             if (resp.status) {
                 Msg.info(resp.messages[0]);
@@ -166,11 +180,23 @@ function initForm(redirectOnCreated) {
 }
 
 function initRelationFields() {
+    $('.select-asset').on('change', function () {
+        var input = $(this);
+        var inputGroup = input.closest('.input-group');
+        var btnView = inputGroup.find('.btn-view-relation');
+        var btnEdit = inputGroup.find('.btn-edit-relation');
+        
+        btnView.attr('href', '/assets/' + this.value);
+        btnEdit.attr('href', '/asset-manager/' + this.value);
+    });
+    
     $('.btn-upload-file').each(function () {
         var btn = $(this);
         var mupload = $('<div style="display: none;"></div>');
         var inputGroup = btn.closest('.input-group');
-        var acceptedFiles = '*/*';
+        var btnView = inputGroup.find('.btn-view-relation');
+        var btnEdit = inputGroup.find('.btn-edit-relation');
+        var acceptedFiles = '';
         
         if (btn.hasClass('btn-upload-image')) {
             acceptedFiles = 'image/*';
@@ -186,11 +212,16 @@ function initRelationFields() {
             acceptedFiles: acceptedFiles,
             oncomplete: function (data, name, href) {
                 flog("uploadcomplete", href);
+                
+                var uniqueId = data.result.href.replace('/assets/', '');
                 var realInput = inputGroup.find('.select-asset');
                 var fakeInput = inputGroup.find('.tt-input');
                 
-                realInput.val(data.result.href.replace('/assets/', ''));
+                realInput.val(uniqueId);
                 fakeInput.val(data.name);
+                btnView.attr('href', data.result.href);
+                btnEdit.attr('href', '/asset-manager/' + uniqueId);
+                
                 flog("uploadcomplete2", data.name);
                 flog("real inp", realInput[0]);
                 flog("fake inp", fakeInput[0]);

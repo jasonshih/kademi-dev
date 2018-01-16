@@ -20,15 +20,15 @@
         #if ($fieldDef.contentType == "image" || $fieldDef.contentType == "video" || $fieldDef.contentType == "binary")
             <p class="input-group input-group-sm">
                 <input type="text" name="$fieldDef.name" class="form-control select-asset select-asset-$fieldDef.contentType" placeholder="Type to search" value="$!asset.uniqueId" data-asset-name="$!asset.name" />
-                <a target="_blank" class="input-group-addon" href="/assets/$asset.uniqueId">
+                <a target="_blank" class="input-group-addon btn-view-relation" href="/assets/$asset.uniqueId">
                     <span class="fa fa-eye"></span>
                 </a>
                 <a class="input-group-addon btn-edit-relation" href="/asset-manager/$asset.uniqueId" data-target="#modal-edit-relation">
                     <span class="fa fa-pencil"></span>
                 </a>
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-success btn-upload-image btn-upload-file">
-                        <span class="fa fa-upload"></span>
+                    <button type="button" class="btn btn-success btn-upload-$fieldDef.contentType btn-upload-file">
+                        <span class="fa fa-upload fa-fw"></span>
                     </button>
                 </span>
             </p>
@@ -36,15 +36,15 @@
         #elseif ($fieldDef.contentType.startsWith("text"))
             <p class="input-group input-group-sm">
                 <input type="text" name="$fieldDef.name" class="form-control select-asset select-asset-$fieldDef.contentType" placeholder="Type to search" value="$!asset.uniqueId" data-asset-name="$!asset.name" />
-                <a target="_blank" class="input-group-addon" href="/assets/$asset.uniqueId">
+                <a target="_blank" class="input-group-addon btn-view-relation" href="/assets/$asset.uniqueId">
                     <span class="fa fa-eye"></span>
                 </a>
                 <a class="input-group-addon btn-edit-relation" href="/asset-manager/$asset.uniqueId" data-target="#modal-edit-relation">
                     <span class="fa fa-pencil"></span>
                 </a>
                 <span class="input-group-btn">
-                    <a class="btn btn-success" href="/asset-manager/new-text?format=text/plain" data-target="#modal-edit-relation">
-                        <span class="fa fa-plus"></span>
+                    <a class="btn btn-success" href="/asset-manager/new-text?format=$fieldDef.contentType" data-target="#modal-edit-relation">
+                        <span class="fa fa-plus fa-fw"></span>
                     </a>
                 </span>
             </p>
@@ -52,7 +52,7 @@
         #else
             <p class="input-group input-group-sm">
                 <input type="text" name="$fieldDef.name" class="form-control select-asset select-asset-$fieldDef.contentType" placeholder="Type to search" value="$!asset.uniqueId" data-asset-name="$!asset.name" />
-                <a target="_blank" class="input-group-addon" href="/assets/$asset.uniqueId">
+                <a target="_blank" class="input-group-addon btn-view-relation" href="/assets/$asset.uniqueId">
                     <span class="fa fa-eye"></span>
                 </a>
                 <a class="input-group-addon btn-edit-relation" href="/asset-manager/$asset.uniqueId" data-target="#modal-edit-relation">
@@ -60,7 +60,7 @@
                 </a>
                 <span class="input-group-btn">
                     <a class="btn btn-success btn-edit-relation" href="/asset-manager/new?type=$fieldDef.contentType" data-target="#modal-edit-relation">
-                        <span class="fa fa-plus"></span>
+                        <span class="fa fa-plus fa-fw"></span>
                     </a>
                 </span>
             </p>
