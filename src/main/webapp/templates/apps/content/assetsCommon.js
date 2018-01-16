@@ -1,9 +1,9 @@
 $(function () {
     var mainAssetContainer = $("#main-asset");
-
+    
     // these need to be loaded for each asset, eg when modals are opened
     initAssetContainer(mainAssetContainer);
-
+    
     // These only need to be initialised once
     $("body").on("click", ".btn-edit-type", function (e) {
         e.preventDefault();
@@ -13,12 +13,12 @@ $(function () {
         modal.find("a.remove-type").attr("href", link.attr("href"));
         modal.modal("show");
     });
-
+    
     flog("init: add type");
     $("body").on("click", ".add-type", function (e) {
         flog("click");
         e.preventDefault();
-
+        
         var link = $(e.target).closest("a");
         var contentTypeName = link.attr("href");
         $.ajax({
@@ -34,14 +34,14 @@ $(function () {
             }
         });
     });
-
+    
     $("body").on("click", ".remove-type", function (e) {
         e.preventDefault();
         var link = $(e.target).closest("a");
         var modal = $("#modal-edit-type");
         var contentTypeName = link.attr("href");
         modal.modal("hide");
-
+        
         $.ajax({
             url: window.location.pathname,
             type: 'POST',
@@ -78,8 +78,15 @@ function initAssetContainer(container) {
             }
         }
     });
-
+    
     container.find(".form-asset-main").forms({
+        onValid: function (form) {
+            form.find('.contenteditor').each(function () {
+                var contentEditor = $(this);
+                
+                contentEditor.val(contentEditor.contentEditor('getContent') || '');
+            });
+        },
         onSuccess: function (resp) {
             if (resp.status) {
                 Msg.info(resp.messages[0]);
@@ -89,8 +96,8 @@ function initAssetContainer(container) {
             }
         }
     });
-
-
+    
+    
     var formUpload = container.find(".frmUpload");
     var uploadProgress = formUpload.find('.progress');
     formUpload.forms({
@@ -127,11 +134,18 @@ function initEditRelations() {
 
 function initForm(redirectOnCreated) {
     $(".form-edit").forms({
+        onValid: function (form) {
+            form.find('.contenteditor').each(function () {
+                var contentEditor = $(this);
+                
+                contentEditor.val(contentEditor.contentEditor('getContent') || '');
+            });
+        },
         onSuccess: function (resp) {
             if (resp.status) {
                 Msg.info(resp.messages[0]);
-                if( redirectOnCreated ) {
-                    if( resp.nextHref ) {
+                if (redirectOnCreated) {
+                    if (resp.nextHref) {
                         window.location = resp.nextHref;
                     }
                 }
@@ -146,15 +160,15 @@ function initRelationFields() {
         var mupload = $('<div style="display: none;"></div>');
         var inputGroup = btn.closest('.input-group');
         var acceptedFiles = '*/*';
-
+        
         if (btn.hasClass('btn-upload-image')) {
             acceptedFiles = 'image/*';
         }
-
+        
         if (btn.hasClass('btn-upload-video')) {
             acceptedFiles = 'video/*';
         }
-
+        
         mupload.mupload({
             url: '/assets/',
             buttonText: '<i class="fa fa-upload"></i> Upload',
@@ -163,7 +177,7 @@ function initRelationFields() {
                 flog("uploadcomplete", href);
                 var realInput = inputGroup.find('.select-asset');
                 var fakeInput = inputGroup.find('.tt-input');
-
+                
                 realInput.val(data.result.href.replace('/assets/', ''));
                 fakeInput.val(data.name);
                 flog("uploadcomplete2", data.name);
@@ -171,17 +185,17 @@ function initRelationFields() {
                 flog("fake inp", fakeInput[0]);
             }
         });
-
+        
         btn.on('click', function (e) {
             e.preventDefault();
-
+            
             mupload.find('.btn').trigger('click');
         });
     });
-
+    
     $('.btn-edit-text').each(function () {
         var btn = $(this);
-
+        
         // TODO: Continue when contentType="text" works
     });
 }
