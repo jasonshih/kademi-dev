@@ -1,10 +1,11 @@
+
 <form class="form-horizontal">
     <div class="form-group">
         <label class="col-sm-12">Query</label>
         <div class="col-sm-12">
             <select class="form-control" id="asset-query-select">
                 <option value="">None</option>
-                #foreach( $query in $services.assetManager.search(null, "query") )
+                #foreach( $query in $services.assetManager.search(null, "query", null, null) )
                     <option data-target-type="$!query.targetAssetType" value="$query.uniqueId">$query.name</option>
                 #end
             </select>
@@ -26,6 +27,16 @@
                 <option value="">None</option>
             </select>
             <small class="help-block">Select field for caption</small>
+        </div>
+    </div>
+    <h4>Or .. choose a field for the whole tile</h4>
+    <div class="form-group">
+        <label class="col-sm-12">Tile</label>
+        <div class="col-sm-12">
+            <select class="form-control select-tile">
+                <option value="">None</option>
+            </select>
+            <small class="help-block">Hint: use a derived template field for custom layout</small>
         </div>
     </div>
 </form>
