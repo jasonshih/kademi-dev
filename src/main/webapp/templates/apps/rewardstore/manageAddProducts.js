@@ -80,7 +80,7 @@
         var orgId = $('#search-library').val();
         
         $.each(selectedCategories, function (i, value) {
-             query += ' category:' + value;
+            query += ' category:' + value;
         });
         
         flog('doSearch', query, orgId);
@@ -108,8 +108,61 @@
     }
     
     function initSelectPicker() {
-        $('.selectpicker').selectpicker({
-            liveSearch: true
+        $('.selectpicker').each(function () {
+            var selectpicker = $(this);
+            
+            selectpicker.selectpicker({
+                liveSearch: true
+            });
+            
+            if (selectpicker.hasClass('category')) {
+                selectpicker.ajaxSelectPicker({
+                    ajax: {
+                        // TODO: Real request to server to get search results
+                        url: '/',
+                        // type: 'POST',
+                        // dataType: 'json',
+                        data: function () {
+                            var params = {
+                                q: '{{{q}}}'
+                            };
+                            
+                            return params;
+                        }
+                    },
+                    cache: true,
+                    preserveSelected: true,
+                    preprocessData: function (resp) {
+                        var categories = [];
+                        if (resp && resp.status) {
+                            // TODO: Add real data to categories
+                        }
+                        
+                        categories.push({
+                            'value': 'CAT-1',
+                            'text': 'Category 1',
+                            'disabled': false
+                        });
+                        
+                        categories.push({
+                            'value': 'CAT-2',
+                            'text': 'Category 2',
+                            'disabled': false
+                        });
+                        
+                        categories.push({
+                            'value': 'CAT-3',
+                            'text': 'Category 3',
+                            'disabled': false
+                        });
+                        
+                        return categories;
+                    },
+                    locale: {
+                        statusInitialized: 'Type to search...'
+                    }
+                });
+            }
         });
     }
     

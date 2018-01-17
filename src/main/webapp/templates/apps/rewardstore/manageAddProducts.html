@@ -15,7 +15,9 @@
             }
         </style>
         <script type="text/javascript" src="/static/bootstrap-select/1.10.0/dist/js/bootstrap-select.min.js">//</script>
+        <script type="text/javascript" src="/static/bootstrap-select-ajax/1.4.3/dist/js/ajax-bootstrap-select.min.js">//</script>
         <link rel="stylesheet" href="/static/bootstrap-select/1.10.0/dist/css/bootstrap-select.min.css" />
+        <link rel="stylesheet" href="/static/bootstrap-select-ajax/1.4.3/dist/css/ajax-bootstrap-select.min.css" />
     </head>
     <body>
         <div id="rewardStoreContent">
@@ -49,14 +51,15 @@
                             </div>
                         </div>
 
+                        <!-- TODO: Just show 10-20 top categories for initializing -->
                         #macro(genCategories $categories)
-                        #foreach($cat in $categories)
-                        #set( $size = $cat.childCategories.size())
-                        $formatter.option($cat.name, "$formatter.padWith('-', '', $cat.level) $cat.title", $request.params.categoryName)
-                        #if( $size > 0 )
-                        #genCategories($cat.childCategories)
-                        #end
-                        #end
+                            #foreach($cat in $categories)
+                                #set( $size = $cat.childCategories.size())
+                                $formatter.option($cat.name, "$formatter.padWith('-', '', $cat.level) $cat.title", $request.params.categoryName)
+                                #if( $size > 0 )
+                                    #genCategories($cat.childCategories)
+                                #end
+                            #end
                         #end
                         
                         <div class="col-md-3">
