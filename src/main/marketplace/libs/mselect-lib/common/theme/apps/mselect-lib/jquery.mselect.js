@@ -34,7 +34,7 @@
         },
         useModal: true,
         useCrop: true,
-        showAssets: false
+        showAssets: true
     };
     
     function MSelect(target, options) {
@@ -104,12 +104,6 @@
         });
         
         self.modal = modal;
-        
-        if (options.showAssets) {
-            self.modal.on('shown.bs.modal', function () {
-                self.mtree.adjustTabHeight();
-            });
-        }
     };
     
     MSelect.prototype.selectFile = function (hash, callback) {
@@ -495,7 +489,7 @@
             '        <div class="col-xs-3"><div class="milton-tree-wrapper"></div></div>' +
             '        <div class="col-xs-9">' +
             '            <div class="milton-file-preview-wrapper">' +
-            '                <div class="milton-btn-upload-file"></div>' + (options.showAssets ? '<div class="milton-btn-upload-asset" style="display: none;"></div>' : '') + extraElement +
+            '                ' + (options.showAssets ? '<div class="milton-btn-upload-asset" style="display: none;"></div>' : '') + '<div class="milton-btn-upload-file"></div>' + extraElement +
             '                <div class="milton-file-progress progress" style="display: none;">' +
             '                    <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: 100%"></div>' +
             '                </div>' +
@@ -534,6 +528,11 @@
             var modalFooter = modal.find('.modal-footer');
             
             modalBody.height('calc(100% - ' + modalHeader.outerHeight() + 'px - ' + modalFooter.outerHeight() + 'px');
+            
+            var mtreeWrapper = modal.find('.milton-tree-wrapper');
+            if (mtreeWrapper.length > 0) {
+                mtreeWrapper.data('mtree').adjustTabHeight();
+            }
         });
     });
 }));

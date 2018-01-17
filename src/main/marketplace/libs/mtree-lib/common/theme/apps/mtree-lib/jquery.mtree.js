@@ -139,8 +139,11 @@
     
     MTree.prototype.adjustTabHeight = function () {
         var self = this;
-        var tabsWrapper = self.target.find('.mtree-tabs');
-        self.target.find('.mtree-tab-contents').css('top', tabsWrapper.outerHeight() + tabsWrapper.position().top - 1);
+        
+        if (self.options.showAssets) {
+            var tabsWrapper = self.target.find('.mtree-tabs');
+            self.target.find('.mtree-tab-contents').css('top', tabsWrapper.outerHeight() + tabsWrapper.position().top - 1);
+        }
     };
     
     MTree.prototype.initTabs = function () {
