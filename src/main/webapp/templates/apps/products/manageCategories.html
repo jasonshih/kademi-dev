@@ -9,31 +9,46 @@
         </style>
     </head>
     <body class="">
-        <p>
-            <button type="button" class="btn btn-sm btn-danger deleteCat pull-right"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="pull-right">
+                    <button type="button" class="btn btn-sm btn-danger deleteCat"><i class="glyphicon glyphicon-trash"></i> Delete</button>
 
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-sm btn-success newCategory" data-toggle="modal" data-target="#addCategoryModal"><i class="fa fa-plus"></i> Add New Category
-                </button>
-                <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li>
-                        <a href="#" title="Upload categories CSV" id="uploadCatsCsv" data-toggle="modal" data-target="#modalUploadCsv"><i class="glyphicon glyphicon-upload"></i> Upload CSV</a>
-                    </li>
-                    <li><a href="categories.csv" title="Export categories CSV"><i class="glyphicon glyphicon-download"></i> Export CSV</a></li>
-                    <li>
-                        <a href="/tableUploaders/categoriesUploader" title="Upload categories" ><i class="glyphicon glyphicon-upload"></i> Upload Categories</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="#" title="Upload product categories CSV" id="uploadProductCategoriesCsv" data-toggle="modal" data-target="#modalUploadProdCatsCsv"><i class="glyphicon glyphicon-upload"></i> Upload product in categories CSV</a>
-                    </li>
-                    <li><a href="product-categories.csv" title="Export product categories CSV"><i class="glyphicon glyphicon-download"></i> Export product in categories CSV</a></li>
-                </ul>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-sm btn-success newCategory" data-toggle="modal" data-target="#addCategoryModal"><i class="fa fa-plus"></i> Add New Category
+                        </button>
+                        <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a href="#" title="Upload categories CSV" id="uploadCatsCsv" data-toggle="modal" data-target="#modalUploadCsv"><i class="glyphicon glyphicon-upload"></i> Upload CSV</a>
+                            </li>
+                            <li><a href="categories.csv" title="Export categories CSV"><i class="glyphicon glyphicon-download"></i> Export CSV</a></li>
+                            <li>
+                                <a href="/tableUploaders/categoriesUploader" title="Upload categories" ><i class="glyphicon glyphicon-upload"></i> Upload Categories</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#" title="Upload product categories CSV" id="uploadProductCategoriesCsv" data-toggle="modal" data-target="#modalUploadProdCatsCsv"><i class="glyphicon glyphicon-upload"></i> Upload product in categories CSV</a>
+                            </li>
+                            <li><a href="product-categories.csv" title="Export product categories CSV"><i class="glyphicon glyphicon-download"></i> Export product in categories CSV</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input type="text" class="form-control text-search-field" placeholder="Search for..." value="$!request.params.q"/>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default btn-clear-search" type="button"><i class="fa fa-times"></i></button>
+                        </span>
+                    </div>
+                </div>
             </div>
-        </p>
+        </div>
+        
+        <br/>
 
         <div class="panel panel-default">
             <div id="productsTableContainer" class="panel-body">
@@ -58,9 +73,9 @@
                         </thead>
                         <tbody id="categoriesTableBody">
                             #if($formatter.isNotNull($request.params.q))
-                                #genList($page.categoryBeans true)
+                            #genList($page.searchCategories($request.params.q) true)
                             #else
-                                #genList($page.categoryBeans false)
+                            #genList($page.categoryBeans false)
                             #end
                         </tbody>
                     </table>
@@ -213,28 +228,40 @@
         </div>
 
         #macro(genList $categories $isSearch)
-            #foreach($cat in $categories)
-                #genCategory($cat $isSearch)
-            #end
+        #foreach($cat in $categories)
+        #genCategory($cat $isSearch)
+        #end
         #end
 
         #macro(genCategory $cat $isSearch)
         #if($isSearch)
-            #set($padding = false)
+        #set($padding = false)
         #else
-            #set($padding = $cat.level * 40)
+        #set($padding = $cat.level * 40)
         #end
         <tr>
             <td>
                 <a href="$cat.name">
+                    #if($isSearch)
+                    #if($cat.mainImageHash)
+                    <img src="/_hashes/files/$cat.mainImageHash" class="cat-image" />
+                    #end
+                    #else
                     #if( $cat.imageHref )
                     <img src="$cat.imageHref" class="cat-image" />
+                    #end
                     #end
                 </a>
             </td>
             <td>#if($isSearch)#genCatPath($cat)#end<a #if($padding)style="margin-left: ${padding}px"#end href="$cat.name">$cat.title</a></td>
             <td>$cat.name</td>
-            <td>$cat.numProducts</td>
+            <td>
+                #if($isSearch)
+                $page.getNumProducts($cat)
+                #else
+                $cat.numProducts
+                #end
+            </td>
             <th><input type="checkbox" data-catid="$cat.id" class="cat-check" /></th>
             <th>
                 <button type="button" data-origname="$cat.name" data-title="$cat.title" class="btn btn-sm btn-info renameCat pull-right">
@@ -243,23 +270,24 @@
             </th>
         </tr>
         #foreach($subCat in $cat.childCategories)
-            #genCategory($subCat, $isSearch)
+        #genCategory($subCat, $isSearch)
         #end
 
         #end
 
         #macro(genCatPath $cat)
-            #if($cat.parent())
-                #set($paths = $formatter.newArrayList())
-                #set($parent = $cat.parent())
-                #foreach($i in [1..$cat.level])
-                    #if($parent)
-                        #if($paths.add($formatter.firstNotNull($parent.title, $parent.name)))#end
-                        #set($parent = $parent.parent())
-                    #end
-                #end
-                #foreach($a in $formatter.sortReverse($paths))$a&nbsp;/#end
-            #end
+        #if($cat.parentCategory)
+        #set($paths = $formatter.newArrayList())
+        #getParents($cat, $paths)
+        #foreach($a in $formatter.sortReverse($paths))$a&nbsp;/#end
+        #end
+        #end
+
+        #macro(getParents $c $list)
+        #if( $c.parentCategory )
+        #if($list.add($formatter.firstNotNull($c.parentCategory.title, $c.parentCategory.name)))#end
+        #getParents($c.parentCategory, $list)
+        #end
         #end
 
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
@@ -326,7 +354,43 @@
 
                 initCategoriesCsv();
                 initProductInCategoriesCsv();
+                initSearch();
             });
+
+            function initSearch() {
+                $('body').on('blur', '.text-search-field', function (e) {
+                    e.preventDefault();
+
+                    doSearch();
+                });
+
+                $('body').on('keypress', '.text-search-field', function (e) {
+                    if (e.which === 13) {
+                        e.preventDefault();
+
+                        doSearch();
+                    }
+                });
+
+                $('body').on('click', '.btn-clear-search', function (e) {
+                    e.preventDefault();
+
+                    $('.text-search-field').val('');
+
+                    doSearch();
+                });
+            }
+
+            function doSearch() {
+                var searchText = $('.text-search-field').val();
+
+                flog('Searching', searchText);
+
+                var t = URI(window.location.search);
+                t.setQuery('q', searchText);
+
+                window.location.search = t.query();
+            }
 
             function deleteCategories(listToDelete) {
                 $.ajax({
