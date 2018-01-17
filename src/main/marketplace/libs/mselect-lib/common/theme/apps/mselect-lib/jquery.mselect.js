@@ -34,7 +34,7 @@
         },
         useModal: true,
         useCrop: true,
-        showAssets: true
+        showAssets: false
     };
     
     function MSelect(target, options) {
