@@ -23,7 +23,7 @@ function initManageModule(baseHref, themePath) {
     if (isKEditor) {
         initPostMessage();
     }
-    
+
     initDropdownMix();
     initImagePicker($('#thumb'), window.location.pathname, '');
     initCRUDModulePages();
@@ -36,8 +36,16 @@ function initManageModule(baseHref, themePath) {
     initFrequencyGroup();
     initResultsSearch();
     initCalendarStuff();
+    checkTab();
 
     window.onbeforeunload = isModalOpen;
+}
+
+function checkTab() {
+    var url = window.location.href;
+    if (url.indexOf("#activity-tab") > 0 || url.indexOf("pageSize") > 0) {
+        $('.tabbable .nav-tabs a[href="#activity"]').trigger('click');
+    }
 }
 
 function initCalendarStuff() {
@@ -58,11 +66,11 @@ function initCalendarStuff() {
         modal.modal("show");
     });
 
-    $("body").on("click", ".deleteEvent", function(e) {
+    $("body").on("click", ".deleteEvent", function (e) {
         e.preventDefault();
         var link = $(e.target).closest("a");
         var id = link.attr("href");
-        if( confirm("Are you sure you want to completely delete this event and attendees?") ) {
+        if (confirm("Are you sure you want to completely delete this event and attendees?")) {
             $.ajax({
                 type: 'POST',
                 url: window.location.pathname + "?deleteEventId=" + id,
@@ -83,7 +91,7 @@ function initCalendarStuff() {
 
 function reloadEvents() {
     $("#modCalEventsBody").reloadFragment({
-        whenComplete: function() {
+        whenComplete: function () {
             $("abbr.timeago").timeago();
         }
     });
@@ -129,11 +137,11 @@ function initPostMessage() {
     win.on('message', function (e) {
         var data = $.parseJSON(e.originalEvent.data);
         flog('On got message', e);
-        
+
         if (data.from === 'keditor') {
             if (data.isSaved) {
                 Msg.success('Saved!');
-                
+
                 if (data.willClose) {
                     $('#modal-add-page').modal('hide');
                 }
