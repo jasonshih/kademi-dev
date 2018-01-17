@@ -1,0 +1,51 @@
+#
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Page Template view</title>
+
+    </head>
+    <body class="">
+
+        <form class="form-horizontal" action="$page.href" method="POST" id="form-edit">
+            <button type="submit" class="btn btn-success">Save</button>
+            <div class="form-group">
+                <label for="template" class="control-label col-md-2">Template</label>
+
+                <div class="col-md-5">
+                    <input type="text" class="form-control required" name="pagePath" value="$page.view.pagePath" />
+                </div>
+            </div>
+            <hr/>
+            <h3>Parameter based views</h3>
+            <p>If you only want this view to display when a certain request parameter is present
+                , enter the parameter name and value (optional)</p>
+            <div class="form-group">
+                <label for="paramName" class="control-label col-md-2">Name</label>
+
+                <div class="col-md-5">
+                    <input type="text" class="form-control" name="paramName" value="$!page.view.matcher.name" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="paramValue" class="control-label col-md-2">Value</label>
+
+                <div class="col-md-5">
+                    <input type="text" class="form-control" name="paramValue" value="$!page.view.matcher.value" />
+                </div>
+            </div>
+
+        </form>
+
+        <script>
+            $(function () {
+                $("#form-edit").forms({
+                    onSuccess: function (resp) {
+                        if (resp.status) {
+                            Msg.info("Saved ok");
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

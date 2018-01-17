@@ -1,0 +1,51 @@
+#
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Derived Field</title>
+    </head>
+    <body class="">
+
+        <form class="form-horizontal" action="$page.href" method="POST" id="form-edit">
+            <button type="submit" class="btn btn-success">Save</button>
+            <h3>Please enter one of the following</h3>
+
+            <div class="form-group">
+                <label for="jsFunction" class="control-label col-md-2">jsFunction</label>
+
+                <div class="col-md-5">
+                    <input type="text" class="form-control" name="jsFunction" value="$!page.field.jsFunction" />
+                    <small>This will execute a specified JS function</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="mvelExpr" class="control-label col-md-2">MVEL Expr</label>
+
+                <div class="col-md-10">
+                    <textarea class="form-control" name="mvelExpr" style="height: 300px;">$!page.field.mvelExpr</textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="mvelTemplate" class="control-label col-md-2">MVEL Template</label>
+
+                <div class="col-md-10">
+                    <textarea class="form-control" name="mvelTemplate" style="height: 300px;">$!page.field.mvelTemplate</textarea>
+                </div>
+            </div>
+
+        </form>
+
+        <script>
+            $(function () {
+                $("#form-edit").forms({
+                    onSuccess: function (resp) {
+                        if (resp.status) {
+                            Msg.info("Saved ok");
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

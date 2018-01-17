@@ -49,7 +49,11 @@
                     <tbody id="tableBodyFields">
                         #foreach($field in $page.assetType.fields)
                         <tr>
-                            <td>$field.name</td>
+                            <td>
+                                <a href="$field.name">
+                                    $field.name
+                                </a>
+                            </td>
                             <td>$!field.description</td>
                             <td>$!field.text</td>
                             <td>

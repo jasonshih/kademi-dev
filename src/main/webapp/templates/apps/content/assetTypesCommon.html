@@ -5,7 +5,7 @@
     <body>
         #macro (assetTypeHeader)
         <h1>$page.title</h1>
-        
+
         <div class="panel panel-default panel-no-icon">
             <div class="panel-heading">
                 <h3 class="panel-title">Views</h3>
@@ -34,7 +34,9 @@
                     </colgroup>
                     #foreach( $view in $page.assetType.views )
                     <tr>
-                        <td>$view.text</td>
+                        <td>
+                            <a href="$view.viewId">$view.text</a>
+                        </td>
                         <td>
                             <input type="checkbox" class="chk-view-id" value="$view.viewId" />
                         </td>
@@ -43,7 +45,7 @@
                 </table>
             </div>
         </div>
-        
+
         <div class="panel panel-default panel-no-icon">
             <div class="panel-heading">
                 <h3 class="panel-title">Permissions</h3>
@@ -97,8 +99,8 @@
             </div>
         </div>
         #end
-        
-        
+
+
         #macro (assetTypeScripts)
         <div id="modal-new-asset-permission" class="modal fade" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog modal-sm">
@@ -112,7 +114,7 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="height" class="control-label col-md-3">Website</label>
-                                
+
                                 <div class="col-md-8">
                                     <select class="form-control required" name="websiteName">
                                         <option value="">[ NONE ]</option>
@@ -126,7 +128,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="width" class="control-label col-md-3">Group</label>
-                                
+
                                 <div class="col-md-8">
                                     <select class="form-control required" name="groupName">
                                         <option value="">[ NONE ]</option>
@@ -138,10 +140,10 @@
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="width" class="control-label col-md-3">Permission</label>
-                                
+
                                 <div class="col-md-8">
                                     <div class="checkbox">
                                         <label>
@@ -172,7 +174,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="new-view-modals">
             <div id="modal-view-altformat" class="modal fade" aria-hidden="true" tabindex="-1">
                 <div class="modal-dialog modal-sm">
@@ -186,19 +188,19 @@
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="height" class="control-label col-md-4">Height</label>
-                                    
+
                                     <div class="col-md-8">
                                         <input type="number" class="form-control required" name="height" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="width" class="control-label col-md-4">Width</label>
-                                    
+
                                     <div class="col-md-8">
                                         <input type="number" class="form-control required" name="width" value="" />
                                     </div>
                                 </div>
-                            
+
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
@@ -208,7 +210,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div id="modal-view-mveltemplate" class="modal fade" aria-hidden="true" tabindex="-1">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
@@ -221,26 +223,26 @@
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="template" class="control-label col-md-4">template</label>
-                                    
+
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="template" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="paramName" class="control-label col-md-4">paramName</label>
-                                    
+
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="paramName" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="paramValue" class="control-label col-md-4">paramValue</label>
-                                    
+
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="paramValue" value="" />
                                     </div>
                                 </div>
-                            
+
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
@@ -250,7 +252,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div id="modal-view-pagetemplate" class="modal fade" aria-hidden="true" tabindex="-1">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
@@ -263,28 +265,28 @@
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="template" class="control-label col-md-4">template</label>
-                                    
+
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="template" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="paramName" class="control-label col-md-4">paramName</label>
-                                    
+
                                     <div class="col-md-8">
-                                        <input type="text" class="form-control required" name="paramName" value="" />
+                                        <input type="text" class="form-control" name="paramName" value="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="paramValue" class="control-label col-md-4">paramValue</label>
-                                    
+
                                     <div class="col-md-8">
-                                        <input type="text" class="form-control required" name="paramValue" value="" />
+                                        <input type="text" class="form-control" name="paramValue" value="" />
                                     </div>
                                 </div>
-                            
+
                             </div>
-                            
+
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
                                 <button class="btn btn-sm btn-primary" type="submit">Save</button>
@@ -293,7 +295,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div id="modal-view-standardbinary" class="modal fade" aria-hidden="true" tabindex="-1">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
@@ -315,7 +317,7 @@
                 </div>
             </div>
         </div>
-        
+
         <script>
             (function ($) {
                 function initViewModals() {
@@ -332,11 +334,11 @@
                         });
                     });
                 }
-                
+
                 function initPermissionModal() {
                     var modal = $('#modal-new-asset-permission');
                     var form = modal.find('form');
-                    
+
                     form.forms({
                         onSuccess: function (resp) {
                             modal.modal('hide');
@@ -346,18 +348,18 @@
                         }
                     });
                 }
-                
+
                 function initDelete() {
                     flog('initDelete');
-                    
+
                     $(document.body).on('click', '.btn-delete-views', function (e) {
                         e.preventDefault();
-                        
+
                         var toDeleteViews = [];
                         $('.chk-view-id:checked').each(function () {
                             toDeleteViews.push(this.value);
                         });
-                        
+
                         if (toDeleteViews.length > 0) {
                             Kalert.confirm('You want to delete ' + toDeleteViews.length + ' views?', 'Delete', function () {
                                 $.ajax({
@@ -387,15 +389,15 @@
                             });
                         }
                     });
-                    
+
                     $(document.body).on('click', '.btn-delete-permissions', function (e) {
                         e.preventDefault();
-                        
+
                         var toDeletePermissions = [];
                         $('.chk-permission-id:checked').each(function () {
                             toDeletePermissions.push(this.value);
                         });
-                        
+
                         if (toDeletePermissions.length > 0) {
                             Kalert.confirm('You want to delete ' + toDeletePermissions.length + ' permissions?', 'Delete', function () {
                                 $.ajax({
@@ -426,7 +428,7 @@
                         }
                     });
                 }
-                
+
                 $(function () {
                     flog("init forms");
                     initViewModals();
