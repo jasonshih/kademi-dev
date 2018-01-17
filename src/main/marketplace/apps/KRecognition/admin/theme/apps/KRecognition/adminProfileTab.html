@@ -8,7 +8,7 @@
                         <col width="100px"/>
                         <col/>
                         <col/>
-                        <col width="85px"/>
+                        <col width="130px"/>
                     </colgroup>
                     <thead>
                         <tr>
@@ -19,12 +19,12 @@
                         </tr>
                     </thead>
                     <tbody id="krecognition-levels-body">
-                        #foreach($level in $formatter.sortByProperty($topic.levels, "levelAmount"))
+                        #foreach($level in $levels)
                         <tr 
                             data-levelid="$level.id"
                             data-levelname="$!formatter.htmlEncode($level.name)"
                             data-leveltitle="$!formatter.htmlEncode($level.title)"
-                            data-levelamount="$!level.levelAmount"
+                            data-levelamount="$!level.amount"
                             >
                             <td>
                                 #if($level.imageHash)
@@ -36,7 +36,7 @@
                                 #end
                             </td>
                             <td>$!level.title</td>
-                            <td>$!level.levelAmount</td>
+                            <td>$!level.amount</td>
                             <td>$formatter.formatDateTime($level.createdDate)</td>
                         </tr>
                         #end
