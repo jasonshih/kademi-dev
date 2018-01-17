@@ -1,19 +1,19 @@
 (function ($) {
     function initAddProducts() {
-        flog("add prods", $('#addProducts'));
+        flog('add prods', $('#addProducts'));
         $('#addSelected').click(function (e) {
             e.preventDefault();
             Msg.info('Adding selected', 'manageAddProducts');
-            var checks = $("#products-list").find('input:checked');
+            var checks = $('#products-list').find('input:checked');
             var ids = [];
             checks.each(function (count, item) {
                 ids.push($(item).data('pid'));
             });
-
+            
             updateProductSelected(ids.join(','));
         });
-
-        $(".addAllMatched").click(function (e) {
+        
+        $('.addAllMatched').click(function (e) {
             e.preventDefault();
             Kalert.confirm('This will add all products matching the current criteria to the reward store. Do you want to proceed?', 'Yes', function () {
                 $.ajax({
@@ -31,117 +31,113 @@
                     }
                 });
             });
-
+            
         });
     }
-
+    
     function initSearchProduct() {
-        $("#product-query").keyup(function () {
+        $('#product-query').keyup(function () {
             typewatch(function () {
-                flog("do search");
+                flog('do search');
                 doProductSearch();
             }, 500);
         });
-
-        $('body').on('change', '.category', function (e) {
-            var t = $(this);
-
-            // Update the search query field
-            var query = $("#product-query").val();
-
-            query += ' category:' + t.val();
-            query = query.trim();
-            $("#product-query").val(query);
-
+        
+        $(document.body).on('change', 'select.category', function (e) {
             doProductSearch();
         });
-
-        $('body').on('change', '#search-library', function (e) {
+        
+        $(document.body).on('change', '#search-library', function (e) {
             doProductSearch();
         });
     }
-
+    
     function initSortable() {
-        $('body').on('click', '.sort-field', function (e) {
+        $(document.body).on('click', '.sort-field', function (e) {
             e.preventDefault();
             var a = $(e.target);
             var uri = URI(window.location);
             var field = a.attr('id');
-
+            
             var dir = 'asc';
             if (field == getSearchValue(window.location.search, 'sortfield')
-                    && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
+                && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
                 dir = 'desc';
             }
             uri.setSearch('sortfield', field);
             uri.setSearch('sortdir', dir);
-
+            
             window.history.pushState('', '', uri.toString());
-
+            
             doProductSearch();
         });
     }
-
-    function initChosenSelectors() {
-        $(".chosen-select").chosen({
-            search_contains: true
-        });
-    }
-
+    
     function doProductSearch() {
-        flog("doProductSearch");
-        var query = $("#product-query").val();
-        var orgId = $("#search-library").val();
-        flog("doSearch", query, orgId);
-        var newUrl = window.location.pathname + "?addProducts&q=" + query + "&l=" + orgId;
-
+        flog('doProductSearch');
+        var query = $('#product-query').val();
+        var selectedCategories = $('#categoryName').val() || [];
+        var orgId = $('#search-library').val();
+        
+        $.each(selectedCategories, function (i, value) {
+             query += ' category:' + value;
+        });
+        
+        flog('doSearch', query, orgId);
+        var newUrl = window.location.pathname + '?addProducts&q=' + query + '&l=' + orgId;
+        
         var sortfield = getSearchValue(window.location.search, 'sortfield');
         var sortdir = getSearchValue(window.location.search, 'sortdir');
-
+        
         if (sortfield && sortdir) {
-            newUrl += "&sortfield=" + sortfield + "&sortdir=" + sortdir;
+            newUrl += '&sortfield=' + sortfield + '&sortdir=' + sortdir;
         }
-
-        window.history.replaceState("", "", newUrl);
+        
+        window.history.replaceState('', '', newUrl);
         $.ajax({
             type: 'GET',
             url: newUrl,
             success: function (data) {
-                var fragment = $(data).find("#searchResults");
-                $("#searchResults").replaceWith(fragment);
+                var fragment = $(data).find('#searchResults');
+                $('#searchResults').replaceWith(fragment);
             },
             error: function (resp) {
-                Msg.error("An error occured doing the search. Please check your internet connection and try again", 'manageAddProducts');
+                Msg.error('An error occured doing the search. Please check your internet connection and try again', 'manageAddProducts');
             }
         });
     }
-
-
+    
+    function initSelectPicker() {
+        $('.selectpicker').selectpicker({
+            liveSearch: true
+        });
+    }
+    
     function updateProductSelected(productIds) {
         var data = {};
         data['addProductIds'] = productIds;
-
+        
         $.ajax({
-            type: "POST",
+            type: 'POST',
             url: window.location.pathname,
-            datatype: "json",
+            datatype: 'json',
             data: data,
             success: function (response) {
-                flog("response", response, response.status);
+                flog('response', response, response.status);
                 if (response.status) {
                     Msg.info(response.messages[0], 'manageAddProducts');
                     window.location.reload();
                 } else {
-                    Msg.error("There was an error changing the product status", 'manageAddProducts');
+                    Msg.error('There was an error changing the product status', 'manageAddProducts');
                 }
             },
             error: function (event, XMLHttpRequest, ajaxOptions, thrownError) {
                 flog('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
-                Msg.error("There was an error changing the product inclusion status", 'manageAddProducts');
+                Msg.error('There was an error changing the product inclusion status', 'manageAddProducts');
             }
         });
     }
-
+    
     function getSearchValue(search, key) {
         if (search.charAt(0) == '?') {
             search = search.substr(1);
@@ -157,12 +153,12 @@
         }
         return '';
     }
-
+    
     // Run init methods
     $(function () {
         initSearchProduct();
         initAddProducts();
         initSortable();
-        initChosenSelectors();
+        initSelectPicker();
     });
 })(jQuery);

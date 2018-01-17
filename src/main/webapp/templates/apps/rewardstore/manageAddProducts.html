@@ -14,10 +14,8 @@
                 display: block;
             }
         </style>
-        <script type="text/javascript" src="/static/chosen/1.1.0/chosen.jquery.js">//</script>
-        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-chosen/1.0.1/bootstrap-chosen.css" />
-        <link href="https://gitcdn.github.io/bootstrap-toggle/2.1.0/css/bootstrap-toggle.min.css" rel="stylesheet" />
-        <script src="https://gitcdn.github.io/bootstrap-toggle/2.1.0/js/bootstrap-toggle.min.js">//</script>
+        <script type="text/javascript" src="/static/bootstrap-select/1.10.0/dist/js/bootstrap-select.min.js">//</script>
+        <link rel="stylesheet" href="/static/bootstrap-select/1.10.0/dist/css/bootstrap-select.min.css" />
     </head>
     <body>
         <div id="rewardStoreContent">
@@ -42,10 +40,9 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="search-group" class="col-sm-3 control-label">Categories:</label>
+                                <label for="categoryName" class="col-sm-3 control-label">Categories: </label>
                                 <div class="col-sm-9">
-                                    <select name="categoryName" class="category form-control input-sm chosen-select">
-                                        <option value="">[Any category]</option>
+                                    <select name="categoryName" id="categoryName" class="category form-control input-sm selectpicker" multiple="multiple">
                                         #genCategories($page.categoryBeans)
                                     </select>
                                 </div>
@@ -64,9 +61,9 @@
                         
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="search-group" class="col-sm-2 control-label">Library:</label>
+                                <label for="search-library" class="col-sm-2 control-label">Library: </label>
                                 <div class="col-sm-10">
-                                    <select name="searchOrg" id="search-library" class="form-control input-sm chosen-select">
+                                    <select name="searchOrg" id="search-library" class="form-control input-sm selectpicker">
                                         <option value="">My library</option>
                                         #foreach($org in $page.parentOrgsWithProducts)
                                         #if($org.id != $rootFolder.organisation.id)
