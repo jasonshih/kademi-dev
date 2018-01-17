@@ -43,6 +43,8 @@
     function MTree(target, options) {
         log('Initialize', target, options);
         
+        $.getStyleOnce('/theme/apps/mtree-lib/jstree/dist/themes/default/style.min.css');
+        $.getStyleOnce('/theme/apps/mtree-lib/jquery.mtree.css');
         this.target = target;
         this.options = $.extend({}, DEFAULTS, options);
         this.init();

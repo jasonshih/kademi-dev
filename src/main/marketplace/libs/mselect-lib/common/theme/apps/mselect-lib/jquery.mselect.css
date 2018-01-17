@@ -66,7 +66,7 @@
 .milton-file-select-container .mtree {
     overflow: auto !important;
     position: absolute;
-    top: 0;
+    top: 45px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -81,7 +81,13 @@
     bottom: 0;
 }
 
-.milton-tree-wrapper .mtree-wrapper .tab-content .mtree {
+.milton-file-select-container .milton-tree-wrapper .mtree-wrapper .tab-content .mtree {
+    top: 0;
+    border: 0;
+}
+
+.milton-file-select-container .milton-tree-wrapper .mtree-wrapper .tab-content .mtree-assets {
+    top: 0;
     border: 0;
 }
 
@@ -90,6 +96,10 @@
    ============================================================================ */
 .modal.modal-mselect {
     padding: 0 !important;
+}
+
+.modal.modal-mselect * {
+    box-sizing: border-box;
 }
 
 .modal.modal-mselect .modal-dialog {
@@ -109,12 +119,12 @@
 }
 
 .modal.modal-mselect .modal-dialog .modal-content .modal-body {
-    height: calc(100% - 56px - 61px) !important;
+    height: calc(100% - 56px - 61px);
     overflow: auto;
 }
 
 .modal.modal-mselect.modal-no-footer .modal-dialog .modal-content .modal-body {
-    height: calc(100% - 56px) !important;
+    height: calc(100% - 56px);
 }
 
 .modal.modal-mselect .modal-dialog .modal-content .modal-footer {

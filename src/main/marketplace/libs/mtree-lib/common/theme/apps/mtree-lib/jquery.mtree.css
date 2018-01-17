@@ -10,5 +10,5 @@
 }
 
 .mtree-wrapper .tab-pane-assets .mtree {
-    top: 50px;
+    top: 50px !important;
 }

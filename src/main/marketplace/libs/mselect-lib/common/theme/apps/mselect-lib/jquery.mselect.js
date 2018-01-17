@@ -38,6 +38,7 @@
     };
     
     function MSelect(target, options) {
+        $.getStyleOnce('/theme/apps/mselect-lib/jquery.mselect.css');
         this.target = target;
         this.options = $.extend({}, DEFAULTS, options);
         this.init();
@@ -104,9 +105,11 @@
         
         self.modal = modal;
         
-        self.modal.on('shown.bs.modal', function () {
-           self.mtree.adjustTabHeight();
-        });
+        if (options.showAssets) {
+            self.modal.on('shown.bs.modal', function () {
+                self.mtree.adjustTabHeight();
+            });
+        }
     };
     
     MSelect.prototype.selectFile = function (hash, callback) {
@@ -220,6 +223,7 @@
             pagePath: options.pagePath,
             includeContentType: options.contentType,
             excludedEndPaths: options.excludedEndPaths,
+            showAssets: options.showAssets,
             onSelect: function (node, type, selectedUrl, hash, isAsset) {
                 flog('[MSelect] Select node', node, selectedUrl, hash);
                 var selectFolder = this.getSelectedFolderUrl();
@@ -291,7 +295,7 @@
                             break;
                         
                         default:
-                            previewContainer.html('<p class="alert alert-warning">Unsupported preview file</p>');
+                            previewContainer.html('<div class="alert alert-warning">Unsupported preview file</div>');
                             
                             if (typeof options.onPreviewFile === 'function') {
                                 options.onPreviewFile.call(container, fileType, selectedUrl, hash);
@@ -521,4 +525,15 @@
     };
     
     $.fn.mselect.constructor = MSelect;
+    
+    $(function () {
+        $(document.body).on('shown.bs.modal', '.modal-mselect', function () {
+            var modal = $(this);
+            var modalHeader = modal.find('.modal-header');
+            var modalBody = modal.find('.modal-body');
+            var modalFooter = modal.find('.modal-footer');
+            
+            modalBody.height('calc(100% - ' + modalHeader.outerHeight() + 'px - ' + modalFooter.outerHeight() + 'px');
+        });
+    });
 }));
