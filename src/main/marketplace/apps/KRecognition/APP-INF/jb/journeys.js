@@ -24,8 +24,9 @@
             var topic = applications.userApp.recognitionService.getTopic(topicId);
             var badge = topic.getBadge(badgeId);
 
-            var award = applications.userApp.recognitionService.createAward(badge, lead.profile);
-
+            if (Utils.isNotNull(badge)) {
+                applications.userApp.recognitionService.createAward(badge, lead.profile);
+            }
         }
     };
 
