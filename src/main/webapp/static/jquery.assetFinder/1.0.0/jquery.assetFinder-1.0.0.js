@@ -100,7 +100,7 @@
         holder.on('typeahead:selected', function (e, datum) {
             flog('Selected assets suggestion', datum);
             
-            element.val(datum.uniqueId);
+            element.val(datum.uniqueId).trigger('change');
         });
         
         flog('[AssetFinder] Initialized');
