@@ -84,6 +84,8 @@ function createClaim(page, params, files) {
         status: true
     };
 
+    var org = page.organisation;
+
     try {
         var currentRoles = securityManager.getRoles();
         log.info('currentRoles={}', currentRoles);
@@ -101,8 +103,10 @@ function createClaim(page, params, files) {
         var tempDateTime = params.soldDate;
         var tempDate = tempDateTime.substring(0, tempDateTime.indexOf(' ')).split('/');
         var tempTime = tempDateTime.substring(tempDateTime.indexOf(' ') + 1, tempDateTime.length).split(':');
-        var soldDate = new Date(+tempDate[2], +tempDate[1] - 1, +tempDate[0], +tempTime[0], +tempTime[1], 00, 00);
-        var now = formatter.formatDateISO8601(formatter.now);
+        var soldDateTmp = formatter.parseDate(tempDateTime);
+        var soldDate = formatter.formatDateISO8601(soldDateTmp, org.timezone);
+        log.info('createClaim > soldDate={}', soldDate);
+        var now = formatter.formatDateISO8601(formatter.now, org.timezone);
 
         var obj = {
             recordId: id,
