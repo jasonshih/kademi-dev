@@ -161,7 +161,7 @@
                     .call(chart);
 
             return chart;
-        });       
+        });
     }
 
     $(function () {
@@ -170,7 +170,7 @@
             return new Handlebars.SafeString(d.toISOString());
         });
 
-        Handlebars.registerHelper('genEmailStatus', function (item, options) {
+        Handlebars.registerHelper('genEmailStatusIcon', function (item, options) {
             var templ = '';
 
             templ += '<span class="fa-stack fa-lg">';
@@ -197,6 +197,67 @@
                 templ += '<small>( ' + item._source.numAttempts + ' attempts; last error ' + (item._source.lastSendAttempt != null ? item._source.lastSendAttempt.status : '') + ')</small>';
             }
             templ += '</abbr>';
+
+            return new Handlebars.SafeString(templ);
+        });
+
+        Handlebars.registerHelper('genEmailStatus', function (item, options) {
+            var icon = '';
+            var label = '';
+            var text = '';
+
+            switch (item._source.sendStatus) {
+                case 'r':
+                {
+                    icon = 'glyphicon glyphicon-repeat';
+                    label = 'label-warning';
+                    text = item._source.statusText + ' - ' + item._source.numAttempts;
+                    break;
+                }
+                case 'c':
+                {
+                    if (item._source.edmConverted) {
+                        icon = 'fa fa-trophy';
+                        label = 'label-success';
+                        text = 'Converted';
+                    } else if (item._source.readStatus) {
+                        icon = 'fa fa-eye';
+                        label = 'label-success';
+                        text = 'Read';
+                    } else {
+                        icon = 'glyphicon glyphicon-ok';
+                        label = 'label-default';
+                        text = 'Sent ok';
+                    }
+                    break;
+                }
+                case 'p':
+                {
+                    icon = 'glyphicon glyphicon-time';
+                    label = 'label-warning';
+                    text = item._source.statusText;
+                    break;
+                }
+                case 'f':
+                {
+                    icon = 'glyphicon glyphicon-remove';
+                    label = 'label-danger';
+                    text = item._source.statusText;
+                    break;
+                }
+                default:
+                {
+                    icon = 'glyphicon glyphicon-time';
+                    label = 'label-info';
+                    text = 'Preparing...';
+                    break;
+                }
+            }
+
+            var templ = '<p class="label ' + label + '">'
+                    + '    <span class="' + icon + '"></span>'
+                    + '    ' + text
+                    + '</p>';
 
             return new Handlebars.SafeString(templ);
         });
