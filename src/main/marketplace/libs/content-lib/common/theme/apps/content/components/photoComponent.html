@@ -1,0 +1,11 @@
+<div class="photo-panel" style="text-align: $!photoAlign;">
+    #if ($photoLinkable == "true")
+    <a href="$!photoLink" target="$!photoLinkTarget">
+    #end
+        
+        <img src="$!photoSrc" style="display: inline-block; vertical-align: $!photoValign;" alt="$!photoAlt" width="$!photoWidth" height="$!photoHeight" class="$!photoStyle #if ($photoResponsive == "true") img-responsive #end" />
+        
+    #if ($photoLinkable == "true")
+    </a>
+    #end
+</div>

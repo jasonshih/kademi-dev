@@ -32,7 +32,7 @@ function loadKEditor(isEdm, callback) {
 (function ($, window) {
     function initMSelectImage(target, keditor, onSelectFile) {
         target.mselect({
-            contentTypes: ['image'],
+            contentType: 'image',
             pagePath: keditor.options.pagePath,
             basePath: keditor.options.basePath,
             onSelectFile: onSelectFile
