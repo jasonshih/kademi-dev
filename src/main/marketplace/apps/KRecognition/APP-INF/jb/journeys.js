@@ -22,10 +22,17 @@
             var badgeId = Utils.safeInt(customSettings.badge);
 
             var topic = applications.userApp.recognitionService.getTopic(topicId);
-            var badge = topic.getBadge(badgeId);
+            if (Utils.isNotNull(topic)) {
+                var badge = topic.getBadge(badgeId);
 
-            var award = applications.userApp.recognitionService.createAward(badge, lead.profile);
-
+                if (Utils.isNotNull(badge)) {
+                    applications.userApp.recognitionService.createAward(badge, lead.profile);
+                } else {
+                    log.warn("_onAwardBadgeEnter - Badge null, Not proceeding - {} - {}", badgeId, funnel);
+                }
+            } else {
+                log.warn("_onAwardBadgeEnter - Topic null, Not proceeding - {} - {}", topicId, funnel);
+            }
         }
     };
 
