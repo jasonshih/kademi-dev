@@ -20,13 +20,13 @@ JBNodes['krecognition-awardBadgeActionNode'] = {
                 '<div class="form-group">' +
                 '    <div class="col-md-12">' +
                 '        <label>Topic</label>' +
-                '        <select class="form-control krecognition-topic"></select>' +
+                '        <select class="form-control krecognition-topic required"></select>' +
                 '    </div>' +
                 '</div>' +
                 '<div class="form-group">' +
                 '    <div class="col-md-12">' +
                 '        <label>Badge</label>' +
-                '        <select class="form-control krecognition-badge"><option value="">[No badge selected]</option></select>' +
+                '        <select class="form-control krecognition-badge required"><option value="">[No badge selected]</option></select>' +
                 '    </div>' +
                 '</div>'
                 );

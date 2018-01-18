@@ -9,10 +9,10 @@
             checks.each(function (count, item) {
                 ids.push($(item).data('pid'));
             });
-            
+
             updateProductSelected(ids.join(','));
         });
-        
+
         $('.addAllMatched').click(function (e) {
             e.preventDefault();
             Kalert.confirm('This will add all products matching the current criteria to the reward store. Do you want to proceed?', 'Yes', function () {
@@ -31,10 +31,10 @@
                     }
                 });
             });
-            
+
         });
     }
-    
+
     function initSearchProduct() {
         $('#product-query').keyup(function () {
             typewatch(function () {
@@ -42,23 +42,23 @@
                 doProductSearch();
             }, 500);
         });
-        
+
         $(document.body).on('change', 'select.category', function (e) {
             doProductSearch();
         });
-        
+
         $(document.body).on('change', '#search-library', function (e) {
             doProductSearch();
         });
     }
-    
+
     function initSortable() {
         $(document.body).on('click', '.sort-field', function (e) {
             e.preventDefault();
             var a = $(e.target);
             var uri = URI(window.location);
             var field = a.attr('id');
-            
+
             var dir = 'asc';
             if (field == getSearchValue(window.location.search, 'sortfield')
                 && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
@@ -66,33 +66,33 @@
             }
             uri.setSearch('sortfield', field);
             uri.setSearch('sortdir', dir);
-            
+
             window.history.pushState('', '', uri.toString());
-            
+
             doProductSearch();
         });
     }
-    
+
     function doProductSearch() {
         flog('doProductSearch');
         var query = $('#product-query').val();
         var selectedCategories = $('#categoryName').val() || [];
         var orgId = $('#search-library').val();
-        
+
         $.each(selectedCategories, function (i, value) {
             query += ' category:' + value;
         });
-        
+
         flog('doSearch', query, orgId);
         var newUrl = window.location.pathname + '?addProducts&q=' + query + '&l=' + orgId;
-        
+
         var sortfield = getSearchValue(window.location.search, 'sortfield');
         var sortdir = getSearchValue(window.location.search, 'sortdir');
-        
+
         if (sortfield && sortdir) {
             newUrl += '&sortfield=' + sortfield + '&sortdir=' + sortdir;
         }
-        
+
         window.history.replaceState('', '', newUrl);
         $.ajax({
             type: 'GET',
@@ -106,27 +106,28 @@
             }
         });
     }
-    
+
     function initSelectPicker() {
         $('.selectpicker').each(function () {
             var selectpicker = $(this);
-            
+
             selectpicker.selectpicker({
-                liveSearch: true
+                liveSearch: true,
+                noneSelectedText : "Category"
             });
-            
+
             if (selectpicker.hasClass('category')) {
                 selectpicker.ajaxSelectPicker({
                     ajax: {
                         // TODO: Real request to server to get search results
-                        url: '/',
+                        url: '/categories/',
                         // type: 'POST',
                         // dataType: 'json',
                         data: function () {
                             var params = {
-                                q: '{{{q}}}'
+                                search : '{{{q}}}'
                             };
-                            
+
                             return params;
                         }
                     },
@@ -136,26 +137,34 @@
                         var categories = [];
                         if (resp && resp.status) {
                             // TODO: Add real data to categories
+                            $.each(resp.data, function(i, n) {
+                                categories.push({
+                                    'value': n.name,
+                                    'text': n.title,
+                                    'disabled': false
+                                });
+
+                            });
                         }
-                        
-                        categories.push({
-                            'value': 'CAT-1',
-                            'text': 'Category 1',
-                            'disabled': false
-                        });
-                        
-                        categories.push({
-                            'value': 'CAT-2',
-                            'text': 'Category 2',
-                            'disabled': false
-                        });
-                        
-                        categories.push({
-                            'value': 'CAT-3',
-                            'text': 'Category 3',
-                            'disabled': false
-                        });
-                        
+
+//                        categories.push({
+//                            'value': 'CAT-1',
+//                            'text': 'Category 1',
+//                            'disabled': false
+//                        });
+//
+//                        categories.push({
+//                            'value': 'CAT-2',
+//                            'text': 'Category 2',
+//                            'disabled': false
+//                        });
+//
+//                        categories.push({
+//                            'value': 'CAT-3',
+//                            'text': 'Category 3',
+//                            'disabled': false
+//                        });
+
                         return categories;
                     },
                     locale: {
@@ -165,11 +174,11 @@
             }
         });
     }
-    
+
     function updateProductSelected(productIds) {
         var data = {};
         data['addProductIds'] = productIds;
-        
+
         $.ajax({
             type: 'POST',
             url: window.location.pathname,
@@ -190,7 +199,7 @@
             }
         });
     }
-    
+
     function getSearchValue(search, key) {
         if (search.charAt(0) == '?') {
             search = search.substr(1);
@@ -206,7 +215,7 @@
         }
         return '';
     }
-    
+
     // Run init methods
     $(function () {
         initSearchProduct();

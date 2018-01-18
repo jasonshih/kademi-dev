@@ -41,25 +41,25 @@
         #macro (assetMainForm)
             <div id="main-asset">
                 <form action="$page.href" method="POST" class="form-asset-main form form-horizontal">
-        
+
                     <button type="submit" class="btn btn-success">Save</button>
-        
+
                     <div class="row">
                         <div class="col-sm-7">
                             <div class="form-group">
                                 <label class="control-label col-md-3" for="name">Name</label>
-        
+
                                 <div class="col-md-8">
                                     <input type="text" name="name" id="name" value="$!page.asset.name" placeholder="" class="required form-control" required="true" />
                                 </div>
                             </div>
-        
+
                             $!bodyContent
                         </div>
                         <div class="col-sm-5">
                             <div id="asset-info">
                                 #assetInfo()
-        
+
                                 <h3>Notes</h3>
                                 <textarea class="form-control" name="notes" style="height: 200px">$!page.asset.notes</textarea>
                             </div>
@@ -125,7 +125,12 @@
         #end
 
         #macro( assetCommonScripts )
-        <div id="modal-edit-type" class="modal fade" aria-hidden="true" tabindex="-1">
+        <style>
+            .keditor-frame {
+                min-height: 800px;
+            }
+        </style>
+        <div id="modal-edit-type" class="modal fade modal-full" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -146,8 +151,8 @@
             </div>
         </div>
 
-        <div id="modal-edit-relation" class="modal fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-dialog modal-lg">
+        <div id="modal-edit-relation" class="modal fade modal-full" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
@@ -160,8 +165,8 @@
             </div>
         </div>
 
-        <div id="modal-add-relation" class="modal fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-dialog modal-lg">
+        <div id="modal-add-relation" class="modal fade modal-full" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
