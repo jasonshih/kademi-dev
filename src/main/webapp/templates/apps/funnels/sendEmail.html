@@ -380,7 +380,13 @@
                     }
                 });
 
+                $('body').on('click', 'td.clickable', function (e) {
+                    e.preventDefault();
 
+                    var td = $(this);
+                    var tr = td.closest('tr');
+                    window.location.href = tr.attr('href');
+                });
 
                 initSendTest();
 
