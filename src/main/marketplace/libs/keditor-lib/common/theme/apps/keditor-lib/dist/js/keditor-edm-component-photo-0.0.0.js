@@ -89,7 +89,7 @@
                     
                     var photoEdit = form.find('#photo-edit');
                     photoEdit.mselect({
-                        contentTypes: ['image'],
+                        contentType: 'image',
                         bs3Modal: true,
                         pagePath: keditor.options.pagePath,
                         basePath: keditor.options.basePath,

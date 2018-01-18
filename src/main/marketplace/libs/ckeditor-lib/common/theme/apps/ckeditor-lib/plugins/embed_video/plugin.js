@@ -1,4 +1,6 @@
 (function (CKEDITOR) {
+    var ALT_SUFFIX = '/alt-640-360.png';
+    
     CKEDITOR.plugins.add('embed_video', {
         init: function (editor) {
             var that = this;
@@ -9,7 +11,7 @@
             var modal = $('#modal-embed-video');
             if (modal.length === 0) {
                 $(document.body).append(
-                    '<div id="modal-embed-video" class="modal fade" aria-hidden="true" tabindex="-1">' +
+                    '<div id="modal-embed-video" class="modal modal-mselect modal-no-foooter fade" aria-hidden="true" tabindex="-1">' +
                     '   <div class="modal-dialog modal-lg">' +
                     '       <div class="modal-content">' +
                     '           <div class="modal-header">' +
@@ -33,14 +35,21 @@
                 exec: function (instance) {
                     if (!modalBody.data('mselect')) {
                         var options = {
-                            contentTypes: ['video'],
+                            contentType: 'video',
                             useModal: false,
-                            onSelectFile: function (url, relativeUrl, fileType, hash) {
-                                flog('[CKEDITOR.embed_video] onSelectFile', url, relativeUrl, fileType, hash);
+                            onSelectFile: function (url, relativeUrl, fileType, hash, isAsset) {
+                                flog('[CKEDITOR.embed_video] onSelectFile', url, relativeUrl, fileType, hash, isAsset);
                                 
-                                var videoUrl = '/_hashes/files/' + hash + '/alt-640-360.png';
+                                var uniqueId = isAsset ? hash : '';
+                                uniqueId = uniqueId || previewContainer.attr('data-uniqueid');
+                                var hashId = isAsset ? '' : hash;
+                                hashId = hashId || previewContainer.attr('data-hash');
+                                var videoUrl = isAsset ? '/assets/' + uniqueId : '/_hashes/files/' + hashId;
+                                videoUrl += ALT_SUFFIX;
+                                
+                                that.element.setAttribute('data-hash', hashId);
+                                that.element.setAttribute('data-uniqueid', uniqueId);
                                 that.element.setAttribute('src', videoUrl);
-                                that.element.setAttribute('data-hash', hash);
                                 that.element.$.removeAttribute('data-cke-saved-src');
                                 that.element.setAttribute("class", "video-jw");
                                 
@@ -79,23 +88,26 @@
                     
                     if (CKEDITOR.plugins.embedVideo.isVideo(element)) {
                         that.insertMode = false;
-                        var hash = element.getAttribute('data-hash');;
+                        var hash = element.getAttribute('data-hash') || '';
+                        var uniqueId = element.getAttribute('data-uniqueid') || '';
                         var src = element.getAttribute('src');
-                        modalBody.mselect('selectFile', hash);
                         
                         $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
                             $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
                                 jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                                previewContainer.attr('data-hash', hash);
-                                previewContainer.attr('data-src', src);
-                                previewContainer.html('<div class="jp-video" data-hash="' + hash + '"></div>');
-                                buildJWPlayer(previewContainer.find('div.jp-video'), 100, '/_hashes/files/' + hash, src);
+                                previewContainer.attr({
+                                    'data-hash': hash,
+                                    'data-uniqueid': uniqueId,
+                                    'data-file-type': 'video',
+                                    'data-src': src
+                                });
+                                previewContainer.html('<div class="jp-video"></div>');
+                                buildJWPlayer(previewContainer.find('div.jp-video'), 100, src.replace(ALT_SUFFIX, ''), src);
                             });
                         });
                     } else {
                         element = instance.document.createElement('img');
                         that.insertMode = true;
-                        // modalBody.mselect('selectFile', '');
                     }
                     
                     that.element = element;

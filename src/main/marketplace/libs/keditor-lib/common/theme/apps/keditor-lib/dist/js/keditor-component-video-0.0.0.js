@@ -108,7 +108,7 @@
                     
                     var btnVideoFileInput = form.find('.btn-videoFileInput');
                     btnVideoFileInput.mselect({
-                        contentTypes: ['video'],
+                        contentType: 'video',
                         bs3Modal: true,
                         pagePath: keditor.options.pagePath,
                         basePath: keditor.options.basePath,

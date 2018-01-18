@@ -860,12 +860,21 @@
                 if (!editor.config.linkShowTargetTab)
                     this.hidePage('target'); //Hide Target tab.
                 
-                var basePath = window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1);
+                var basePath;
+                var pagePath;
+                
+                if (editor.config.basePath) {
+                    basePath = editor.config.basePath;
+                }
+                
+                if (editor.config.pagePath) {
+                    pagePath = editor.config.pagePath;
+                }
+                
                 var that = this;
-                $('.btnBrowseFiles').mselectAll({
-                    pagePath: basePath,
+                $('.btnBrowseFiles').mselect({
+                    pagePath: pagePath,
                     basePath: basePath,
-                    mselectAll: true,
                     zIndex: 10012,
                     onSelectFile: function (url, relUrl, type, hash) {
                         flog('ckeditor link plugin file selected', url, relUrl, type, hash);

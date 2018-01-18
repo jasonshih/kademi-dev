@@ -219,10 +219,10 @@
             excludedEndPaths: options.excludedEndPaths,
             showAssets: options.showAssets,
             onSelect: function (node, type, selectedUrl, hash, isAsset) {
-                flog('[MSelect] Select node', node, selectedUrl, hash);
-                var selectFolder = this.getSelectedFolderUrl();
+                flog('[MSelect] Select node', node, selectedUrl, hash, isAsset);
                 
                 if (!isAsset) {
+                    var selectFolder = this.getSelectedFolderUrl();
                     btnUploadFile.mupload('setUrl', selectFolder);
                 }
                 
@@ -238,11 +238,16 @@
                     progressBar.show();
                     progressBarInner.html('Loading...');
                     container.find('.btn-edit-image').hide();
-                    previewContainer.attr('data-file-type', fileType);
+                    previewContainer.attr({
+                        'data-file-type': fileType,
+                        'data-hash': (isAsset ? '' : hash),
+                        'data-uniqueid': (isAsset ? hash : ''),
+                        'data-url': selectedUrl
+                    });
                     
                     switch (fileType) {
                         case 'video':
-                            previewContainer.html('<div class="jp-video" data-hash="' + hash + '"></div>');
+                            previewContainer.html('<div class="jp-video"></div>');
                             $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
                                 $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
                                     jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
@@ -257,7 +262,7 @@
                             break;
                         
                         case 'audio':
-                            previewContainer.html('<div class="jp-audio" data-hash="' + hash + '" style="padding: 15px"><div id="kaudio-player-100" /></div>');
+                            previewContainer.html('<div class="jp-audio" style="padding: 15px"><div id="kaudio-player-100" /></div>');
                             $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
                                 $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
                                     jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
@@ -279,7 +284,7 @@
                                 var realHeight = this.height;
                                 var ratio = realWidth / realHeight;
                                 
-                                previewContainer.html('<img src="' + previewUrl + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" />');
+                                previewContainer.html('<img src="' + previewUrl + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" />');
                                 
                                 if (typeof options.onPreviewFile === 'function') {
                                     options.onPreviewFile.call(container, fileType, selectedUrl, hash);
@@ -296,9 +301,6 @@
                             }
                             progressBar.hide();
                     }
-                    
-                    previewContainer.attr('data-url', selectedUrl);
-                    previewContainer.attr('data-hash', hash);
                 }
             }
         };
@@ -342,7 +344,7 @@
         };
         
         if (options.contentType) {
-            muploadOptions.acceptedFiles = [self.getAcceptedFile(options.contentType)];
+            muploadOptions.acceptedFiles = self.getAcceptedFile(options.contentType);
         }
         btnUploadFile.mupload(muploadOptions);
         

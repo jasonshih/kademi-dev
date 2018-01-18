@@ -41,23 +41,28 @@
             editor.addCommand('imageDialog', new CKEDITOR.command(editor, {
                 exec: function (instance) {
                     if (!modalBody.data('mselect')) {
-                        flog('[fuse-image] Init mselect modal');
+                        flog('[CKEDITOR.fuse-image] Init mselect modal');
                         
                         var options = {
-                            contentTypes: ['image'],
+                            contentType: 'image',
                             useModal: false,
-                            onSelectFile: function (url, relativeUrl, fileType, hash) {
-                                flog('[CKEDITOR.fuse-image] onSelectFile', url, relativeUrl, fileType, hash);
+                            onSelectFile: function (url, relativeUrl, fileType, hash, isAsset) {
+                                flog('[CKEDITOR.fuse-image] onSelectFile', url, relativeUrl, fileType, hash, isAsset);
                                 
                                 var previewImg = previewContainer.find('img');
-                                hash = hash || previewImg.attr('data-hash');
-                                var imageUrl = (editor.config.fullUrl ? 'http://' + window.location.host : '') + '/_hashes/files/' + hash;
+                                var uniqueId = isAsset ? hash : '';
+                                uniqueId = uniqueId || previewContainer.attr('data-uniqueid');
+                                var hashId = isAsset ? '' : hash;
+                                hashId = hashId || previewContainer.attr('data-hash');
+                                var imageUrl = isAsset ? '/assets/' + uniqueId : '/_hashes/files/' + hashId;
+                                imageUrl = (editor.config.fullUrl ? 'http://' + window.location.host : '') + imageUrl;
                                 var width = previewImg.width();
                                 var height = previewImg.height();
                                 var alt = previewImg.attr('alt');
-
+                                
+                                that.element.setAttribute('data-hash', hashId);
+                                that.element.setAttribute('data-uniqueid', uniqueId);
                                 that.element.setAttribute('src', imageUrl);
-                                that.element.setAttribute('data-hash', hash);
                                 that.element.setAttribute('align', previewImg.attr('align') || '');
                                 that.element.setAttribute('width', width);
                                 that.element.setAttribute('height', height);
@@ -162,7 +167,7 @@
                                         }
                                     }, 200);
                                 });
-
+                                
                                 txtAlt.on('input', function () {
                                     var value = this.value;
                                     typewatch(function () {
@@ -284,18 +289,18 @@
         if (element) {
             element = element.getAscendant('img', true);
         }
-
+        
         if (CKEDITOR.plugins.fuseImage.isImage(element)) {
             that.insertMode = false;
-            var hash = element.getAttribute('data-hash');
+            var hash = element.getAttribute('data-hash') || '';
+            var uniqueId = element.getAttribute('data-uniqueid') || '';
             var width = (element.$.style.width || '').replace('px', '') || element.getAttribute('width');
             var height = (element.$.style.height || '').replace('px', '') || element.getAttribute('height');
             var src = element.getAttribute('src');
             var alt = element.getAttribute('alt');
-            if (!alt){
+            if (!alt) {
                 alt = '';
             }
-            modalBody.mselect('selectFile', hash);
             
             $('<img />').attr('src', src).attr('alt', alt).load(function () {
                 var realWidth = this.width;
@@ -303,7 +308,13 @@
                 var ratio = realWidth / realHeight;
                 var align = element.getAttribute('align') || '';
                 
-                previewContainer.html('<img alt="'+alt+'" src="' + src + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" style="width: ' + width + 'px; height: ' + height + 'px;" align="' + align + '" />');
+                previewContainer.html('<img alt="' + alt + '" src="' + src + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" style="width: ' + width + 'px; height: ' + height + 'px;" align="' + align + '" />');
+                previewContainer.attr({
+                    'data-hash': hash,
+                    'data-uniqueid': uniqueId,
+                    'data-file-type': 'image',
+                    'data-src': src
+                });
                 addLoremText();
                 txtWidth.val(width || realWidth);
                 txtHeight.val(height || realHeight);

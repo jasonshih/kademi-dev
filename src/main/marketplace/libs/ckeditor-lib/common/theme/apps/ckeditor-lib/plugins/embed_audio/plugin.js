@@ -9,7 +9,7 @@
             var modal = $('#modal-embed-audio');
             if (modal.length === 0) {
                 $(document.body).append(
-                    '<div id="modal-embed-audio" class="modal fade" aria-hidden="true" tabindex="-1">' +
+                    '<div id="modal-embed-audio" class="modal modal-mselect modal-no-foooter fade" aria-hidden="true" tabindex="-1">' +
                     '   <div class="modal-dialog modal-lg">' +
                     '       <div class="modal-content">' +
                     '           <div class="modal-header">' +
@@ -34,14 +34,21 @@
                 exec: function (instance) {
                     if (!modalBody.data('mselect')) {
                         var options = {
-                            contentTypes: ['audio'],
+                            contentType: 'audio',
                             useModal: false,
-                            onSelectFile: function (url, relativeUrl, fileType, hash) {
-                                flog('[CKEDITOR.embed_audio] onSelectFile', url, relativeUrl, fileType, hash);
+                            onSelectFile: function (url, relativeUrl, fileType, hash, isAsset) {
+                                flog('[CKEDITOR.embed_audio] onSelectFile', url, relativeUrl, fileType, hash, isAsset);
                                 
-                                that.element.setAttribute('src', '/static/ckeditor456/plugins/embed_audio/images/audio.jpg');
-                                that.element.setAttribute('data-kaudio', '/_hashes/files/' + hash);
-                                that.element.setAttribute('data-hash', hash);
+                                var uniqueId = isAsset ? hash : '';
+                                uniqueId = uniqueId || previewContainer.attr('data-uniqueid');
+                                var hashId = isAsset ? '' : hash;
+                                hashId = hashId || previewContainer.attr('data-hash');
+                                var audioUrl = isAsset ? '/assets/' + uniqueId : '/_hashes/files/' + hashId;
+                                
+                                that.element.setAttribute('data-hash', hashId);
+                                that.element.setAttribute('data-uniqueid', uniqueId);
+                                that.element.setAttribute('src', that.path + 'audio.jpg');
+                                that.element.setAttribute('data-kaudio', audioUrl);
                                 that.element.setAttribute('data-autostart', 'false');
                                 that.element.setAttribute('data-width', txtWidth.val());
                                 that.element.$.removeAttribute('data-cke-saved-src');
@@ -74,7 +81,7 @@
                                 modalBody.find('.milton-btn-upload-file').after(
                                     '<div class="input-group" style="float: left; width: 170px; margin: 0 10px;">' +
                                     '    <span class="input-group-addon">Width</span>' +
-                                    '    <input type="text" class="form-control txt-width" placeholder="Image width" />' +
+                                    '    <input type="text" class="form-control txt-width" placeholder="Audio width" />' +
                                     '</div>'
                                 );
                                 
@@ -124,25 +131,28 @@
                     
                     if (CKEDITOR.plugins.embedAudio.isAudio(element)) {
                         that.insertMode = false;
-                        var hash = element.getAttribute('data-hash');
+                        var hash = element.getAttribute('data-hash') || '';
+                        var uniqueId = element.getAttribute('data-uniqueid') || '';
                         var url = element.getAttribute('data-kaudio');
                         var width = element.getAttribute('data-width') || 300;
-                        modalBody.mselect('selectFile', hash);
                         
                         $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
                             $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
                                 jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                                previewContainer.attr('data-hash', hash);
-                                previewContainer.attr('data-src', url);
+                                previewContainer.attr({
+                                    'data-hash': hash,
+                                    'data-uniqueid': uniqueId,
+                                    'data-file-type': 'audio',
+                                    'data-src': src
+                                });
                                 txtWidth.val(width);
-                                previewContainer.html('<div class="jp-audio" data-hash="' + hash + '" style="padding: 15px; width: ' + (+width + 30) + 'px; margin: 0 auto;"><div id="kaudio-player-100" /></div>');
+                                previewContainer.html('<div class="jp-audio" style="padding: 15px; width: ' + (+width + 30) + 'px; margin: 0 auto;"><div id="kaudio-player-100" /></div>');
                                 buildJWAudioPlayer(100, url, false);
                             });
                         });
                     } else {
                         element = instance.document.createElement('img');
                         that.insertMode = true;
-                        // modalBody.mselect('selectFile', '');
                     }
                     
                     that.element = element;

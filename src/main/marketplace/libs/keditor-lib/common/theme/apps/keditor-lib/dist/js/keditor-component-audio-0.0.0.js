@@ -69,7 +69,7 @@
             var instance = this;
             var btnAudioFileInput = form.find('.btn-audioFileInput');
             btnAudioFileInput.mselect({
-                contentTypes: ['audio'],
+                contentType: 'audio',
                 bs3Modal: true,
                 pagePath: keditor.options.pagePath,
                 basePath: keditor.options.basePath,
