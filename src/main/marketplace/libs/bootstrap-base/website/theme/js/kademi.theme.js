@@ -341,10 +341,6 @@ function doInitVideos() {
 }
 
 function replaceImagesWithJWPlayer(images) {
-    // will not transform images which in /contenteditor page
-    if ($(document.body).hasClass('content-editor-page'))
-        return;
-    
     images.each(function (i, n) {
         var img = $(n);
         var src = img.attr("data-video-src");
@@ -433,7 +429,7 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
     });
     
     jwplayer(innerId).onReady(function () {
-        var wrapperId = innerId + "_wrapper";
+        var wrapperId = innerId;
         var wrapper = $("#" + wrapperId);
         wrapper.addClass("jwplayer-wrapper");
     });

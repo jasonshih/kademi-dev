@@ -1,0 +1,3 @@
+<div class="video-wrapper" #if($videoBorder == "true") style="border: #if ($videoBorderWidth) ${videoBorderWidth}px #end $!videoBorderStyle $!videoBorderColor" #end>
+    <img src="$!videoSrc/alt-640-320.png" width="320" data-autostart="$!videoAutostart" data-aspectratio="$!videoRatio" data-repeat="$!videoRepeat" data-controls="$!videoControls" data-video-src="$!videoSrc" id="vdieo-${formatter.randomGuid}" class="video-jw" />
+</div>
