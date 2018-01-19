@@ -35,25 +35,32 @@
         });
     }
     
-    function initSearchProduct() {
+    function updateCategory() {
         var txtQuery = $('#product-query');
         var cbbCategory = $('select.category');
         
+        var query = (txtQuery.val() || '').replace(/\s*([^\s]+\s?)\s*/g, '$1').trim();
+        if (query) {
+            query = query.split(' ');
+            
+            var selectedCategories = [];
+            $.each(query, function (i, value) {
+                if (value.indexOf('category:') === 0) {
+                    selectedCategories.push(value.replace('category:', ''));
+                    cbbCategory.val(selectedCategories).selectpicker('refresh');
+                }
+            });
+        }
+    }
+    
+    function initSearchProduct() {
+        var txtQuery = $('#product-query');
+        var cbbCategory = $('select.category');
+        updateCategory();
+        
         txtQuery.keyup(function () {
             typewatch(function () {
-                var query = (txtQuery.val() || '').replace(/\s*([^\s]+\s?)\s*/g, '$1').trim();
-                if (query) {
-                    query = query.split(' ');
-                    
-                    var selectedCategories = [];
-                    $.each(query, function (i, value) {
-                        if (value.indexOf('category:') === 0) {
-                            selectedCategories.push(value.replace('category:', ''));
-                            cbbCategory.val(selectedCategories).selectpicker('refresh');
-                        }
-                    });
-                }
-                
+                updateCategory();
                 doProductSearch();
             }, 500);
         });
