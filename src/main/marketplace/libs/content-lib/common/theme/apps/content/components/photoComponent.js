@@ -68,6 +68,26 @@
                 success: function (resp) {
                     form.html(resp);
                     
+                    $.ajax({
+                        url: '/_fields',
+                        type: 'get',
+                        dataType: 'JSON',
+                        success: function (resp) {
+                            var optionsStr = '';
+                            $.each(resp.data, function (i, field) {
+                                optionsStr += '<option value="' + field.placeholder + '">' + field.label + '</option>';
+                            });
+                            
+                            form.find('#photo-asset-code').append(optionsStr).on('change', function () {
+                                var component = keditor.getSettingComponent();
+                                var dynamicElement = component.find('[data-dynamic-href]');
+                                
+                                component.attr('data-photo-src', this.value);
+                                keditor.initDynamicContent(dynamicElement);
+                            });
+                        }
+                    });
+                    
                     form.find('#photo-link').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -202,18 +222,23 @@
             flog('showSettingForm "photo" component', component);
             
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('#photo-link').val(dataAttributes['photo-link'] || '');
-            form.find('#photo-target').val(dataAttributes['photo-target'] || '');
-            form.find('#photo-linkable').prop('checked', dataAttributes['photo-linkable'] === 'true').trigger('change');
-            form.find('#photo-align').val(dataAttributes['photo-align'] || '');
-            form.find('#photo-valign').val(dataAttributes['photo-valign'] || '');
-            form.find('#photo-responsive').prop('checked', dataAttributes['photo-responsive'] === 'true');
-            form.find('#photo-style').val(dataAttributes['photo-style'] || '');
-            form.find('#photo-width').val(dataAttributes['photo-width'] || '');
-            form.find('#photo-height').val(dataAttributes['photo-height'] || '');
-            form.find('#photo-alt').val(dataAttributes['photo-alt'] || '');
+            form.find('#photo-link').val(dataAttributes['data-photo-link'] || '');
+            form.find('#photo-target').val(dataAttributes['data-photo-target'] || '');
+            form.find('#photo-linkable').prop('checked', dataAttributes['data-photo-linkable'] === 'true').trigger('change');
+            form.find('#photo-align').val(dataAttributes['data-photo-align'] || '');
+            form.find('#photo-valign').val(dataAttributes['data-photo-valign'] || '');
+            form.find('#photo-responsive').prop('checked', dataAttributes['data-photo-responsive'] === 'true');
+            form.find('#photo-style').val(dataAttributes['data-photo-style'] || '');
+            form.find('#photo-width').val(dataAttributes['data-photo-width'] || '');
+            form.find('#photo-height').val(dataAttributes['data-photo-height'] || '');
+            form.find('#photo-alt').val(dataAttributes['data-photo-alt'] || '');
+            form.find('#photo-asset-code').val('');
             
-            $('<img />').attr('src', dataAttributes['photo-src']).load(function () {
+            if (dataAttributes['data-photo-src'].indexOf('*|') === 0) {
+                form.find('#photo-asset-code').val(dataAttributes['data-photo-src']);
+            }
+            
+            $('<img />').attr('src', dataAttributes['data-photo-src']).load(function () {
                 form.find('#photo-keep-ratio').attr({
                     'data-width': this.width,
                     'data-height': this.height,

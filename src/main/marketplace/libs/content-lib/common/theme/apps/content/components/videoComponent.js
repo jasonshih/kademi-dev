@@ -56,6 +56,26 @@
                 success: function (resp) {
                     form.html(resp);
                     
+                    $.ajax({
+                        url: '/_fields',
+                        type: 'get',
+                        dataType: 'JSON',
+                        success: function (resp) {
+                            var optionsStr = '';
+                            $.each(resp.data, function (i, field) {
+                                optionsStr += '<option value="' + field.placeholder + '">' + field.label + '</option>';
+                            });
+                            
+                            form.find('#video-asset-code').append(optionsStr).on('change', function () {
+                                var component = keditor.getSettingComponent();
+                                var dynamicElement = component.find('[data-dynamic-href]');
+                                
+                                component.attr('data-video-src', this.value);
+                                keditor.initDynamicContent(dynamicElement);
+                            });
+                        }
+                    });
+                    
                     var selectPicker = form.find('.border-style');
                     selectPicker.on('change', function () {
                         var component = keditor.getSettingComponent();
@@ -174,6 +194,12 @@
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             
             var isBorderEnabled = dataAttributes['data-video-border'] === 'true';
+            
+            form.find('#video-asset-code').val('');
+            
+            if (dataAttributes['data-video-src'].indexOf('*|') === 0) {
+                form.find('#video-asset-code').val(dataAttributes['data-video-src']);
+            }
             
             form.find('.chk-border').prop('checked', isBorderEnabled);
             form.find('.border-style').prop('disabled', !isBorderEnabled).val(dataAttributes['data-video-border-style']);
