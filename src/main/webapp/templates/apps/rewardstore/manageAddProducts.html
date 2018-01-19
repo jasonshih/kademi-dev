@@ -41,20 +41,19 @@
                             </p>
                         </div>
                         <div class="col-md-2">
-                                    <select name="categoryName" id="categoryName" class="category form-control input-sm selectpicker" multiple="multiple">
-                                        #set( $catCount = 0 )
-                                        #genCategories($page.categoryBeans)
-                                    </select>
+                            <select name="categoryName" id="categoryName" class="category form-control input-sm selectpicker" multiple="multiple">
+                                #set( $catCount = 0 )
+                                #genCategories($page.categoryBeans)
+
+                                #if( $catCount >= 20 )
+                                    <option class="search-more"></option>
+                                #end
+                            </select>
                         </div>
 
-                        <!-- TODO: Just show 10-20 top categories for initializing -->
                         #macro(genCategories $categories)
                             #foreach($cat in $categories)
                                 #set( $size = $cat.childCategories.size())
-
-                                #if( $catCount == 20 )
-                                    $formatter.option("", "search to see more..", "xx")
-                                #end
 
                                 #set( $catCount = $catCount + 1 )
 
@@ -137,7 +136,7 @@
                             <tbody id="products-list">
                                 #if( $products.isEmpty() )
                                 <tr>
-                                    <td colspan="6">No products were found matching the critieria</td>
+                                    <td colspan="999">No products were found matching the critieria</td>
                                 </tr>
                                 #else
                                 #foreach($p in $products )

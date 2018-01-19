@@ -9,10 +9,10 @@
             checks.each(function (count, item) {
                 ids.push($(item).data('pid'));
             });
-
+            
             updateProductSelected(ids.join(','));
         });
-
+        
         $('.addAllMatched').click(function (e) {
             e.preventDefault();
             Kalert.confirm('This will add all products matching the current criteria to the reward store. Do you want to proceed?', 'Yes', function () {
@@ -31,34 +31,75 @@
                     }
                 });
             });
-
+            
         });
     }
-
+    
+    function updateCategory() {
+        var txtQuery = $('#product-query');
+        var cbbCategory = $('select.category');
+        
+        var query = (txtQuery.val() || '').replace(/\s*([^\s]+\s?)\s*/g, '$1').trim();
+        if (query) {
+            query = query.split(' ');
+            
+            var selectedCategories = [];
+            $.each(query, function (i, value) {
+                if (value.indexOf('category:') === 0) {
+                    selectedCategories.push(value.replace('category:', ''));
+                    cbbCategory.val(selectedCategories).selectpicker('refresh');
+                }
+            });
+        }
+    }
+    
     function initSearchProduct() {
-        $('#product-query').keyup(function () {
+        var txtQuery = $('#product-query');
+        var cbbCategory = $('select.category');
+        updateCategory();
+        
+        txtQuery.keyup(function () {
             typewatch(function () {
-                flog('do search');
+                updateCategory();
                 doProductSearch();
             }, 500);
         });
-
-        $(document.body).on('change', 'select.category', function (e) {
+        
+        cbbCategory.on('change', function (e) {
+            var query = (txtQuery.val() || '').replace(/\s*([^\s]+\s?)\s*/g, '$1').trim();
+            var newQuery = [];
+            if (query) {
+                query = query.split(' ');
+                
+                $.each(query, function (i, value) {
+                    if (value.indexOf('category:') === -1) {
+                        newQuery.push(value);
+                    }
+                });
+            }
+            
+            var selectCategories = cbbCategory.val() || [];
+            $.each(selectCategories, function (i, value) {
+                newQuery.push('category:' + value);
+            });
+            
+            txtQuery.val(newQuery.join(' '));
+            
             doProductSearch();
         });
-
+        
         $(document.body).on('change', '#search-library', function (e) {
             doProductSearch();
         });
     }
-
+    
     function initSortable() {
         $(document.body).on('click', '.sort-field', function (e) {
             e.preventDefault();
             var a = $(e.target);
             var uri = URI(window.location);
             var field = a.attr('id');
-
+            
             var dir = 'asc';
             if (field == getSearchValue(window.location.search, 'sortfield')
                 && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
@@ -66,33 +107,28 @@
             }
             uri.setSearch('sortfield', field);
             uri.setSearch('sortdir', dir);
-
+            
             window.history.pushState('', '', uri.toString());
-
+            
             doProductSearch();
         });
     }
-
+    
     function doProductSearch() {
         flog('doProductSearch');
         var query = $('#product-query').val();
-        var selectedCategories = $('#categoryName').val() || [];
         var orgId = $('#search-library').val();
-
-        $.each(selectedCategories, function (i, value) {
-            query += ' category:' + value;
-        });
-
+        
         flog('doSearch', query, orgId);
         var newUrl = window.location.pathname + '?addProducts&q=' + query + '&l=' + orgId;
-
+        
         var sortfield = getSearchValue(window.location.search, 'sortfield');
         var sortdir = getSearchValue(window.location.search, 'sortdir');
-
+        
         if (sortfield && sortdir) {
             newUrl += '&sortfield=' + sortfield + '&sortdir=' + sortdir;
         }
-
+        
         window.history.replaceState('', '', newUrl);
         $.ajax({
             type: 'GET',
@@ -106,79 +142,65 @@
             }
         });
     }
-
+    
     function initSelectPicker() {
         $('.selectpicker').each(function () {
             var selectpicker = $(this);
-
+            var searchMore = selectpicker.find('.search-more');
+            var needAjaxSearch = searchMore.length > 0;
+            
+            if (searchMore.length > 0) {
+                searchMore.remove();
+            }
+            
             selectpicker.selectpicker({
                 liveSearch: true,
-                noneSelectedText : "Category"
+                noneSelectedText: "Category",
+                style: 'btn btn-sm btn-default'
             });
-
-            if (selectpicker.hasClass('category')) {
+            
+            if (selectpicker.hasClass('category') && needAjaxSearch) {
                 selectpicker.ajaxSelectPicker({
                     ajax: {
-                        // TODO: Real request to server to get search results
                         url: '/categories/',
-                        // type: 'POST',
-                        // dataType: 'json',
+                        type: 'POST',
+                        dataType: 'json',
                         data: function () {
                             var params = {
-                                search : '{{{q}}}'
+                                search: '{{{q}}}'
                             };
-
+                            
                             return params;
                         }
                     },
-                    cache: true,
+                    cache: false,
                     preserveSelected: true,
                     preprocessData: function (resp) {
                         var categories = [];
                         if (resp && resp.status) {
-                            // TODO: Add real data to categories
-                            $.each(resp.data, function(i, n) {
+                            $.each(resp.data, function (i, n) {
                                 categories.push({
                                     'value': n.name,
                                     'text': n.title,
                                     'disabled': false
                                 });
-
                             });
                         }
-
-//                        categories.push({
-//                            'value': 'CAT-1',
-//                            'text': 'Category 1',
-//                            'disabled': false
-//                        });
-//
-//                        categories.push({
-//                            'value': 'CAT-2',
-//                            'text': 'Category 2',
-//                            'disabled': false
-//                        });
-//
-//                        categories.push({
-//                            'value': 'CAT-3',
-//                            'text': 'Category 3',
-//                            'disabled': false
-//                        });
-
+                        
                         return categories;
                     },
                     locale: {
-                        statusInitialized: 'Type to search...'
+                        statusInitialized: 'Search to see more...'
                     }
                 });
             }
         });
     }
-
+    
     function updateProductSelected(productIds) {
         var data = {};
         data['addProductIds'] = productIds;
-
+        
         $.ajax({
             type: 'POST',
             url: window.location.pathname,
@@ -199,7 +221,7 @@
             }
         });
     }
-
+    
     function getSearchValue(search, key) {
         if (search.charAt(0) == '?') {
             search = search.substr(1);
@@ -215,7 +237,7 @@
         }
         return '';
     }
-
+    
     // Run init methods
     $(function () {
         initSearchProduct();
