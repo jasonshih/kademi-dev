@@ -2,34 +2,40 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['dynamicMediaAsset'] = {
+    KEditor.components['assetQueryText'] = {
         settingEnabled: true,
-        settingTitle: 'Dynamic Media Asset',
+        settingTitle: 'Asset Text Query Settings',
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "dynamicMediaAsset" component');
+            var self = this;
+            flog('initSettingForm "assetQueryText" component');
 
             return $.ajax({
-                url: '_components/dynamicMediaAsset?settings',
+                url: '_components/assetQueryText?settings',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
                     form.html(resp);
 
-                    form.find('[name=assetField]').on('change', function (e) {
-                        flog("changed");
+                    form.find('#asset-query-select').on('change', function () {
                         var comp = keditor.getSettingComponent();
-                        comp.attr('data-asset-field', this.value);
+                        comp.attr('data-query', this.value);
+
                         var dynamicElement = comp.find('[data-dynamic-href]');
                         keditor.initDynamicContent(dynamicElement);
+
+                        self.loadFields(form, keditor);
                     });
 
                 }
             });
         },
+
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "dynamicMediaAsset" component');
+            flog('showSettingForm "assetQueryText" component');
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('[name=assetField]').val(dataAttributes['data-asset-field'])
+
+            form.find('#asset-query-select').val(dataAttributes['data-query'] || '');
+
         }
     };
 

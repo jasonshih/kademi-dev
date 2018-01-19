@@ -25,6 +25,8 @@ controllerMappings.addComponent("content/components", "photo")
         .addDefaultAtt("photo-link-target", "")
         .build();
 
+controllerMappings.addComponent("content/components", "assetQueryText", "html", "Displays text assets from a query", "Content App component");
+
 // controllerMappings.addComponent("content/components", "video")
 //         .addType("html")
 //         .desc("Video block")
