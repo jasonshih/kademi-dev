@@ -242,7 +242,11 @@
                                     <tbody id="products-list">
                                         #if( $products.isEmpty() )
                                         <tr>
-                                            <td colspan="6">No products were found matching the critieria</td>
+                                            <td colspan="7" class="text-center">
+                                                No products were found matching the critieria
+                                                <br/>
+                                                <a href="$page.href?addProducts" class="btn btn-sm btn-success"><i class="fa fa-plus-circle"></i> Add products</a>
+                                            </td>
                                         </tr>
                                         #else
                                         #foreach($p in $products )
