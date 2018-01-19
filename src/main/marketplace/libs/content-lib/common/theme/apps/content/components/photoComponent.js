@@ -177,12 +177,6 @@
                         var src = isAsset ? '/assets/' + hash : '/_hashes/files/' + hash;
                         
                         $('<img />').attr('src', src).load(function () {
-                            img.attr({
-                                width: this.width,
-                                height: this.height,
-                                src: src
-                            });
-                            
                             chkKeepRatio.attr({
                                 'data-width': this.width,
                                 'data-height': this.height,
