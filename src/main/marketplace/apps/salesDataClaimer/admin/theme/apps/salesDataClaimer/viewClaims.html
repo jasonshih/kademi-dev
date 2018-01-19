@@ -102,7 +102,7 @@
         <td>
             #set ($soldDate = $formatter.toDate($hit.fields.soldDate.value))
             <abbr class="timeago" title="$formatter.formatDateISO8601($soldDate, $page.organisation.timezone)">
-                $formatter.formatDateISO8601($soldDate, $page.organisation.timezone)
+                $formatter.formatTimeLong($soldDate, $page.organisation.timezone)
             </abbr>
         </td>
         <td><a href="/manageUsers/$!hit.fields.soldById.value/">$!hit.fields.soldBy.value</a></td>
