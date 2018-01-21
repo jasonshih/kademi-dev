@@ -22,7 +22,7 @@
         showModal: function (modal) {
             modal.modal('show');
         },
-        onSelectFile: function (selectedUrl, selectedRelUrl) {
+        onSelectFile: function (selectedUrl, selectedRelUrl, type, hash, isAsset) {
         },
         onSelectFolder: function (selectedUrl, selectedRelUrl) {
         
@@ -377,15 +377,16 @@
         container.find('.btn-ok').click(function () {
             var url = previewContainer.attr('data-url');
             var hash = previewContainer.attr('data-hash');
+            var uniqueId = previewContainer.attr('data-uniqueid');
             
             if (url) {
                 if (typeof options.onSelectFile === 'function') {
-                    var isAssets = url.indexOf('/assets/') === 0;
+                    var isAssets = !hash;
                     var fileType = previewContainer.attr('data-file-type');
                     var relUrl = isAssets ? url : url.substring(options.basePath.length, url.length);
                     flog('[MSelect] Selected', url, relUrl);
                     
-                    options.onSelectFile.call(container, url, relUrl, fileType, hash, isAssets);
+                    options.onSelectFile.call(container, url, relUrl, fileType, isAssets ? uniqueId : hash, isAssets);
                 }
                 
                 if (typeof options.onSelectFolder === 'function') {
@@ -448,7 +449,7 @@
                         if (resp && resp.status) {
                             if (typeof self.options.onSelectFile === 'function') {
                                 var url = '/_hashes/files/' + resp.hash;
-                                self.options.onSelectFile(url, url, 'image', resp.hash);
+                                self.options.onSelectFile.call(container, url, url, 'image', resp.hash, false);
                             }
                         }
                         
