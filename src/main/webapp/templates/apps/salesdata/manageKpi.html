@@ -831,13 +831,13 @@
                                         <td>$plusOne</td>
                                         <td>
                                             #if( $item.amount )
-                                            $item.amount
+                                            $formatter.formatCurrency($item.amount)
                                             #else
                                             No value
                                             #end
                                         </td>
-                                        <td>$!item.rawAmount</td>
-                                        <td>$!item.baseline</td>
+                                        <td>$!formatter.formatCurrency($item.rawAmount)</td>
+                                        <td>$!formatter.formatCurrency($item.baseline)</td>
                                         <td>
                                             <!-- either a profilebean or orgdata -->
                                             #if( $item.profile) <!-- is individual -->
