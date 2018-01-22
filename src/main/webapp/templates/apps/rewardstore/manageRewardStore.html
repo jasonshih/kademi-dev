@@ -324,7 +324,6 @@
                     }
                 });
 
-
                 var productInRewardModal = $("#editProductInRewardModal");
                 $("body").on("click", ".product-inreward-details", function (e) {
                     e.preventDefault();
@@ -361,7 +360,8 @@
                                 removeAllMatched: true
                             },
                             success: function (data, textStatus, jqXHR) {
-                                window.location.reload();
+                                //window.location.reload();
+                                $("#searchResults").reloadFragment();
                             },
                             error: function () {
                                 Msg.error('Oh No! Something went wrong!', 'manageRewardStore');
@@ -492,7 +492,8 @@
                         flog("response", response, response.status);
                         if (response.status) {
                             Msg.info(response.messages[0], 'manageRewardStore');
-                            window.location.reload();
+                            //window.location.reload();
+                            $("#searchResults").reloadFragment();
                         } else {
                             Msg.error("There was an error changing the product status", 'manageRewardStore');
                         }
