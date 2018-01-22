@@ -1,13 +1,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Contact Requests</title>
+        <link rel="stylesheet" href="/static/dropzone/4.3.0/downloads/css/dropzone.css" />
     </head>
     <body class="manageEmail">
         <div class="btn-group" role="group">
-            <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-upload-file">
-                <span class="fa fa-plus"></span>
-                Upload
-            </button>
+            <div class="btn-group">
+                <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-upload-file">
+                    <span class="fa fa-plus"></span>
+                    Upload
+                </button>
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a data-toggle="collapse" href="#bulk-upload">Bulk upload</a></li>
+                </ul>
+            </div>
 
             <div class="btn-group">
                 <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -42,6 +52,12 @@
                 <span class="fa fa-cogs"></span>
                 Manage types
             </a>
+        </div>
+
+        <div class="collapse" id="bulk-upload">
+            <div class="well">
+                <form action="${page.href}_DAV/PUT?overwrite=true" class="dropzone dropzone-fullwidth" id="uploadFileDropzone"></form>
+            </div>
         </div>
 
         <hr />
@@ -135,6 +151,7 @@
             </div>
         </div>
 
+        <script src="/static/dropzone/4.3.0/downloads/dropzone.min.js"></script>
         <script type="text/javascript" src="/theme/apps/content/manageAssets.js"></script>
     </body>
 </html>
