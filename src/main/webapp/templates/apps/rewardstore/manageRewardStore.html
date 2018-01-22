@@ -337,14 +337,17 @@
                 $('#removeSelected').click(function (e) {
                     flog("clic");
                     e.preventDefault();
-                    Msg.info('Removing selected', 'manageRewardStore');
                     var checks = $("#products-list").find('input:checked');
                     var ids = [];
                     checks.each(function (count, item) {
                         ids.push($(item).data('pid'));
                     });
 
-                    updateProductSelected(ids.join(','));
+                    if (ids === undefined || ids.length === 0) {
+                        Msg.error('Please select at least one product to remove.', 'manageRewardStore');
+                    } else {
+                        updateProductSelected(ids.join(','));
+                    }
                 });
 
                 $(".removeAllMatched").click(function (e) {
