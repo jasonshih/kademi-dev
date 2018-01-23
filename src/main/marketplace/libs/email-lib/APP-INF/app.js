@@ -19,3 +19,16 @@
 //         .addDefaultAtt("message", "Reset your password")
 //         .build();
 // ;
+
+controllerMappings.addComponent("email/components", "photoEDM")
+        .addType("edm")
+        .desc("Photo block")
+        .categories("Email")
+        .addDefaultAtt("photo-src", "http://www.kademi.co/static/images/somewhere_bangladesh.jpg")
+        .addDefaultAtt("photo-align", "left")
+        .addDefaultAtt("photo-fullwith", "")
+        .addDefaultAtt("photo-alt", "")
+        .addDefaultAtt("photo-linkable", "false")
+        .addDefaultAtt("photo-link", "")
+        .addDefaultAtt("photo-link-target", "")
+        .build();

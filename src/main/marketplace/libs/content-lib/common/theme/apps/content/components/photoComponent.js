@@ -222,9 +222,9 @@
             flog('showSettingForm "photo" component', component);
             
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('#photo-link').val(dataAttributes['data-photo-link'] || '');
-            form.find('#photo-target').val(dataAttributes['data-photo-target'] || '');
-            form.find('#photo-linkable').prop('checked', dataAttributes['data-photo-linkable'] === 'true').trigger('change');
+            form.find('#photo-link').prop('disabled', dataAttributes['data-photo-linkable'] !== 'true').val(dataAttributes['data-photo-link'] || '');
+            form.find('#photo-target').prop('disabled', dataAttributes['data-photo-linkable'] !== 'true').val(dataAttributes['data-photo-target'] || '');
+            form.find('#photo-linkable').prop('checked', dataAttributes['data-photo-linkable'] === 'true');
             form.find('#photo-align').val(dataAttributes['data-photo-align'] || '');
             form.find('#photo-valign').val(dataAttributes['data-photo-valign'] || '');
             form.find('#photo-responsive').prop('checked', dataAttributes['data-photo-responsive'] === 'true');

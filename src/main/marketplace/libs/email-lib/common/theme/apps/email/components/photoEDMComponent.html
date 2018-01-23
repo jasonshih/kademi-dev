@@ -1,0 +1,56 @@
+#set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
+#set ($linkStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${linkColor}; text-decoration: none;")
+
+#set ($width = $formatter.toInteger($width))
+
+#set ($wrapperStyle = "")
+#if ($paddingTop)
+    #set ($wrapperStyle = $wrapperStyle + " padding-top: " + $paddingTop + "px;")
+#end
+#if ($paddingBottom)
+    #set ($wrapperStyle = $wrapperStyle + " padding-bottom: " + $paddingBottom + "px;")
+#end
+#if ($paddingLeft)
+    #set ($wrapperStyle = $wrapperStyle + " padding-left: " + $paddingLeft + "px;")
+#end
+#if ($paddingRight)
+    #set ($wrapperStyle = $wrapperStyle + " padding-right: " + $paddingRight + "px;")
+#end
+
+#if ($photoFullwidth == "true")
+    #set ($imageWidth = $width)
+    #if ($paddingLeft)
+        #set ($paddingLeft = $formatter.toInteger($paddingLeft))
+        #set ($imageWidth = $imageWidth - $paddingLeft)
+    #end
+    #if ($paddingRight)
+        #set ($paddingRight = $formatter.toInteger($paddingRight))
+        #set ($imageWidth = $imageWidth - $paddingRight)
+    #end
+#else
+    #set ($imageWidth = $realWidth)
+#end
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tbody>
+        <tr>
+            <td class="wrapper" #if ($backgroundColor) bgcolor="$backgroundColor" #end style="$!wrapperStyle">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tbody>
+                        <tr>
+                            <td class="text-wrapper" style="$!baseStyles" #if ($photoAlign) align="$photoAlign" #end>
+                                #if ($photoLinkable == "true")
+                                <a href="$!photoLink" target="$!photoLinkTarget" style="$!linkStyles">
+                                #end
+                                    <img src="$!photoSrc" style="display: block; border: 0;" width="$!imageWidth" height="" alt="$!photoAlt" />
+                                #if ($photoLinkable == "true")
+                                </a>
+                                #end
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>

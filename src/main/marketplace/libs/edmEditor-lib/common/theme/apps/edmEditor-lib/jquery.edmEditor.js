@@ -1,6 +1,5 @@
 (function ($) {
     var EDITOR_PATH = '/theme/apps/edmEditor-lib/';
-    var KEDITOR_PATH = '/theme/apps/keditor-lib/dist/';
     
     $.fn.edmEditor = function (method) {
         if (methods[method]) {
@@ -434,20 +433,35 @@
         });
     };
     
-    edmEditor.showDefaultComponentControls = function (form, component, keditor) {
-        flog('[jquery.edmEditor] showDefaultComponentControls', form, component, keditor);
+    edmEditor.showDefaultComponentControls = function (form, component, keditor, options) {
+        flog('[jquery.edmEditor] showDefaultComponentControls', form, component, keditor, options);
         
-        var tdWrapper = component.find('td.wrapper');
-        form.find('.txt-padding').each(function () {
-            var input = $(this);
-            var dataCss = input.attr('data-css');
+        if (options && options.dynamicComponent) {
+            var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             
-            input.val(
-                edmEditor.getPxValue(tdWrapper.css(dataCss))
-            );
-        });
-        
-        form.find('.txt-bg-color').val(tdWrapper.attr('bgcolor') || '');
+            flog('-----------------', dataAttributes);
+            
+            form.find('.txt-padding').each(function () {
+                var input = $(this);
+                var dataCss = input.attr('data-css');
+                
+                input.val(dataAttributes['data-' + dataCss] || '');
+            });
+            
+            form.find('.txt-bg-color').val(dataAttributes['data-background-color'] || '').trigger('update');
+        } else {
+            var tdWrapper = component.find('td.wrapper');
+            form.find('.txt-padding').each(function () {
+                var input = $(this);
+                var dataCss = input.attr('data-css');
+                
+                input.val(
+                    edmEditor.getPxValue(tdWrapper.css(dataCss))
+                );
+            });
+            
+            form.find('.txt-bg-color').val(tdWrapper.attr('bgcolor') || '').trigger('update');
+        }
     };
     
     edmEditor.applySetting = function (keditor, input) {
@@ -846,7 +860,9 @@
                             component.removeAttr('data-line-height-h5');
                             component.removeAttr('data-font-size-h6');
                             component.removeAttr('data-line-height-h6');
+                            component.hide();
                             component.attr('data-width', component.closest('td').width());
+                            component.show();
                         },
                         onInitContentArea: function (contentArea) {
                             contentArea[contentArea.children().length === 0 ? 'addClass' : 'removeClass']('empty');
