@@ -2,6 +2,10 @@
     <head>
         <title>Manage Contact Requests</title>
         <link rel="stylesheet" href="/static/dropzone/4.3.0/downloads/css/dropzone.css" />
+        <script type="text/javascript" src="/static/bootstrap-select/1.10.0/dist/js/bootstrap-select.min.js">//</script>
+        <script type="text/javascript" src="/static/bootstrap-select-ajax/1.4.3/dist/js/ajax-bootstrap-select.min.js">//</script>
+        <link rel="stylesheet" href="/static/bootstrap-select/1.10.0/dist/css/bootstrap-select.min.css" />
+        <link rel="stylesheet" href="/static/bootstrap-select-ajax/1.4.3/dist/css/ajax-bootstrap-select.min.css" />
     </head>
     <body class="manageEmail">
         <div class="btn-group" role="group">
@@ -63,7 +67,7 @@
         <hr />
 
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <p class="input-group search-user input-group-sm">
                     <input type="text" id="query" class="form-control" placeholder="Search for asset here" value="" />
                     <span class="input-group-btn">
@@ -73,7 +77,15 @@
                     </span>
                 </p>
             </div>
-            <div class="col-sm-6">
+            <div class="col-md-7">
+                <select name="contentType" id="searchContentType" class="form-control input-sm selectpicker" multiple="multiple">
+                    #foreach($type in $page.assetTypes)
+                    $formatter.option($type.name, $type.name, $request.params.contentType)
+                    #end
+                </select>
+            </div>
+
+            <div class="col-sm-1">
                 <div class="btn-group pull-right" role="group">
                     <a href="#" class="btn btn-danger btn-delete-assets" role="button"><i class="fa fa-times"></i> Delete</a>
                 </div>

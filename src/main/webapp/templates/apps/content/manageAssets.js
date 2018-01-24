@@ -3,6 +3,7 @@
         initSearchAsset();
         initDeleteAssets();
         initUploadModal();
+        initSelectPicker();
     });
 
     function initUploadModal() {
@@ -58,7 +59,8 @@
 
         var uri = URI(window.location);
 
-        uri.setSearch('q', query);
+        uri.setSearch('q', query );
+        uri.setSearch('type', $("#searchContentType").val() );
         var newHref = uri.toString();
 
         window.history.pushState('', newHref, newHref);
@@ -180,6 +182,18 @@
 
     function reloadImageList() {
         $("#productsList").reloadFragment();
+    }
+
+
+    function initSelectPicker() {
+        $('.selectpicker').each(function () {
+            var selectpicker = $(this);
+
+            selectpicker.selectpicker({
+                noneSelectedText: "Type",
+                style: 'btn btn-sm btn-default'
+            });
+        });
     }
 
 })(jQuery);
