@@ -138,12 +138,14 @@
                                 <a href='/manageUsers/$i.recipientId'>$i.recipientAddress</a>
                             </td>
                             <td>
-                                <a href='/emails/$i.id'><i class='fa fa-envelope'></i></a>$i.subject
+                                <a href='/emails/$i.id'><i class='fa fa-envelope'></i>$i.subject</a>
                             </td>
                             <td>
                                 <abbr title='$formatter.formatDateISO8601($i.sendStatusDate, $!rootFolder.organisation.timezone)' class='timeago'>$formatter.formatDateISO8601($i.sendStatusDate, $!rootFolder.organisation.timezone)</abbr>
                             </td>
-                            <td>$i.sendStatusText</td>
+                            <td>
+                                <a href='/emails/$i.id'>$i.sendStatusText</a>
+                            </td>
                             <td>$!i.baseEmailJob</td>
                             <td><input data-edmid="$i.id" type="checkbox" name="markIgnored"/></td>
                         </tr>
