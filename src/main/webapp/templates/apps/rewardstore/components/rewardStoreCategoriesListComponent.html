@@ -15,7 +15,6 @@
 <div class="list-group list-group-root well">
     <span href="#" class="list-group-item active lead">Categories</span>
     #foreach($cate in $rewardResource.children.ofType.category)
-        #if ($cate.numProducts > 0)
 
             #if($cate.children.ofType.category.size() > 0)
                 <a href="#item-$cate.name" class="#if($page.href == $cate.href) selected #end list-group-item" data-toggle="collapse" data-num-products="$cate.numProducts">
@@ -43,7 +42,6 @@
                     #end
                 </div>
             #end
-        #end
     #end
 </div>
 #end
