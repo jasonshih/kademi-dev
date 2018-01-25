@@ -1,27 +1,16 @@
 #set( $relations = $asset.getRelations($fieldDef.name) )
-<!-- TODO -->
 #foreach( $relation in $relations )
     #set( $asset = $services.assetManager.find($relation.objectId) )
     #renderFieldOutput($asset $fieldDef)
 #end
 
-
 #macro (renderFieldOutput $asset $fieldDef)
-    <div class="relation-field-wrapper">
         #if ($fieldDef.contentType == "image" || $fieldDef.contentType == "video" || $fieldDef.contentType == "binary")
             #set( $assetRes = $services.assetManager.newAssetDeliveryResource($asset) )
-
-            #if($fieldDef.contentType == "image" )
-            <img src="$assetRes.href" class="image"/>
-            #elseif( $fieldDef.contentType == "video" )
-            TODO: video
-            #else
-            $assetRes.link
-            #end
+$assetRes.href
         #elseif ($fieldDef.contentType.startsWith("text"))
             $asset.text
         #else
             TODO: Show value $asset
         #end
-    </div>
 #end

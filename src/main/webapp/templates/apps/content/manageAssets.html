@@ -92,17 +92,16 @@
             </div>
         </div>
 
-        #set( $assets = $page.search($request.params.q, $request.params.type) )
-
         <table class="table table-striped" id="table-assets">
+            <tbody id="table-body-assets">
             <tr>
-                <th>Name</th>
+                <th>Displaying $page.paginator.records.size() of $page.paginator.totalRecords assets</th>
                 <th>Format</th>
                 <th>Created</th>
                 <th>Modified</th>
                 <th width="40"><input type="checkbox" class="chk-all"></th>
             </tr>
-            #foreach( $asset in $assets )
+            #foreach( $asset in $page.paginator.records )
             <tr>
                 <td><a href="$asset.uniqueId">$asset.name</a></td>
                 <td>
@@ -118,6 +117,14 @@
                 </td>
             </tr>
             #end
+            </tbody>
+            <tfoot id="assetsFooter">
+                <tr>
+                    <td colspan="5">
+                        $!page.paginator.html
+                    </td>
+                </tr>
+            </tfoot>
         </table>
 
 

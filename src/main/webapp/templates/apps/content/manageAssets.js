@@ -46,11 +46,37 @@
     function initSearchAsset() {
         flog('initSearchAsset');
 
-        $('#query').keyup(function () {
+        var txtQuery = $('#query');
+        txtQuery.keyup(function () {
             typewatch(function () {
                 doSearchAsset();
             }, 500);
         });
+
+        var cbbCategory = $('#searchContentType');
+        cbbCategory.on('change', function (e) {
+            var query = (txtQuery.val() || '').replace(/\s*([^\s]+\s?)\s*/g, '$1').trim();
+            var newQuery = [];
+            if (query) {
+                query = query.split(' ');
+
+                $.each(query, function (i, value) {
+                    if (value.indexOf('category:') === -1) {
+                        newQuery.push(value);
+                    }
+                });
+            }
+
+            var selectCategories = cbbCategory.val() || [];
+            $.each(selectCategories, function (i, value) {
+                newQuery.push('category:' + value);
+            });
+
+            txtQuery.val(newQuery.join(' '));
+
+            doSearchAsset();
+        });
+
     }
 
     function doSearchAsset() {
@@ -64,24 +90,10 @@
         var newHref = uri.toString();
 
         window.history.pushState('', newHref, newHref);
-
-        $.ajax({
-            type: 'GET',
-            url: newHref,
-            success: function (data) {
-                var table = $('#table-assets');
-
-                var newDom = $(data);
-
-                var $fragment = newDom.find('#table-assets');
-
-                table.replaceWith($fragment);
-
-            },
-            error: function (resp) {
-                Msg.error('An error occured doing the user search. Please check your internet connection and try again', 'search');
-            }
+        $("#table-body-assets").reloadFragment({
+            url : newHref
         });
+
     }
 
     function initDeleteAssets() {
