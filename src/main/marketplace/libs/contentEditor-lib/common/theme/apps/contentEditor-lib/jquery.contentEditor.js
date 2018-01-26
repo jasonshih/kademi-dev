@@ -530,6 +530,19 @@
                     }
                 });
                 
+                form.find('.select-dock-type').on('change', function () {
+                    var container = keditor.getSettingContainer();
+                    var containerBg = contentEditor.getContainerElement(container, '.container-bg');
+                    
+                    containerBg.removeClass('navbar-fixed-top navbar-fixed-bottom navbar-fixed-middle');
+                    if (this.value !== '') {
+                        containerBg.addClass('navbar-fixed-' + this.value);
+                    }
+                });
+                
+                // ===============================================================================
+                // Settings for grid
+                // ===============================================================================
                 form.on('change', '.txt-extra-class-column', function () {
                     var txt = $(this);
                     var index = txt.attr('data-index');
@@ -549,13 +562,71 @@
                     targetContainerContent[this.checked ? 'addClass' : 'removeClass']('col-inverse');
                 });
                 
-                form.find('.select-dock-type').on('change', function () {
-                    var container = keditor.getSettingContainer();
-                    var containerBg = contentEditor.getContainerElement(container, '.container-bg');
+                // ===============================================================================
+                // Settings for tab
+                // ===============================================================================
+                var tabsList = form.find('.tabs-list');
+                form.find('.btn-add-tab').on('click', function (e) {
+                    e.preventDefault();
                     
-                    containerBg.removeClass('navbar-fixed-top navbar-fixed-bottom navbar-fixed-middle');
-                    if (this.value !== '') {
-                        containerBg.addClass('navbar-fixed-' + this.value);
+                    var container = keditor.getSettingContainer();
+                    var tabbable = container.find('.tabbable');
+                    
+                    tabsList.append(
+                        '<p class="input-group input-group-sm tab-item">' +
+                        '    <input type="text" class="form-control txt-tab-name" value="New tab" placeholder="Tab name" />' +
+                        '    <span class="input-group-btn">' +
+                        '        <a href="#" class="btn btn-danger btn-delete-tab"><i class="fa fa-times"></i></a>' +
+                        '    </span>' +
+                        '</p>'
+                    );
+                    
+                    var newTabId = keditor.generateId('tab');
+                    tabbable.find('.nav-tabs').append('<li><a href="#' + newTabId + '" data-toggle="tab">New tab</a></li>');
+                    tabbable.find('.tab-content').append(
+                        '<div class="tab-pane" id="' + newTabId + '">' +
+                        '    <div data-type="container-content" class="clearfix"></div>' +
+                        '</div>'
+                    );
+                    
+                    var newContainerContent = $('#' + newTabId).find('[data-type="container-content"]');
+                    var contentArea = container.closest('.keditor-content-area');
+                    var isNested = container.closest('[data-type="container-content"]').length > 0;
+                    
+                    keditor.initContainerContent(contentArea, container, newContainerContent, isNested);
+                });
+                
+                form.on('change', '.txt-tab-name', function () {
+                    var txt = $(this);
+                    var tabItem = txt.closest('.tab-item');
+                    var tabIndex = tabItem.index();
+                    
+                    var container = keditor.getSettingContainer();
+                    var tabbable = container.find('.tabbable');
+                    
+                    tabbable.find('.nav-tabs').children().eq(tabIndex).find('a').html(txt.val());
+                });
+                
+                form.on('click', '.btn-delete-tab', function (e) {
+                    e.preventDefault();
+                    
+                    var totalTab = tabsList.find('.tab-item').length;
+                    
+                    if (totalTab === 1) {
+                        alert('You can not delete last tab');
+                        
+                        return;
+                    }
+                    
+                    if (confirm('Are you sure you want to delete this tab? This action can not be undo!')) {
+                        var tabItem = $(this).closest('.tab-item');
+                        var tabIndex = tabItem.index();
+                        var container = keditor.getSettingContainer();
+                        var tabbable = container.find('.tabbable');
+                        
+                        tabbable.find('.nav-tabs').children().eq(tabIndex).remove();
+                        tabbable.find('.tab-pane').eq(tabIndex).remove();
+                        tabItem.remove();
                     }
                 });
             }
@@ -738,7 +809,35 @@
         var transition = containerBg.attr('data-bg-transition');
         form.find('.txt-transition').val(transition || 2);
         
-        contentEditor.buildExtraClassForColumns(form, container, keditor);
+        var tabbable = container.find('.tabbable');
+        if (tabbable.length > 0) {
+            form.find('.container-tab-settings').css('display', 'block');
+            form.find('.container-grid-settings').css('display', 'none');
+            contentEditor.initTabListForContainer(form, container, keditor);
+        } else {
+            form.find('.container-tab-settings').css('display', 'none');
+            form.find('.container-grid-settings').css('display', 'block');
+            contentEditor.buildExtraClassForColumns(form, container, keditor);
+        }
+    };
+    
+    contentEditor.initTabListForContainer = function (form, container, keditor) {
+        flog('[jquery.contentEditor] initTabListForContainer', form, container, keditor);
+        
+        var tabsList = form.find('.tabs-list');
+        tabsList.html('');
+        
+        var tabsStr = '';
+        var tabbble = container.find('.tabbable');
+        tabbble.find('.nav-tabs li a').each(function () {
+            tabsStr += '<p class="input-group input-group-sm tab-item">';
+            tabsStr += '    <input type="text" class="form-control txt-tab-name" value="' + $(this).html().trim() + '" placeholder="Tab name" />';
+            tabsStr += '    <span class="input-group-btn">';
+            tabsStr += '        <a href="#" class="btn btn-danger btn-delete-tab"><i class="fa fa-times"></i></a>';
+            tabsStr += '    </span>';
+            tabsStr += '</p>';
+        });
+        tabsList.html(tabsStr);
     };
     
     contentEditor.getContainerContentClasses = function (containerContent) {
