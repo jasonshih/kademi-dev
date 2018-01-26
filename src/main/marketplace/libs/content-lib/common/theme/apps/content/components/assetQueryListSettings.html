@@ -3,6 +3,7 @@
     <div class="form-group">
         <label class="col-sm-12">Query</label>
         <div class="col-sm-12">
+            $services.assetManager.search("", "query")
             <select class="form-control" id="asset-query-select">
                 <option value="">None</option>
                 #foreach( $query in $services.assetManager.search(null, "query") )
