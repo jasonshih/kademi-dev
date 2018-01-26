@@ -1,0 +1,44 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Edit Content Item</title>
+        <script type="text/javascript" src="/static/jquery.assetFinder/1.0.0/jquery.assetFinder-1.0.0.js"></script>
+    </head>
+    <body class="manageEmail">
+
+        #parse("/theme/apps/content/assetsCommon.html")
+
+        <form action="$page.href" method="POST" class="form-horizontal form-edit" role="form">
+
+            <p class="text-right">
+                <button type="submit" class="btn btn-lg btn-success">Save</button>
+            </p>
+
+
+            #if( $page.asset )
+
+            #else
+            <input name="type" type="hidden" value="$request.params.type" />
+            #end
+
+            #foreach($field in $page.allFields )
+                #if( $field.editable )
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="$field.name">$field.title</label>
+
+                        <div class="col-md-8">
+                            $page.renderFieldInput($field)
+                        </div>
+                    </div>
+                #end
+            #end
+
+
+        </form>
+
+
+        #assetCommonScripts()
+
+        <script type="text/javascript" src="/static/milton-upload/1.0.1/jquery.milton-upload.js"></script>
+        <script type="text/javascript" src="/theme/apps/content/manageAssetItem.js"></script>
+    </body>
+</html>
