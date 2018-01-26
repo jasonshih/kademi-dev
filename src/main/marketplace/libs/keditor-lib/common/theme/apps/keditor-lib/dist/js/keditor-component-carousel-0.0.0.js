@@ -417,7 +417,7 @@
             
             var itemStr = '';
             if (data.content) {
-                itemStr += '<img class="img-responsive" src="/keditor/componentCarouselContent.png" />';
+                itemStr += '<img class="img-responsive" src="/theme/apps/keditor-lib/componentCarouselContent.png" />';
                 itemStr += '<textarea style="display: none" class="txt-carousel-content">' + data.content + '</textarea>';
             } else {
                 itemStr += '<img class="img-responsive" src="' + data.src + '" data-hash="' + data.hash + '" />';
