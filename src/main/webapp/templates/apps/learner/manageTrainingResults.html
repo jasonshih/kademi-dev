@@ -56,15 +56,17 @@
             </thead>
             <tbody>
                 #foreach( $row in $records )
+                #set( $web = $row.website)
+                #set( $branch = $web.liveBranch())
                 <tr data-modulestatusid="$row.id">
                     <td>
-                        <a href="/programs/$row.programCode/">$row.programCode</a>                        
+                        <a href="/websites/$web.name/$branch.name/programs/$row.programCode/">$row.programCode</a>                        
                     </td>
                     <td>
-                        <a href="/programs/$row.programCode/$row.courseCode/">$row.courseCode</a>                                                
+                        <a href="/websites/$web.name/$branch.name/programs/$row.programCode/$row.courseCode/">$row.courseCode</a>                                                
                     </td>
                     <td>
-                        <a href="/programs/$row.programCode/$row.courseCode/$row.moduleCode/">$row.moduleCode</a>                                                                        
+                        <a href="/websites/$web.name/$branch.name/programs/$row.programCode/$row.courseCode/$row.moduleCode/">$row.moduleCode</a>                                                                        
                     </td>
                     <td>
                         <a href="/manageUsers/$row.profile.id">$row.profile.formattedName</a>                        

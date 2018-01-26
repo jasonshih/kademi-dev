@@ -185,10 +185,12 @@
             }
 
             templ += '</span>';
+            
+            var na = new moment(item._source.nextAttempt);
 
             templ += '<abbr title="EmailItemID: ' + item._source.id + '">';
             if (item._source.sendStatus === 'r') {
-                templ += '<small>( retry at ' + item._source.nextAttemptDate + ')</small>';
+                templ += '<small>( retry at '+na.toString()+')</small>';
             } else if (item._source.sendStatus === 'p') {
                 if (item._source.numAttempts) {
                     templ += '<small>( ' + item._source.numAttempts + ' attempts )</small>';
