@@ -6,6 +6,21 @@
         #macro (assetTypeHeader)
         <h1>$page.title</h1>
 
+        <div class="btn-group" role="group">            
+            <a class="btn btn-info" href="/repositories/$page.parent.contentTypeRepo.name/version1/texteditor?fileName=${page.name}.type.xml">
+                <span class="fa fa-pencil"></span>
+            </a>
+            <a class="btn btn-info" href="/repositories/$page.parent.contentTypeRepo.name/version1/">
+                <span class="fa fa-folder"></span>
+            </a>            
+            <a class="btn btn-info" href="/asset-manager/?q=category%3Aa1">
+                <span class="fa fa-cogs"></span>
+                Asset manager
+            </a>
+        </div>        
+        
+        <br/>
+
         <div class="panel panel-default panel-no-icon">
             <div class="panel-heading">
                 <h3 class="panel-title">Views</h3>
@@ -75,8 +90,8 @@
                     <tbody>
                         #foreach($permission in $page.assetType.permissions)
                         <tr>
-                            <td>$permission.websiteName</td>
-                            <td>$permission.groupName</td>
+                            <td>$!permission.websiteName</td>
+                            <td>$!permission.groupName</td>
                             <td>
                                 #foreach($p in $permission.priviledges)
                                 #if($p == "READ_CONTENT")
@@ -98,10 +113,90 @@
                 </table>
             </div>
         </div>
+
+
+        <div class="panel panel-default panel-no-icon">
+            <div class="panel-heading">
+                <h3 class="panel-title">Actions and controllers</h3>
+                <div class="panel-tools">
+                    <div class="btn-group btn-group-xs" role="group">
+                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="fa fa-plus"></span>
+                            New action
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right new-action">
+                            #foreach($actionType in $page.allActionTypes )
+                            <li><a href="$actionType.canonicalName" data-target="#modal-new-action" data-toggle="modal">$actionType.simpleName</a></li>                            
+                            #end
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-xs btn-danger btn-delete-permissions"><i class="fa fa-times"></i> Delete actions</button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped" id="tablePermissions">
+                    <colgroup>
+                        <col />
+                        <col />
+                        <col style="width: 20px;" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Matcher</th>                            
+                            <th>Priv</th>
+                            
+                            <th><input type="checkbox" class="chk-all" /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #foreach($action in $page.assetType.controllerMethods)
+                        <tr>
+                            <td>$action.assetAction.description</td>                    
+                            <td>$!action.matcher.description</td>                            
+                            <td>$!action.priv</td>
+                            <td>
+                                <input type="checkbox" class="chk-action-id" value="$action.id" />
+                            </td>
+                        </tr>
+                        #end
+                    </tbody>
+                </table>
+            </div>
+        </div>
         #end
 
 
         #macro (assetTypeScripts)
+        <div id="modal-new-action" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">New Action</h4>
+                    </div>
+                    <form class="form-horizontal" action="$page.href" method="POST">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="height" class="control-label col-md-3">Action type</label>
+
+                                <div class="col-md-8">
+                                    <input type="text" name="newActionType" value="" class="action-type-class form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        
         <div id="modal-new-asset-permission" class="modal fade" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -334,6 +429,14 @@
                         });
                     });
                 }
+                
+                function initActionsModal() {
+                    $(".new-action a").click(function(e) {
+                        var href = $(e.target).attr("href");                        
+                        $(".action-type-class").val(href);
+                        flog("action click", href, $(".action-type-class"));
+                    });
+                }
 
                 function initPermissionModal() {
                     var modal = $('#modal-new-asset-permission');
@@ -433,6 +536,7 @@
                     flog("init forms");
                     initViewModals();
                     initPermissionModal();
+                    initActionsModal();
                     initDelete();
                 });
             })(jQuery);
