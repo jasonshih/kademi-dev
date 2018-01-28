@@ -1,0 +1,59 @@
+{
+    "appDependencies": [],
+    "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/typeahead/0.11.1/typeahead.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/reporting/orgSelector.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/typeahead/0.11.1/typeahead.bundle.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/reporting/jquery.dateAgg.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/reporting/jquery.queryTable.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/reporting/queryComponents.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/reporting/jquery.pieChartAgg.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/reporting/orgSelector.js"
+            }
+        }
+    ]
+}
