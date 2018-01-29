@@ -10,6 +10,7 @@ controllerMappings.addComponent("salesDataClaimer/components", "claimsOverTime",
 controllerMappings.addComponent("salesDataClaimer/components", "claimsTable", "html", "Table of dealers that shows date of claim, dealer name, product purhcased, sale amount, status i.e. pending or approved", "Sales Data Claimer");
 
 controllerMappings.addGoalNodeType("claimSubmittedGoal", "salesDataClaimer/claimSubmittedGoalNode.js", "checkSubmittedGoal");
+
 function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
     log.info('checkSubmittedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);
     if (!lead) {
@@ -31,6 +32,7 @@ function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNod
 }
 
 controllerMappings.addGoalNodeType("claimProcessedGoal", "salesDataClaimer/claimProcessedGoalNode.js", "checkProcessedGoal");
+
 function checkProcessedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
     log.info('checkProcessedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);
     if (!lead) {
@@ -51,7 +53,7 @@ function checkProcessedGoal(rootFolder, lead, funnel, eventParams, customNextNod
     return false;
 }
 
-function initApp(orgRoot, webRoot, enabled) {
+function initSalesDataClaimerApp(orgRoot, webRoot, enabled) {
     log.info("initApp SalesDataClaimer > orgRoot={}, webRoot={}", orgRoot, webRoot);
     
     var dbs = orgRoot.find(JSON_DB);
@@ -71,16 +73,67 @@ function initApp(orgRoot, webRoot, enabled) {
     }
     
     saveMapping(db);
+    
+    // Default config for app
+    if (webRoot) {
+        var website = webRoot.website;
+        var alertsApp = applications.alerts;
+        
+        var claimerGroupName = "sale-claimer";
+        var claimerGroup = orgRoot.find("groups").child(claimerGroupName);
+        if (claimerGroup == null) {
+            group = orgRoot.createGroup(claimerGroupName);
+            orgRoot.addRoles(group, "SalesClaimEditor");
+            orgRoot.addRoles(group, website, "Content Viewer");
+            orgRoot.addGroupToWebsite(group, website);
+            log.info("Created '" + claimerGroupName + "' group");
+            
+            if (alertsApp) {
+                alertsApp.createAdminAlert("Sales Data Claimer", "We've created a group called " + group.name + " for Sales Data Claimer. Please be sure to <a href='/groups/" + claimerGroupName + "'>check the settings here</a>. You might want to allow public registration to this group.");
+            }
+        }
+        
+        var claimAdminGroupName = "sale-claim-admin";
+        var claimAdminGroup = orgRoot.find("groups").child(claimAdminGroupName);
+        if (claimAdminGroup == null) {
+            group = orgRoot.createGroup(claimAdminGroupName);
+            orgRoot.addRoles(group, "SalesClaimAdmin");
+            orgRoot.addRoles(group, website, "Content Viewer");
+            orgRoot.addGroupToWebsite(group, website);
+            log.info("Created '" + claimAdminGroupName + "' group");
+            
+            if (alertsApp) {
+                alertsApp.createAdminAlert("Sales Data Claimer", "We've created a group called " + group.name + " for Sales Data Claimer. Please be sure to <a href='/groups/" + claimAdminGroupName + "'>check the settings here</a>. You might want to allow public registration to this group.");
+            }
+        }
+        
+        var curUser = securityManager.currentUser;
+        securityManager.addToGroup(curUser, group);
+        
+        var dataSeriesName = "SalesClaims";
+        var dataSeries = orgRoot.find("sales").child(dataSeriesName);
+        if (dataSeries == null) {
+            // TODO: Add data series
+        }
+        
+        // orgRoot.setAppSetting(APP_NAME, 'dataSeries', dataSeriesName);
+    }
 }
 
 function saveSettings(page, params) {
     log.info('saveSettings > page={}, params={}', page, params);
     
-    var dataSeries = params.dataSeries || '';
-    var allowAnonymous = params.allowAnonymous || '';
+    page = page.find('/manageApps/');
     
-    page.setAppSetting(APP_NAME, 'dataSeries', dataSeries);
-    page.setAppSetting(APP_NAME, 'allowAnonymous', allowAnonymous);
+    if (params.dataSeries) {
+        var dataSeries = params.dataSeries || '';
+        page.setAppSetting(APP_NAME, 'dataSeries', dataSeries);
+    }
+    
+    if (params.dataSeries) {
+        var allowAnonymous = params.allowAnonymous || '';
+        page.setAppSetting(APP_NAME, 'allowAnonymous', allowAnonymous);
+    }
     
     return views.jsonResult(true);
 }
@@ -136,21 +189,21 @@ controllerMappings.addTableDef("tableClaims", "Table claims", "loadTableClaims")
     .addHeader("Status");
 
 
-function loadTableClaims(start, maxRows, rowsResult, rootFolder){
+function loadTableClaims(start, maxRows, rowsResult, rootFolder) {
     var resp = queryService.runQuery("claimsTable");
-    for (var i in resp.hits.hits){
+    for (var i in resp.hits.hits) {
         rowsResult.addRow();
         var hit = resp.hits.hits[i];
         rowsResult.addCell(formatter.formatDate(formatter.toDate(hit.source.soldDate)));
         var user = applications.userApp.findUserResource(hit.source.soldBy);
-        if (user){
+        if (user) {
             rowsResult.addCell(user.firstName + " " + user.surName);
         } else {
             rowsResult.addCell("-");
         }
         rowsResult.addCell(hit.source.productSku);
         rowsResult.addCell(hit.source.amount);
-        var statusArr = {'0': 'New', '1': 'Approved', '-1':'Rejected'};
+        var statusArr = {'0': 'New', '1': 'Approved', '-1': 'Rejected'};
         rowsResult.addCell(statusArr[hit.source.status]);
     }
 }
@@ -160,10 +213,10 @@ controllerMappings.addTableDef("tableClaimsOverTime", "Claims over time", "loadT
     .addHeader("Total");
 
 
-function loadTableClaimsOverTime(start, maxRows, rowsResult, rootFolder){
+function loadTableClaimsOverTime(start, maxRows, rowsResult, rootFolder) {
     var resp = queryService.runQuery("claimsOverTime");
     var buckets1 = resp.aggregations.get('claims_over_time').buckets;
-    for (var i in buckets1){
+    for (var i in buckets1) {
         rowsResult.addRow();
         rowsResult.addCell(formatter.formatDateISO8601(buckets1[i].key));
         rowsResult.addCell(buckets1[i].aggregations.get('totalAmount').value);

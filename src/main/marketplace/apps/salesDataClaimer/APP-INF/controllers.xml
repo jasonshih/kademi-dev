@@ -1,4 +1,4 @@
-<controllers onAppEnabled="initApp">
+<controllers onAppEnabled="initSalesDataClaimerApp">
     <source>/APP-INF/mapping.js</source>
     <source>/APP-INF/dbUtils.js</source>
     <source>/APP-INF/utils.js</source>

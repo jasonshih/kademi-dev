@@ -13,8 +13,33 @@
             initModalReviewClaim();
             initClaimsTable();
             initUpdateMapping();
+            initSettingForm();
         }
     });
+    
+    function initSettingForm() {
+        flog('initSettingForm');
+        
+        $('.form-settings-claim').each(function () {
+            var form = $(this);
+            var saveOnChange = form.find('.save-on-change');
+            
+            form.forms({
+                onSuccess: function (resp) {
+                    if (resp && resp.status) {
+                        Msg.success('Settings are saved');
+                        window.location.reload();
+                    }
+                }
+            });
+            
+            if (saveOnChange.length > 0) {
+                saveOnChange.on('change', function () {
+                    form.trigger('submit');
+                });
+            }
+        });
+    }
     
     function initModalReviewClaim() {
         flog('initModalReviewClaim');

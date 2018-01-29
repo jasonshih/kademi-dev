@@ -10,184 +10,244 @@
         #if ($user.isInGroup("administrators") || $user.isInGroup("administrator") || $user.isInGroup("admin") || $user.hasRole("Administrator"))
         #set ($isAdmin = true)
         #end
-
-        <div class="claims-list-component">
-            <div class="row">
-                <div class="col-sm-3">
-                    <p class="input-group input-group-sm">
-                        <span class="input-group-addon">Status</span>
-                        <select class="form-control select-status">
-                            #if ($isAdmin)
-                            <option value="" selected="selected"> - All statuses -</option>
-                            $formatter.option("0", "New", $params.status)
+        
+        #set ($selectedDateSeries = $page.attributes.settings.dataSeries)
+        
+        #if (!$selectedDateSeries || $selectedDateSeries == "")
+            <form class="form-horizontal form-settings-claim" action="/settingSaleDataClaimer" method="post">
+                <div class="alert alert-warning">
+                    <p><i class="fa fa-exclamation-circle"></i> No data series selected. Please select data series
+                        <select name="dataSeries" class="save-on-change">
+                            <option value=""> - None -</option>
+                            #foreach ($dataSeries in $page.find("/sales").children)
+                                $formatter.option($dataSeries.name, $dataSeries.title, "")
                             #end
-                            $formatter.option("1", "Approved", $params.status)
-                            $formatter.option("-1", "Rejected", $params.status)
-                        </select>
+                        </select> for <b>Sales Claims</b>. You can create new data series at <a href="/sales/new/">here</a>.
                     </p>
                 </div>
-                <div class="col-sm-9 text-right">
-                    #if ($isAdmin)
-                    <p class="btn-group btn-group-sm">
-                        <button type="button" class="btn btn-info btn-update-mapping"><i class="fa fa-refresh"></i> Update mapping</button>
-                    </p>
-                    #end
-                    <p class="btn-group btn-group-sm">
-                        <button type="button" class="btn btn-success btn-approve-claims"><i class="fa fa-check"></i> Approve</button>
-                        <button type="button" class="btn btn-danger btn-reject-claims"><i class="fa fa-times"></i> Reject</button>
-                    </p>
-                    #if ($isAdmin)
-                    <p class="btn-group btn-group-sm">
-                        <button type="button" class="btn btn-danger btn-delete-claims"><i class="fa fa-times"></i> Delete</button>
-                    </p>
-                    #end
-                </div>
-            </div>
-            <br />
-
-            <table class="table table-hover table-striped" id="table-claims">
-                <thead>
-                    <tr>
-                        <th width="50"></th>
-                        <th width="100">Receipt</th>
-                        <th>Amount</th>
-                        <th>Sold Date</th>
-                        <th>Entered By</th>
-                        <th>SKU Entered</th>
-                        <th width="90"></th>
-                        <th width="30"><input type="checkbox" class="chk-all" /></th>
-                    </tr>
-                </thead>
-                <tbody id="table-claims-body">
-                    #set ($searchResult = $page.attributes.searchResult)
-                    #if ($searchResult.hits.hits.size() > 0)
-                    #foreach($hit in $searchResult.hits.hits)
-                    #if ($hit.fields.status.value == 0)
-                    #renderClaim($hit)
-                    #end
-                    #end
-                    #foreach($hit in $searchResult.hits.hits)
-                    #if ($hit.fields.status.value != 0)
-                    #renderClaim($hit)
-                    #end
-                    #end
-                    #else
-                    <tr>
-                        <td colspan="99">No claim found</td>
-                    </tr>
-                    #end
-                </tbody>
-            </table>
-        </div>
-
-        #macro (renderClaim $hit)
-    <tr>
-        <td class="fa-2x text-center">
-            #if ($hit.fields.status.value == 0)
-            <i class="fa fa-circle text-muted" title="New"></i>
-            #elseif ($hit.fields.status.value == 1)
-            <i class="fa fa-check-circle text-success" title="Approved"></i>
-            #elseif ($hit.fields.status.value == -1)
-            <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
-            #end
-        </td>
-        <td>
-            #if ($hit.fields.receipt.value)
-            <a href="$hit.fields.receipt.value" target="_blank" class="thumbnail claim-receipt">
-                <span style="background-image: url('$hit.fields.receipt.value');"></span>
-            </a>
-            #end
-        </td>
-        <td>$hit.fields.amount.value</td>
-        <td>
-            #set ($soldDate = $formatter.toDate($hit.fields.soldDate.value))
-            <abbr class="timeago" title="$formatter.formatDateISO8601($soldDate, $page.organisation.timezone)">
-                $formatter.formatTimeLong($soldDate, $page.organisation.timezone)
-            </abbr>
-        </td>
-        <td><a href="/manageUsers/$!hit.fields.soldById.value/">$!hit.fields.soldBy.value</a></td>
-        <td>$!hit.fields.productSku.value</td>
-        <td>
-            #if ($hit.fields.status.value == 0)
-            <button type="button" class="btn btn-sm btn-link btn-review-claim" data-id="$hit.fields.recordId.value">
-                <i class="fa fa-pencil-square-o"></i> Review
-            </button>
-            #else
-            <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-eye"></i> View
-            </button>
-            #end
-        </td>
-        <td><input type="checkbox" value="$hit.fields.recordId.value" /></td>
-    </tr>
-    #end
-
-    <div class="modal fade" id="modal-review-claim">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Review claim</h3>
-                </div>
-                <form class="form-horizontal form-new-claim" action="/manageSaleDataClaimer/" method="post" enctype="multipart/form-data">
-                    <div class="modal-body">
-                        <div class="form-message alert alert-danger" style="display: none;"></div>
-                        <input type="hidden" name="createClaim" value="true" class="modal-action" />
-                        <input type="hidden" name="ids" value="" class="" />
-
-                        <div class="form-group">
-                            <label class="control-label col-md-4">Amount</label>
-
-                            <div class="col-md-8">
-                                <p class="form-control-static amount"></p>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-4">Date</label>
-
-                            <div class="col-md-8">
-                                <p class="form-control-static soldDate"></p>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-4">Product SKU</label>
-
-                            <div class="col-md-8">
-                                <p class="form-control-static productSku"></p>
-                            </div>
-                        </div>
-
-                        #foreach($xf in $app.call("getSalesDataExtreFields", $page))
-                        <div class="form-group">
-                            <label class="control-label col-md-4">$formatter.firstNotNull($xf.title, $xf.name)</label>
-
-                            <div class="col-md-8">
-                                <p class="form-control-static field_${xf.name}"></p>
-                            </div>
-                        </div>
-                        #end
-
-                        <div class="form-group">
-                            <label class="control-label col-md-4">Receipt</label>
-
-                            <div class="col-md-8">
-                                <p class="thumbnail">
-                                    <img src="" class="img-responsive" />
+            </form>
+        #end
+        
+        <div class="tabbable">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#claims-list" data-toggle="tab"><i class="fa fa-list"></i> Claims List</a></li>
+                <li><a href="#claims-setting" data-toggle="tab"><i class="fa fa-cogs"></i> Settings</a></li>
+            </ul>
+            
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane active" id="claims-list">
+                    <div class="claims-list-component">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="input-group input-group-sm">
+                                    <span class="input-group-addon">Status</span>
+                                    <select class="form-control select-status">
+                                        #if ($isAdmin)
+                                        <option value="" selected="selected"> - All statuses -</option>
+                                        $formatter.option("0", "New", $params.status)
+                                        #end
+                                        $formatter.option("1", "Approved", $params.status)
+                                        $formatter.option("-1", "Rejected", $params.status)
+                                    </select>
                                 </p>
                             </div>
+                            <div class="col-sm-9 text-right">
+                                #if ($isAdmin)
+                                <p class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-info btn-update-mapping"><i class="fa fa-refresh"></i> Update mapping</button>
+                                </p>
+                                #end
+                                <p class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-success btn-approve-claims"><i class="fa fa-check"></i> Approve</button>
+                                    <button type="button" class="btn btn-danger btn-reject-claims"><i class="fa fa-times"></i> Reject</button>
+                                </p>
+                                #if ($isAdmin)
+                                <p class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-danger btn-delete-claims"><i class="fa fa-times"></i> Delete</button>
+                                </p>
+                                #end
+                            </div>
                         </div>
-
+                        <br />
+                        
+                        <table class="table table-hover table-striped" id="table-claims">
+                            <thead>
+                                <tr>
+                                    <th width="50"></th>
+                                    <th width="100">Receipt</th>
+                                    <th>Amount</th>
+                                    <th>Sold Date</th>
+                                    <th>Entered By</th>
+                                    <th>SKU Entered</th>
+                                    <th width="90"></th>
+                                    <th width="30"><input type="checkbox" class="chk-all" /></th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-claims-body">
+                                #set ($searchResult = $page.attributes.searchResult)
+                                #if ($searchResult.hits.hits.size() > 0)
+                                #foreach($hit in $searchResult.hits.hits)
+                                #if ($hit.fields.status.value == 0)
+                                #renderClaim($hit)
+                                #end
+                                #end
+                                #foreach($hit in $searchResult.hits.hits)
+                                #if ($hit.fields.status.value != 0)
+                                #renderClaim($hit)
+                                #end
+                                #end
+                                #else
+                                <tr>
+                                    <td colspan="99">No claim found</td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button class="btn btn-success btn-approve-claim" type="button">Approve</button>
-                        <button class="btn btn-danger btn-reject-claim" type="button">Reject</button>
-                    </div>
-                </form>
+                </div>
+                <div class="tab-pane" id="claims-setting">
+                    <form class="form-horizontal form-settings-claim" action="/settingSaleDataClaimer" method="post">
+                        #set ($allowAnonymous = $page.attributes.settings.allowAnonymous)
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="salesDataClaimer-dataSeries">Date Series</label>
+                            <div class="col-sm-3">
+                                <select class="form-control" name="dataSeries" id="salesDataClaimer-dataSeries">
+                                    <option value=""> - None -</option>
+                                    #foreach ($dataSeries in $page.find("/sales").children)
+                                    $formatter.option($dataSeries.name, $dataSeries.title, $selectedDateSeries)
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="salesDataClaimer-allowAnonymous">Allow Anonymous</label>
+                            <div class="col-sm-3">
+                                <div class="checkbox">
+                                    <label for="salesDataClaimer-allowAnonymous">
+                                        $formatter.checkbox("salesDataClaimer-allowAnonymous", "allowAnonymous", $allowAnonymous, "true" )
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3 col-sm-offset-3">
+                                <button type="submit" class="btn btn-sm btn-success">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-
-</body>
+        
+        #macro (renderClaim $hit)
+        <tr>
+            <td class="fa-2x text-center">
+                #if ($hit.fields.status.value == 0)
+                <i class="fa fa-circle text-muted" title="New"></i>
+                #elseif ($hit.fields.status.value == 1)
+                <i class="fa fa-check-circle text-success" title="Approved"></i>
+                #elseif ($hit.fields.status.value == -1)
+                <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
+                #end
+            </td>
+            <td>
+                #if ($hit.fields.receipt.value)
+                <a href="$hit.fields.receipt.value" target="_blank" class="thumbnail claim-receipt">
+                    <span style="background-image: url('$hit.fields.receipt.value');"></span>
+                </a>
+                #end
+            </td>
+            <td>$hit.fields.amount.value</td>
+            <td>
+                #set ($soldDate = $formatter.toDate($hit.fields.soldDate.value))
+                <abbr class="timeago" title="$formatter.formatDateISO8601($soldDate, $page.organisation.timezone)">
+                    $formatter.formatTimeLong($soldDate, $page.organisation.timezone)
+                </abbr>
+            </td>
+            <td><a href="/manageUsers/$!hit.fields.soldById.value/">$!hit.fields.soldBy.value</a></td>
+            <td>$!hit.fields.productSku.value</td>
+            <td>
+                #if ($hit.fields.status.value == 0)
+                <button type="button" class="btn btn-sm btn-link btn-review-claim" data-id="$hit.fields.recordId.value">
+                    <i class="fa fa-pencil-square-o"></i> Review
+                </button>
+                #else
+                <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-eye"></i> View
+                </button>
+                #end
+            </td>
+            <td><input type="checkbox" value="$hit.fields.recordId.value" /></td>
+        </tr>
+        #end
+        
+        <div class="modal fade" id="modal-review-claim">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Review claim</h3>
+                    </div>
+                    <form class="form-horizontal form-new-claim" action="/manageSaleDataClaimer/" method="post" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <input type="hidden" name="createClaim" value="true" class="modal-action" />
+                            <input type="hidden" name="ids" value="" class="" />
+                            
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Amount</label>
+                                
+                                <div class="col-md-8">
+                                    <p class="form-control-static amount"></p>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Date</label>
+                                
+                                <div class="col-md-8">
+                                    <p class="form-control-static soldDate"></p>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Product SKU</label>
+                                
+                                <div class="col-md-8">
+                                    <p class="form-control-static productSku"></p>
+                                </div>
+                            </div>
+                            
+                            #foreach($xf in $app.call("getSalesDataExtreFields", $page))
+                            <div class="form-group">
+                                <label class="control-label col-md-4">$formatter.firstNotNull($xf.title, $xf.name)</label>
+                                
+                                <div class="col-md-8">
+                                    <p class="form-control-static field_${xf.name}"></p>
+                                </div>
+                            </div>
+                            #end
+                            
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Receipt</label>
+                                
+                                <div class="col-md-8">
+                                    <p class="thumbnail">
+                                        <img src="" class="img-responsive" />
+                                    </p>
+                                </div>
+                            </div>
+                        
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-success btn-approve-claim" type="button">Approve</button>
+                            <button class="btn btn-danger btn-reject-claim" type="button">Reject</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
 </html>

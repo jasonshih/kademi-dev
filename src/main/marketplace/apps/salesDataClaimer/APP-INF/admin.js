@@ -14,6 +14,14 @@ controllerMappings
 
 controllerMappings
         .adminController()
+        .path('/settingSaleDataClaimer')
+        .addMethod('POST', 'saveSettings')
+        .postPriviledge('READ_CONTENT')
+        .enabled(true)
+        .build();
+
+controllerMappings
+        .adminController()
         .path('/manageSaleDataClaimer/')
         .defaultView(views.templateView('/theme/apps/salesDataClaimer/viewClaims.html'))
         .addMethod('GET', 'getAllClaims')
@@ -44,6 +52,7 @@ function getAllClaims(page, params) {
     if (!params.claimId) {
         var results = searchClaims(page, params.status);
         page.attributes.searchResult = results;
+        page.attributes.settings = getAppSettings(page);
     }
 }
 
