@@ -393,7 +393,7 @@
                             var item = self.generateItemData(data[0]);
                             log('Data for new node', item);
                             
-                            var existingNode = self.treeFiles.find('.mtree-node[href="' + escape(path) + '"]');
+                            var existingNode = self.treeFiles.find('.mtree-node[href="' + path + '"]');
                             
                             if (existingNode && existingNode.length > 0) {
                                 log('Delete old node', existingNode);
@@ -414,7 +414,7 @@
                         }
                     });
                 })
-            }, 300);
+            }, 400);
         }
     };
     
@@ -554,7 +554,7 @@
         log('openPath: ' + url);
         
         var self = this;
-        var relPath = self.getRelativePath(url);
+        var relPath = self.getRelativePath(decodeURIComponent(url));
         if (self.endsWith(relPath, '/')) {
             relPath = relPath.substring(0, relPath.length - 1);
         }
