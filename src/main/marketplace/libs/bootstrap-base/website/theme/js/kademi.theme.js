@@ -334,7 +334,7 @@ function doInitVideos() {
     if (images.length === 0) {
         return;
     }
-    $.getScript("/static/jwplayer/6.10/jwplayer.js", function () {
+    $.getScriptOnce("/static/jwplayer/6.10/jwplayer.js", function () {
         jwplayer.key = "cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=";
         replaceImagesWithJWPlayer(images);
     });
@@ -445,7 +445,7 @@ function doInitAudio() {
     if (images.length === 0) {
         return;
     }
-    $.getScript("/static/jwplayer/6.10/jwplayer.js", function () {
+    $.getScriptOnce("/static/jwplayer/6.10/jwplayer.js", function () {
         jwplayer.key = "cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=";
         replaceImagesWithAudio(images);
     });
