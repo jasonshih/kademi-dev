@@ -1,5 +1,22 @@
 {
-    "appDependencies": [],
+    "appDependencies": [
+        {
+            "appId": "nvd3-lib",
+            "branch": "1.8.3"
+        },
+        {
+            "appId": "handlebars-lib",
+            "branch": "3.0.3"
+        },
+        {
+            "appId": "moment-lib",
+            "branch": "2.18.3"
+        },
+        {
+            "appId": "pagedatepicker-lib",
+            "branch": "1.0.4"
+        }
+    ],
     "dependencies": [
         {
             "css": {
