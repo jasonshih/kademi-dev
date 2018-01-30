@@ -79,44 +79,50 @@ function initSalesDataClaimerApp(orgRoot, webRoot, enabled) {
         var website = webRoot.website;
         var alertsApp = applications.alerts;
         
-        var claimerGroupName = "sale-claimer";
+        var claimerGroupName = "sales-claimer";
         var claimerGroup = orgRoot.find("groups").child(claimerGroupName);
         if (claimerGroup == null) {
-            group = orgRoot.createGroup(claimerGroupName);
-            orgRoot.addRoles(group, "SalesClaimEditor");
-            orgRoot.addRoles(group, website, "Content Viewer");
-            orgRoot.addGroupToWebsite(group, website);
-            log.info("Created '" + claimerGroupName + "' group");
+            claimerGroup = orgRoot.createGroup(claimerGroupName);
+            orgRoot.addRoles(claimerGroup, "SalesClaimEditor");
+            orgRoot.addRoles(claimerGroup, website, "Content Viewer");
+            orgRoot.addGroupToWebsite(claimerGroup, website);
+            log.info("Created '" + claimerGroupName + "' group: {}", claimerGroup);
             
             if (alertsApp) {
-                alertsApp.createAdminAlert("Sales Data Claimer", "We've created a group called " + group.name + " for Sales Data Claimer. Please be sure to <a href='/groups/" + claimerGroupName + "'>check the settings here</a>. You might want to allow public registration to this group.");
+                alertsApp.createAdminAlert("Sales Data Claimer", "We've created a group called " + claimerGroup.name + " for Sales Data Claimer. Please be sure to <a href='/groups/" + claimerGroupName + "'>check the settings here</a>. You might want to allow public registration to this group.");
             }
         }
         
-        var claimAdminGroupName = "sale-claim-admin";
+        var claimAdminGroupName = "sales-claim-admin";
         var claimAdminGroup = orgRoot.find("groups").child(claimAdminGroupName);
         if (claimAdminGroup == null) {
-            group = orgRoot.createGroup(claimAdminGroupName);
-            orgRoot.addRoles(group, "SalesClaimAdmin");
-            orgRoot.addRoles(group, website, "Content Viewer");
-            orgRoot.addGroupToWebsite(group, website);
-            log.info("Created '" + claimAdminGroupName + "' group");
+            claimAdminGroup = orgRoot.createGroup(claimAdminGroupName);
+            orgRoot.addRoles(claimAdminGroup, "SalesClaimAdmin");
+            orgRoot.addRoles(claimAdminGroup, website, "Content Viewer");
+            orgRoot.addGroupToWebsite(claimAdminGroup, website);
+            log.info("Created '" + claimAdminGroupName + "' group: {}", claimAdminGroup);
             
             if (alertsApp) {
-                alertsApp.createAdminAlert("Sales Data Claimer", "We've created a group called " + group.name + " for Sales Data Claimer. Please be sure to <a href='/groups/" + claimAdminGroupName + "'>check the settings here</a>. You might want to allow public registration to this group.");
+                alertsApp.createAdminAlert("Sales Data Claimer", "We've created a group called " + claimAdminGroup.name + " for Sales Data Claimer. Please be sure to <a href='/groups/" + claimAdminGroupName + "'>check the settings here</a>. You might want to allow public registration to this group.");
             }
         }
         
         var curUser = securityManager.currentUser;
-        securityManager.addToGroup(curUser, group);
+        securityManager.addToGroup(curUser, claimAdminGroup);
         
-        var dataSeriesName = "SalesClaims";
+        var dataSeriesName = "sales-claims";
+        var dataSeriesTitle = "Sales Claims";
         var dataSeries = orgRoot.find("sales").child(dataSeriesName);
         if (dataSeries == null) {
-            // TODO: Add data series
+            dataSeries = applications.salesData.createSeries('sales-claims', dataSeriesTitle, claimerGroup);
+            log.info("Created '" + dataSeriesName + "' data series: {}", dataSeries);
+            
+            if (alertsApp) {
+                alertsApp.createAdminAlert("Sales Data Claimer", "We've created a data series called " + dataSeriesTitle + " for Sales Data Claimer. Please be sure to <a href='/sales/" + dataSeriesName + "'>check the settings here</a>.");
+            }
         }
         
-        // orgRoot.setAppSetting(APP_NAME, 'dataSeries', dataSeriesName);
+        orgRoot.find('/manageApps/').setAppSetting(APP_NAME, 'dataSeries', dataSeriesName);
     }
 }
 
