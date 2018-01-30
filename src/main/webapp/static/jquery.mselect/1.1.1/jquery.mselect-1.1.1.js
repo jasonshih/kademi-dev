@@ -368,7 +368,9 @@
             }
         });
         
-        self.initEditZone(container);
+        if ($.fn.photoEditor) {
+            self.initEditZone(container);
+        }
         
         if (typeof options.onReady === 'function') {
             options.onReady.call(self);
@@ -445,7 +447,7 @@
         var options = self.options;
         var extraElement = '';
         
-        if (options.useCrop) {
+        if (options.useCrop && $.fn.photoEditor) {
             extraElement += '<button type="button" class="btn btn-primary btn-sm btn-edit-image" title="Edit image" style="display: none;"><i class="fa fa-edit"></i></button>';
         }
         
