@@ -32,7 +32,9 @@
                 }
                 flog('Converted to new video component');
             } else {
-                doInitVideos();
+                keditor.initDynamicContent(dynamicElement).done(function () {
+                    doInitVideos();
+                });
             }
             
             var options = keditor.options;
