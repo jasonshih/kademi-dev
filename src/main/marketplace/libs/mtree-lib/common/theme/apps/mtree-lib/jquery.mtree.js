@@ -437,7 +437,7 @@
         item.a_attr = {
             class: 'mtree-node mtree-' + type,
             id: item.id,
-            href: escape(item.href || ASSETS_HREF + item.uniqueId),
+            href: item.href || ASSETS_HREF + item.uniqueId,
             'data-name': item.name,
             'data-type': type
         };
