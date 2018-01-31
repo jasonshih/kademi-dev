@@ -1,0 +1,19 @@
+{
+    "appDependencies": [
+
+    ],
+    "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/cropperjs-lib/dist/cropper.min.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/cropperjs-lib/dist/cropper.min.js"
+            }
+        }
+    ]
+}
