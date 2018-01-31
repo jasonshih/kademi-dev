@@ -426,7 +426,8 @@
             },
             onModalShown: function () {
                 var hash = self.previewContainer.attr('data-hash');
-                this.setImage('/_hashes/files/' + hash);
+                var uniqueId = self.previewContainer.attr('data-uniqueid');
+                this.setImage(hash ? '/_hashes/files/' + hash : '/assets/' + uniqueId);
             },
             onCancel: function () {
                 if (options.useModal) {
