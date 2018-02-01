@@ -1,7 +1,7 @@
 var iframeUrl;
 var win = $(window);
 
-function initManageBlogArticle(pagePath) {
+function initManageBlogArticle() {
     $.timeago.settings.allowFuture = true;
     $('.timeago').timeago();
     
