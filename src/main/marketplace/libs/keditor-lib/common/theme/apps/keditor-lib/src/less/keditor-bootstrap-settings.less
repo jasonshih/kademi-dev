@@ -106,3 +106,37 @@ hr {
 @import "bootstrap/input-groups";
 @import "bootstrap/progress-bars";
 @import "bootstrap/utilities";
+
+.img-responsive {
+    .img-responsive();
+}
+
+.alert,
+.close,
+.row,
+.modal,
+.panel,
+.form-horizontal,
+.form-inline,
+.well,
+.btn,
+.nav,
+.btn-group,
+.input-group,
+.progress {
+    &,
+    &:before,
+    &:after {
+        box-sizing: border-box;
+    }
+    
+    * {
+        &,
+        &:before,
+        &:after {
+            box-sizing: border-box;
+        }
+    }
+}
+
+

@@ -29,6 +29,14 @@
                 #end
             #end
         #end
+        <!-- End injected JS sources -->
+        
+        <!-- Injected CSS sources -->
+        #foreach($groupEntry in $templater.cssSources.entrySet())
+            #foreach($cssFile in $groupEntry.value)
+                <link rel="stylesheet" href="$cssFile" media="$!groupEntry.key" />
+            #end
+        #end
         <!-- End injected CSS sources -->
         
         #set($fname = $params.fileName)

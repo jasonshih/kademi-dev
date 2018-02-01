@@ -296,6 +296,7 @@
         };
         
         self.image.attr('src', url);
+        self.image.css('max-height', $(window).height() * 0.7);
         
         if (self.cropper) {
             self.cropper.destroy();
