@@ -331,11 +331,11 @@
             <script type="text/javascript" >
                 var useHash = "$!useHash";
                 var allGroups = {
-                #foreach ($group in $page.find("/").allGroups)
-                '$group.name': '$formatter.firstNotNull($group.title, $group.name)',
-                #end}
-                ;
-
+                    #foreach ($group in $page.find("/").allGroups)
+                    '$group.name': '$formatter.firstNotNull($group.title, $group.name)',
+                    #end
+                };
+    
                 var metas = [];
                 #foreach($metaName in $file.metaNames)
                     metas.push({
@@ -343,8 +343,8 @@
                         'content': '$!file.getMeta($metaName)'
                     });
                 #end
-
-                    var params = {};
+    
+                var params = {};
                 #foreach($paramName in $file.paramNames)
                     params['$paramName'] = '$!file.getParam($paramName)';
                 #end
