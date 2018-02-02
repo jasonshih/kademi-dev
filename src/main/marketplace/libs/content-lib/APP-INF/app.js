@@ -41,10 +41,10 @@ controllerMappings.addComponent("content/components", "video")
         .addDefaultAtt("video-border-style", "")
         .build();
 
-controllerMappings.addComponent("email/components", "photoEDM")
+controllerMappings.addComponent("content/components", "photoEDM")
         .addType("edm")
         .desc("Photo block")
-        .categories("Email")
+        .categories("Content App component")
         .addDefaultAtt("photo-src", "http://www.kademi.co/static/images/somewhere_bangladesh.jpg")
         .addDefaultAtt("photo-align", "left")
         .addDefaultAtt("photo-fullwith", "")
