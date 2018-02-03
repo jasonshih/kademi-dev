@@ -228,7 +228,7 @@ function addMetaTags(metasData) {
 
 function addMetaTag(name, content) {
     var metaWrapper = $('.meta-wrapper');
-    var id = (new Date()).getTime();
+    var id = (new Date()).getTime() + Math.round(Math.random() * 9876543210);
     var isSeoMeta = name === 'keywords' || name === 'description';
     
     metaWrapper.append(
@@ -244,7 +244,7 @@ function addMetaTag(name, content) {
 
 function addParam(title, value) {
     var metaWrapper = $('.param-wrapper');
-    var id = (new Date()).getTime();
+    var id = (new Date()).getTime() + Math.round(Math.random() * 9876543210);
     
     metaWrapper.append(
         '<div class="input-group param">' +

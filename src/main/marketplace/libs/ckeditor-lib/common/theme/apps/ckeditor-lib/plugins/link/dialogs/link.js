@@ -6,6 +6,8 @@
 'use strict';
 
 (function () {
+    var BROWSER_CLASS_NAME = 'btnBrowseFiles-' + (new Date()).getTime();
+    
     CKEDITOR.dialog.add('link', function (editor) {
         var plugin = CKEDITOR.plugins.link;
         
@@ -236,7 +238,8 @@
                             {
                                 type: 'button',
                                 id: 'browse',
-                                className: 'btnBrowseFiles',
+                                className: BROWSER_CLASS_NAME,
+                                // hidden: true,
                                 label: commonLang.browseServer
                             }
                         ]
@@ -872,13 +875,16 @@
                 }
                 
                 var that = this;
-                $('.btnBrowseFiles').mselect({
+                $('.' + BROWSER_CLASS_NAME).trigger('click').mselect({
                     pagePath: pagePath,
                     basePath: basePath,
-                    zIndex: 10012,
-                    onSelectFile: function (url, relUrl, type, hash) {
-                        flog('ckeditor link plugin file selected', url, relUrl, type, hash);
-                        that.getContentElement('info', 'url').setValue(url);
+                    zIndex: 10031,
+                    onSelectFile: function (url, relUrl, type, hash, isAsset) {
+                        flog('ckeditor link plugin file selected', url, relUrl, type, hash, isAsset);
+                        
+                        var selectedUrl = isAsset ? url : '/_hashes/files/' + hash;
+                        
+                        that.getContentElement('info', 'url').setValue(selectedUrl);
                         that.getContentElement('info', 'protocol').setValue('');
                     }
                 });

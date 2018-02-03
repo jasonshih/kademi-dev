@@ -60,7 +60,9 @@
 
     <script type="text/javascript">
         $(function () {
-            initViewAuction("$page.wSUri");
+            if (!$(document.body).hasClass('content-editor-page')) {
+                initViewAuction("$page.wSUri");
+            }
         });
     </script>
 #else

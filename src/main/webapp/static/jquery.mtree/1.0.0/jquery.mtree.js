@@ -353,7 +353,7 @@
     MTree.prototype.addNode = function (path) {
         var self = this;
         var options = self.options;
-        var isAsset = path.indexOf('/assets/') === 0;
+        var isAsset = path ? path.indexOf('/assets/') === 0 : false;
         
         log('addNode', path, isAsset);
         
@@ -505,7 +505,7 @@
             url = url.substr(0, url.length - 1);
         }
         
-        return url.substr(0, url.lastIndexOf('/') + 1);
+        return url ? url.substr(0, url.lastIndexOf('/') + 1) : '';
     };
     
     MTree.prototype.getSelectedFolder = function () {

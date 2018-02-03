@@ -42,3 +42,16 @@ controllerMappings.addComponent("content/components", "video")
         .addDefaultAtt("video-border-color", "")
         .addDefaultAtt("video-border-style", "")
         .build();
+
+controllerMappings.addComponent("content/components", "photoEDM")
+        .addType("edm")
+        .desc("Photo block")
+        .categories("Content App component")
+        .addDefaultAtt("photo-src", "http://www.kademi.co/static/images/somewhere_bangladesh.jpg")
+        .addDefaultAtt("photo-align", "left")
+        .addDefaultAtt("photo-fullwith", "")
+        .addDefaultAtt("photo-alt", "")
+        .addDefaultAtt("photo-linkable", "false")
+        .addDefaultAtt("photo-link", "")
+        .addDefaultAtt("photo-link-target", "")
+        .build();

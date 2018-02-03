@@ -52,7 +52,7 @@ function initPropertiesModal() {
     
     modal.find('form').forms({
         onSuccess: function () {
-            $('#file-title, #file-jsparams').reloadFragment({
+            $('#file-title').reloadFragment({
                 url: window.location.href,
                 whenComplete: function () {
                     modal.modal('hide');
@@ -66,7 +66,6 @@ function initPropertiesModal() {
     addMetaTags(metas);
     // Load data/param
     addParams(params);
-
     
     modal.find('.btn-add-meta').on('click', function (e) {
         e.preventDefault();
@@ -158,23 +157,6 @@ function initPageBgModal() {
             modal.modal('hide');
         }
     });
-
-    // modal.find('form').on('submit', function (e) {
-    //     e.preventDefault();
-    //
-    //     var image = modal.find('#pageBgImage').val();
-    //     var pageBgSize = modal.find('#pageBgSize').val();
-    //     var pageBgRepeat = modal.find('.select-bg-repeat').val();
-    //     var pageBgPosition = modal.find('.select-bg-position').val();
-    //     var pageBgColor = modal.find('#pageBgColor').val();
-    //
-    //     var css = {};
-    //     if (image){
-    //         css = {'background-repeat': pageBgRepeat, 'background-position': pageBgPosition, 'background-size': pageBgSize};
-    //         css['background-image'] = image;
-    //     }
-    //     css['background-color'] = pageBgColor;
-    // });
 }
 
 function initKEditor(options) {
@@ -325,6 +307,8 @@ function showLoadingIcon() {
 // Meta and data/param functions
 // ============================================================
 function addParams(paramsData) {
+    $('.param-wrapper').html('');
+    
     $.each(paramsData, function (title, value) {
         if ( paramsData.hasOwnProperty(title) && title.indexOf('pageBg') != 0 ) {
             if (title !== 'title' && title !== 'itemType' && title !== 'category' && title !== 'tags' && title !== 'metas' && title !== 'body' && title !== 'cssFiles' && title !== 'template') {
@@ -337,6 +321,9 @@ function addParams(paramsData) {
 function addMetaTags(metasData) {
     var hasKeywords = false;
     var hasDescription = false;
+    
+    $('.meta-wrapper').html('');
+    
     $.each(metasData, function (i, meta) {
         addMetaTag(meta.name, meta.content);
         
@@ -348,6 +335,7 @@ function addMetaTags(metasData) {
             hasDescription = true;
         }
     });
+    
     if (!hasKeywords) {
         addMetaTag('keywords', '');
     }
@@ -358,8 +346,7 @@ function addMetaTags(metasData) {
 
 function addMetaTag(name, content) {
     var metaWrapper = $('.meta-wrapper');
-    var id = (new Date()).getTime();
-    id ++; // make sure no duplicate timestamp
+    var id = (new Date()).getTime() + Math.round(Math.random() * 9876543210);
     var isSeoMeta = name === 'keywords' || name === 'description';
     
     metaWrapper.append(
@@ -375,8 +362,7 @@ function addMetaTag(name, content) {
 
 function addParam(title, value) {
     var metaWrapper = $('.param-wrapper');
-    var id = (new Date()).getTime();
-    id ++; // make sure no duplicate timestamp
+    var id = (new Date()).getTime() + Math.round(Math.random() * 9876543210);
     
     metaWrapper.append(
         '<div class="input-group param">' +
