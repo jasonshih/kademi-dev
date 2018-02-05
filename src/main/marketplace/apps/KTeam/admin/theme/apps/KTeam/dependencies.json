@@ -1,0 +1,12 @@
+{
+  "appDependencies": [
+        {
+            "appId": "team",
+            "branch" : ""
+        },
+        {
+            "appId": "search",
+            "branch" : ""
+        }
+  ]
+}
