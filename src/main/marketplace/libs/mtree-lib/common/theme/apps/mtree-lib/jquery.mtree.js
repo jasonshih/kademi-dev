@@ -76,17 +76,19 @@
             var filesTabId = self.generateId('tab-files');
             var assetsTabId = self.generateId('tab-assets');
             
-            htmlContent += '    <ul class="nav nav-tabs mtree-tabs">';
-            htmlContent += '        <li class="active"><a href="#' + filesTabId + '" data-toggle="tab" data-type="files">Files</a></li>';
-            htmlContent += '        <li><a href="#' + assetsTabId + '" data-toggle="tab" data-type="assets">Assets</a></li>';
-            htmlContent += '    </ul>';
-            htmlContent += '    <div class="tab-content mtree-panels">';
-            htmlContent += '        <div class="mtree-panel tab-pane mtree-panel-contents panel panel-default active" id="' + filesTabId + '">';
-            htmlContent += '            <div class="mtree mtree-files"></div>';
-            htmlContent += '        </div>';
-            htmlContent += '        <div class="mtree-panel tab-pane mtree-panel-assets panel panel-default" id="' + assetsTabId + '">';
-            htmlContent += '            <p><input type="text" class="form-control mtree-assets-finder" /></p>';
-            htmlContent += '            <div class="mtree mtree-assets"></div>';
+            htmlContent += '    <div class="mtree-tabs-wrapper">';
+            htmlContent += '        <ul class="nav nav-tabs mtree-tabs">';
+            htmlContent += '            <li class="active"><a href="#' + filesTabId + '" data-toggle="tab" data-type="files">Files</a></li>';
+            htmlContent += '            <li><a href="#' + assetsTabId + '" data-toggle="tab" data-type="assets">Assets</a></li>';
+            htmlContent += '        </ul>';
+            htmlContent += '        <div class="tab-content mtree-panels">';
+            htmlContent += '            <div class="mtree-panel tab-pane mtree-panel-contents panel panel-default active" id="' + filesTabId + '">';
+            htmlContent += '                <div class="mtree mtree-files"></div>';
+            htmlContent += '            </div>';
+            htmlContent += '            <div class="mtree-panel tab-pane mtree-panel-assets panel panel-default" id="' + assetsTabId + '">';
+            htmlContent += '                <p><input type="text" class="form-control mtree-assets-finder" /></p>';
+            htmlContent += '                <div class="mtree mtree-assets"></div>';
+            htmlContent += '            </div>';
             htmlContent += '        </div>';
             htmlContent += '    </div>';
         } else {

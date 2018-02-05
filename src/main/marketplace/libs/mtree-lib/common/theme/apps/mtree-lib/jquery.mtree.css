@@ -5,6 +5,7 @@
 .mtree-wrapper .mtree-panels {
     padding: 0;
     border: 0;
+    position: static;
 }
 
 .mtree-wrapper .mtree-panel {
