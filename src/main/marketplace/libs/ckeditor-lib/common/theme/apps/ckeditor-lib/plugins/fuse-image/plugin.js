@@ -191,6 +191,14 @@
                             options.basePath = editor.config.pagePath;
                         }
                         
+                        if (window.showAssets !== undefined) {
+                            options.showAssets = window.showAssets;
+                        }
+                        
+                        if (window.showFiles !== undefined) {
+                            options.showFiles = window.showFiles;
+                        }
+                        
                         modalBody.mselect(options);
                     } else {
                         openModal(that, instance);
