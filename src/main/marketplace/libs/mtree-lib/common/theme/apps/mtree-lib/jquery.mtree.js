@@ -163,7 +163,7 @@
         
         if (self.options.showAssets && self.options.showFiles) {
             var tabsWrapper = self.target.find('.mtree-tabs');
-            self.target.find('.mtree-tab-contents').css('top', tabsWrapper.outerHeight() + tabsWrapper.position().top - 1);
+            self.target.find('.mtree-panel.tab-pane').css('top', tabsWrapper.outerHeight() + tabsWrapper.position().top - 1);
         }
     };
     
