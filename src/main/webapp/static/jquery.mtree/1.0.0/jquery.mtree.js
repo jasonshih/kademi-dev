@@ -22,6 +22,7 @@
         basePath: window.location.href,
         showToolbar: true,
         showAssets: true,
+        showFiles: true,
         onlyFolders: false,
         theme: 'default',
         excludedEndPaths: [],
@@ -61,38 +62,52 @@
         htmlContent += '<div class="mtree-wrapper">';
         if (options.showToolbar) {
             htmlContent += '    <div class="mtree-toolbar">';
-            htmlContent += '        <button type="button" class="btn btn-success btn-sm mtree-btn-add-folder" title="Add folder"><i class="fa fa-plus"></i></button>';
-            htmlContent += '        <button type="button" class="btn btn-danger btn-sm mtree-btn-delete-file" title="Delete"><i class="fa fa-times"></i></button>';
+            if (options.showFiles) {
+                htmlContent += '    <button type="button" class="btn btn-success btn-sm mtree-btn-add-folder" title="Add folder"><i class="fa fa-plus"></i></button>';
+                htmlContent += '    <button type="button" class="btn btn-danger btn-sm mtree-btn-delete-file" title="Delete"><i class="fa fa-times"></i></button>';
+            }
             if (options.showAssets) {
-                htmlContent += '    <button type="button" class="btn btn-danger btn-sm mtree-btn-delete-asset" title="Delete" style="display: none"><i class="fa fa-times"></i></button>';
+                htmlContent += '    <button type="button" class="btn btn-danger btn-sm mtree-btn-delete-asset" title="Delete" style="' + (options.showFiles ? 'display: none' : '') + '"><i class="fa fa-times"></i></button>';
             }
             htmlContent += '    </div>';
         }
-        if (options.showAssets) {
+        
+        if (options.showAssets && options.showFiles) {
             var filesTabId = self.generateId('tab-files');
             var assetsTabId = self.generateId('tab-assets');
             
-            htmlContent += '    <ul class="nav nav-tabs mtree-tabs">';
-            htmlContent += '        <li class="active"><a href="#' + filesTabId + '" data-toggle="tab" data-type="files">Files</a></li>';
-            htmlContent += '        <li><a href="#' + assetsTabId + '" data-toggle="tab" data-type="assets">Assets</a></li>';
-            htmlContent += '    </ul>';
-            htmlContent += '    <div class="tab-content mtree-tab-contents">';
-            htmlContent += '        <div class="tab-pane tab-pane-files active" id="' + filesTabId + '">';
-            htmlContent += '            <div class="mtree mtree-files"></div>';
-            htmlContent += '        </div>';
-            htmlContent += '        <div class="tab-pane tab-pane-assets" id="' + assetsTabId + '">';
-            htmlContent += '            <p><input type="text" class="form-control mtree-assets-finder" /></p>';
-            htmlContent += '            <div class="mtree mtree-assets"></div>';
+            htmlContent += '    <div class="mtree-tabs-wrapper">';
+            htmlContent += '        <ul class="nav nav-tabs mtree-tabs">';
+            htmlContent += '            <li class="active"><a href="#' + filesTabId + '" data-toggle="tab" data-type="files">Files</a></li>';
+            htmlContent += '            <li><a href="#' + assetsTabId + '" data-toggle="tab" data-type="assets">Assets</a></li>';
+            htmlContent += '        </ul>';
+            htmlContent += '        <div class="tab-content mtree-panels">';
+            htmlContent += '            <div class="mtree-panel tab-pane mtree-panel-contents panel panel-default active" id="' + filesTabId + '">';
+            htmlContent += '                <div class="mtree mtree-files"></div>';
+            htmlContent += '            </div>';
+            htmlContent += '            <div class="mtree-panel tab-pane mtree-panel-assets panel panel-default" id="' + assetsTabId + '">';
+            htmlContent += '                <p><input type="text" class="form-control mtree-assets-finder" /></p>';
+            htmlContent += '                <div class="mtree mtree-assets"></div>';
+            htmlContent += '            </div>';
             htmlContent += '        </div>';
             htmlContent += '    </div>';
         } else {
-            htmlContent += '    <div class="mtree mtree-files panel panel-default"></div>';
+            if (options.showFiles) {
+                htmlContent += '    <div class="mtree-panel mtree-panel-contents panel panel-default">';
+                htmlContent += '        <div class="mtree mtree-files"></div>';
+                htmlContent += '    </div>';
+            }
+            
+            if (options.showAssets) {
+                htmlContent += '    <div class="mtree-panel mtree-panel-assets panel panel-default">';
+                htmlContent += '        <p><input type="text" class="form-control mtree-assets-finder" /></p>';
+                htmlContent += '        <div class="mtree mtree-assets"></div>';
+                htmlContent += '    </div>';
+            }
         }
         htmlContent += '</div>';
         
         target.html(htmlContent);
-        
-        self.treeFiles = target.find('.mtree-files');
         
         if (options.showToolbar) {
             self.toolbar = target.find('.mtree-toolbar');
@@ -125,13 +140,19 @@
             });
         }
         
-        self.initTree();
+        if (options.showFiles) {
+            self.treeFiles = target.find('.mtree-files');
+            self.initTree();
+        }
         
         if (options.showAssets) {
             self.treeAssets = target.find('.mtree-assets');
             self.txtAssetsFinder = self.target.find('.mtree-assets-finder');
-            self.tabs = target.find('.mtree-tabs a[data-toggle="tab"]');
             self.initTree(true);
+        }
+        
+        if (options.showFiles && options.showAssets) {
+            self.tabs = target.find('.mtree-tabs a[data-toggle="tab"]');
             self.initTabs();
             self.adjustTabHeight();
         }
@@ -140,9 +161,9 @@
     MTree.prototype.adjustTabHeight = function () {
         var self = this;
         
-        if (self.options.showAssets) {
+        if (self.options.showAssets && self.options.showFiles) {
             var tabsWrapper = self.target.find('.mtree-tabs');
-            self.target.find('.mtree-tab-contents').css('top', tabsWrapper.outerHeight() + tabsWrapper.position().top - 1);
+            self.target.find('.mtree-panel.tab-pane').css('top', tabsWrapper.outerHeight() + tabsWrapper.position().top - 1);
         }
     };
     

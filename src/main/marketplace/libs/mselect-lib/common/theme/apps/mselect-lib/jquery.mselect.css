@@ -63,32 +63,40 @@
     height: 100%;
 }
 
-.milton-file-select-container .mtree {
-    overflow: auto !important;
-    position: absolute;
+.milton-tree-wrapper .mtree-tabs-wrapper  {
     top: 45px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: auto !important;
-}
-
-.milton-tree-wrapper .mtree-wrapper .tab-content {
-    top: 83px;
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
 }
 
-.milton-file-select-container .milton-tree-wrapper .mtree-wrapper .tab-content .mtree {
-    top: 0;
-    border: 0;
+.milton-file-select-container .mtree-panel {
+    top: 45px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
-.milton-file-select-container .milton-tree-wrapper .mtree-wrapper .tab-content .mtree-assets {
+.milton-file-select-container .mtree-panel.tab-pane {
+    top: 38px;
+}
+
+.milton-file-select-container .mtree-panel .mtree {
     top: 0;
-    border: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.milton-file-select-container .mtree-panel.mtree-panel-assets .mtree {
+    top: 45px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 /* ============================================================================

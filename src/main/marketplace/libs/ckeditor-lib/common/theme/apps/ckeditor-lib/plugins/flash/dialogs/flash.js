@@ -319,21 +319,8 @@
             },
             
             onLoad: function () {
-                var basePath;
-                var pagePath;
-                
-                if (editor.config.basePath) {
-                    basePath = editor.config.basePath;
-                }
-                
-                if (editor.config.pagePath) {
-                    pagePath = editor.config.pagePath;
-                }
-                
                 var that = this;
-                $('.' + BROWSER_CLASS_NAME).trigger('click').mselect({
-                    pagePath: pagePath,
-                    basePath: basePath,
+                var options = {
                     zIndex: 10031,
                     onSelectFile: function (url, relUrl, type, hash, isAsset) {
                         flog('ckeditor flash plugin file selected', url, relUrl, type, hash, isAsset);
@@ -342,7 +329,25 @@
                         
                         that.getContentElement('info', 'src').setValue(selectedUrl);
                     }
-                });
+                };
+                
+                if (editor.config.basePath) {
+                    options.basePath = editor.config.basePath;
+                }
+                
+                if (editor.config.pagePath) {
+                    options.pagePath = editor.config.pagePath;
+                }
+                
+                if (window.showAssets !== undefined) {
+                    options.showAssets = window.showAssets;
+                }
+                
+                if (window.showFiles !== undefined) {
+                    options.showFiles = window.showFiles;
+                }
+                
+                $('.' + BROWSER_CLASS_NAME).trigger('click').mselect(options);
             },
             
             contents: [{

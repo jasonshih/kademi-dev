@@ -10,7 +10,8 @@
     height: 100%;
 }
 
-.milton-file-select-container .milton-btn-upload-file {
+.milton-file-select-container .milton-btn-upload-file,
+.milton-file-select-container .milton-btn-upload-asset {
     float: left;
     margin-right: 5px;
 }
@@ -38,7 +39,8 @@
 
 .milton-file-select-container .milton-file-preview {
     position: absolute;
-    border: 1px solid #ddd !important;
+    border-radius: 0;
+    margin: 0;
     overflow: auto !important;
     position: absolute;
     top: 45px;
@@ -46,24 +48,55 @@
     right: 0px;
     bottom: 0;
     height: auto !important;
+    box-shadow: none;
 }
 
 /* ============================================================================
    Milton tree
    ============================================================================ */
+.milton-tree-wrapper .mtree-wrapper {
+    height: 100%;
+}
+
 .milton-file-select-container .milton-tree-wrapper {
     position: relative;
     height: 100%;
 }
 
-.milton-file-select-container .mtree {
-    overflow: auto !important;
-    position: absolute;
+.milton-tree-wrapper .mtree-tabs-wrapper  {
     top: 45px;
+    position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
-    height: auto !important;
+}
+
+.milton-file-select-container .mtree-panel {
+    top: 45px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.milton-file-select-container .mtree-panel.tab-pane {
+    top: 38px;
+}
+
+.milton-file-select-container .mtree-panel .mtree {
+    top: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.milton-file-select-container .mtree-panel.mtree-panel-assets .mtree {
+    top: 45px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 /* ============================================================================
@@ -71,6 +104,10 @@
    ============================================================================ */
 .modal.modal-mselect {
     padding: 0 !important;
+}
+
+.modal.modal-mselect * {
+    box-sizing: border-box;
 }
 
 .modal.modal-mselect .modal-dialog {
@@ -90,12 +127,12 @@
 }
 
 .modal.modal-mselect .modal-dialog .modal-content .modal-body {
-    height: calc(100% - 56px - 61px) !important;
+    height: calc(100% - 56px - 61px);
     overflow: auto;
 }
 
 .modal.modal-mselect.modal-no-footer .modal-dialog .modal-content .modal-body {
-    height: calc(100% - 56px) !important;
+    height: calc(100% - 56px);
 }
 
 .modal.modal-mselect .modal-dialog .modal-content .modal-footer {

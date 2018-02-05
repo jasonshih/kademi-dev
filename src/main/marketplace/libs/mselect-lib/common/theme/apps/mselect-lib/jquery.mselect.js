@@ -34,7 +34,8 @@
         },
         useModal: true,
         useCrop: true,
-        showAssets: true
+        showAssets: true,
+        showFiles: true
     };
     
     function MSelect(target, options) {
@@ -218,6 +219,7 @@
             includeContentType: options.contentType,
             excludedEndPaths: options.excludedEndPaths,
             showAssets: options.showAssets,
+            showFiles: options.showFiles,
             onSelect: function (node, type, selectedUrl, hash, isAsset) {
                 flog('[MSelect] Select node', node, selectedUrl, hash, isAsset);
                 
@@ -305,7 +307,7 @@
             }
         };
         
-        if (options.showAssets) {
+        if (options.showAssets && options.showFiles) {
             mtreeOptions.onTabSwitch = function (tabType) {
                 if (tabType === 'assets') {
                     self.btnUploadAsset.show();
@@ -326,7 +328,6 @@
         
         var progressBar = self.progressBar;
         var progressBarInner = self.progressBarInner;
-        var btnUploadFile = self.btnUploadFile;
         
         var muploadOptions = {
             url: options.basePath,
@@ -346,7 +347,10 @@
         if (options.contentType) {
             muploadOptions.acceptedFiles = self.getAcceptedFile(options.contentType);
         }
-        btnUploadFile.mupload(muploadOptions);
+        
+        if (options.showFiles) {
+            self.btnUploadFile.mupload(muploadOptions);
+        }
         
         if (options.showAssets) {
             muploadOptions.url = '/assets/';
@@ -373,6 +377,18 @@
         
         self.initTreeContainer(container);
         self.initUploadButtons(container);
+        
+        if (options.showAssets && options.showFiles) {
+            btnUploadFile.show();
+        } else {
+            if (options.showFiles) {
+                btnUploadFile.show();
+            }
+            
+            if (options.showAssets) {
+                btnUploadAsset.show();
+            }
+        }
         
         container.find('.btn-ok').click(function () {
             var url = previewContainer.attr('data-url');
@@ -493,7 +509,9 @@
             '        <div class="col-xs-3"><div class="milton-tree-wrapper"></div></div>' +
             '        <div class="col-xs-9">' +
             '            <div class="milton-file-preview-wrapper">' +
-            '                ' + (options.showAssets ? '<div class="milton-btn-upload-asset" style="display: none;"></div>' : '') + '<div class="milton-btn-upload-file"></div>' + extraElement +
+            '                ' + (options.showAssets ? '<div class="milton-btn-upload-asset" style="display: none;"></div>' : '') +
+            '                ' + (options.showFiles ? '<div class="milton-btn-upload-file" style="display: none;"></div>' : '') +
+            '                ' + extraElement +
             '                <div class="milton-file-progress progress" style="display: none;">' +
             '                    <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: 100%"></div>' +
             '                </div>' +
