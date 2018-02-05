@@ -342,9 +342,59 @@
                 height: croppedHeight
             });
             data.croppedImage = data.croppedCanvas.toDataURL();
+            
+            var block = data.croppedImage.split(';');
+            var contentType = block[0].split(':')[1];
+            var realData = block[1].split(',')[1];
+            var blob = self.base64toBlob(realData, contentType);
+            
+            data.croppedImageBlob = blob;
         }
         
         return data;
+    };
+    
+    PhotoEditor.prototype.base64toBlob = function (b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+        
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+        
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+            
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+            
+            var byteArray = new Uint8Array(byteNumbers);
+            
+            byteArrays.push(byteArray);
+        }
+        
+        var blob = null;
+        
+        try {
+            blob = new Blob(byteArrays, {type: contentType});
+        } catch (e) {
+            // TypeError old chrome and FF
+            window.BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder;
+            if (e.name == 'TypeError' && window.BlobBuilder) {
+                var bb = new BlobBuilder();
+                bb.append(byteArrays);
+                blob = bb.getBlob(contentType);
+            } else if (e.name == "InvalidStateError") {
+                // InvalidStateError (tested on FF13 WinXP)
+                blob = new Blob(byteArrays, {type: contentType});
+            } else {
+                // We're screwed, blob constructor unsupported entirely
+                blob = null;
+            }
+        }
+        
+        return blob;
     };
     
     PhotoEditor.prototype.showModal = function () {
