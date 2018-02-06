@@ -47,7 +47,58 @@
                         keditor.initDynamicContent(dynamicElement);
                         form.find('.most-recent-badge-wrapper').css('display', this.checked ? 'none' : 'block');
                     });
-                    
+
+                    form.find('.txt-padding').each(function () {
+                        var txt = $(this);
+                        var styleName = txt.attr('data-style-name');
+
+                        txt.on('change', function () {
+                            var paddingValue = this.value || '';
+                            var target = keditor.getSettingComponent().find('.badgeStyle').get(0);
+
+                            if (paddingValue.trim() === '') {
+                                target.style[styleName] = '';
+                            } else {
+                                if (isNaN(paddingValue)) {
+                                    paddingValue = 0;
+                                    this.value = paddingValue;
+                                }
+                                target.style[styleName] = paddingValue + 'px';
+                            }
+
+                            var component = keditor.getSettingComponent();
+                            var dynamicElement = component.find('[data-dynamic-href]');
+
+                            component.attr('data-style', target.getAttribute('style') || '');
+                            keditor.initDynamicContent(dynamicElement);
+                        });
+                    });
+
+                    form.find('.txt-margin').each(function () {
+                        var txt = $(this);
+                        var styleName = txt.attr('data-style-name');
+
+                        txt.on('change', function () {
+                            var marginValue = this.value || '';
+                            var target = keditor.getSettingComponent().find('.badgeStyle').get(0);
+
+                            if (marginValue.trim() === '') {
+                                target.style[styleName] = '';
+                            } else {
+                                if (isNaN(marginValue)) {
+                                    marginValue = 0;
+                                    this.value = marginValue;
+                                }
+                                target.style[styleName] = marginValue + 'px';
+                            }
+
+                            var component = keditor.getSettingComponent();
+                            var dynamicElement = component.find('[data-dynamic-href]');
+
+                            component.attr('data-style', target.getAttribute('style') || '');
+                            keditor.initDynamicContent(dynamicElement);
+                        });
+                    });
                 }
             });
         },
@@ -60,6 +111,21 @@
             form.find('.chk-show-badge-title').prop('checked', dataAttributes['show-badge-title'] === 'true');
             form.find('.chk-most-recent-badge').prop('checked', dataAttributes['most-recent-badge'] === 'true');
             form.find('.most-recent-badge-wrapper').css('display', dataAttributes['most-recent-badge'] === 'true' ? 'none' : 'block');
+
+            var target = component.find('.badgeStyle').get(0);
+
+            form.find('.txt-padding').each(function () {
+                var txt = $(this);
+                var styleName = txt.attr('data-style-name');
+
+                txt.val((target.style[styleName] || '').replace('px', ''));
+            });
+            form.find('.txt-margin').each(function () {
+                var txt = $(this);
+                var styleName = txt.attr('data-style-name');
+
+                txt.val((target.style[styleName] || '').replace('px', ''));
+            });
         }
     };
     
