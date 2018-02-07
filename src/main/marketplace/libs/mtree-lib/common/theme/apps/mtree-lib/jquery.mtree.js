@@ -86,7 +86,7 @@
             htmlContent += '                <div class="mtree mtree-files"></div>';
             htmlContent += '            </div>';
             htmlContent += '            <div class="mtree-panel tab-pane mtree-panel-assets panel panel-default" id="' + assetsTabId + '">';
-            htmlContent += '                <p><input type="text" class="form-control mtree-assets-finder" /></p>';
+            htmlContent += '                <p class="mtree-assets-finder-wrapper"><input type="text" class="form-control mtree-assets-finder" /></p>';
             htmlContent += '                <div class="mtree mtree-assets"></div>';
             htmlContent += '            </div>';
             htmlContent += '        </div>';

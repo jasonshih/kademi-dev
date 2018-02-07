@@ -18,3 +18,11 @@
 .mtree-wrapper .mtree-panel .mtree {
     overflow: auto;
 }
+
+.mtree-wrapper .mtree-tabs {
+    margin: 0;
+}
+
+.mtree-wrapper .mtree-assets-finder-wrapper {
+    margin: 0 0 10px;
+}
