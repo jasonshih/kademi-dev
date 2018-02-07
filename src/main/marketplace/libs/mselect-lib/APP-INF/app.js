@@ -45,12 +45,21 @@ controllerMappings
     .addMethod("POST", "storeImage")
     .build();
 
-function storeImage(page, params) {
+function storeImage(page, params, files) {
     log.info('storeImage > page={}, params={}', page, params);
     
-    var fileData = params.file.replace('data:image/png;base64,', '');
-    var file = formatter.fromBase64AsByteArray(fileData);
-    var fileHash = fileManager.upload(file);
+    var fileHash;
+    
+    if (files !== null || !files.isEmpty()) {
+        var filesArrays = files.entrySet().toArray();
+        var file = filesArrays[0].getValue();
+        fileHash = fileManager.uploadFile(file);
+    } else {
+        var block = data.croppedImage.split(';');
+        var realData = block[1].split(',')[1];
+        var file = formatter.fromBase64AsByteArray(realData);
+        fileHash = fileManager.upload(file);
+    }
     
     return views.jsonObjectView(JSON.stringify({
         status: true,
