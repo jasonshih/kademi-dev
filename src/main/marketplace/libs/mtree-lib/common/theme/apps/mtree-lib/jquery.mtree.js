@@ -352,11 +352,11 @@
         }
     };
     
-    MTree.prototype.deselectNode = function (node) {
-        if (node && node.hasClass('mtree-asset')) {
+    MTree.prototype.deselectNode = function (isAsset) {
+        if (isAsset) {
             this.jstreeAssets.deselect_node(this.treeAssets.find('.mtree-node.jstree-clicked'));
         } else {
-            this.jstreeFiles.deselect_node(node || this.treeFiles.find('.mtree-node.jstree-clicked'));
+            this.jstreeFiles.deselect_node(this.treeFiles.find('.mtree-node.jstree-clicked'));
         }
     };
     
@@ -384,17 +384,20 @@
                 cache: false
             }).done(function (data) {
                 if (data && data[0]) {
-                    var item = self.generateItemData(data[0]);
+                    var newNodeData = data[0];
+                    newNodeData.uniqueId = newNodeData.name;
+                    newNodeData.format = newNodeData.contentType;
+                    var item = self.generateItemData(newNodeData);
                     log('Data for new node', item);
                     
-                    self.jstreeAssets.load_node('#', function () {
-                        var newNode = self.treeAssets.find('.mtree-node[href="' + path + '"]');
+                    self.jstreeAssets.create_node('#', item, 'first', function () {
+                        var newNode = self.treeAssets.find('#' + item.id);
                         
                         if (typeof options.onCreate === 'function') {
                             options.onCreate.call(self, newNode, null, item.type);
                         }
                         
-                        self.deselectNode();
+                        self.deselectNode(true);
                         self.jstreeAssets.select_node(newNode);
                     });
                 }

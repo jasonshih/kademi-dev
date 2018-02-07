@@ -168,7 +168,7 @@
     
     MSelect.prototype.getFileType = function (fileUrl, isFormat) {
         // Remove '/_DAV/....' before checking file type
-        fileUrl = fileUrl.replace(/^(.+)(\/_DAV\/.+)$/, '$1')
+        fileUrl = (fileUrl || '').replace(/^(.+)(\/_DAV\/.+)$/, '$1')
         flog('[MSelect] getFileType', fileUrl, isFormat);
         
         var fileType = 'other';

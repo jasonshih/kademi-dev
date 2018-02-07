@@ -168,7 +168,7 @@
     
     MSelect.prototype.getFileType = function (fileUrl, isFormat) {
         // Remove '/_DAV/....' before checking file type
-        fileUrl = fileUrl.replace(/^(.+)(\/_DAV\/.+)$/, '$1')
+        fileUrl = (fileUrl || '').replace(/^(.+)(\/_DAV\/.+)$/, '$1')
         flog('[MSelect] getFileType', fileUrl, isFormat);
         
         var fileType = 'other';
@@ -451,29 +451,68 @@
                 }
             },
             onSave: function (data) {
+                flog('onSave photoeditor', data);
+                
                 var editModal = this.modal;
                 var btns = editModal.find('.btn');
                 btns.prop('disabled', true);
                 
-                $.ajax({
+                var ajaxOptions = {
                     url: '/mselect-lib/storeImage',
                     type: 'post',
                     dataType: 'json',
-                    data: {
-                        file: data.croppedImage
-                    },
                     success: function (resp) {
                         if (resp && resp.status) {
                             if (typeof self.options.onSelectFile === 'function') {
                                 var url = '/_hashes/files/' + resp.hash;
+                                self.previewContainer.attr({
+                                    'data-uniqueid': '',
+                                    'data-hash': resp.hash,
+                                    'data-url': url
+                                });
+                                $('<img />').attr('src', url).on('load', function () {
+                                    var realWidth = this.width;
+                                    var realHeight = this.height;
+                                    var ratio = realWidth / realHeight;
+                                    
+                                    self.previewContainer.html('<img src="' + url + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" />');
+                                    
+                                    if (typeof options.onPreviewFile === 'function') {
+                                        options.onPreviewFile.call(container, 'image', url, resp.hash);
+                                    }
+                                });
                                 self.options.onSelectFile.call(container, url, url, 'image', resp.hash, false);
                             }
+                            editModal.modal('hide');
+                        } else {
+                            flog('Error when saving image', resp);
+                            Msg.error('Error when saving image. Please contact your administrators to resolve this issue')
                         }
                         
-                        editModal.modal('hide');
+                        btns.prop('disabled', false);
+                    },
+                    error: function (jqXhr, textStatus, errorThrow) {
+                        flog('Error when saving image', jqXhr, textStatus, errorThrow);
+                        Msg.error('Error when saving image. Please contact your administrators to resolve this issue')
                         btns.prop('disabled', false);
                     }
-                });
+                };
+                
+                var ajaxData;
+                if (data.croppedImageBlob) {
+                    ajaxData = new FormData();
+                    ajaxData.append('file', data.croppedImageBlob);
+                    
+                    ajaxOptions.processData = false;
+                    ajaxOptions.contentType = false;
+                } else {
+                    ajaxData = {
+                        file: data.croppedImage
+                    };
+                }
+                ajaxOptions.data = ajaxData;
+                
+                $.ajax(ajaxOptions);
             }
         });
         
