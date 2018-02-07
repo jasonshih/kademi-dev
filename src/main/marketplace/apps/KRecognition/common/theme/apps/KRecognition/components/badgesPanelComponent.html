@@ -34,7 +34,7 @@
         #set ($badges = $formatter.sortByProperty($badges, "createdDate"))
         #set ($badges = $formatter.sortReverse($badges))
             #foreach($b in $badges)
-                <div class="$badgeClass kbadge">
+                <div class="$badgeClass kbadge" style="$!style">
                     #if ($b.recognition.imageHash)
                         <img src="/_hashes/files/$b.recognition.imageHash" class="img-responsive kbadge-photo" alt="$b.recognition.title" />
                     #else
@@ -56,3 +56,5 @@
         <p class="alert alert-warning">No topic selected</p>
     #end
 #end
+
+<div class="hide badgeStyle" style="$!style"></div>

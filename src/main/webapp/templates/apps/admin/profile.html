@@ -125,6 +125,11 @@
             </ul>
             <div class="tab-content">
                 <div id="summary" class="tab-pane">
+                    <div class="row" style="margin-bottom: 10px;">
+                        <div class="col-md-12 text-right">
+                            <a href="summary.csv" id="downloadCsv" class="btn btn-info">Export CSV</a>
+                        </div>
+                    </div>
                     <div class="row " id="profile-panels">
                         #foreach( $pair in $page.appPanels)
                         <div class="col-lg-3 col-md-6">

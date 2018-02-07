@@ -19,13 +19,13 @@
                 <div class="col-sm-12">
                     <div class="dashboard-alert alert-parent ${msg.type}-alert">
                         <div class="col-sm-1 alert-icon">
-                          <i class="#if($msg.type == "primary") fa fa-commenting #elseif ($msg.type == "success")  fa fa-check-circle #elseif ($msg.type == "info") fa fa-info-circle #elseif ($msg.type == "warning") fa fa-exclamation-triangle #elseif ($msg.type == "danger") fa fa-times #end" aria-hidden="true"></i>                          
+                          <i class="#if($msg.type == "primary") fa fa-commenting #elseif ($msg.type == "success")  fa fa-check-circle #elseif ($msg.type == "info") fa fa-info-circle #elseif ($msg.type == "warning") fa fa-exclamation-triangle #elseif ($msg.type == "danger") fa fa-times #end" aria-hidden="true"></i>
                         </div>
 
-                        <div class="col-sm-10 alert-message">                 
+                        <div class="col-sm-10 alert-message">
                             $!msg.body
                         </div>
-                        
+
                         #if( $msg.id )
                             <div class="col-sm-1 alert-close">
                               <button type="button" class="close alert-close" aria-hidden="true">&times;</button>
@@ -163,6 +163,8 @@
                         </div>
                     </div>
                 #end
+
+                #portlets("adminDashboardMiddle")
 
                 <div class="ktile-container row">
                     <div class="ktile-sizer col-md-1 col-lg-1 col-sm-1"></div>
@@ -385,7 +387,7 @@
                             ackAlert(href);
                         }
                     })
-                    
+
                     $(".alert-close").click(function(){
                         flog('aaaaaaaaaaaaa', $(this));
                         $(this).closest('.col-sm-12').remove();
