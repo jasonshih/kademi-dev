@@ -1,7 +1,7 @@
 (function ($, window) {
     $(function () {
         var panel = $('.panel-coming-up-auction');
-        
+
         if (panel.length > 0) {
             var countdown = panel.find('.countdown');
             var WSUri = countdown.attr('data-WSUri');
@@ -10,10 +10,10 @@
             initBidForm(panel);
         }
     });
-    
+
     function initBidForm(panel) {
         flog('initBidForm', panel);
-        
+
         var form = panel.find('form');
         form.forms({
             onSuccess: function () {
@@ -21,25 +21,24 @@
             }
         })
     }
-    
+
     window.initAuctionCountDown = function (panel, timeOnly) {
         flog('initAuctionCountDown', panel);
-        
         var countdown = panel.find('.countdown');
         var finalDate = countdown.attr('data-end');
-        
+
         if (finalDate) {
-            var c = moment(finalDate).format('YYYY/MM/DD HH:MM:ss');
+            var c = moment(finalDate).format('YYYY-MM-DD HH:mm:ss');
             
             countdown.countdown(c).on({
                 'update.countdown': function (event) {
                     var format = '';
-                    
+
                     if (timeOnly) {
                         var totalTimes = event.offset.hours;
                         totalTimes += event.offset.days * 24;
                         totalTimes += event.offset.weeks * 7 * 24;
-                        
+
                         format = totalTimes + ':%M:<span>%S</span>';
                     } else {
                         format = '%H:%M:<span>%S</span>';
@@ -50,7 +49,7 @@
                             format = '%-w week%!w ' + format;
                         }
                     }
-                    
+
                     $(this).html(event.strftime(format));
                 },
                 'finish.countdown': function () {
@@ -59,7 +58,7 @@
             });
         }
     }
-    
+
     function initWebsockets(WSUri, panel) {
         try {
             var port = parseInt(window.location.port || 80) + 1;
@@ -69,14 +68,14 @@
                 port = parseInt(window.location.port || 443) + 1;
             }
             var wsPath = proto + window.location.hostname + ':' + port + '/comments/' + window.location.hostname + '/auctionBid/' + WSUri;
-            
+
             flog("initWebsockets", window.location.hostname, wsPath);
-            
+
             wsocket = new WebSocket(wsPath);
             wsocket.onmessage = function (evt) {
                 var c = $.parseJSON(evt.data);
                 if (c.beanType != null && c.beanType == "auctionBid") {
-                    if (c.action == "BID_PLACED"){
+                    if (c.action == "BID_PLACED") {
                         var dt = moment(c.bidDate);
                         flog("Received Date: ", dt);
                         panel.find('.bidValue').text(c.bidValue);
@@ -94,5 +93,5 @@
             log("Websocket initialisation failed. Live bid stream is not available");
         }
     }
-    
+
 })(jQuery, window);
