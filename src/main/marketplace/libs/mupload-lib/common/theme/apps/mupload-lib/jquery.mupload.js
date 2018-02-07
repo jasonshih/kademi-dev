@@ -115,7 +115,7 @@
                         alert('An error occured uploading: ' + file.name + ' because: ' + errorMessage);
                     });
                     
-                    this.on('addedfile', function (file, errorMessage) {
+                    this.on('sending', function (file, errorMessage) {
                         if (previewDiv !== null) {
                             previewDiv.show();
                         }

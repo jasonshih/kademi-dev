@@ -8,6 +8,10 @@
         },
         {
             "appId": "search"
+        },
+        {
+            "appId": "mupload-lib",
+            "branch": "1.0.1"
         }
     ],
     "dependencies": [
@@ -45,12 +49,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/js/jquery.fileupload.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/js/jquery.milton-upload.js"
             }
         },
         {

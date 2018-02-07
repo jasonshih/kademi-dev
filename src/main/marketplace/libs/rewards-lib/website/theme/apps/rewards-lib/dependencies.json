@@ -3,6 +3,10 @@
         {
             "appId": "handlebars-lib",
             "branch": "3.0.3"
+        },
+        {
+            "appId": "mupload-lib",
+            "branch": "1.0.1"
         }
     ],
     "dependencies": [
@@ -64,12 +68,6 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/rewards-lib/rewardSelector.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/js/jquery.milton-upload.js"
             }
         }
     ]
