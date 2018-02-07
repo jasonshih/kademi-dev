@@ -78,6 +78,10 @@
             #set($file = $page)
         #end
         #set($fileBody = $file.body)
+    
+        #if ($fname == "")
+            #set($fname = "newFile")
+        #end
     #end
     #set($useHash = $params.useHash)
 
@@ -323,8 +327,8 @@
             </span>
         </div>
 
-        #set($snippetsUrl = "_components?fileName=$!fname")
-        #set($snippetsHandlersUrl = "${page.parent.href}_components?handlers&fileName=$!fname")
+        #set($snippetsUrl = "_components?fileName=$fname")
+        #set($snippetsHandlersUrl = "${page.parent.href}_components?handlers&fileName=$fname")
 
         <div id="file-jsparams">
             <code class="hide">$!bodyCssBgColor $!bodyCssBgImg</code>
