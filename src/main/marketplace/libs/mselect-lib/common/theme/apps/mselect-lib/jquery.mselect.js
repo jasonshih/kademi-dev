@@ -455,13 +455,10 @@
                 var btns = editModal.find('.btn');
                 btns.prop('disabled', true);
                 
-                $.ajax({
+                var ajaxOptions = {
                     url: '/mselect-lib/storeImage',
                     type: 'post',
                     dataType: 'json',
-                    data: {
-                        file: data.croppedImage
-                    },
                     success: function (resp) {
                         if (resp && resp.status) {
                             if (typeof self.options.onSelectFile === 'function') {
@@ -473,7 +470,24 @@
                         editModal.modal('hide');
                         btns.prop('disabled', false);
                     }
-                });
+                };
+                
+                var ajaxData;
+                if (data.croppedImageBlob) {
+                    ajaxData = new FormData();
+                    ajaxData.append('file', data.croppedImageBlob);
+                    ajaxData.append('blob', true);
+                    
+                    ajaxOptions.processData = false;
+                    ajaxOptions.contentType = false;
+                } else {
+                    ajaxData = {
+                        file: data.croppedImage
+                    };
+                }
+                ajaxOptions.data = ajaxData;
+                
+                $.ajax(ajaxOptions);
             }
         });
         
