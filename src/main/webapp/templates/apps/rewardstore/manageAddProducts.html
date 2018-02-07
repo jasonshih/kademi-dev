@@ -43,7 +43,7 @@
                         <div class="col-md-2">
                             <select name="categoryName" id="categoryName" class="category form-control input-sm selectpicker" multiple="multiple">
                                 #set( $catCount = 0 )
-                                #genCategories($page.categoryBeans)
+                                #genCategories($page.getCategoryBeans(20))
 
                                 #if( $catCount >= 20 )
                                     <option class="search-more"></option>
@@ -193,6 +193,6 @@
             </div>
         </div>
 
-        <script src="/theme/apps/rewardstore/manageAddProducts.js?v=0001" type="text/javascript">//</script>
+        <script src="/theme/apps/rewardstore/manageAddProducts.js?v=0002" type="text/javascript">//</script>
     </body>
 </html>
