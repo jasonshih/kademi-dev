@@ -234,6 +234,7 @@
                 timePicker: true,
                 timePickerIncrement: 15,
                 timePicker12Hour: false,
+                opens: 'left',
                 locale: {
                     format: 'DD/MM/YYYY HH:mm'
                 }
@@ -304,6 +305,7 @@
                 timePicker: true,
                 timePickerIncrement: 15,
                 timePicker12Hour: false,
+                opens: 'left',
                 locale: {
                     format: 'DD/MM/YYYY HH:mm'
                 }
