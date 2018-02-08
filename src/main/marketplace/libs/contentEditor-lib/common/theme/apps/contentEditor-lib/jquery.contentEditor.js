@@ -980,6 +980,14 @@
             });
         });
         
+        var tree = form.find('.menuTree ol').not('.rootMenuList');
+        tree.sortable({
+            handle: '.btnSortMenuItem',
+            items: '> li',
+            axis: 'y',
+            tolerance: 'pointer'
+        });
+        
         form.on('click', '.btnAddMenuItem', function (e) {
             e.preventDefault();
             
@@ -1013,7 +1021,6 @@
                 '</li>'
             );
             
-            var tree = $('.menuTree ol').not('.rootMenuList');
             try {
                 tree.sortable('destroy');
             } catch (e) {
