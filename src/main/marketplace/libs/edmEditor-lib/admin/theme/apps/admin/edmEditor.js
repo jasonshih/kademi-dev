@@ -17,15 +17,31 @@ function initEdmEditorPage(options) {
         e.stopPropagation();
     });
     
-    $('#edm-editor').edmEditor({
-        snippetsUrl: options.snippetsUrl,
-        snippetsHandlersUrl: options.snippetsHandlersUrl,
-        allGroups: options.allGroups,
-        basePath: basePath,
-        pagePath: basePath,
-        onReady: function () {
-            $('#editor-loading').addClass('loading').find('.loading-text').html('Saving...');
-            hideLoadingIcon();
+    var allGroups;
+    $.ajax({
+        url: '/edmEditor-lib/getAllGroups',
+        type: 'get',
+        dataType: 'json',
+        success: function (resp) {
+            if (resp && resp.status) {
+                allGroups = resp.data;
+            }
+        },
+        error: function (jqXhr, statusText, errorThrown) {
+            flog('Error when getting all groups', jqXhr, statusText, errorThrown);
+        },
+        complete: function () {
+            $('#edm-editor').edmEditor({
+                snippetsUrl: options.snippetsUrl,
+                snippetsHandlersUrl: options.snippetsHandlersUrl,
+                allGroups: options.allGroups,
+                basePath: basePath,
+                pagePath: basePath,
+                onReady: function () {
+                    $('#editor-loading').addClass('loading').find('.loading-text').html('Saving...');
+                    hideLoadingIcon();
+                }
+            });
         }
     });
     
