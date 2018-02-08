@@ -16,7 +16,11 @@
             <strong>Validation Emails:</strong>
             <br/>
             #foreach($dvo in $certificate.domainValidationOptions)
-            <strong>$dvo.validationDomain: </strong> $formatter.toCsv($dvo.validationEmails)<br/>
+            <span style="padding-left: 10px;"><strong>Domain:</strong> $dvo.validationDomain:</span><br/>
+            #foreach($e in $dvo.validationEmails)
+            <span style="padding-left: 20px;">$e</span> <br/>
+            #end
+            <br/>
             #end
             #elseif($certificate.status == "ISSUED")
             <strong>In Use:</strong> #if($certificate.inUseBy.size() > 0) True #else False #end
