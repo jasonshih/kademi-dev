@@ -210,8 +210,9 @@
                             </ul>
                         </div>
                         <hr />
-                        $page.previewHtml
-
+                        <div id="previewHtml">
+                            $!page.previewHtml
+                        </div>
                     </div>
 
                     <!-- Start content of History tab -->
@@ -411,7 +412,7 @@
                     },
 
                     'hide.bs.modal': function () {
-                        iframe.src = iframe.src;
+                        $("#previewHtml").reloadFragment();
                     }
                 });
             });
