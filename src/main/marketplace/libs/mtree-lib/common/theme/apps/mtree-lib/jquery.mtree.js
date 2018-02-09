@@ -371,12 +371,12 @@
         }
     };
     
-    MTree.prototype.addNode = function (path) {
+    MTree.prototype.addNode = function (path, name) {
         var self = this;
         var options = self.options;
         var isAsset = path ? path.indexOf('/assets/') === 0 : false;
         
-        log('addNode', path, isAsset);
+        log('addNode', path, name, isAsset);
         
         if (isAsset) {
             $.ajax({
@@ -387,6 +387,7 @@
                     var newNodeData = data[0];
                     newNodeData.uniqueId = newNodeData.name;
                     newNodeData.format = newNodeData.contentType;
+                    newNodeData.name = name;
                     var item = self.generateItemData(newNodeData);
                     log('Data for new node', item);
                     

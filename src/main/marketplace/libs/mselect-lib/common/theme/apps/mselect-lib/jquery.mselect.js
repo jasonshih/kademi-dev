@@ -336,7 +336,7 @@
             oncomplete: function (data, name, href) {
                 flog('[MSelect] oncomplete', data);
                 progressBar.hide();
-                self.mtree.addNode(href);
+                self.mtree.addNode(href, name);
             },
             onBeforeUpload: function () {
                 progressBar.show();
