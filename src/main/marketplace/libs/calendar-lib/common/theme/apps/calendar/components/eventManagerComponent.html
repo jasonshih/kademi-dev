@@ -107,12 +107,14 @@
                             </div>
     
                             <hr />
-    
+
                             <p class="lead">Create your calendar event content below</p>
-    
+
                             #if($page.calendar.website)
                                 #if ($applicationManager.isActive($applications.calendar, $page.calendar.website.liveBranch()))
-                                    <textarea autocomplete="off" cols="100" name="description" rows="10" class="#if($isKEditor) contenteditor #else htmleditor #end" data-preview="?goto=">$!page.description</textarea>
+                                    <textarea cols="100" name="description1" rows="10" class="htmleditor" placeholder="Enter the details here">$!page.description</textarea>
+                                    <pre style="display: none;">$!page.description</pre>
+                                    <textarea name="description" style="width: 1px; height: 1px; opacity: 0.01;" id="" cols="30" rows="10"></textarea>
                                 #else
                                     <p class="alert alert-warning lead"><i class="fa fa-warning"></i> Calendar App of
                                         <b>$page.calendar.website.name</b> website is disabled. Please enable it at
