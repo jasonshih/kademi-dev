@@ -1,0 +1,39 @@
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12">Points bucket</label>
+        <div class="col-sm-12">
+            <select class="form-control select-store">
+                <option value="" selected="selected">- None -</option>
+                #foreach($store in $applications.rewardStore.pointsBuckets)
+                <option value="$store.name">$store.title</option>
+                #end
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Start date</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control start-date" value="" />
+            <p class="help-block">Leave empty as 7 days ago</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">End date</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control end-date" value="" />
+            <p class="help-block">Leave empty as today</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Number of participants</label>
+        <div class="col-sm-12">
+            <input type="number" class="form-control num-users" value="" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Height</label>
+        <div class="col-sm-12">
+            <input type="number" class="form-control txt-height" value="" />
+        </div>
+    </div>
+</form>
