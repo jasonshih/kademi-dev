@@ -141,12 +141,6 @@
         </div>
 
         <script type="text/javascript">
-            var useHash = "$!useHash";
-            var allGroups = {
-                #foreach ($group in $page.find("/").allGroups)
-                '$group.name': #if ($group.title) '$group.title' #else '$group.name' #end,
-                #end};
-            
             var metas = [];
             #foreach($metaName in $file.metaNames)
                 metas.push({
@@ -165,7 +159,6 @@
                     fileName: '$!fname',
                     snippetsUrl: '_components?fileName=$!{params.fileName}',
                     snippetsHandlersUrl: '${page.parent.href}_components?handlers&fileName=$!{params.fileName}"',
-                    allGroups: allGroups,
                     pagePath: '$!pagePath'
                 });
             });

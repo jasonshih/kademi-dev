@@ -217,7 +217,14 @@ function initNewMembershipForm() {
         e.stopPropagation();
         $("#modal-membership").modal('show');
     });
-    
+
+    $("#modal-membership").find('#orgIdGroupMembership').entityFinder({
+        type: 'organisation',
+        onSelectSuggestion: function (el, suggestion, id, actualId, type) {
+            $("#modal-membership").find('#orgIdGroupMembership').val(id);
+        }
+    });
+
     $("#modal-membership").find("form").forms({
         validate: function (form) {
             var groupInputs = form.find('.radio input[name=group]');

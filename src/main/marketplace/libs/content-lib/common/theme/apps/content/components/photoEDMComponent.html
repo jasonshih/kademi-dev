@@ -16,9 +16,11 @@
 #if ($paddingRight)
     #set ($wrapperStyle = $wrapperStyle + " padding-right: " + $paddingRight + "px;")
 #end
-
 #if ($photoFullwidth == "true")
-    #set ($imageWidth = $width)
+    #set ($imageWidth = "100%")
+    #if ($width)
+        #set ($imageWidth = $width)
+    #end
     #if ($paddingLeft)
         #set ($paddingLeft = $formatter.toInteger($paddingLeft))
         #set ($imageWidth = $imageWidth - $paddingLeft)

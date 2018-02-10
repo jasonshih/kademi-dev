@@ -30,9 +30,14 @@ function getUserVisitCSV() {
                     var byUsers = userVisits[j].aggregations.get("byUsers").buckets;
                     for (k in byUsers) {
                         var user = applications.userApp.findUserResource(byUsers[k].key);
-                        var name = user.name;
-                        if (user.firstName) {
-                            name = user.firstName + " (" + user.name + ")";
+                        var name;
+                        if (user) {
+                            name = user.name;
+                            if (user.firstName) {
+                                name = user.firstName + " (" + user.name + ")";
+                            }
+                        } else {
+                            name = byUsers[k].key;
                         }
 
                         var d = formatter.formatDate(userVisits[j].key);

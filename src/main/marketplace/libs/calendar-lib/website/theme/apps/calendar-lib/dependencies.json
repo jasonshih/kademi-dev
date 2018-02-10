@@ -15,7 +15,7 @@
         {
           "css": {
               "cssMedia": "all",
-              "path": "/static/daterangepicker/1.3.3/daterangepicker-bs3.css"
+              "path": "/static/daterangepicker/2.0.11/daterangepicker.css"
           }
         },
         {
@@ -33,7 +33,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/static/daterangepicker/1.3.3/daterangepicker.js"
+                "path": "/static/daterangepicker/2.0.11/daterangepicker.js"
             }
         },
         {

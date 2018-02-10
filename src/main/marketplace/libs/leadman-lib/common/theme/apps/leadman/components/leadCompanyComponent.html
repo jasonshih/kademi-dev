@@ -111,7 +111,9 @@
                     <div class="form-group">
                         <div class="col-md-10 col-md-offset-2">
                             <button class="btn btn-primary btn-save-company" type="submit">Save details</button>
+                            #if ($disableUnlink != "true")
                             <button class="btn btn-info btn-unlink-company" type="button" #if(!$leadOrg.id) style="display: none" #end>Unlink company</button>
+                            #end
                         </div>
                     </div>
                     #end

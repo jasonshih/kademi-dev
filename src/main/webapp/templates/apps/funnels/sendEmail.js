@@ -196,7 +196,7 @@
                     templ += '<small>( ' + item._source.numAttempts + ' attempts )</small>';
                 }
             } else if (item._source.sendStatus === 'f') {
-                templ += '<small>( ' + item._source.numAttempts + ' attempts; last error ' + (item._source.lastSendAttempt != null ? item._source.lastSendAttempt.status : '') + ')</small>';
+                //#4804 - templ += '<small>( ' + item._source.numAttempts + ' attempts; last error ' + (item._source.lastSendAttempt != null ? item._source.lastSendAttempt.status : '') + ')</small>';
             }
             templ += '</abbr>';
 

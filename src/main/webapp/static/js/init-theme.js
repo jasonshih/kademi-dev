@@ -496,6 +496,9 @@ function buildJWPlayer(itemToReplace, count, src, posterHref) {
     itemToReplace.replaceWith(div);
     var innerId = div.find(".jw-video").attr("id");
     var isHash = src.indexOf('/_hashes/files/') === 0;
+    var isAsset = src.indexOf('/assets/') === 0;
+    var webmUrl = src + (isHash || isAsset ? '/alt-640-360.webm' : '/../alt-640-360.webm');
+    var m4vUrl = src + (isHash || isAsset ? '/alt-640-360.m4v' : '/../alt-640-360.m4v');
     
     jwplayer(innerId).setup({
         file: src,
@@ -509,9 +512,9 @@ function buildJWPlayer(itemToReplace, count, src, posterHref) {
                 sources: [{
                     file: src
                 }, {
-                    file: src + isHash ? '/alt-640-360.webm' : '/../alt-640-360.webm'
+                    file: webmUrl
                 }, {
-                    file: src + isHash ? '/alt-640-360.m4v' : '/../alt-640-360.m4v'
+                    file: m4vUrl
                 }]
             }
         ]

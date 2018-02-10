@@ -2,13 +2,27 @@
     margin-bottom: 15px;
 }
 
-.mtree-wrapper .mtree {
+.mtree-wrapper .mtree-panels {
+    padding: 0;
+    border: 0;
+    position: static;
+}
+
+.mtree-wrapper .mtree-panel {
     border-radius: 0;
     margin: 0;
     padding: 5px;
     box-shadow: none;
 }
 
-.mtree-wrapper .tab-pane-assets .mtree {
-    top: 50px !important;
+.mtree-wrapper .mtree-panel .mtree {
+    overflow: auto;
+}
+
+.mtree-wrapper .mtree-tabs {
+    margin: 0;
+}
+
+.mtree-wrapper .mtree-assets-finder-wrapper {
+    margin: 0 0 10px;
 }

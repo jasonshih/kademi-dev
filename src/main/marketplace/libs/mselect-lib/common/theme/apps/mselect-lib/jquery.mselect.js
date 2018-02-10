@@ -34,7 +34,8 @@
         },
         useModal: true,
         useCrop: true,
-        showAssets: true
+        showAssets: true,
+        showFiles: true
     };
     
     function MSelect(target, options) {
@@ -167,7 +168,7 @@
     
     MSelect.prototype.getFileType = function (fileUrl, isFormat) {
         // Remove '/_DAV/....' before checking file type
-        fileUrl = fileUrl.replace(/^(.+)(\/_DAV\/.+)$/, '$1')
+        fileUrl = (fileUrl || '').replace(/^(.+)(\/_DAV\/.+)$/, '$1')
         flog('[MSelect] getFileType', fileUrl, isFormat);
         
         var fileType = 'other';
@@ -218,6 +219,7 @@
             includeContentType: options.contentType,
             excludedEndPaths: options.excludedEndPaths,
             showAssets: options.showAssets,
+            showFiles: options.showFiles,
             onSelect: function (node, type, selectedUrl, hash, isAsset) {
                 flog('[MSelect] Select node', node, selectedUrl, hash, isAsset);
                 
@@ -305,7 +307,7 @@
             }
         };
         
-        if (options.showAssets) {
+        if (options.showAssets && options.showFiles) {
             mtreeOptions.onTabSwitch = function (tabType) {
                 if (tabType === 'assets') {
                     self.btnUploadAsset.show();
@@ -326,7 +328,6 @@
         
         var progressBar = self.progressBar;
         var progressBarInner = self.progressBarInner;
-        var btnUploadFile = self.btnUploadFile;
         
         var muploadOptions = {
             url: options.basePath,
@@ -335,7 +336,7 @@
             oncomplete: function (data, name, href) {
                 flog('[MSelect] oncomplete', data);
                 progressBar.hide();
-                self.mtree.addNode(href);
+                self.mtree.addNode(href, name);
             },
             onBeforeUpload: function () {
                 progressBar.show();
@@ -346,7 +347,10 @@
         if (options.contentType) {
             muploadOptions.acceptedFiles = self.getAcceptedFile(options.contentType);
         }
-        btnUploadFile.mupload(muploadOptions);
+        
+        if (options.showFiles) {
+            self.btnUploadFile.mupload(muploadOptions);
+        }
         
         if (options.showAssets) {
             muploadOptions.url = '/assets/';
@@ -373,6 +377,18 @@
         
         self.initTreeContainer(container);
         self.initUploadButtons(container);
+        
+        if (options.showAssets && options.showFiles) {
+            btnUploadFile.show();
+        } else {
+            if (options.showFiles) {
+                btnUploadFile.show();
+            }
+            
+            if (options.showAssets) {
+                btnUploadAsset.show();
+            }
+        }
         
         container.find('.btn-ok').click(function () {
             var url = previewContainer.attr('data-url');
@@ -435,29 +451,68 @@
                 }
             },
             onSave: function (data) {
+                flog('onSave photoeditor', data);
+                
                 var editModal = this.modal;
                 var btns = editModal.find('.btn');
                 btns.prop('disabled', true);
                 
-                $.ajax({
+                var ajaxOptions = {
                     url: '/mselect-lib/storeImage',
                     type: 'post',
                     dataType: 'json',
-                    data: {
-                        file: data.croppedImage
-                    },
                     success: function (resp) {
                         if (resp && resp.status) {
                             if (typeof self.options.onSelectFile === 'function') {
                                 var url = '/_hashes/files/' + resp.hash;
+                                self.previewContainer.attr({
+                                    'data-uniqueid': '',
+                                    'data-hash': resp.hash,
+                                    'data-url': url
+                                });
+                                $('<img />').attr('src', url).on('load', function () {
+                                    var realWidth = this.width;
+                                    var realHeight = this.height;
+                                    var ratio = realWidth / realHeight;
+                                    
+                                    self.previewContainer.html('<img src="' + url + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" />');
+                                    
+                                    if (typeof options.onPreviewFile === 'function') {
+                                        options.onPreviewFile.call(container, 'image', url, resp.hash);
+                                    }
+                                });
                                 self.options.onSelectFile.call(container, url, url, 'image', resp.hash, false);
                             }
+                            editModal.modal('hide');
+                        } else {
+                            flog('Error when saving image', resp);
+                            Msg.error('Error when saving image. Please contact your administrators to resolve this issue')
                         }
                         
-                        editModal.modal('hide');
+                        btns.prop('disabled', false);
+                    },
+                    error: function (jqXhr, textStatus, errorThrow) {
+                        flog('Error when saving image', jqXhr, textStatus, errorThrow);
+                        Msg.error('Error when saving image. Please contact your administrators to resolve this issue')
                         btns.prop('disabled', false);
                     }
-                });
+                };
+                
+                var ajaxData;
+                if (data.croppedImageBlob) {
+                    ajaxData = new FormData();
+                    ajaxData.append('file', data.croppedImageBlob);
+                    
+                    ajaxOptions.processData = false;
+                    ajaxOptions.contentType = false;
+                } else {
+                    ajaxData = {
+                        file: data.croppedImage
+                    };
+                }
+                ajaxOptions.data = ajaxData;
+                
+                $.ajax(ajaxOptions);
             }
         });
         
@@ -493,7 +548,9 @@
             '        <div class="col-xs-3"><div class="milton-tree-wrapper"></div></div>' +
             '        <div class="col-xs-9">' +
             '            <div class="milton-file-preview-wrapper">' +
-            '                ' + (options.showAssets ? '<div class="milton-btn-upload-asset" style="display: none;"></div>' : '') + '<div class="milton-btn-upload-file"></div>' + extraElement +
+            '                ' + (options.showAssets ? '<div class="milton-btn-upload-asset" style="display: none;"></div>' : '') +
+            '                ' + (options.showFiles ? '<div class="milton-btn-upload-file" style="display: none;"></div>' : '') +
+            '                ' + extraElement +
             '                <div class="milton-file-progress progress" style="display: none;">' +
             '                    <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: 100%"></div>' +
             '                </div>' +

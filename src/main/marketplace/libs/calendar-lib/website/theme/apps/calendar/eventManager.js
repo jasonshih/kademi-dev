@@ -68,12 +68,16 @@
         var emailConfirmTemplate = container.find('[name=emailConfirmTemplate]');
         emailConfirmTemplate.html(emailConfirmTemplate.next().html());
         initHtmlEditors(emailConfirmTemplate);
-        
+
         makeSwitch(form);
         initConfirmationTab(container);
         initDetailsTab(form);
         initReminder(form);
         initReminderModal(form);
+
+        var desc = $('[name=description1]');
+        desc.html(desc.next().html());
+        initHtmlEditors(desc);
     }
     
     function makeSwitch(form) {
@@ -223,6 +227,7 @@
                     tr.find('input.themeSite').attr('name', 'reminder.' + i + '.themeSite');
                     tr.find('textarea.html').attr('name', 'reminder.' + i + '.html');
                 });
+                form.find('[name=description]').val(form.find('[name=description1]').val());
             },
             onSuccess: function (resp) {
                 Msg.success('Event is saved');
@@ -234,6 +239,7 @@
                 timePicker: true,
                 timePickerIncrement: 15,
                 timePicker12Hour: false,
+                opens: 'left',
                 locale: {
                     format: 'DD/MM/YYYY HH:mm'
                 }
@@ -304,6 +310,7 @@
                 timePicker: true,
                 timePickerIncrement: 15,
                 timePicker12Hour: false,
+                opens: 'left',
                 locale: {
                     format: 'DD/MM/YYYY HH:mm'
                 }
@@ -319,6 +326,4 @@
             form.trigger('reset');
         });
     }
-    
-    
 })(jQuery);

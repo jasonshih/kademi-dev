@@ -61,7 +61,7 @@ function initPropertiesModal() {
             });
         }
     });
-
+    
     // Load metas
     addMetaTags(metas);
     // Load data/param
@@ -95,30 +95,30 @@ function initPropertiesModal() {
 function initPageBgModal() {
     flog(params);
     var modal = $('#modal-page-bg');
-    if (!modal.find('.pageBgColor').data('colorpicker')){
+    if (!modal.find('.pageBgColor').data('colorpicker')) {
         $.contentEditor.initColorPicker(modal.find('.pageBgColor'));
     }
-
+    
     modal.find('.bgColorEnabled').on('click', function () {
-        if (this.checked){
+        if (this.checked) {
             modal.find('.pageBgColor').prop('readonly', false);
         } else {
             modal.find('.pageBgColor').val('').prop('readonly', true);
             modal.find('.input-group-addon i').css('color', 'transparent');
         }
     });
-
-    for(var key in params){
-        if (params.hasOwnProperty(key) && key.indexOf('pageBg') == 0){
-            modal.find('.'+key).val(params[key]);
-            if (key.indexOf('pageBgImage') == 0){
+    
+    for (var key in params) {
+        if (params.hasOwnProperty(key) && key.indexOf('pageBg') == 0) {
+            modal.find('.' + key).val(params[key]);
+            if (key.indexOf('pageBgImage') == 0) {
                 modal.find('.pageBgImagePreview img').attr('src', params[key]);
-                if (!params[key]){
+                if (!params[key]) {
                     modal.find('.pageBgImagePreview img').attr('src', '/static/images/photo_holder.png');
                 }
             }
-            if (key.indexOf('pageBgColor') == 0){
-                if (params[key]){
+            if (key.indexOf('pageBgColor') == 0) {
+                if (params[key]) {
                     modal.find('.bgColorEnabled').prop('checked', true);
                 } else {
                     modal.find('.bgColorEnabled').prop('checked', false);
@@ -128,22 +128,22 @@ function initPageBgModal() {
             }
         }
     }
-
+    
     modal.find('#pageBgImagePicker').mselect({
         contentTypes: ['image'],
         onSelectFile: function (url, relUrl, fileType, hash) {
-            var hashUrl = '/_hashes/files/'+hash;
+            var hashUrl = '/_hashes/files/' + hash;
             modal.find('.pageBgImagePreview img').attr('src', hashUrl);
             modal.find('.pageBgImage').val(hashUrl)
         }
     });
-
+    
     modal.find('#pageBgImagePickerRemove').on('click', function (e) {
         e.preventDefault();
         modal.find('.pageBgImagePreview img').attr('src', '/static/images/photo_holder.png');
         modal.find('.pageBgImage').val('')
     });
-
+    
     modal.find('form').forms({
         onSuccess: function () {
             $('#file-jsparams').reloadFragment({
@@ -182,20 +182,36 @@ function initKEditor(options) {
     });
     
     var basePath = window.location.pathname.replace('contenteditor', '');
-    $('#content-area').contentEditor({
-        snippetsUrl: options.snippetsUrl,
-        snippetsHandlersUrl: options.snippetsHandlersUrl,
-        allGroups: options.allGroups,
-        basePath: basePath,
-        pagePath: basePath,
-        onReady: function () {
-            win.trigger('resize');
-            setTimeout(function () {
-                hideLoadingIcon();
-                $('#editor-loading').addClass('loading').find('.loading-text').html('Saving...');
-            }, 150);
+    var allGroups;
+    $.ajax({
+        url: '/contentEditor-lib/getAllGroups',
+        type: 'get',
+        dataType: 'json',
+        success: function (resp) {
+            if (resp && resp.status) {
+                allGroups = resp.data;
+            }
         },
-        isCustomApp: options.isCustomApp
+        error: function (jqXhr, statusText, errorThrown) {
+            flog('Error when getting all groups', jqXhr, statusText, errorThrown);
+        },
+        complete: function () {
+            $('#content-area').contentEditor({
+                snippetsUrl: options.snippetsUrl,
+                snippetsHandlersUrl: options.snippetsHandlersUrl,
+                allGroups: allGroups,
+                basePath: basePath,
+                pagePath: basePath,
+                onReady: function () {
+                    win.trigger('resize');
+                    setTimeout(function () {
+                        hideLoadingIcon();
+                        $('#editor-loading').addClass('loading').find('.loading-text').html('Saving...');
+                    }, 150);
+                },
+                isCustomApp: options.isCustomApp
+            });
+        }
     });
     
     // Stop prevent reloading page or redirecting to other pages
@@ -249,7 +265,7 @@ function initSaving(fileName, originalUrl) {
         showLoadingIcon();
         var fileContent = $('#content-area').contentEditor('getContent');
         var saveUrl;
-        if( fileName == "" ) {
+        if (fileName == "") {
             saveUrl = "./";
         } else {
             saveUrl = fileName;
@@ -310,7 +326,7 @@ function addParams(paramsData) {
     $('.param-wrapper').html('');
     
     $.each(paramsData, function (title, value) {
-        if ( paramsData.hasOwnProperty(title) && title.indexOf('pageBg') != 0 ) {
+        if (paramsData.hasOwnProperty(title) && title.indexOf('pageBg') != 0) {
             if (title !== 'title' && title !== 'itemType' && title !== 'category' && title !== 'tags' && title !== 'metas' && title !== 'body' && title !== 'cssFiles' && title !== 'template') {
                 addParam(title, value);
             }

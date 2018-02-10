@@ -3,7 +3,7 @@
         <title>Profile</title>
         <link href="profile.css" rel="stylesheet" type="text/css" />
         <link href="manageUser.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="/theme/apps/admin/profile.js?v=3">//</script>
+        <script type="text/javascript" src="/theme/apps/admin/profile.js?v=4">//</script>
         <script type="text/javascript" src="manageUser.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
         <style>
@@ -125,6 +125,11 @@
             </ul>
             <div class="tab-content">
                 <div id="summary" class="tab-pane">
+                    <div class="row" style="margin-bottom: 10px;">
+                        <div class="col-md-12 text-right">
+                            <a href="summary.csv" id="downloadCsv" class="btn btn-info">Export CSV</a>
+                        </div>
+                    </div>
                     <div class="row " id="profile-panels">
                         #foreach( $pair in $page.appPanels)
                         <div class="col-lg-3 col-md-6">
@@ -511,7 +516,7 @@
                                         <div class="form-group">
                                             <div class="col-md-12">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control required" name="orgId" id="orgId" value="$page.organisation.id" data-text="$page.organisation.formattedName" />
+                                                    <input type="text" class="form-control required" name="orgId" id="orgIdGroupMembership" value="$page.organisation.id" data-text="$page.organisation.formattedName" />
                                                     <span class="input-group-addon"><i class="fa fa-search"></i></span>
                                                 </div>
                                             </div>

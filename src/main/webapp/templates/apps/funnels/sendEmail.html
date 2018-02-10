@@ -200,15 +200,19 @@
                         <!--<a href="#modalEditMessage" data-toggle="modal" class="btn btn-sm btn-warning">Edit Message</a>-->
                         <div class="btn-group">
                             <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Edit Message <span class="caret"></span>
+                                <span class="fa fa-pencil"></span>
+                                Edit
+                                <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a href="#modalEditMessage" data-toggle="modal">EDM Editor</a></li>
-                                <li><a href="#modalEditMessageHTML" data-toggle="modal">Text Editor</a></li>
+                                <li><a href="#modalEditMessage" data-toggle="modal">Visual editor</a></li>
+                                <li><a href="#modalEditMessageHTML" data-toggle="modal">Plain text editor</a></li>
                             </ul>
                         </div>
                         <hr />
-                        <iframe width="100%" height="500" src="$contentFileName"></iframe>
+                        <div id="previewHtml">
+                            $!page.previewHtml
+                        </div>
                     </div>
 
                     <!-- Start content of History tab -->
@@ -352,7 +356,7 @@
         <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css" />
         <script src="/static/nvd3/nv.d3.js" type="text/javascript">//</script>
         <script type="text/javascript" src="/theme/apps/email/manageEmail.js">//</script>
-        <script type="text/javascript" src="/theme/apps/funnels/sendEmail.js?v=00001">//</script>
+        <script type="text/javascript" src="/theme/apps/funnels/sendEmail.js?v=00002">//</script>
         <script type="text/javascript">
             $(function () {
                 $('#targetProfile').entityFinder({
@@ -408,7 +412,7 @@
                     },
 
                     'hide.bs.modal': function () {
-                        iframe.src = iframe.src;
+                        $("#previewHtml").reloadFragment();
                     }
                 });
             });
