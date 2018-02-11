@@ -33,6 +33,7 @@
     #set ($imageWidth = $realWidth)
 #end
 
+
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tbody>
         <tr>
@@ -43,8 +44,9 @@
                             <td class="text-wrapper" style="$!baseStyles" #if ($photoAlign) align="$photoAlign" #end>
                                 #if ($photoLinkable == "true")
                                 <a href="$!photoLink" target="$!photoLinkTarget" style="$!linkStyles">
-                                #end
-                                    <img src="$!photoSrc" style="display: block; border: 0;" width="$!imageWidth" height="" alt="$!photoAlt" />
+                                #end                                    
+                                    <img src="$!rootFolder.externalUrl($photoSrc)" style="display: block; border: 0;" width="$!imageWidth" height="" alt="$!photoAlt" />
+                                    
                                 #if ($photoLinkable == "true")
                                 </a>
                                 #end
