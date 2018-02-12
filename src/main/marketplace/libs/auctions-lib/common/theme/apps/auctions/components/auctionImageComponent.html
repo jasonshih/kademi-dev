@@ -1,4 +1,4 @@
-#if($page && "$!page.title" != "")
+#if($page && $page.is("auction"))
     <div class="auction-detail">
         <div class="auction-images">
             #if( $page.images.size() > 0 )
@@ -24,7 +24,10 @@
         </div>
     </div>
 #else
-    #fakeUI()
+    #if ($page && !$page.is("auction"))
+    #else
+        #fakeUI()
+    #end
 #end
 
 #macro(fakeUI)
