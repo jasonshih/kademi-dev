@@ -123,7 +123,7 @@
                     <tbody id="history-table-body">
                         <tr>
                             <td colspan="6">
-                            Displaying $page.paginator.records.size() of $page.totalEmailItems emails
+                                Displaying $page.paginator.records.size() of $page.totalEmailItems emails
                             </td>
                         </tr>
                         #if( $page.paginator.isEmpty() )
@@ -138,13 +138,47 @@
                                 <a href='/manageUsers/$i.recipientId'>$i.recipientAddress</a>
                             </td>
                             <td>
-                                <a href='/emails/$i.id'><i class='fa fa-envelope'></i>$i.subject</a>
+                                <a href='/emails/$i.id'>$i.subject</a>
                             </td>
                             <td>
                                 <abbr title='$formatter.formatDateISO8601($i.sendStatusDate, $!rootFolder.organisation.timezone)' class='timeago'>$formatter.formatDateISO8601($i.sendStatusDate, $!rootFolder.organisation.timezone)</abbr>
                             </td>
                             <td>
-                                <a href='/emails/$i.id'>$i.sendStatusText</a>
+                                #set( $edm = $i.emailItem() )
+                                #if( $edm.edmConverted )
+                                <p class="label label-success">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                    Converted
+                                </p>
+                                #elseif( $edm.readStatus )
+                                <p class="label label-primary">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                    Opened
+                                </p>
+
+                                #elseif( $edm.sendStatus == 'r' )
+                                <p class="label label-warning">
+                                    <span class="glyphicon glyphicon-repeat"></span>
+                                    $edm.statusText - $!edm.numAttempts
+                                </p>
+                                #elseif( $edm.sendStatus == 'c' )
+                                <p class="label label-default">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                    $edm.statusText
+                                </p>
+                                #elseif( $edm.sendStatus == 'p' )
+                                <p class="label label-warning">
+                                    <span class="glyphicon glyphicon-time"></span>
+                                    $edm.statusText
+                                </p>
+                                #elseif( $edm.sendStatus == 'f' )
+                                <p class="label label-danger">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                    $edm.statusText
+                                </p>
+                                #else
+                                <span class="glyphicon glyphicon-time"></span> Preparing..
+                                #end
                             </td>
                             <td>$!i.baseEmailJob</td>
                             <td><input data-edmid="$i.id" type="checkbox" name="markIgnored"/></td>
