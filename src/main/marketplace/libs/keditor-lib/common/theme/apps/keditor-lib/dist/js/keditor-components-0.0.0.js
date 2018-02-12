@@ -2226,12 +2226,14 @@
                         e.preventDefault();
                         
                         var inputData = prompt('Please enter Youtube URL in here:');
-                        var youtubeRegex = /^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/;
-                        var match = inputData.match(youtubeRegex);
-                        if (match && match[1]) {
-                            keditor.getSettingComponent().find('.embed-responsive-item').attr('src', 'https://www.youtube.com/embed/' + match[1]);
-                        } else {
-                            alert('Your Youtube URL is invalid!');
+                        if (inputData !== null) {
+                            var youtubeRegex = /^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/;
+                            var match = inputData.match(youtubeRegex);
+                            if (match && match[1]) {
+                                keditor.getSettingComponent().find('.embed-responsive-item').attr('src', 'https://www.youtube.com/embed/' + match[1]);
+                            } else {
+                                alert('Your Youtube URL is invalid!');
+                            }
                         }
                     });
                     
