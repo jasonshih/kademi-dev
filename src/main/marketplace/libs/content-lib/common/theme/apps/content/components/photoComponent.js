@@ -189,7 +189,7 @@
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
-                        component.attr('data-alt', this.value);
+                        component.attr('data-photo-alt', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
