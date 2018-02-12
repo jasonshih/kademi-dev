@@ -43,8 +43,9 @@
                                     </td>
                                     <td>$survey.jsonObject.name</td>
                                     #set ($surveyStatistic = $page.controllerMappings.call('getSurveyStatistic', $page, $survey.name))
-                                    #set ($totalSubmits = $surveyStatistic.get('totalSubmits'))
-                                    <td>$!totalSubmits</td>
+                                    #set ($surveyResult = $surveyStatistic.get('surveyResult'))
+                                    #set ($histogram = $surveyStatistic.get('histogram'))
+                                    <td>$formatter.ifNull($histogram.entrySet().size(), 0)</td>
                                     #set ($createdBy = $users.find($!survey.jsonObject.createdBy))
                                     <td>$createdBy.name</td>
                                     <td><abbr class="timeago" title="$!survey.jsonObject.createdDate">$!survey.jsonObject.createdDate</abbr></td>
