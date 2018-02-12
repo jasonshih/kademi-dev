@@ -328,8 +328,8 @@ function getAnswersByQuestion(questionId, surveyId) {
 function onKsurveySubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
     log.info('onKsurveySubmittedGoal customSettings {}', customSettings);
     log.info('onKsurveySubmittedGoal event parameters {}', event.parameters);
-
-    if (customSettings && eventParams && eventParams.survey && customSettings.survey){
+    
+    if (customSettings && eventParams && eventParams.survey && customSettings.survey) {
         return customSettings.survey === eventParams.survey;
     }
     return true;

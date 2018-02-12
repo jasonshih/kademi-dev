@@ -1,21 +1,21 @@
 // private functions
 function getSurveysList(page) {
     log.info('getSurveys > page={} ', page);
-
+    
     var db = getDB(page);
     var surveys = db.findByType(RECORD_TYPES.SURVEY);
-
+    
     log.info('Found {} surveys(s)', surveys.length);
-
+    
     return surveys;
 }
 
 // GET /ksurveyJson
 function getSurveysJson(page, params) {
-    if (params.method == 'surveysList'){
+    if (params.method == 'surveysList') {
         var surveys = getSurveysList(page);
         var arr = [];
-        for(var i in surveys){
+        for (var i in surveys) {
             arr.push({
                 id: surveys[i].name,
                 name: surveys[i].jsonObject.name,
@@ -24,7 +24,7 @@ function getSurveysJson(page, params) {
         }
         return views.jsonObjectView(JSON.stringify({status: true, data: arr}));
     }
-
+    
     return views.jsonObjectView(JSON.stringify({status: false}));
 }
 
@@ -73,7 +73,7 @@ function saveGroupAccess(page, params) {
     } else {
         errors.push('System error! Please contact to administrator for more information.');
     }
-
+    
     var result;
     if (errors.length > 0) {
         result = {
@@ -86,7 +86,7 @@ function saveGroupAccess(page, params) {
             messages: ['Successfully add/update survey']
         };
     }
-
+    
     return views.jsonObjectView(JSON.stringify(result)).wrapJsonResult();
 }
 
@@ -156,7 +156,7 @@ function saveSurvey(page, params) {
             log.info('Added new survey {}', surveyJson);
         }
     }
-
+    
     var result;
     if (errors.length > 0) {
         result = {
@@ -170,7 +170,7 @@ function saveSurvey(page, params) {
             data: returnObj
         };
     }
-
+    
     return views.jsonObjectView(JSON.stringify(result)).wrapJsonResult();
 }
 
@@ -216,7 +216,7 @@ function saveAnswer(page, params) {
             } else {
                 errors.push('There was an error when updating answer. Please try again!')
             }
-
+            
         } else {
             // Create new answer
             newId = RECORD_TYPES.ANSWER + '-' + formatter.randomGuid;
@@ -231,7 +231,7 @@ function saveAnswer(page, params) {
             log.info('Added new answer {}', answer);
         }
     }
-
+    
     var status;
     if (errors.length > 0) {
         status = {
@@ -246,7 +246,7 @@ function saveAnswer(page, params) {
             data: {answerId: returnId, answerBody: answerBody}
         }
     }
-
+    
     return views.jsonObjectView(JSON.stringify(status)).wrapJsonResult();
 }
 
@@ -267,7 +267,7 @@ function saveAnswerRequiredQuestions(page, params) {
     } else {
         errors.push('Missing parameters');
     }
-
+    
     return views.jsonObjectView(JSON.stringify({status: errors.length < 1, messages: errors}));
 }
 
@@ -333,7 +333,7 @@ function saveQuestion(page, params) {
             } else {
                 errors.push('There was an error when updating question. Please try again!')
             }
-
+            
         } else {
             // Create new question
             var newId = RECORD_TYPES.QUESTION + '-' + formatter.randomGuid;
@@ -377,7 +377,7 @@ function saveQuestion(page, params) {
             log.info('Added new question {}', questionJson);
         }
     }
-
+    
     var status;
     if (errors.length > 0) {
         status = {
@@ -391,7 +391,7 @@ function saveQuestion(page, params) {
             data: returnObj
         };
     }
-
+    
     return views.jsonObjectView(JSON.stringify(status)).wrapJsonResult();
 }
 
@@ -417,14 +417,14 @@ function deleteQuestion(page, params) {
 // GET /ksurvey/reorderQuestions
 function reorderQuestions(page, params) {
     log.info('reorderQuestions > page={}, params={}', page, params);
-
+    
     var questionsIds = (params.questionsIds || '').trim();
     var questionsIdsArr = questionsIds.split(',');
-
+    
     if (questionsIds && questionsIdsArr.length > 0) {
         var db = getDB(page);
         var errorIds = [];
-
+        
         for (var i = 0; i < questionsIdsArr.length; i++) {
             (function (index) {
                 var questionRes = db.child(questionsIdsArr[index]);
@@ -437,7 +437,7 @@ function reorderQuestions(page, params) {
                 }
             })(i);
         }
-
+        
         if (errorIds.length === 0) {
             return views.jsonObjectView(JSON.stringify({status: true})).wrapJsonResult();
         } else {
@@ -457,14 +457,14 @@ function reorderQuestions(page, params) {
 // GET /ksurvey/reorderQuestions
 function reorderAnswers(page, params) {
     log.info('reorderAnswers > page={}, params={}', page, params);
-
+    
     var answersIds = (params.answersIds || '').trim();
     var answersIdsArr = answersIds.split(',');
-
+    
     if (answersIds && answersIdsArr.length > 0) {
         var db = getDB(page);
         var errorIds = [];
-
+        
         for (var i = 0; i < answersIdsArr.length; i++) {
             (function (index) {
                 var answerRes = db.child(answersIdsArr[index]);
@@ -476,7 +476,7 @@ function reorderAnswers(page, params) {
                 }
             })(i);
         }
-
+        
         if (errorIds.length === 0) {
             return views.jsonObjectView(JSON.stringify({status: true})).wrapJsonResult();
         } else {
@@ -514,7 +514,7 @@ function deleteSurvey(page, params) {
 
 function findQuestionBySurvey(page, surveyId) {
     log.info('findQuestionBySurvey > page={}, surveyId={}', page, surveyId);
-
+    
     var queryJson = {
         'sort': {
             'order': 'asc'
@@ -536,8 +536,8 @@ function findQuestionBySurvey(page, surveyId) {
             }
         }
     };
-
-
+    
+    
     var questionResult = doDBSearch(page, queryJson);
     queryJson.query = {
         'bool': {
@@ -562,14 +562,14 @@ function getQuestionType(type) {
 
 function findSurvey(rf, groupName, groupVal, mapOfGroups) {
     log.info('findSurvey > {} {} {} {}', [rf, groupName, groupVal, mapOfGroups]);
-
+    
     var db = getDB(rf);
     var survey = db.child(groupVal);
     log.info('Survey found {}', survey);
     if (isNull(survey)) {
         return null;
     }
-
+    
     return survey;
 }
 
@@ -581,11 +581,11 @@ function generateTitle(page) {
 
 function clearResult(page, params) {
     log.info('findSubmissions {}', page);
-
+    
     var db = getDB(page);
     var userId = params.userId;
     var surveyId = params.surveyId;
-
+    
     var queryJson = {
         'size': 10000,
         'query': {
@@ -597,7 +597,7 @@ function clearResult(page, params) {
             }
         }
     };
-
+    
     var queryJson2 = {
         'size': 10000,
         'query': {
@@ -609,11 +609,12 @@ function clearResult(page, params) {
             }
         }
     };
+    
     if (userId) {
         queryJson.query.bool.must.push({'term': {'userId': userId}});
     }
-
-
+    
+    
     var searchResult = doDBSearch(page, queryJson);
     if (searchResult.hits.totalHits > 0) {
         var hits = searchResult.hits.hits;
@@ -623,7 +624,7 @@ function clearResult(page, params) {
             if (submitRes) submitRes.delete();
         }
     }
-
+    
     var searchResult2 = doDBSearch(page, queryJson2);
     if (searchResult2.hits.totalHits > 0) {
         var hits = searchResult2.hits.hits;
@@ -633,7 +634,7 @@ function clearResult(page, params) {
             if (resultRes) resultRes.delete();
         }
     }
-
+    
     return views.jsonObjectView(JSON.stringify({status: true}))
 }
 
@@ -668,7 +669,7 @@ function getSurveyStatistic(page, surveyId) {
     };
     var searchResult = doDBSearch(page, queryJson);
     var surveyResult = {};
-
+    
     if (searchResult.hits.totalHits > 0) {
         var buckets = [];
         if (searchResult.aggregations && searchResult.aggregations.get('by_question') && searchResult.aggregations.get('by_question').buckets) {
@@ -676,31 +677,31 @@ function getSurveyStatistic(page, surveyId) {
         }
         for (var i = 0; i < buckets.length; i++) {
             var question = buckets[i];
-
+            
             surveyResult[question.key] = {
                 docCount: question.docCount,
                 answers: {}
             };
-
+            
             var answerBuckets = [];
             if (question.aggregations && question.aggregations.get('by_answer') && question.aggregations.get('by_answer').buckets) {
                 answerBuckets = question.aggregations.get('by_answer').buckets;
             }
-
+            
             for (var j = 0; j < answerBuckets.length; j++) {
                 var ans = answerBuckets[j];
                 log.info('answer key {}', ans.key);
                 surveyResult[question.key].answers[ans.key] = ans.docCount;
             }
         }
-
+        
         log.info('surveyResult {}', JSON.stringify(surveyResult));
-
+        
     }
-
-
+    
+    
     var queryJson1 = {
-
+        
         'size': 10000,
         'query': {
             'bool': {
@@ -737,7 +738,7 @@ function getSurveyStatistic(page, surveyId) {
             }
         }
     };
-
+    
     var searchResult1 = doDBSearch(page, queryJson1);
     var userAgentResult = {
         browser: {},
@@ -745,7 +746,7 @@ function getSurveyStatistic(page, surveyId) {
         device: {}
     };
     var histogram = {};
-
+    
     if (searchResult1.hits.totalHits > 0) {
         // Browsers
         var browserBuckets = [];
@@ -756,7 +757,7 @@ function getSurveyStatistic(page, surveyId) {
             var browserBucket = browserBuckets[i];
             userAgentResult.browser[browserBucket.key] = browserBucket.docCount;
         }
-
+        
         // OS
         var osBuckets = [];
         if (searchResult1.aggregations && searchResult1.aggregations.get('by_os') && searchResult1.aggregations.get('by_os').buckets) {
@@ -766,7 +767,7 @@ function getSurveyStatistic(page, surveyId) {
             var osBucket = osBuckets[i];
             userAgentResult.os[osBucket.key] = osBucket.docCount;
         }
-
+        
         // Devices
         var deviceBuckets = [];
         if (searchResult1.aggregations && searchResult1.aggregations.get('by_os') && searchResult1.aggregations.get('by_os').buckets) {
@@ -776,7 +777,7 @@ function getSurveyStatistic(page, surveyId) {
             var deviceBucket = deviceBuckets[i];
             userAgentResult.device[deviceBucket.key] = deviceBucket.docCount;
         }
-
+        
         // by_createdDate
         var createdDateBuckets = [];
         if (searchResult1.aggregations && searchResult1.aggregations.get('by_createdDate') && searchResult1.aggregations.get('by_createdDate').buckets) {
@@ -837,7 +838,7 @@ function getUserSurveyStatistic(page, surveyId) {
     };
     var searchResult = doDBSearch(page, queryJson);
     var surveyResult = {};
-
+    
     if (searchResult.hits.totalHits > 0) {
         var buckets = [];
         if (searchResult.aggregations && searchResult.aggregations.get('by_question') && searchResult.aggregations.get('by_question').buckets) {
@@ -845,28 +846,28 @@ function getUserSurveyStatistic(page, surveyId) {
         }
         for (var i = 0; i < buckets.length; i++) {
             var question = buckets[i];
-
+            
             surveyResult[question.key] = {
                 docCount: question.docCount,
                 answers: {}
             };
-
+            
             var answerBuckets = [];
             if (question.aggregations && question.aggregations.get('by_answer') && question.aggregations.get('by_answer').buckets) {
                 answerBuckets = question.aggregations.get('by_answer').buckets;
             }
-
+            
             for (var j = 0; j < answerBuckets.length; j++) {
                 var ans = answerBuckets[j];
                 log.info('answer key {}', ans.key);
                 surveyResult[question.key].answers[ans.key] = ans.docCount;
             }
         }
-
+        
         log.info('surveyResult {}', JSON.stringify(surveyResult));
-
+        
     }
-
+    
     return {
         surveyResult: surveyResult
     };
@@ -902,7 +903,7 @@ function migrateDB(page, params) {
         }
         s.save();
     }
-
+    
     var questions = db.findByType(RECORD_TYPES.QUESTION);
     for (var i in questions) {
         var s = questions[i];
@@ -911,10 +912,10 @@ function migrateDB(page, params) {
             s.jsonObject.required = 'true';
         }
         s.save();
-
-
+        
+        
     }
-
+    
     return views.jsonObjectView(JSON.stringify({status: true})).wrapJsonResult();
 }
 
@@ -924,23 +925,23 @@ function getSurveyCSV(page) {
     var searchResult = findQuestionBySurvey(page, survey.name);
     var questionResult = searchResult.questionResult;
     var answerResult = searchResult.answerResult;
-    var csvheader = ["Survey","Question Title", "Question body", "Question Type", "Answer", "Votes", "Percentage", "Submitted By", "Email"];
+    var csvheader = ["Survey", "Question Title", "Question body", "Question Type", "Answer", "Votes", "Percentage", "Submitted By", "Email"];
     arr.push(csvheader);
     var surveyStats = getSurveyStatistic(page, survey.name);
     var surveyResult = surveyStats.surveyResult;
     var questions = questionResult.hits.hits;
     var answers = answerResult.hits.hits;
     var totalSumits = surveyStats.totalSubmits;
-
+    
     for (var i in questions) {
         var q = questions[i];
-
-        if (!q || !surveyResult[q.id]){
+        
+        if (!q || !surveyResult[q.id]) {
             continue;
         }
-
+        
         arr.push([]);
-
+        
         if (q.source.type != '1') {
             var totalQuestionSubmits = surveyResult[q.id].docCount;
             for (j in answers) {
@@ -958,13 +959,13 @@ function getSurveyCSV(page) {
         } else {
             // var totalAnswerSubmits = surveyResult[q.id].answers['PLAIN_TEXT_ANSWER'];
             var plainAnswers = getPlainAnswers(page, q.id, survey.name);
-
+            
             for (var k in plainAnswers.hits.hits) {
                 var a = plainAnswers.hits.hits[k];
                 var userRes = applications.userApp.findUserResource(a.source.userId);
                 var name = '';
                 var email = '';
-                if (userRes){
+                if (userRes) {
                     name = userRes.extProfileBean.formattedName();
                     email = userRes.email;
                 }
@@ -972,12 +973,12 @@ function getSurveyCSV(page) {
                 arr.push(surveyCSVRow);
             }
         }
-
+        
     }
-
+    
     arr.push([]);
     arr.push([]);
     arr.push(['Total Submits', totalSumits]);
-
+    
     return views.csvView(arr);
 }

@@ -185,8 +185,8 @@ $(function () {
                         whenComplete: function () {
                             initProgressBar();
                             var answersList = form.siblings('.answersList');
-                            if (answersList.data( 'ui-sortable' )) {
-                                answersList.sortable( "refresh" );
+                            if (answersList.data('ui-sortable')) {
+                                answersList.sortable("refresh");
                             }
                         }
                     });
@@ -291,7 +291,7 @@ $(function () {
                 } else {
                     Msg.error(resp.data.messages.join('<br />'));
                 }
-
+                
                 form.find('[name=questionId]').val('');
             },
             error: function (e) {
@@ -501,15 +501,18 @@ $(function () {
             if (userId) {
                 clearResult(surveyId, userId);
             } else {
-                alert('Please enter username');
+                if (userId == null) {
+                    // When press "Cancel"
+                } else {
+                    alert('Please enter username');
+                }
             }
         });
         
         $(document).on('click', '.clearAllResult', function (e) {
             e.preventDefault();
             
-            var yes = confirm('Are you sure you want to delete all result? This data will not be able to restore.');
-            if (yes) {
+            if (confirm('Are you sure you want to delete all result? This data will not be able to restore.')) {
                 var surveyId = $(this).attr('data-survey-id');
                 clearResult(surveyId);
             }
@@ -597,12 +600,12 @@ $(function () {
             });
         }
     }
-
+    
     function initSortableAnswers() {
         var answersList = $('.answersList');
         if (answersList.length > 0) {
             flog('initSortableAnswers');
-
+            
             answersList.each(function () {
                 var list = $(this);
                 list.sortable({
@@ -617,9 +620,9 @@ $(function () {
                             answersIds.push($(this).attr('data-answer'));
                         });
                         answersIds = answersIds.join(',');
-
+                        
                         flog('Reordered questions list IDs: ' + answersIds);
-
+                        
                         $.ajax({
                             url: '/ksurvey/question/',
                             type: 'get',
@@ -656,18 +659,18 @@ $(function () {
             var requiredQuestions = $(this).find(':selected').attr('data-requiredQuestions') || '';
             var panelBody = $(this).parents('.panel-body');
             panelBody.find('.requiredQuestion').each(function () {
-                if(requiredQuestions.indexOf(this.value) != -1){
+                if (requiredQuestions.indexOf(this.value) != -1) {
                     this.checked = true;
                 } else {
                     this.checked = false;
                 }
             })
         });
-
+        
         $(window).on('load', function () {
             $(document).find('.yesnoAnswer').trigger('change');
         });
-
+        
         $(document).on('click', '.requiredQuestion', function (e) {
             var panelBody = $(this).parents('.panel-body');
             var qs = getRequiredQuestions(panelBody);
@@ -692,11 +695,11 @@ $(function () {
             })
         });
     }
-
+    
     function getRequiredQuestions(panelBody) {
         var arr = [];
         panelBody.find('.requiredQuestion').each(function () {
-            if (this.checked){
+            if (this.checked) {
                 arr.push(this.value);
             }
         });

@@ -1,4 +1,5 @@
 var PLAIN_TEXT_ANSWER = 'PLAIN_TEXT_ANSWER';
+
 function generateWebsiteTitle(page) {
     log.info('generateWebsiteTitle > page={}', page);
     var title = page.attributes.surveyId.jsonObject.name;
