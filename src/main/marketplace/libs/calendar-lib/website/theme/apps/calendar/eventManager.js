@@ -1,6 +1,3 @@
-var showAssets = true;
-var showFiles = false;
-
 (function ($) {
     var isAddFormInitialized = false;
     var isEditFormInitialized = false;
@@ -8,6 +5,8 @@ var showFiles = false;
     $(function () {
         var eventManager = $('.event-manager[data-editable="true"]');
         if (eventManager.length > 0) {
+            window.showAssets = true;
+            window.showFiles = false;
             eventManager.find('.btn-add-event').on('click', function (e) {
                 e.preventDefault();
                 
@@ -71,13 +70,13 @@ var showFiles = false;
         var emailConfirmTemplate = container.find('[name=emailConfirmTemplate]');
         emailConfirmTemplate.html(emailConfirmTemplate.next().html());
         initHtmlEditors(emailConfirmTemplate);
-
+        
         makeSwitch(form);
         initConfirmationTab(container);
         initDetailsTab(form);
         initReminder(form);
         initReminderModal(form);
-
+        
         var desc = $('[name=description1]');
         desc.html(desc.next().html());
         initHtmlEditors(desc);
