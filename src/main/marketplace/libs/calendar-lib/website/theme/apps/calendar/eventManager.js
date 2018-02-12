@@ -1,3 +1,6 @@
+var showAssets = true;
+var showFiles = false;
+
 (function ($) {
     var isAddFormInitialized = false;
     var isEditFormInitialized = false;

@@ -48,6 +48,15 @@
         $.getStyleOnce('/theme/apps/mtree-lib/jquery.mtree.css');
         this.target = target;
         this.options = $.extend({}, DEFAULTS, options);
+        
+        if (window.showAssets !== undefined) {
+            options.showAssets = window.showAssets;
+        }
+        
+        if (window.showFiles !== undefined) {
+            options.showFiles = window.showFiles;
+        }
+        
         this.init();
     };
     
