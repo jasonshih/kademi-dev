@@ -53,7 +53,7 @@
         }
     };
     
-    var defaultRegionCode = typeof window.defaultRegionCode !== 'undefined' ? window.defaultRegionCode : 'AU';
+    var defaultRegionCode = (typeof window.defaultRegionCode !== 'undefined' && window.defaultRegionCode !== '') ? window.defaultRegionCode : 'AU';
     
     // Version for jquery.forms
     $.fn.forms.version = '1.1.7';
@@ -183,10 +183,10 @@
                     form.data('formOptions', config);
                 }
                 
-                if (!window.moment){
+                if (!window.moment) {
                     $.getScriptOnce('/static/moment/2.18.1/moment-with-locales.js');
                 }
-
+                
                 flog('[jquery.forms] Initializing forms plugin...', form);
                 
                 form.off('submit').on('submit', function (e) {
@@ -511,6 +511,7 @@ function showFormMessage(form, config, message, title, type, callback) {
         callback.call(this, form, config, message, type);
     }
 }
+
 /**
  * Show error message
  * @param {jQuery} form
@@ -929,7 +930,7 @@ function checkPhones(form, config) {
             var parsingResult = phoneNumberParser(val, config.phoneRegionCode, config.phoneCarrierCode);
             flog('[jquery.forms] Parsing result', parsingResult);
             
-            if (parsingResult.error || (input.hasClass('allow-dodgy-phone') && !parsingResult.isPossibleNumber) || (!input.hasClass('allow-dodgy-phone') && !(parsingResult.isPossibleNumber && parsingResult.isNumberValid))) {
+            if (parsingResult.error || !parsingResult.isPossibleNumber) {
                 flog('[jquery.forms] Phone field is invalid', input);
                 
                 errorFields.push(input);

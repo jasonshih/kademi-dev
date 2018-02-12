@@ -53,7 +53,7 @@
         }
     };
     
-    var defaultRegionCode = typeof window.defaultRegionCode !== 'undefined' ? window.defaultRegionCode : 'AU';
+    var defaultRegionCode = (typeof window.defaultRegionCode !== 'undefined' && window.defaultRegionCode !== '') ? window.defaultRegionCode : 'AU';
     
     // Version for jquery.forms
     $.fn.forms.version = '1.1.1';
@@ -927,7 +927,7 @@ function checkPhones(form, config) {
             var parsingResult = phoneNumberParser(val, config.phoneRegionCode, config.phoneCarrierCode);
             flog('[jquery.forms] Parsing result', parsingResult);
             
-            if (parsingResult.error || (input.hasClass('allow-dodgy-phone') && !parsingResult.isPossibleNumber) || (!input.hasClass('allow-dodgy-phone') && !(parsingResult.isPossibleNumber && parsingResult.isNumberValid))) {
+            if (parsingResult.error || !parsingResult.isPossibleNumber) {
                 flog('[jquery.forms] Phone field is invalid', input);
                 
                 errorFields.push(input);
