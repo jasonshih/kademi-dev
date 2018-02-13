@@ -4,6 +4,8 @@ controllerMappings.addComponent("salesdata/components", "salesTable", "html", "D
 controllerMappings.addComponent("salesdata/components", "salesDataCompare", "html", "Displays chart to compare sale amount between last year and current", "Sales data");
 controllerMappings.addComponent("salesdata/components", "onTrackAllKpis", "html", "Shows indicators if the user is on track to achieve all available KPIs", "Sales data");
 
+controllerMappings.addComponent("salesdata/components", "kpiLeaderboardEDM", "edm", "Shows a leaderboard that includes current participant, for a selected KPI", "Sales data");
+
 controllerMappings
     .websiteController()
     .enabled(true)
@@ -22,13 +24,13 @@ controllerMappings
 function getTopSkusData(page, params) {
     log.info('getTopSkusData > page={}, params={}, queryService={}', page, params, queryService);
     var selectedOrgs = [];
-    
+
     for (var key in queryService.selectedOrgIds) {
         selectedOrgs.push(queryService.selectedOrgIds[key]);
     }
-    
+
     var dataSerialName = params.dataSerialName;
-    
+
     var queryJson = {
         "stored_fields": ["productSku", "amount", "qty"],
         "size": 10,
@@ -83,7 +85,7 @@ function getTopSkusData(page, params) {
             }
         }
     };
-    
+
     var displayedItems = params.displayedItems;
     if (displayedItems && $.trim(displayedItems).length > 0) {
         queryJson.aggregations.skuCode = {
@@ -102,7 +104,7 @@ function getTopSkusData(page, params) {
                         "field": "amount"
                     }
                 },
-                
+
                 "skuQuantity": {
                     "top_hits": {
                         "_source": {
@@ -116,7 +118,7 @@ function getTopSkusData(page, params) {
             }
         };
     }
-    
+
     var startDate = params.startDate;
     var endDate = params.endDate;
     if (startDate && endDate) {
@@ -129,7 +131,7 @@ function getTopSkusData(page, params) {
             }
         });
     }
-    
+
     var query = params.query;
     if (query && $.trim(query).length > 0) {
         queryJson.query.bool.must.push({
@@ -140,20 +142,20 @@ function getTopSkusData(page, params) {
             }
         });
     }
-    
+
     var queryString = JSON.stringify(queryJson);
     log.info('Query String: {}', queryString);
-    
-    
+
+
     var searchResults = applications.search.searchManager.search(queryString, "dataseries");
     // log.info('Search results: {}', searchResults);
-    
+
     return searchResults;
 }
 
 function getTopSkus(page, params) {
     log.info('getTopSkus > page={}, params={}', page, params);
-    
+
     var searchResults = getTopSkusData(page, params);
     log.info('---------- getTopSkus searchResults > {}', searchResults);
     var productsApp = applications.productsApp;
@@ -177,10 +179,10 @@ function getTopSkus(page, params) {
 
 function getTopSkusCSV(page, params) {
     log.info('getTopSkusCSV > page={}, params={}', page, params);
-    
+
     var searchResults = getTopSkusData(page, params);
     var csvLines = formatter.newArrayList();
-    
+
     // CSV Headers
     var headers = formatter.newArrayList();
     // headers.add('Category');
@@ -192,7 +194,7 @@ function getTopSkusCSV(page, params) {
     var productsApp = applications.productsApp;
     for (var i in buckets) {
         var bucket = buckets[i];
-        
+
         var values = formatter.newArrayList();
         // values.add(safeString(bucket.aggregations.get('skuCategory').hits.hits[0].source.category));
         values.add(safeString(bucket.key));
@@ -202,24 +204,24 @@ function getTopSkusCSV(page, params) {
         } else {
             values.add(safeString(bucket.key));
         }
-        
+
         values.add(bucket.aggregations.get('totalPoints').value);
         csvLines.add(values);
     }
-    
+
     page.attributes.csvValues = csvLines;
 }
 
 function getLastYearSale(userResource, dataSeries, currentStartDate, currentEndDate) {
     log.info('getLastYearSale > dataSeries={}, currentStartDate={}, currentEndDate={}', dataSeries, currentStartDate, currentEndDate);
-    
+
     var lastStartDate = formatter.addYears(currentStartDate, -1);
     var lastEndDate = formatter.addYears(currentEndDate, -1);
     var selectedOrgs = [];
     for (var i = 0; i < queryManager.selectedOrgIds.length; i++) {
         selectedOrgs.push(queryManager.selectedOrgIds[i]);
     }
-    
+
     var query = {
         "stored_fields": [
             "amount",
@@ -276,12 +278,12 @@ function getLastYearSale(userResource, dataSeries, currentStartDate, currentEndD
         },
         "size": 1
     };
-    
+
     var queryString = JSON.stringify(query);
     log.info('getLastYearSale > queryString={}', queryString);
-    
+
     var searchResults = applications.search.searchManager.search(queryString, "dataseries");
     log.info('getLastYearSale > searchResults={}', searchResults);
-    
+
     return searchResults;
 }

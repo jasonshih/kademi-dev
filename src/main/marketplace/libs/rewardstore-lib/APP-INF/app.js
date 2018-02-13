@@ -4,11 +4,11 @@ controllerMappings.addComponent("rewardstore/components", "recentlyViewedProduct
 controllerMappings.addComponent("rewardstore/components", "pointsRangeList", "html", "Shows points ranges list", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "productSort", "html", "Shows products sorting dropdown list", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "pointsEarned", "html", "Shows points earned for the current participant, for a selected points bucket and optionally filtered by a points tag", "Reward Store");
-controllerMappings.addComponent("rewardstore/components", "pointsLeaderboardEDM", "edm", "Shows points leaderboard that includes current participant, for a selected points bucket", "Reward Store");
 
 /* EDM Components */
 controllerMappings.addComponent("rewardstore/components", "singleProductEDM", "edm", "Show single product for EDM Editor", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "rewardCategoriesListEDM", "edm", "Show reward store categories list for EDM Editor", "Reward Store");
+controllerMappings.addComponent("rewardstore/components", "pointsLeaderboardEDM", "edm", "Shows points leaderboard that includes current participant, for a selected points bucket", "Reward Store");
 
 controllerMappings
         .websitePortletController()
@@ -39,12 +39,12 @@ function findProducts(page, params, rewardName, numberOfProducts, sort, asc) {
         log.warn("Could not find reward store: " + rewardName);
         return null;
     }
-    
+
     if (rewardStoreFolder.rewardStore == null) {
         log.warn("Could not find reward store for reward store folder " + rewardStoreFolder);
         return null;
     }
-    
+
     var rewardStoreName = rewardStoreFolder.rewardStore.name;
 
 
