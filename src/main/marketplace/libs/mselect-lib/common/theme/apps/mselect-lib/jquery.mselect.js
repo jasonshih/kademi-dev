@@ -336,7 +336,7 @@
             oncomplete: function (data, name, href) {
                 flog('[MSelect] oncomplete', data);
                 progressBar.hide();
-                self.mtree.addNode(href);
+                self.mtree.addNode(href, name);
             },
             onBeforeUpload: function () {
                 progressBar.show();
@@ -430,14 +430,21 @@
         var self = this;
         var options = self.options;
         var btnEditImage = container.find('.btn-edit-image');
+        var mselectModal;
+        if (options.useModal) {
+            mselectModal = container;
+        }
+        if (!mselectModal) {
+            mselectModal = $('.modal-mselect');
+        }
         
         var photoEditor = btnEditImage.photoEditor({
             modalSize: 'modal-lg',
             modalAuto: false,
             btnCancelText: 'Back to Upload',
             onModalShow: function () {
-                if (options.useModal) {
-                    container.modal('hide');
+                if (mselectModal && mselectModal.length > 0) {
+                    mselectModal.modal('hide');
                 }
             },
             onModalShown: function () {
@@ -446,8 +453,8 @@
                 this.setImage(hash ? '/_hashes/files/' + hash : '/assets/' + uniqueId);
             },
             onCancel: function () {
-                if (options.useModal) {
-                    container.modal('show');
+                if (mselectModal && mselectModal.length > 0) {
+                    mselectModal.modal('show');
                 }
             },
             onSave: function (data) {

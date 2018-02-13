@@ -1,7 +1,8 @@
 {
     "appDependencies": [
         {
-            "appId": "googlemap-lib"
+            "appId": "googlemap-lib",
+            "branch": "1.0.4"
         }
     ],
     "dependencies": [

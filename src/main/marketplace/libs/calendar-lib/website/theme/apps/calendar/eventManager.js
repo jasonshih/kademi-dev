@@ -5,6 +5,8 @@
     $(function () {
         var eventManager = $('.event-manager[data-editable="true"]');
         if (eventManager.length > 0) {
+            window.showAssets = true;
+            window.showFiles = false;
             eventManager.find('.btn-add-event').on('click', function (e) {
                 e.preventDefault();
                 
@@ -68,16 +70,16 @@
         var emailConfirmTemplate = container.find('[name=emailConfirmTemplate]');
         emailConfirmTemplate.html(emailConfirmTemplate.next().html());
         initHtmlEditors(emailConfirmTemplate);
-
+        
         makeSwitch(form);
         initConfirmationTab(container);
         initDetailsTab(form);
         initReminder(form);
         initReminderModal(form);
-        $.getScriptOnce('/theme/apps/contentEditor-lib/jquery.contentEditor.js', function () {
-            initFullscreenEditorModal($('[name=description]'), true, false, []);
-        });
-
+        
+        var desc = $('[name=description1]');
+        desc.html(desc.next().html());
+        initHtmlEditors(desc);
     }
     
     function makeSwitch(form) {
@@ -227,6 +229,7 @@
                     tr.find('input.themeSite').attr('name', 'reminder.' + i + '.themeSite');
                     tr.find('textarea.html').attr('name', 'reminder.' + i + '.html');
                 });
+                form.find('[name=description]').val(form.find('[name=description1]').val());
             },
             onSuccess: function (resp) {
                 Msg.success('Event is saved');
@@ -325,106 +328,4 @@
             form.trigger('reset');
         });
     }
-
-
-    function initFullscreenEditorModal(target, isContentEditor, isEdmEditor, allGroups) {
-        var content = target.html() || '';
-        var id = target.attr('id');
-        if (!id) {
-            id = 'editor-' + (new Date()).getTime();
-            target.attr('id', id);
-        }
-        var modalId = 'modal-fullscreen-' + id;
-        var modal = $(
-            '<div id="' + modalId + '" class="modal ' + (isContentEditor || isEdmEditor ? 'modal-full' : '') + ' fullscreen-editor-modal fade" tabindex="-1">' +
-            '    <div class="modal-dialog modal-lg">' +
-            '        <div class="modal-content">' +
-            '            <div class="modal-body">' +
-            '                <div class="editor-wrapper">' +
-            '                    <div class="editor-loading">' +
-            '                        <span>' +
-            '                            <span class="loading-icon">' +
-            '                                <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i>' +
-            '                            </span>' +
-            '                            <span class="loading-text">Initializing editor...</span>' +
-            '                        </span>' +
-            '                    </div>' +
-            '                    <textarea autocomplete="off" class="form-control">' + content + '</textarea>' +
-            '                </div>' +
-            '            </div>' +
-            '            <div class="modal-footer">' +
-            '                <button type="button" data-dismiss="modal" class="btn btn-sm btn-default">Close</button>' +
-            '                <button type="button" class="btn btn-sm btn-info fullscreen-editor-save">Save</button>' +
-            '            </div>' +
-            '        </div>' +
-            '    </div>' +
-            '</div>'
-        );
-        modal.appendTo(document.body);
-
-        var textarea = modal.find('textarea');
-        var textareaId = 'modal-fullscreen-textarea-' + id;
-        textarea.attr('id', textareaId);
-
-        var ckeditor;
-        var editorLoading = modal.find('.editor-loading');
-        if (isContentEditor || isEdmEditor) {
-            var pageName = getFileName(window.location.href);
-            var pagePath = target.attr('data-page-path') || '';
-            var basePath = target.attr('data-base-path') || '';
-
-            textarea[isContentEditor ? 'contentEditor' : 'edmEditor']({
-                iframeMode: true,
-                snippetsUrl: './_components?fileName=' + pageName,
-                snippetsHandlersUrl: './_components?handlers&fileName=' + pageName,
-                basePath: basePath,
-                pagePath: pagePath,
-                allGroups: allGroups,
-                contentStyles: [
-                    {href: '/static/bootstrap/3.3.7/css/bootstrap.css'},
-                    {href: '/theme/apps/keditor-lib/dist/css/keditor-0.0.0.min.css'},
-                    {href: '/theme/apps/keditor-lib/dist/css/keditor-components-0.0.0.min.css'}
-                ],
-                onReady: function () {
-                    editorLoading.hide();
-                }
-            });
-        } else {
-            initHtmlEditors(textarea, 500, null, null, null, function (editor) {
-                ckeditor = editor;
-                editorLoading.hide();
-            });
-        }
-
-        var btnEdit = $('<button type="button" class="btn btn-sm btn-info fullscreen-editor-edit">Edit content</button>');
-        target.before(btnEdit);
-        btnEdit.wrap('<p class="fullscreen-editor-actions"></p>');
-
-        btnEdit.on('click', function (e) {
-            e.preventDefault();
-
-            modal.modal('show');
-        });
-
-        modal.find('.fullscreen-editor-save').on('click', function (e) {
-            e.preventDefault();
-
-            var content;
-            if (isContentEditor || isEdmEditor) {
-                content = textarea[isContentEditor ? 'contentEditor' : 'edmEditor']('getContent');
-            } else {
-                content = ckeditor.getData();
-            }
-
-            target.val(content);
-            target.closest('form').trigger('submit');
-            modal.modal('hide');
-
-            // var iframe = target.siblings('.fullscreen-editor-preview');
-            // if (iframe.hasClass('fullscreen-editor-preview-inline')) {
-            //     loadFullscreenEditorInlinePreview(target);
-            // }
-        });
-    }
-    
 })(jQuery);

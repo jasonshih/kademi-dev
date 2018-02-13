@@ -43,6 +43,7 @@
                                     </td>
                                     <td>$survey.jsonObject.name</td>
                                     #set ($surveyStatistic = $page.controllerMappings.call('getSurveyStatistic', $page, $survey.name))
+                                    #set ($surveyResult = $surveyStatistic.get('surveyResult'))
                                     #set ($totalSubmits = $surveyStatistic.get('totalSubmits'))
                                     <td>$!totalSubmits</td>
                                     #set ($createdBy = $users.find($!survey.jsonObject.createdBy))

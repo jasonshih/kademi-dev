@@ -1654,7 +1654,8 @@ function initImagePicker(target, basePath, pagePath) {
             });
         }
         
-        var btnEdit = $('<button type="button" class="btn btn-sm btn-info fullscreen-editor-edit">Edit content</button>');
+        var btnEditText = target.attr('data-button-text') || 'Edit content';
+        var btnEdit = $('<button type="button" class="btn btn-sm btn-info fullscreen-editor-edit">' + btnEditText + '</button>');
         target.before(btnEdit);
         btnEdit.wrap('<p class="fullscreen-editor-actions"></p>');
         

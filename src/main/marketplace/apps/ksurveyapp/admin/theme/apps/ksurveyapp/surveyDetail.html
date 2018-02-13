@@ -260,7 +260,7 @@
 
                     <div class="survey-summary clearfix">
                         <div class="row">
-                            #if($surveyResult.entrySet().size()>0)
+                            #if($surveyResult.entrySet().size() > 0)
                                 <div class="col-sm-9">
                                     #if($histogram.entrySet().size()>0)
                                         <svg id="histogram" width="100%" height="300"></svg>
@@ -291,33 +291,36 @@
                                 <div class="col-sm-12"><p class="text-center">No submits found</p></div>
                             #end
                         </div>
-                        <div class="row">
-                            <div class="col-sm-4">
-                                #if($userAgentResult.get('browser').entrySet().size()>0 && $page.attributes.questionResult.hits.totalHits>0)
-                                    <div id="browserStats" style="height: 200px"></div>
-                                    <script type="text/javascript">
-                                        var browserStats = [
-                                            #foreach ($b in $userAgentResult.get('browser').entrySet())
-                                                {label: '$b.key', value: $b.value},
-                                            #end];
-                                    </script>
-                                #end
+                        
+                        #if ($page.attributes.questionResult.hits.totalHits > 0)
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    #if($userAgentResult.get('browser').entrySet().size() > 0)
+                                        <div id="browserStats" style="height: 200px"></div>
+                                        <script type="text/javascript">
+                                            var browserStats = [
+                                                #foreach ($b in $userAgentResult.get('browser').entrySet())
+                                                    {label: '$b.key', value: $b.value},
+                                                #end];
+                                        </script>
+                                    #end
+                                </div>
+                                <div class="col-sm-4">
+                                    #if($userAgentResult.get('os').entrySet().size() > 0)
+                                        <div id="osStats" style="height: 200px"></div>
+                                        <script type="text/javascript">
+                                            var osStats = [
+                                                #foreach ($b in $userAgentResult.get('os').entrySet())
+                                                    {label: '$b.key', value: $b.value},
+                                                #end];
+                                        </script>
+                                    #end
+                                </div>
+                                <div class="col-sm-4">
+    
+                                </div>
                             </div>
-                            <div class="col-sm-4">
-                                #if($userAgentResult.get('os').entrySet().size()>0 && $page.attributes.questionResult.hits.totalHits>0)
-                                    <div id="osStats" style="height: 200px"></div>
-                                    <script type="text/javascript">
-                                        var osStats = [
-                                            #foreach ($b in $userAgentResult.get('os').entrySet())
-                                                {label: '$b.key', value: $b.value},
-                                            #end];
-                                    </script>
-                                #end
-                            </div>
-                            <div class="col-sm-4">
-
-                            </div>
-                        </div>
+                        #end
                     </div>
                     <div id="stats-questions">
                         #if($page.attributes.questionResult.hits.totalHits > 0 && $surveyResult.entrySet().size()>0 )

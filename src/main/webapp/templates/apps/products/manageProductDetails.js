@@ -1,6 +1,6 @@
-function initProductDetails(editorType, allGroups) {
+function initProductDetails(editorType) {
     initProductDetailsForm();
-    initProductContentsTab(editorType, allGroups);
+    initProductContentsTab(editorType);
     toggleOrderInfo();
     $('#canOrderChk').change(function (event) {
         toggleOrderInfo();
@@ -19,58 +19,21 @@ function initProductDetails(editorType, allGroups) {
     });
 }
 
-function initProductContentsTab(editorType, allGroups) {
+function initProductContentsTab(editorType) {
     if (editorType === 'html') {
         initHtmlEditors();
     } else {
-        $('.contenteditor').each(function () {
-            var editor = $(this);
-            var loading = $(
-                '<div class="editor-loading">' +
-                '    <span>' +
-                '        <span class="loading-icon">' +
-                '            <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i>' +
-                '        </span>' +
-                '        <span class="loading-text">Initializing Content Editor...</span>' +
-                '    </span>' +
-                '</div>'
-            );
-            
-            editor.before(loading);
-            editor.hide();
-            
-            editor.contentEditor({
-                iframeMode: true,
-                allGroups: allGroups,
-                snippetsUrl: '_components',
-                pagePath: editor.attr('data-page-path'),
-                basePath: editor.attr('data-base-path'),
-                onReady: function () {
-                    loading.remove();
-                }
-            });
-        });
+        initFullscreenEditor($('#brief'));
+        initFullscreenEditor($('#notes'));
     }
     
     $('.updateProductBrief').forms({
-        onValid: function () {
-            if (editorType !== 'html') {
-                var brief = $('#brief');
-                brief.val(brief.contentEditor('getContent'));
-            }
-        },
         onSuccess: function () {
             Msg.success('Successfully updated product\'s brief!', 'saveProduct');
         }
     });
     
     $('.updateProductContent').forms({
-        onValid: function () {
-            if (editorType !== 'html') {
-                var notes = $('#notes');
-                notes.val(notes.contentEditor('getContent'));
-            }
-        },
         onSuccess: function () {
             Msg.success('Successfully updated product\'s content!', 'saveProduct');
         }

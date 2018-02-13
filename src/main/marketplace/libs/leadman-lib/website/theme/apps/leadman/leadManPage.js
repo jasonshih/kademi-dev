@@ -276,10 +276,12 @@
         });
 
         editor.on('submitComplete', function (e, json, data) {
-            var scoreTd = $('#leadTable').find('.leadMan-del-lead[value='+data.leadId+']').closest('td').parent('tr').find('td').first();
-            if (scoreTd){
-                var cell = dataTable.cell( scoreTd );
-                cell.data( scores[data.leadId] ).draw();
+            if(data !== undefined){
+                var scoreTd = $('#leadTable').find('.leadMan-del-lead[value='+data.leadId+']').closest('td').parent('tr').find('td').first();
+                if (scoreTd){
+                    var cell = dataTable.cell( scoreTd );
+                    cell.data( scores[data.leadId] ).draw();
+                }
             }
         });
 
@@ -312,13 +314,15 @@
         }).done(function (data) {
             if (data.status) {
                 var sources = [];
-                $.each(data.data, function (i, el) {
-                    if ($.inArray(el, stages) === -1) {
-                        sources.push(el);
-                    }
-                });
-                flog('Sources', sources);
-                editor.field('source').update(sources).set(currentValue);
+                if(data.data !== null && data.data !== undefined){
+                    $.each(data.data, function (i, el) {
+                        if ($.inArray(el, stages) === -1) {
+                            sources.push(el);
+                        }
+                    });
+                    flog('Sources', sources);
+                    editor.field('source').update(sources).set(currentValue);
+                }
             }
         });
     }

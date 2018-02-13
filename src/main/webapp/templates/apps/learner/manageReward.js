@@ -3,7 +3,7 @@ var win = $(window);
 
 function initManagePoints() {
     Msg.singletonForCategory = true;
-    
+
     var editModal = $("#modalEditPoints");
     var modalForm = editModal.find("form");
     modalForm.forms({
@@ -18,9 +18,9 @@ function initManagePoints() {
             }
         }
     });
-    
+
     refreshTableEvents();
-    
+
     $(".removeUsers").click(function (e) {
         var node = $(e.target);
         log("removeUsers", node, node.is(":checked"));
@@ -33,7 +33,7 @@ function initManagePoints() {
             }
         }
     });
-    
+
     $("#new-debit-points-form .btn-primary").on("click", function (event) {
         event.preventDefault();
         var points = $("#new-debit-points-form input[name=\"numPoints\"]").val();
@@ -61,7 +61,7 @@ function initManagePoints() {
             }
         });
     });
-    
+
     $("#new-debit-points-form").forms({
         onSuccess: function (resp) {
             if (resp.status) {
@@ -74,12 +74,12 @@ function initManagePoints() {
             }
         }
     });
-    
+
     $("#new-points-form").forms({
         onSuccess: function (resp) {
             if (resp.status) {
                 reloadFragmentPoints(function () {
-                    Msg.info("Assigned points OK" , "points assign");
+                    Msg.info("Assigned points OK", "points assign");
                     $('#modal-new-points').modal('hide');
                 });
             } else {
@@ -87,7 +87,7 @@ function initManagePoints() {
             }
         }
     });
-    
+
     $("#doUploadCsv").mupload({
         buttonText: "<i class=\"clip-folder\"></i> Upload spreadsheet",
         url: "points.csv",
@@ -104,10 +104,10 @@ function initManagePoints() {
             });
         }
     });
-    
+
     var debitModal = $('#modal-debit-points');
     var debitModalForm = debitModal.find('form');
-    
+
     debitModalForm.forms({
         onSuccess: function (resp) {
             if (resp.status) {
@@ -120,13 +120,13 @@ function initManagePoints() {
             }
         }
     });
-    
+
     debitModal.on('hidden', function () {
         debitModalForm.trigger('reset');
     });
-    
+
     initHistorySearch();
-    
+
     $(document.body).on('click', '.btn-refresh-pb', function (e) {
         e.preventDefault();
         if (confirm('Are you sure you want to refresh the points balance for all rewards?')) {
@@ -148,9 +148,9 @@ function initManagePoints() {
             });
         }
     });
-    
+
     updateRefreshPBStatus();
-    
+
     $('body').on('click', '.reason-codes a', function (e) {
         e.preventDefault();
         var a = $(e.target).closest("a");
@@ -166,39 +166,39 @@ function refreshTableEvents() {
         var a = $(e.target);
         var uri = URI(window.location);
         var field = a.attr('id');
-        
+
         var dir = 'asc';
         if (field == getSearchValue(window.location.search, 'sortfield')
-            && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
+                && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
             dir = 'desc';
         }
         uri.setSearch('sortfield', field);
         uri.setSearch('sortdir', dir);
-        
+
         $.ajax({
             type: 'GET',
             url: uri.toString(),
             success: function (data) {
                 flog('success', data);
                 window.history.pushState('', document.title, uri.toString());
-                
+
                 var newDom = $(data);
-                
+
                 var $tableContent = newDom.find('#pointsBody');
                 $('#pointsBody').replaceWith($tableContent);
-                
+
                 var $tableContent = newDom.find('#pointsFooter');
                 $('#pointsFooter').replaceWith($tableContent);
-                
+
                 refreshTableEvents();
             },
             error: function (resp) {
                 Msg.error('err');
             }
         });
-        
+
     });
-    
+
     $("#pointsContainer").on("click", ".btnEditPoints", function (e) {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
@@ -230,9 +230,9 @@ function updateRefreshPBStatus() {
         clearTimeout(refreshPbCheckTimer);
         refreshPbCheckTimer = null;
     }
-    
+
     var btn = $('.btn-refresh-pb');
-    
+
     $.ajax({
         type: 'GET',
         url: "/tasks/refreshPointsBalance",
@@ -273,7 +273,7 @@ function initContentEditor() {
 
 function initEditReward() {
     initContentEditor();
-    
+
     var entryFormInput = $("#quizHtml");
     var entryFormBuilderDiv = $("#entryFormBuilder");
     var formBuilder = entryFormBuilderDiv.formBuilder({
@@ -282,12 +282,12 @@ function initEditReward() {
         roles: null,
         disableFields: ["autocomplete", "button"]
     }).data('formBuilder');
-    
+
     $('.form-builder-save').click(function () {
         var config = formBuilder.formData;
         flog("save form config", config);
     });
-    
+
     $("form.manageRewardForm").forms({
         ignoreContainers: "#entryFormBuilder",
         validate: function () {
@@ -297,7 +297,7 @@ function initEditReward() {
         },
         onSuccess: function (resp) {
             flog("done", resp);
-            
+
             reloadFullscreenEditorPreview($('#body'));
             Msg.success("Saved ok");
         },
@@ -306,7 +306,7 @@ function initEditReward() {
         }
     });
     flog("initEditReward3");
-    
+
     $("body").on("submitForm", "form", function (e) {
         var form = $(e.target);
         data = prepareQuizForSave(form);
@@ -324,12 +324,12 @@ function initEditReward() {
     $(".Cancel").click(function () {
         window.location = "../";
     });
-    
+
     initGroupEditing();
     initEntryFormEditing();
     initQuizBuilder();
     initRestrictions();
-    
+
     flog("initEditReward9");
 }
 
@@ -359,10 +359,10 @@ function initRestrictions() {
         ul.append(li);
         ul.removeClass('hidden');
         flog("Successfully added restriction!");
-        
+
         $("#modalAddRestriction").modal('hide');
     });
-    
+
     $(".restrictionList").on("click", ".remove", function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -486,7 +486,7 @@ function initManageReward() {
             window.location.href = resp.nextHref;
         }
     });
-    
+
 }
 
 function checkCookie() {
@@ -496,7 +496,7 @@ function checkCookie() {
         var _type = _sort_type[0];
         var _asc = _sort_type[1] === "asc" ? true : false;
         sortBy(_type, _asc);
-        
+
         if (_type === "status") {
             $("a.SortByStatus").attr("rel", _asc ? "desc" : "asc");
         } else {
@@ -522,7 +522,7 @@ function initController() {
         e.preventDefault();
         var link = $(e.target).closest("a");
         var href = link.attr("href");
-        
+
         confirmDelete(href, href, function () {
             flog("remove it");
             link.closest("tr").remove();
@@ -536,27 +536,27 @@ function sortBy(type, asc) {
     var _list = {};
     var sortObject = function (obj) {
         var sorted = {},
-            array = [],
-            key,
-            l;
-        
+                array = [],
+                key,
+                l;
+
         for (key in obj) {
             if (obj.hasOwnProperty(key)) {
                 array.push(key);
             }
         }
-        
+
         array.sort();
         if (!asc) {
             array.reverse();
         }
-        
+
         for (key = 0, l = array.length; key < l; key++) {
             sorted[array[key]] = obj[array[key]];
         }
         return sorted;
     };
-    
+
     if (type === "title") {
         for (var i = 0, _item; _item = list[i]; i++) {
             _item = $(_item);
@@ -572,15 +572,15 @@ function sortBy(type, asc) {
             _list[status + "#" + rel] = _item;
         }
     }
-    
+
     _list = sortObject(_list);
-    
+
     var _rewardList = $("#manageReward .Content ul");
     _rewardList.html("");
     for (var i in _list) {
         _rewardList.append(_list[i]);
     }
-    
+
     stripList();
 }
 
@@ -588,10 +588,10 @@ function initSortableButton() {
     // Bind event for Status sort button
     $("body").on("click", "a.SortByStatus", function (e) {
         e.preventDefault();
-        
+
         var _this = $(this);
         var _rel = _this.attr("rel");
-        
+
         if (_rel === "asc") {
             sortBy("status", true);
             $.cookie("reward-sort-type", "status#asc");
@@ -602,14 +602,14 @@ function initSortableButton() {
             _this.attr("rel", "asc");
         }
     });
-    
+
     // Bind event for Title sort button
     $("body").on("click", "a.SortByTitle", function (e) {
         e.preventDefault();
-        
+
         var _this = $(this);
         var _rel = _this.attr("rel");
-        
+
         if (_rel === "asc") {
             sortBy("title", true);
             $.cookie("reward-sort-type", "title#asc");
@@ -624,7 +624,7 @@ function initSortableButton() {
 
 function initEntryFormEditing() {
     var chks = $(".entryFormItem input[type=checkbox]");
-    
+
     chks.click(function (e) {
         var node = $(e.target);
         if (node.is(":checked")) {
@@ -690,37 +690,45 @@ function initHistorySearch() {
         }
         doHistorySearch();
     });
-    
+
+    var timer;
     $(document.body).on('keypress', '#data-query', function (e) {
         var code = e.keyCode || e.which;
         if (code == 13) {
             e.preventDefault();
             doHistorySearch();
             return false;
+        } else {
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                e.preventDefault();
+                doHistorySearch();
+            }, 250);
         }
+        return true;
     });
-    
+
     $(document.body).on('change', '#data-query', function (e) {
         e.preventDefault();
-        
+
         doHistorySearch();
     });
-    
+
     $(document.body).on('change', '#searchGroup', function (e) {
         e.preventDefault();
         doHistorySearch();
     });
-    
+
     $(document.body).on('change', '#searchReward', function (e) {
         e.preventDefault();
         doHistorySearch();
     });
-    
+
     $(document.body).on('change', '#tagId', function (e) {
         e.preventDefault();
         doHistorySearch();
     });
-    
+
     $(document.body).on('change', '#reasonCode', function (e) {
         e.preventDefault();
         doHistorySearch();
@@ -730,7 +738,7 @@ function initHistorySearch() {
 function doHistorySearch() {
     flog('doHistorySearch');
     Msg.info("Doing search...", 2000);
-    
+
     var data = {
         dataQuery: $("#data-query").val(),
         searchGroup: $("#searchGroup").val(),
@@ -739,25 +747,25 @@ function doHistorySearch() {
         reasonCode: $("#reasonCode").val()
     };
     flog("data", data);
-    
+
     $('.btn-export-points').attr('href', 'points.csv?' + $.param(data));
-    
+
     var target = $("#pointsTable");
     target.load();
-    
+
     var serialize = function (obj, prefix) {
         var str = [], p;
         for (p in obj) {
             if (obj.hasOwnProperty(p)) {
                 var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
                 str.push((v !== null && typeof v === "object") ?
-                    serialize(v, k) :
-                    encodeURIComponent(k) + "=" + encodeURIComponent(v));
+                        serialize(v, k) :
+                        encodeURIComponent(k) + "=" + encodeURIComponent(v));
             }
         }
         return str.join("&");
     }
-    
+
     var link = window.location.pathname + "?" + serialize(data);
     flog("new link", link);
     $.ajax({
@@ -770,9 +778,9 @@ function doHistorySearch() {
             var newBody = $(content).find("#pointsTable");
             target.replaceWith(newBody);
             history.pushState(null, null, link);
-            
+
             refreshTableEvents();
-            
+
             $("abbr.timeago").timeago();
             $("#pointsFooter").paginator();
         }

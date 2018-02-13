@@ -7,6 +7,8 @@ controllerMappings.addComponent("content/components", "tile", "html", "Shows a t
 
 // Asset stuff
 controllerMappings.addComponent("content/components", "assetQueryList", "html", "Shows a list of assets from an asset query", "Content App component");
+controllerMappings.addComponent("content/components", "assetEditForm", "html", "Shows a default edit form for assets");
+
 controllerMappings.addComponent("content/components", "photo")
         .addType("html")
         .desc("Photo block")

@@ -173,9 +173,13 @@
         Handlebars.registerHelper('genEmailStatusIcon', function (item, options) {
             var templ = '';
 
+            flog("genEmailStatusIcon", item);
+
             templ += '<span class="fa-stack fa-lg">';
             if (item._source.sendStatus === 'c') {
                 templ += '<i class="fa fa-check-circle fa-stack-1x text-success"></i>';
+            } else if (item._source.sendStatus === 'f') {
+                templ += '<i class="fa fa-times-circle fa-stack-1x text-danger"></i>';
             } else {
                 templ += '<i class="fa fa-exclamation-circle fa-stack-1x text-muted"></i>';
             }
@@ -185,18 +189,18 @@
             }
 
             templ += '</span>';
-            
+
             var na = new moment(item._source.nextAttempt);
 
             templ += '<abbr title="EmailItemID: ' + item._source.id + '">';
             if (item._source.sendStatus === 'r') {
-                templ += '<small>( retry at '+na.toString()+')</small>';
+
             } else if (item._source.sendStatus === 'p') {
                 if (item._source.numAttempts) {
-                    templ += '<small>( ' + item._source.numAttempts + ' attempts )</small>';
+                    templ += '<small>( X2 ' + item._source.numAttempts + ' attempts )</small>';
                 }
             } else if (item._source.sendStatus === 'f') {
-                templ += '<small>( ' + item._source.numAttempts + ' attempts; last error ' + (item._source.lastSendAttempt != null ? item._source.lastSendAttempt.status : '') + ')</small>';
+
             }
             templ += '</abbr>';
 
@@ -213,7 +217,8 @@
                 {
                     icon = 'glyphicon glyphicon-repeat';
                     label = 'label-warning';
-                    text = item._source.statusText + ' - ' + item._source.numAttempts;
+                    var na = new moment(item._source.nextAttempt);
+                    text = item._source.sendStatusText + ', ' + item._source.numAttempts + ' attempts, next retry at ' + na.toString();
                     break;
                 }
                 case 'c':
@@ -237,14 +242,18 @@
                 {
                     icon = 'glyphicon glyphicon-time';
                     label = 'label-warning';
-                    text = item._source.statusText;
+                    text = item._source.sendStatusText;
                     break;
                 }
                 case 'f':
                 {
                     icon = 'glyphicon glyphicon-remove';
                     label = 'label-danger';
-                    text = item._source.statusText;
+                    text = item._source.sendStatusText;
+                    if( item._source.numAttempts ) {
+                    text += item._source.numAttempts + ' attempts;';
+                    }
+                    text += ' last error ' + (item._source.lastSendAttempt != null ? item._source.lastSendAttempt.status : '');
                     break;
                 }
                 default:

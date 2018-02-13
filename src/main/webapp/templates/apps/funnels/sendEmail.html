@@ -210,8 +210,9 @@
                             </ul>
                         </div>
                         <hr />
-                        $page.previewHtml
-
+                        <div id="previewHtml">
+                            $!page.previewHtml
+                        </div>
                     </div>
 
                     <!-- Start content of History tab -->
@@ -355,7 +356,7 @@
         <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css" />
         <script src="/static/nvd3/nv.d3.js" type="text/javascript">//</script>
         <script type="text/javascript" src="/theme/apps/email/manageEmail.js">//</script>
-        <script type="text/javascript" src="/theme/apps/funnels/sendEmail.js?v=00001">//</script>
+        <script type="text/javascript" src="/theme/apps/funnels/sendEmail.js?v=00002">//</script>
         <script type="text/javascript">
             $(function () {
                 $('#targetProfile').entityFinder({
@@ -411,7 +412,7 @@
                     },
 
                     'hide.bs.modal': function () {
-                        iframe.src = iframe.src;
+                        $("#previewHtml").reloadFragment();
                     }
                 });
             });

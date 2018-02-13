@@ -1,7 +1,7 @@
 /**
  *
  * jquery.forms.js
- * @version: 1.1.6
+ * @version: 1.1.7
  * @depends: common.js, moment.js
  *
  * Configuration:
@@ -34,7 +34,7 @@
  */
 
 (function ($) {
-    flog('[jquery.forms] DEPRECATED options of 1.1.6 which will be removed 1.2.0:');
+    flog('[jquery.forms] DEPRECATED options of 1.1.7 which will be removed 1.2.0:');
     flog('********************************************');
     flog('- "doPostForm" is DEPRECATED and removed. Use "allowPostForm" instead');
     flog('- "error" is DEPRECATED. Use "onInvalid" instead');
@@ -53,10 +53,10 @@
         }
     };
     
-    var defaultRegionCode = typeof window.defaultRegionCode !== 'undefined' ? window.defaultRegionCode : 'AU';
+    var defaultRegionCode = (typeof window.defaultRegionCode !== 'undefined' && window.defaultRegionCode !== '') ? window.defaultRegionCode : 'AU';
     
     // Version for jquery.forms
-    $.fn.forms.version = '1.1.4';
+    $.fn.forms.version = '1.1.7';
     
     // Get libphonenumber.js
     $.getScriptOnce('/static/libphonenumber/7.2.6/libphonenumber.js', function () {
@@ -67,7 +67,7 @@
     $.fn.forms.DEFAULT = {
         postUrl: null, // means to use the form action as url
         validate: function (form, config) {
-            flog('[jquery.forms] Default validate of v1.1.6', form, config);
+            flog('[jquery.forms] Default validate of v1.1.7', form, config);
             
             return {
                 error: 0,
@@ -76,19 +76,19 @@
             }
         },
         onValid: function (form, config) {
-            flog('[jquery.forms] Default onValid of v1.1.6', form, config);
+            flog('[jquery.forms] Default onValid of v1.1.7', form, config);
         },
         onInvalid: function (form, config) {
-            flog('[jquery.forms] Default onInvalid of v1.1.6', form, config);
+            flog('[jquery.forms] Default onInvalid of v1.1.7', form, config);
         },
         allowPostForm: true,
         beforePostForm: function (form, config, data) {
-            flog('[jquery.forms] Default beforePostForm of v1.1.6', form, config, data);
+            flog('[jquery.forms] Default beforePostForm of v1.1.7', form, config, data);
             
             return data;
         },
         onSuccess: function (resp, form, config) {
-            flog('[jquery.forms] Default onSuccess of v1.1.6', resp, form, config);
+            flog('[jquery.forms] Default onSuccess of v1.1.7', resp, form, config);
         },
         onError: function (resp, form, config) {
             try {
@@ -183,10 +183,10 @@
                     form.data('formOptions', config);
                 }
                 
-                if (!window.moment){
+                if (!window.moment) {
                     $.getScriptOnce('/static/moment/2.18.1/moment-with-locales.js');
                 }
-
+                
                 flog('[jquery.forms] Initializing forms plugin...', form);
                 
                 form.off('submit').on('submit', function (e) {
@@ -511,6 +511,7 @@ function showFormMessage(form, config, message, title, type, callback) {
         callback.call(this, form, config, message, type);
     }
 }
+
 /**
  * Show error message
  * @param {jQuery} form
@@ -929,7 +930,7 @@ function checkPhones(form, config) {
             var parsingResult = phoneNumberParser(val, config.phoneRegionCode, config.phoneCarrierCode);
             flog('[jquery.forms] Parsing result', parsingResult);
             
-            if (parsingResult.error || (input.hasClass('allow-dodgy-phone') && !parsingResult.isPossibleNumber) || (!input.hasClass('allow-dodgy-phone') && !(parsingResult.isPossibleNumber && parsingResult.isNumberValid))) {
+            if (parsingResult.error || !parsingResult.isPossibleNumber) {
                 flog('[jquery.forms] Phone field is invalid', input);
                 
                 errorFields.push(input);

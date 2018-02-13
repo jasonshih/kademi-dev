@@ -1,4 +1,4 @@
-#if($page)
+#if($page && $page.is("auction"))
     <div class="panel panel-default panel-auction-bid-form" data-ws-uri="$page.wSUri">
         <div class="panel-heading">
             <div class="panel-title">
@@ -50,6 +50,8 @@
         </div>
     </div>
 #else
+    #if($page && !$page.is("auction"))
+    #else
     <div id="panel-auction-bid-form" class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title">Bid Form</div>
@@ -77,6 +79,7 @@
             <p><i class="fa fa-clock-o fa-fw"></i> End at: <abbr class="timeago" title="$formatter.formatDateISO8601($page.auctionEndDate)">$formatter.formatDate($formatter.getCurrentDateService().getNow())</abbr></p>
         </div>
     </div>
+    #end
 #end
 
 

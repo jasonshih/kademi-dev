@@ -32,6 +32,12 @@
         </style>
     </head>
     <body class="manageApplications appsContainer">
+        <form method="POST" action="$page.href" class="maintForm" >
+            <input type="hidden" name="clearSqlStats" />
+            <button class="btn btn-primary" >
+                Clear SQL stats
+            </button>
+        </form>
         <div class="tabbable">
             <ul class="nav nav-tabs tab-bricky">
                 <li><a data-toggle="tab" href="#hibernate">Hibernate cache</a></li>
@@ -332,9 +338,9 @@
                                 <td></td>
                                 <td colspan="3">
                                     <ul class="list">
-                                    #foreach($stackItem in $stat.stats.callStack)
-                                    <li>$stackItem</li>
-                                    #end
+                                        #foreach($stackItem in $stat.stats.callStack)
+                                        <li>$stackItem</li>
+                                        #end
                                     </ul>
                                 </td>
                             </tr>
@@ -345,5 +351,16 @@
                 </div>
             </div>
         </div>
+
+        <script type="text/javascript">
+            $(function () {
+                $("form.clearSqlStats").forms({
+                    onSuccess: function (resp) {
+                        flog("resp", resp);
+                        Msg.success("Done");
+                    }
+                });
+            });
+        </script>
     </body>
 </html>
