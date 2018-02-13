@@ -90,6 +90,8 @@
                             } else {
                                 self.search(self.input.val());
                             }
+                        } else {
+                            window.location.href = '/contentSearch?q=' + self.input.val();
                         }
                         
                         break;
