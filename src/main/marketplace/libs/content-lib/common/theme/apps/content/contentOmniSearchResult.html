@@ -1,0 +1,17 @@
+#set($fields = $searchResult.getSourceAsMap())
+#set($faIcon = "fa-file")
+
+#if($fields.itemType == "program" || $fields.itemType == "course" || $fields.itemType == "module" || $fields.itemType == "modulePage")
+    #set($faIcon = "fa-graduation-cap")
+#end
+
+<li class="omni-search-suggestion">
+    <a href="$fields.path">
+        <span>
+            <i class="text-info fa $faIcon fa-fw"></i>
+            $fields.title
+        </span>
+        &ndash;
+        <span class="text-info">$fields.path</span>
+    </a>
+</li>
