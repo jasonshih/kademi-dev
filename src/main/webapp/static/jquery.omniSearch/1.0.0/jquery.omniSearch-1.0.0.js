@@ -91,6 +91,7 @@
                                 self.search(self.input.val());
                             }
                         } else {
+                            e.preventDefault();
                             window.location.href = '/contentSearch?q=' + self.input.val();
                         }
                         
