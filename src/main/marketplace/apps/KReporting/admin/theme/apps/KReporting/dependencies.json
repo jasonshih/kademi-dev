@@ -1,0 +1,12 @@
+{
+    "appDependencies": [
+        {
+            "appId": "Reporting",
+            "branch": ""
+        },
+        {
+            "appId": "reporting-lib",
+            "branch": "1.2.3"
+        }
+    ]
+}
