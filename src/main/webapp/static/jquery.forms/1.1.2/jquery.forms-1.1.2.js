@@ -658,12 +658,12 @@ function validateFormFields(form, config) {
             errorMessages = errorMessages.concat(resultRegexes.errorMessages);
         }
         
-        var resultPhones = checkPhones(form, config);
-        if (resultPhones.error > 0) {
-            error += resultPhones.error;
-            errorFields = errorFields.concat(resultPhones.errorFields);
-            errorMessages.push(config.phoneErrorMessage);
-        }
+        // var resultPhones = checkPhones(form, config);
+        // if (resultPhones.error > 0) {
+        //     error += resultPhones.error;
+        //     errorFields = errorFields.concat(resultPhones.errorFields);
+        //     errorMessages.push(config.phoneErrorMessage);
+        // }
         
         if (typeof config.validate === 'function') {
             var resultCustomValidate = config.validate.call(this, form, config);

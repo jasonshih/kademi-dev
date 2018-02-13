@@ -43,6 +43,17 @@ log.info("x3");
                 alertsApp.createAdminAlert("KJourneys", "We've created a group called " + group.name + " for your sales managers. Please be sure to <a href='/groups/" + group.name + "'>check the settings here</a>.");
             }
         }
+        
+        var groupName = "leads";
+        var group = orgRoot.find("groups").child(groupName);
+        if (group == null) {
+            group = orgRoot.createGroup(groupName);
+            log.info("Created group '" + groupName + "'");
+            if (alertsApp) {
+                alertsApp.createAdminAlert("KJourneys", "We've created a group called " + group.name + " for your customers and leads. Please be sure to <a href='/groups/" + groupName + "'>check the settings here</a>.");
+            }
+        }
+        
 log.info("x4");
         // Add current user to the sales and sales-manager groups, so they can login
         var curUser = securityManager.currentUser;
