@@ -25,7 +25,7 @@
                     <option class="query" value="$query.name">$query.name</option>
                 #end
                 #foreach ($query in $applications.Reporting.queryTables )
-                    <option class="queryTable hide" value="$query.tableId">$query.description</option>
+                    <option class="queryTable hide" value="$query.tableId">$query.tableId</option>
                 #end
             </select>
         </div>
@@ -44,7 +44,7 @@
             <input type="checkbox" class="show-headers" value="true"/> Headers
         </label>
     </div>
-    
+
     <div class="form-group">
         <label class="col-sm-12">Item per page</label>
         <div class="col-sm-12">
