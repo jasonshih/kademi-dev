@@ -49,6 +49,22 @@
                         var dynamicElement = comp.find('[data-dynamic-href]');
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('.select-sortfield').on('change', function () {
+                        var comp = keditor.getSettingComponent();
+                        comp.attr('data-sort-field', this.value);
+
+                        var dynamicElement = comp.find('[data-dynamic-href]');
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    form.find('.select-sortdir').on('change', function () {
+                        var comp = keditor.getSettingComponent();
+                        comp.attr('data-sort-dir', this.value);
+
+                        var dynamicElement = comp.find('[data-dynamic-href]');
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -102,6 +118,9 @@
                 form.find('.select-thumbnail').val(dataAttributes['data-thumbnail-field'] || '');
                 form.find('.select-caption').val(dataAttributes['data-caption-field'] || '');
                 form.find('.select-tile').val(dataAttributes['data-tile-field'] || '');
+
+                form.find('.select-sortfield').val(dataAttributes['data-sort-field'] || '');
+                form.find('.select-sortdir').val(dataAttributes['data-sort-dir'] || '');
             });
         }
     };

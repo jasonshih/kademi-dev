@@ -12,6 +12,9 @@
             </select>
         </div>
     </div>
+
+    <hr/>
+
     <div class="form-group">
         <label class="col-sm-12">Thumbnail</label>
         <div class="col-sm-12">
@@ -30,7 +33,9 @@
             <small class="help-block">Select field for caption</small>
         </div>
     </div>
-    <h4>Or .. choose a field for the whole tile</h4>
+
+    <h4>Or choose a field for the whole tile</h4>
+
     <div class="form-group">
         <label class="col-sm-12">Tile</label>
         <div class="col-sm-12">
@@ -38,6 +43,32 @@
                 <option value="">None</option>
             </select>
             <small class="help-block">Hint: use a derived template field for custom layout</small>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="form-group">
+        <label class="col-sm-12">Order by field</label>
+        <div class="col-sm-12">
+            <select class="form-control select-sortfield">
+                <option value="">None</option>
+                <option value="createdDate">Created date</option>
+                <option value="modifiedDate">Modified date</option>
+                <option value="name">Name</option>
+            </select>
+            <small class="help-block">Choose a field to order by</small>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Sort direction</label>
+        <div class="col-sm-12">
+            <select class="form-control select-sortdir">
+                <option value="">None</option>
+                <option value="true">Ascending</option>
+                <option value="false">Descending</option>
+            </select>
+            <small class="help-block">Select the sorting direction</small>
         </div>
     </div>
 </form>
