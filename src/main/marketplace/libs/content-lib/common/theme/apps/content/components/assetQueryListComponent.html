@@ -1,11 +1,11 @@
 #set( $queryAsset = $applications.content.assetManager.find($query) )
-#set( $queryResult = $applications.content.assetManager.evaluateAssetQuery($queryAsset) )
+#set( $queryResult = $applications.content.assetManager.evaluateAssetQuery($queryAsset, $sortField, $formatter.toBool($sortDir)) )
 
 #set( $assetsFolder = $rootFolder.find("/assets") )
 
 #set( $thumbProp = $!thumbnailField )
 #set( $captionProp = $!captionField )
-#set( $tileProp = $!tileField )
+#set( $tileProp = $formatter.ifTrue($tileField, true, false) )
 
 #if( $thumbProp || $captionProp || $tileProp )
     #set( $useDefault = false )
@@ -32,10 +32,10 @@
                 </p>
             </div>
             #elseif( $tileProp )
-
                 $assetRes.data.get($tileProp)
-                
+
             #else
+
                 #if( $thumbProp )
                 <a href="/assets/$asset.uniqueId" class="thumbnail">
                     <img src="$assetRes.data.get($thumbProp).href" alt="$asset.name"/>
