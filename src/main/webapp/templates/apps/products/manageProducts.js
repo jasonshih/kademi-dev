@@ -479,6 +479,7 @@ function initSelectPicker() {
 }
 
 function initAddCategories() {
+    flog("initAddCategories.1");
     $('body').on('click', '.btnAddCategories', function (e) {
         e.preventDefault();
         var listToAdd = [];
@@ -494,14 +495,10 @@ function initAddCategories() {
         }
     });
 
+    flog("initAddCategories.2");
     $('.selectPickerAddCategory').each(function () {
         var selectpicker = $(this);
-        var searchMore = selectpicker.find('.search-more');
-        var needAjaxSearch = searchMore.length > 0;
-
-        if (searchMore.length > 0) {
-            searchMore.remove();
-        }
+        flog("initAddCategories.3");
 
         selectpicker.selectpicker({
             liveSearch: true,
@@ -509,7 +506,9 @@ function initAddCategories() {
             style: 'btn btn-sm btn-default'
         });
 
-        if (selectpicker.hasClass('category') && needAjaxSearch) {
+
+            flog("initAddCategories.4");
+            flog("initAddCategories: ", selectpicker);
             selectpicker.ajaxSelectPicker({
                 ajax: {
                     url: '/categories/',
@@ -525,6 +524,12 @@ function initAddCategories() {
                 },
                 cache: false,
                 preserveSelected: true,
+                preserveSelectedPosition : 'before',
+                log : 4,
+                clearOnEmpty : false,
+                minLength : 0,
+                emptyRequest : true,
+
                 preprocessData: function (resp) {
                     flog(resp);
                     var categories = [];
@@ -545,7 +550,6 @@ function initAddCategories() {
                     statusInitialized: 'Search to see more...'
                 }
             });
-        }
     });
 
     $(".btnSaveCategories").on('click', function (e) {
