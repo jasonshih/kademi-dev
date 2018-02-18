@@ -1,3 +1,4 @@
+#if($request.params.omni)
 <li class="omni-search-suggestion">
     #if( $searchResult.type == "profile" )
         <a href="/custs/$!searchResult.userId">
@@ -17,3 +18,42 @@
         </a>
     #end
 </li>
+#else
+    #if($request.params.q)
+        
+        <div class="result">
+            <div class="pull-right">
+                #if( $searchResult.type )
+                <span class="label label-info">$searchResult.type</span>
+                #end
+                #if( $searchResult.category )
+                <span class="label label-primary">$searchResult.category</span>
+                #end
+                #foreach( $tag in $searchResult.tags )
+                <span class="label label-info">$tag</span>
+                #end
+            </div>
+            <h3>
+                #if( $searchResult.type == "profile" )
+                    <a href="/custs/$!searchResult.userId">
+                        <span>$!searchResult.source.nickName</span>
+                        &ndash;
+                        <span class="text-info">$!searchResult.source.email</span>
+                        <br />
+                        <small class="text-muted">$!searchResult.source.firstName $!searchResult.source.surName</small>
+                    </a>
+                #else
+                    <a href="/leads/$!searchResult.source.leadId">
+                        <span>$!searchResult.source.profile.nickName</span>
+                        &ndash;
+                        <span class="text-info">$!searchResult.source.profile.email</span>
+                        <br />
+                        <small class="text-muted">$!searchResult.source.profile.firstName $!searchResult.source.profile.surName</small>
+                    </a>
+                #end
+            </h3>
+        </div>
+    
+    #end
+
+#end

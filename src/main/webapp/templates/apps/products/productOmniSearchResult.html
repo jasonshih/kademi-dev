@@ -1,10 +1,38 @@
-<li class="omni-search-suggestion">
-    <a href="/products/$!searchResult.source.id/">
-        <span>
-            <i class="text-info fa fa-shopping-bag fa-fw" aria-hidden="true"></i>
-            $!formatter.truncate($formatter.firstNotNull($searchResult.source.title, $searchResult.source.name), 20)
-        </span>
-        &ndash;
-        <span class="text-info">$!formatter.truncate($searchResult.source.name, 20)</span>
-    </a>
-</li>
+#if($request.params.omni)
+    <li class="omni-search-suggestion">
+        <a href="/products/$!searchResult.source.id/">
+            <span>
+                <i class="text-info fa fa-shopping-bag fa-fw" aria-hidden="true"></i>
+                $!formatter.truncate($formatter.firstNotNull($searchResult.source.title, $searchResult.source.name), 20)
+            </span>
+            &ndash;
+            <span class="text-info">$!formatter.truncate($searchResult.source.name, 20)</span>
+        </a>
+    </li>
+#else
+    #if($request.params.q)
+                
+        <div class="result">
+            
+            <div class="pull-right">
+                #if( $searchResult.category )
+                    <span class="label label-primary">$searchResult.category</span>
+                #end
+            </div>
+            
+            <h3>
+                <a href="/products/$!searchResult.source.id/">
+                    <span>
+                        <i class="text-info fa fa-shopping-bag fa-fw" aria-hidden="true"></i>
+                        $!formatter.truncate($formatter.firstNotNull($searchResult.source.title, $searchResult.source.name), 20)
+                    </span>
+                    &ndash;
+                    <span class="text-info">$!formatter.truncate($searchResult.source.name, 20)</span>
+                    <br />
+                    <small class="text-muted">$!searchResult.source.firstName $!searchResult.source.surName</small>
+                </a>
+            </h3>
+        </div>
+
+    #end
+#end

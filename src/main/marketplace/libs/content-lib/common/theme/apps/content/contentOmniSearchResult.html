@@ -1,17 +1,45 @@
-#set($fields = $searchResult.getSourceAsMap())
-#set($faIcon = "fa-file")
+#if($request.params.omni)
+    #set($fields = $searchResult.getSourceAsMap())
+    #set($faIcon = "fa-file")
 
-#if($fields.itemType == "program" || $fields.itemType == "course" || $fields.itemType == "module" || $fields.itemType == "modulePage")
-    #set($faIcon = "fa-graduation-cap")
+    #if($fields.itemType == "program" || $fields.itemType == "course" || $fields.itemType == "module" || $fields.itemType == "modulePage")
+        #set($faIcon = "fa-graduation-cap")
+    #end
+
+    <li class="omni-search-suggestion">
+        <a href="$fields.path">
+            <span>
+                <i class="text-info fa $faIcon fa-fw"></i>
+                $fields.title
+            </span>
+            &ndash;
+            <span class="text-info">$fields.path</span>
+        </a>
+    </li>
+#else
+    #if($request.params.q)
+        
+        <div class="result">
+            <div class="pull-right">
+                
+                #if( $searchResult.type )
+                    <span class="label label-info">$searchResult.type</span>
+                #end               
+            </div>
+            
+            <h3>
+                <a href="$fields.path">
+                    <span>
+                        <i class="text-info fa $faIcon fa-fw"></i>
+                        $fields.title
+                    </span>
+                    &ndash;
+                    <span class="text-info">$fields.path</span>
+                </a>
+
+            </h3>
+            
+        </div>
+    
+    #end
 #end
-
-<li class="omni-search-suggestion">
-    <a href="$fields.path">
-        <span>
-            <i class="text-info fa $faIcon fa-fw"></i>
-            $fields.title
-        </span>
-        &ndash;
-        <span class="text-info">$fields.path</span>
-    </a>
-</li>
