@@ -14,7 +14,7 @@
         },
         {
             "appId": "search-lib",
-            "branch" : "1.1.2"
+            "branch" : "1.1.4"
         }
   ]
 }
