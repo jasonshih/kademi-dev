@@ -430,7 +430,9 @@
                     #portlets('websiteSSLManager')
 
                     <p>
+                        #if($page.website.domainName)
                         <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addWebsiteHttpsModal" ><i class="fa fa-plus"></i> Configure New HTTPS Certificate</a>
+                        #end
                     </p>
 
                     <div class="modal fade" id="addWebsiteHttpsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
