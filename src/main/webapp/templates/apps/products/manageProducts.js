@@ -1,6 +1,5 @@
 $(function () {
     initTable();
-    initSearchProduct();
     initSelectPicker();
     initAddCategories();
 
@@ -99,6 +98,9 @@ $(function () {
             $(this).prop('checked', checkedStatus);
         });
     });
+
+    // BM: Do this last!
+    initSearchProduct();
 });
 
 function initSupplier() {
@@ -273,7 +275,7 @@ function getSearchValue(search, key) {
 function doHistorySearch() {
     flog('doHistorySearch');
 
-    Msg.info("Doing search...", "manageProducts", 2000);
+    Msg.info("Doing search...", "manageProducts", 1000);
 
     var uri = URI(window.location);
 
@@ -300,7 +302,7 @@ function doHistorySearch() {
         success: function (content) {
             flog('response', content);
 
-            Msg.info("Search complete", "manageProducts", 2000);
+            Msg.info("Search complete", "manageProducts", 1000);
 
             var newBody = $(content).find("#productsTableContainer");
 
@@ -316,6 +318,7 @@ function doHistorySearch() {
 function updateCategory() {
     var txtQuery = $('#data-query');
     var cbbCategory = $('select.category');
+    console.trace();
 
     var query = (txtQuery.val() || '').replace(/\s*([^\s]+\s?)\s*/g, '$1').trim();
     if (query) {
@@ -419,12 +422,6 @@ function initSearchProduct() {
 function initSelectPicker() {
     $('.selectpicker').each(function () {
         var selectpicker = $(this);
-        var searchMore = selectpicker.find('.search-more');
-        var needAjaxSearch = searchMore.length > 0;
-
-        if (searchMore.length > 0) {
-            searchMore.remove();
-        }
 
         selectpicker.selectpicker({
             liveSearch: true,
@@ -432,7 +429,7 @@ function initSelectPicker() {
             style: 'btn btn-sm btn-default'
         });
 
-        if (selectpicker.hasClass('category') && needAjaxSearch) {
+        if (selectpicker.hasClass('category') ) {
             selectpicker.ajaxSelectPicker({
                 ajax: {
                     url: '/categories/',
@@ -448,8 +445,14 @@ function initSelectPicker() {
                 },
                 cache: false,
                 preserveSelected: true,
+                preserveSelectedPosition : 'before',
+                log : 4,
+                clearOnEmpty : false,
+                minLength : 0,
+                emptyRequest : true,
+
                 preprocessData: function (resp) {
-                    flog(resp);
+                    flog("preprocessData", resp);
                     var categories = [];
                     if (resp && resp.status) {
                         $.each(resp.data, function (i, n) {
@@ -468,6 +471,9 @@ function initSelectPicker() {
                     statusInitialized: 'Search to see more...'
                 }
             });
+
+            //flog("do initial load")
+            //selectpicker.$searchbox.trigger("keyup");
         }
     });
 }

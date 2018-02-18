@@ -330,7 +330,7 @@ AjaxBootstrapSelect.prototype.init = function () {
             plugin.log(plugin.LOG_DEBUG, 'Key ignored.');
             return;
         }
-		
+
         // Don't process if below minimum query length
         if (query.length < plugin.options.minLength) {
             plugin.list.setStatus(plugin.t('statusTooShort'));
@@ -384,6 +384,9 @@ AjaxBootstrapSelect.prototype.init = function () {
             });
         }, plugin.options.requestDelay || 300);
     });
+
+    flog("do initial load")
+    this.selectpicker.$searchbox.trigger("keyup");
 };
 
 /**
@@ -773,7 +776,7 @@ AjaxBootstrapSelectList.prototype.refresh = function (triggerChange) {
     else if (
         this.title ||
         (
-            this.selectedTextFormat !== 'static' && 
+            this.selectedTextFormat !== 'static' &&
             this.selectedTextFormat !== this.plugin.selectpicker.options.selectedTextFormat
         )
     ) {
@@ -809,7 +812,37 @@ AjaxBootstrapSelectList.prototype.replaceOptions = function (data) {
     // Merge in selected options from the previous state (cannot be cached).
     if (this.selected && this.selected.length) {
         this.plugin.log(this.plugin.LOG_INFO, 'Processing preserved selections:', this.selected);
-        selected = [].concat(this.selected, data);
+        flog("selected:", this.selected);
+        flog("data:", data);
+        //selected = [].concat(this.selected, data);
+
+        var newSelected = [];
+        l = this.selected.length;
+        flog("build new selected", l, this.selected);
+        for (i = 0; i < l; i++) {
+            item = this.selected[i];
+
+            flog("is selected?", item);
+            //if (item.selected) {
+                newSelected.push(item);
+            //}
+        }
+        l = data.length;
+        flog("build new selected", l, data);
+        for (i = 0; i < l; i++) {
+            item = data[i];
+
+            flog("is selected2?", item);
+            //if (item.selected) {
+                newSelected.push(item);
+            //}
+        }
+
+        flog("done build new selected", newSelected);
+        selected = newSelected;
+        flog("selected 2", selected);
+
+
         l = selected.length;
         for (i = 0; i < l; i++) {
             item = selected[i];
