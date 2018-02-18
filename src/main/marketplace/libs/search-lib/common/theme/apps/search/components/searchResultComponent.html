@@ -60,3 +60,22 @@
     #end
 </div>
 
+<script>
+(function ($) {
+    $("body").on("keyup", "#omniSearchInput", function () {
+        typewatch(function () {
+            flog("search: dosearch");
+            var q = $("#omniSearchInput").val();
+            var uri = URI(window.location);
+            uri.setSearch('q', q);
+            var newHref = uri.toString();
+            window.history.pushState('', newHref, newHref);
+
+            $("#search-results").reloadFragment({
+                url : newHref
+            });
+        }, 500);
+    });
+})(jQuery);
+</script>
+
