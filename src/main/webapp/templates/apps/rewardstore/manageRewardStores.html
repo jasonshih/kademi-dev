@@ -106,6 +106,27 @@
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="rewardSettings">
+                    <div class="clearfix">
+                        <div class="btn-group pull-right" role="group">
+                            <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-cog"></i> Tools <span class="caret"></span>
+                            </button>
+
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li>
+                                    <a href="#" class="rewardStoreSettings-processinvoices">
+                                        <i class="glyphicon glyphicon-refresh"></i>&nbsp;Process invoices
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="rewardStoreSettings-processinvoices rewardStoreSettings-forceinvoices">
+                                        <i class="glyphicon glyphicon-refresh"></i>&nbsp;Force Process invoices
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
                     <form id="rewardStoresSettingsForm" class="form form-horizontal" action="." method="POST">
                         <input type="hidden" name="saveSettings" value="true"/>
 
@@ -206,6 +227,29 @@
                     onSuccess: function (resp) {
                         Msg.success(resp.messages);
                     }
+                });
+
+                $('body').on('click', '.rewardStoreSettings-processinvoices', function (e) {
+                    e.preventDefault();
+                    var btn = $(this);
+                    var force = btn.hasClass('rewardStoreSettings-forceinvoices');
+
+                    var msg = "You want to process invoices?";
+
+                    if (force) {
+                        msg = "You want to force process invoices?";
+                    }
+
+                    Kalert.confirm(msg, function () {
+                        $.ajax({
+                            type: 'POST',
+                            dataType: 'JSON',
+                            data: {
+                                processInvoices: true,
+                                forced: force
+                            }
+                        });
+                    });
                 });
             });
         </script>
