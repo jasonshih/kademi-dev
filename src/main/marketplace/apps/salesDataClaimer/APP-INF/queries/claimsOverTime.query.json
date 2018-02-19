@@ -1,0 +1,38 @@
+{
+    "stored_fields": [
+    ],
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "range": {
+                        "soldDate": {
+                            "gte": "$startDate",
+                            "lte": "$endDate"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "aggregations": {
+        "claims_over_time": {
+            "date_histogram": {
+                "field": "soldDate",
+                "interval": "day",
+                "extended_bounds": {
+                    "min": "$startDate",
+                    "max": "$endDate"
+                }
+            },
+            "aggs": {
+                "totalAmount": {
+                    "sum": {
+                        "field": "amount"
+                    }
+                }
+            }
+        }
+    },
+    "size": 0
+}
