@@ -1,34 +1,24 @@
-JBNodes['emailResultGoal'] = {
+JBNodes['emailInteractionGoal'] = {
     icon: 'fa fa-envelope-open',
-    title: 'Email delivery',
+    title: 'Email open',
     type: JB_NODE_TYPE.GOAL,
-    previewUrl: '/theme/apps/email/jb/emailResultGoalNode.png',
+    previewUrl: '/theme/apps/email/jb/emailInteractionGoalNode.png',
     ports: {
         timeoutNode: {
             label: 'timeout',
             title: 'When timeout',
             maxConnections: 1
         },
-        nodeIdDelivered: {
-            label: 'delivered',
-            title: 'When delivered',
+        nodeIdOpened: {
+            label: 'opened',
+            title: 'When opened',
             maxConnections: 1
         },
-        nodeIdFailed: {
-            label: 'failed',
-            title: 'When failed',
+        nodeIdConverted: {
+            label: 'converted',
+            title: 'When converted',
             maxConnections: 1
         },
-//        nodeIdOpened: {
-//            label: 'opened',
-//            title: 'When opened',
-//            maxConnections: 1
-//        },
-//        nodeIdConverted: {
-//            label: 'converted',
-//            title: 'When converted',
-//            maxConnections: 1
-//        },
         pastTimeNode: {
             label: 'past time',
             title: 'When entered while timeout has passed',
