@@ -1,5 +1,5 @@
 JBNodes['emailResultGoal'] = {
-    icon: 'fa fa-envelope-open',
+    icon: 'fa fa-envelope-square',
     title: 'Email delivery',
     type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/email/jb/emailResultGoalNode.png',
