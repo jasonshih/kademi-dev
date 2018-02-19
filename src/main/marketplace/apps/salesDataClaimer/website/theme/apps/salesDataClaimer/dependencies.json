@@ -27,6 +27,14 @@
         {
             "appId": "nvd3-lib",
             "branch": "1.8.3"
+        },
+        {
+            "appId": "Reporting",
+            "branch": ""
+        },
+        {
+            "appId": "reporting-lib",
+            "branch": "1.2.4"
         }
     ],
     "dependencies": [

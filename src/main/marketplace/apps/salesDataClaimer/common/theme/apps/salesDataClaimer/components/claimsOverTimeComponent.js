@@ -58,18 +58,19 @@
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
-                        component.attr('data-chart-title', this.value);
+                        component.attr('data-title', this.value);
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             self.initDateAgg();
                         });
                     });
+
                 }
             });
         },
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "claimsOverTime" component');
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.txt-title').val(dataAttributes['data-chart-title']);
+            form.find('.txt-title').val(dataAttributes['data-title']);
         }
     };
 })(jQuery);
