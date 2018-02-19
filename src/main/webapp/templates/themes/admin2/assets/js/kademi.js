@@ -222,6 +222,16 @@ function initDatePicker() {
         datePicker.datepicker('show');
     });
     
+    $(document.body).on('click', '[data-role="date-time-picker-trigger"]', function (e) {
+        e.preventDefault();
+        
+        var trigger = $(this);
+        var datePickerId = trigger.attr('href');
+        var datePicker = $(datePickerId);
+        
+        datePicker.datetimepicker('show');
+    });
+    
     $('.date-time-picker').exist(function () {
         flog('Found date-time-picker', this);
         var options = {};
