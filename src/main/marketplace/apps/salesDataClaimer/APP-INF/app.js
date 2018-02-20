@@ -16,18 +16,18 @@ function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNod
     if (!lead) {
         return true;
     }
-    
+
     var claimId = attributes.get(LEAD_CLAIM_ID);
-    
+
     if (isNotBlank(claimId)) {
         // Process only for this claim ID
         return safeString(eventParams.claim) === safeString(claimId);
     } else {
         attributes.put(LEAD_CLAIM_ID, eventParams.claim);
-        
+
         return true;
     }
-    
+
     return false;
 }
 
@@ -38,47 +38,47 @@ function checkProcessedGoal(rootFolder, lead, funnel, eventParams, customNextNod
     if (!lead) {
         return true;
     }
-    
+
     var claimId = attributes.get(LEAD_CLAIM_ID);
-    
+
     if (isNotBlank(claimId)) {
         // Process only for this claim ID
         return safeString(eventParams.claim) === safeString(claimId);
     } else {
         attributes.put(LEAD_CLAIM_ID, eventParams.claim);
-        
+
         return true;
     }
-    
+
     return false;
 }
 
 function initSalesDataClaimerApp(orgRoot, webRoot, enabled) {
     log.info("initApp SalesDataClaimer > orgRoot={}, webRoot={}", orgRoot, webRoot);
-    
+
     var dbs = orgRoot.find(JSON_DB);
     if (isNull(dbs)) {
         log.error('ERROR: KongoDB is disabled. Please enable it for continue with this app!');
         return;
     }
-    
+
     var db = dbs.child(DB_NAME);
     if (isNull(db)) {
         log.info('{} does not exist!', DB_TITLE);
         db = dbs.createDb(DB_NAME, DB_TITLE, DB_NAME);
-        
+
         if (!db.allowAccess) {
             setAllowAccess(db, true);
         }
     }
-    
+
     saveMapping(db);
-    
+
     // Default config for app
     if (webRoot) {
         var website = webRoot.website;
         var alertsApp = applications.alerts;
-        
+
         var claimerGroupName = "sales-claimer";
         var claimerGroup = orgRoot.find("groups").child(claimerGroupName);
         if (claimerGroup == null) {
@@ -87,12 +87,12 @@ function initSalesDataClaimerApp(orgRoot, webRoot, enabled) {
             orgRoot.addRoles(claimerGroup, website, "Content Viewer");
             orgRoot.addGroupToWebsite(claimerGroup, website);
             log.info("Created '" + claimerGroupName + "' group: {}", claimerGroup);
-            
+
             if (alertsApp) {
                 alertsApp.createAdminAlert("Sales Data Claimer", "We've created a group called " + claimerGroup.name + " for Sales Data Claimer. Please be sure to <a href='/groups/" + claimerGroupName + "'>check the settings here</a>. You might want to allow public registration to this group.");
             }
         }
-        
+
         var claimAdminGroupName = "sales-claim-admin";
         var claimAdminGroup = orgRoot.find("groups").child(claimAdminGroupName);
         if (claimAdminGroup == null) {
@@ -101,80 +101,81 @@ function initSalesDataClaimerApp(orgRoot, webRoot, enabled) {
             orgRoot.addRoles(claimAdminGroup, website, "Content Viewer");
             orgRoot.addGroupToWebsite(claimAdminGroup, website);
             log.info("Created '" + claimAdminGroupName + "' group: {}", claimAdminGroup);
-            
+
             if (alertsApp) {
                 alertsApp.createAdminAlert("Sales Data Claimer", "We've created a group called " + claimAdminGroup.name + " for Sales Data Claimer. Please be sure to <a href='/groups/" + claimAdminGroupName + "'>check the settings here</a>. You might want to allow public registration to this group.");
             }
         }
-        
+
         var curUser = securityManager.currentUser;
         securityManager.addToGroup(curUser, claimAdminGroup);
-        
+
         var dataSeriesName = "sales-claims";
         var dataSeriesTitle = "Sales Claims";
         var dataSeries = orgRoot.find("sales").child(dataSeriesName);
         if (dataSeries == null) {
             dataSeries = applications.salesData.createSeries('sales-claims', dataSeriesTitle, claimerGroup);
             log.info("Created '" + dataSeriesName + "' data series: {}", dataSeries);
-            
+
             if (alertsApp) {
                 alertsApp.createAdminAlert("Sales Data Claimer", "We've created a data series called " + dataSeriesTitle + " for Sales Data Claimer. Please be sure to <a href='/sales/" + dataSeriesName + "'>check the settings here</a>.");
             }
         }
-        
+
         orgRoot.find('/manageApps/').setAppSetting(APP_NAME, 'dataSeries', dataSeriesName);
     }
 }
 
 function saveSettings(page, params) {
     log.info('saveSettings > page={}, params={}', page, params);
-    
-    page = page.find('/manageApps/');
-    
+
+    // BM: we must not do this! https://github.com/Kademi/kademi-dev/issues/4987
+    //page = page.find('/manageApps/');
+
     if (params.dataSeries) {
         var dataSeries = params.dataSeries || '';
         page.setAppSetting(APP_NAME, 'dataSeries', dataSeries);
     }
-    
+
     if (params.dataSeries) {
         var allowAnonymous = params.allowAnonymous || '';
         page.setAppSetting(APP_NAME, 'allowAnonymous', allowAnonymous);
     }
-    
+
     return views.jsonResult(true);
 }
 
 
 function getAppSettings(page) {
     log.info('getAppSettings > page={}', page);
-    
+
     var websiteFolder = page.closest('websiteVersion');
     var org = page.organisation;
     var branch = null;
-    
+
     if (websiteFolder !== null && typeof websiteFolder !== 'undefined') {
         branch = websiteFolder.branch;
     }
-    
+
     var app = applications.get(APP_NAME);
     if (app !== null) {
         var settings = app.getAppSettings(org, branch);
         return settings;
     }
-    
+
     return null;
 }
 
 function isAnonymousAllowed(page) {
     log.info('isAnonymousAllowed > page={}', page);
-    
+
     var allowAnonymous = false;
     var settings = getAppSettings(page);
-    
+
     if (isNotNull(settings)) {
         allowAnonymous = settings.allowAnonymous === 'true';
     }
-    
+
     return allowAnonymous;
 }
 
@@ -183,7 +184,7 @@ function checkRedirect(page, params) {
     if (!href.endsWith('/')) {
         href = href + '/';
     }
-    
+
     return views.redirectView(href);
 }
 
