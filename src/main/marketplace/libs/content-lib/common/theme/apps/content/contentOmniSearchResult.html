@@ -1,5 +1,6 @@
 #if($request.params.omni)
     #set($fields = $searchResult.getSourceAsMap())
+
     #set($faIcon = "fa-file")
 
     #if($fields.itemType == "program" || $fields.itemType == "course" || $fields.itemType == "module" || $fields.itemType == "modulePage")
@@ -10,7 +11,7 @@
         <a href="$fields.path">
             <span>
                 <i class="text-info fa $faIcon fa-fw"></i>
-                $fields.title
+                $fields.title - fields - $fields
             </span>
             &ndash;
             <span class="text-info">$fields.path</span>
@@ -18,28 +19,35 @@
     </li>
 #else
     #if($request.params.q)
-        
+        #set($hit = $searchResult.getSourceAsMap())
+
         <div class="result">
             <div class="pull-right">
-                
-                #if( $searchResult.type )
-                    <span class="label label-info">$searchResult.type</span>
-                #end               
+                #if( $hit.itemType )
+                <span class="label label-info">$hit.itemType</span>
+                #end
+                #if( $hit.category )
+                <span class="label label-primary">$hit.category</span>
+                #end
+                #foreach( $tag in $hit.tags )
+                <span class="label label-info">$tag</span>
+                #end
             </div>
-            
-            <h3>
-                <a href="$fields.path">
-                    <span>
-                        <i class="text-info fa $faIcon fa-fw"></i>
-                        $fields.title
-                    </span>
-                    &ndash;
-                    <span class="text-info">$fields.path</span>
-                </a>
 
+            <h3>
+                <a href="$hit.path">$hit.title</a>
             </h3>
-            
+            <p class="text-success">$hit.path</p>
+            <p>
+
+                #foreach( $matchEntry in $searchResult.highlightFields.entrySet())
+                    #foreach( $text in $matchEntry.value.fragments )
+                        $text
+                    #end
+                #end
+
+            </p>
         </div>
-    
+
     #end
 #end
