@@ -27,6 +27,7 @@
                     #set( $fields = $applications.Reporting.getQueryFieldNames($queryBean) )
                     <thead>
                     <tr>
+                        <th>fields - $fields - bean - $queryBean</th>
                         #foreach( $field in $fields)
                             <th data-field="$field">$field</th>
                         #end
