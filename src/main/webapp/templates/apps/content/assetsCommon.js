@@ -156,10 +156,16 @@ function initAssetContainer(container) {
         },
         onSuccess: function (resp) {
             if (resp && resp.status) {
-                $('#asset-previewer, #asset-info').reloadFragment({
+                var img = $('#asset-previewer img');
+                var newUrl = new URI(img.attr('src'));
+                newUrl.removeSearch('v');
+                newUrl.addSearch('v', (new Date().getTime()));
+                img.attr('src', newUrl.toString());
+                
+                $('#asset-info').reloadFragment({
                     whenComplete: function () {
                         uploadProgress.hide();
-                        Msg.info(resp.messages[0]);
+                        Msg.info(resp.messages[0] || 'Uploaded');
                     }
                 });
             }
