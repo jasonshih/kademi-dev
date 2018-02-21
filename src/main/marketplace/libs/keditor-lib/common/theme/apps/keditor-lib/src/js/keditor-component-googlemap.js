@@ -95,10 +95,15 @@
             var input = form.find('[name=mapAddress]')[0];
             
             setTimeout(function () {
-                google.maps.event.trigger(input, 'focus');
-                google.maps.event.trigger(input, 'keydown', {
-                    keyCode: 13
-                });
+                try {
+                    $(input).trigger('focus');
+                    // google.maps.event.trigger(input, 'focus');
+                    google.maps.event.trigger(input, 'keydown', {
+                        keyCode: 13
+                    });
+                } catch (e) {
+                    flog('===================', e);
+                }
             }, 1000);
             
             var map = component.find('.kgooglemap').data('map');
