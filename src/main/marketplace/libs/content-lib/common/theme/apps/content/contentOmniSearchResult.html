@@ -19,7 +19,12 @@
                 $fields.title
             </span>
             &ndash;
-            <span class="text-info">$fields.path ($fields.repository)</span>
+            <span class="text-info">
+                $fields.path
+                #if( !$rootFolder.is("website") )
+                ($fields.repository)
+                #end
+            </span>
         </a>
     </li>
 #else
