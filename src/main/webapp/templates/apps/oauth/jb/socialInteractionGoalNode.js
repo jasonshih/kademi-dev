@@ -27,12 +27,6 @@ JBNodes['socialInteractionGoal'] = {
         form.append(
                 '<div class="form-group">' +
                 '    <div class="col-md-12">' +
-                '        <label>Website</label>' +
-                '        <select class="form-control websiteName"></select>' +
-                '    </div>' +
-                '</div>' +
-                '<div class="form-group">' +
-                '    <div class="col-md-12">' +
                 '        <label>Type</label>' +
                 '        <select class="form-control interactionType">' +
                 '            <option value="">[No type selected]</option>' +
