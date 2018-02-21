@@ -402,10 +402,11 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
     var innerId = div.find(".jw-video").attr("id");
     var isHash = src.indexOf('/_hashes/files/') === 0;
     var isAsset = src.indexOf('/assets/') === 0;
+    flog('isHash=' + isHash + ', isAsset=' + isAsset);
     var webmUrl = src + (isHash || isAsset ? '/alt-640-360.webm' : '/../alt-640-360.webm');
     var m4vUrl = src + (isHash || isAsset ? '/alt-640-360.m4v' : '/../alt-640-360.m4v');
     
-    flog('Url: ' + src + ', webmUrl: ' + webmUrl + ', m4vUrl: ' + m4vUrl);
+    flog('Url: ' + src + ' \nwebmUrl: ' + webmUrl + '\nm4vUrl: ' + m4vUrl);
     
     jwplayer(innerId).setup({
         flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
