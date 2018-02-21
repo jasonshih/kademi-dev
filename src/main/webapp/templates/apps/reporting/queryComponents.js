@@ -20,6 +20,8 @@ $(function () {
 
     // TODO reporting components which need to update.. eg single value metric
     $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+        flog(e, startDate, endDate);
+        flog("pageDateChanged");
         $('[data-dynamic-href="_components/singleValue"]').reloadFragment({
             url: location.pathname + location.search
         });

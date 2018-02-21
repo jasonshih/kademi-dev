@@ -338,6 +338,7 @@ function initAddNewOrder() {
         onSuccess: function (resp) {
             modal.modal('hide');
             Msg.success(resp.messages);
+            $("#auction-wrapper").reloadFragment();
         }
     });
 }
