@@ -355,7 +355,6 @@ function replaceImagesWithJWPlayer(images) {
         } else {
             flog("replaceImagesWithJWPlayer: Using data-video-src", src);
         }
-        src += "/alt-hls.m3u8";
         flog("jwplayer item", img, i, src);
         buildJWPlayer(img, i + 10, src, posterUrl, aspectratio, autostart, repeat, controls);
     });
@@ -400,12 +399,12 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
     itemToReplace.replaceWith(div);
     
     var innerId = div.find(".jw-video").attr("id");
-    var isHash = src.indexOf('/_hashes/files/') === 0;
-    var isAsset = src.indexOf('/assets/') === 0;
-    var webmUrl = src + (isHash || isAsset ? '/alt-640-360.webm' : '/../alt-640-360.webm');
-    var m4vUrl = src + (isHash || isAsset ? '/alt-640-360.m4v' : '/../alt-640-360.m4v');
     
-    flog('Url: ' + src + ', webmUrl: ' + webmUrl + ', m4vUrl: ' + m4vUrl);
+    var m3u8Url = src + '/alt-hls.m3u8';
+    var webmUrl = src + '/alt-640-360.webm';
+    var m4vUrl = src + '/alt-640-360.m4v';
+    
+    flog('Url: ' + src + ' \nwebmUrl: ' + webmUrl + '\nm4vUrl: ' + m4vUrl);
     
     jwplayer(innerId).setup({
         flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
@@ -419,7 +418,7 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
         playlist: [{
             image: posterHref,
             sources: [{
-                file: src
+                file: m3u8Url
             }, {
                 file: webmUrl
             }, {

@@ -1294,6 +1294,7 @@ function initImagePicker(target, basePath, pagePath) {
     wrapper.find('.image-picker-upload').mselect({
         basePath: basePath,
         pagePath: pagePath,
+        contentType: 'image',
         onSelectFile: function (selectedUrl, relativeUrl, type, hash) {
             var newUrl = '/_hashes/files/' + hash;
             
