@@ -1,31 +1,36 @@
 <form class="form-horizontal">
     <div class="form-group">
-        <label class="col-sm-12">Points bucket</label>
+        <label class="col-sm-12">Sales Data Series:</label>
         <div class="col-sm-12">
-            <select class="form-control select-store">
+            <select class="form-control select-sales-data-series">
                 <option value="" selected="selected">- None -</option>
-                #foreach($store in $applications.rewardStore.pointsBuckets)
-                <option value="$store.name">$store.title</option>
+                #foreach($sds in $applications.salesData.allSalesDataSeries)
+                <option value="$sds.name">$sds.title</option>
                 #end
             </select>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-12">Start date</label>
+        <label class="col-sm-12">KPI:</label>
         <div class="col-sm-12">
-            <input type="text" class="form-control start-date" value="" />
-            <p class="help-block">Leave empty as 7 days ago</p>
+            <select class="form-control select-kpis">
+                <option value="" selected="selected">- None -</option>
+
+            </select>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-12">End date</label>
+        <label class="col-sm-12">Period:</label>
         <div class="col-sm-12">
-            <input type="text" class="form-control end-date" value="" />
-            <p class="help-block">Leave empty as today</p>
+            <select class="form-control select-period">
+                <option value="current" selected="selected">Current (In progress)</option>
+                <option value="previous">Most recently assessed period</option>
+
+            </select>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-12">Number of participants</label>
+        <label class="col-sm-12">Number of users:</label>
         <div class="col-sm-12">
             <input type="number" class="form-control num-users" value="" />
         </div>
