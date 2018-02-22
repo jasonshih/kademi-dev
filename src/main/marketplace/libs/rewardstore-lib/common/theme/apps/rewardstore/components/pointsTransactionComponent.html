@@ -32,8 +32,6 @@
     <tr>
         <th>Amount</th>
         <th>Date</th>
-        <th>Type</th>
-        <th>Expired?</th>
         <th>Reason</th>
     </tr>
     </thead>
@@ -60,8 +58,6 @@
 <tr>
     <td>$!t.numPoints Pts</td>
     <td>$!formatter.formatDate($t.date)</td>
-    <td>#if ($t.txType == "C") Credit #elseif ($!t.txType == "D") Debit #end</td>
-    <td>#if ($t.expired) Expired #end</td>
     <td>$!t.description</td>
 </tr>
 #end
