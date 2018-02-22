@@ -1,22 +1,33 @@
 #if($request.params.omni)
-    #set($fields = $searchResult.getSourceAsMap())
+    #set($fields = $searchResult.sourceAsMap)
 
     #set($faIcon = "fa-file")
 
     #if($fields.itemType == "program" || $fields.itemType == "course" || $fields.itemType == "module" || $fields.itemType == "modulePage")
         #set($faIcon = "fa-graduation-cap")
     #end
-
+    #if( $fields.title )
     <li class="omni-search-suggestion">
-        <a href="$fields.path">
+        #if( $rootFolder.is("website") )
+            #set( $path = $fields.path )
+        #else
+            #set( $path = "/pages/$fields.repository/$fields.branch/$fields.path/.." )
+        #end
+        <a href="$path">
             <span>
                 <i class="text-info fa $faIcon fa-fw"></i>
-                $fields.title - fields - $fields
+                $fields.title
             </span>
             &ndash;
-            <span class="text-info">$fields.path</span>
+            <span class="text-info">
+                $fields.path
+                #if( !$rootFolder.is("website") )
+                ($fields.repository)
+                #end
+            </span>
         </a>
     </li>
+    #end
 #else
     #if($request.params.q)
         #set($hit = $searchResult.getSourceAsMap())
