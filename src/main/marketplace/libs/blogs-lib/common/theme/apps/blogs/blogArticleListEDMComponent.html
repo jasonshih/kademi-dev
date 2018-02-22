@@ -14,6 +14,7 @@
 
     #if ($layout == "grid")
         #set ($tableWidth = $width / $itemsPerRow)
+        #set ($imageWidth = $tableWidth - 10 - 10)
 
         #set ($blogListId = $formatter.randomGuid)
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -61,7 +62,7 @@
                                                         #set($bg = "http://${rootFolder.domainName}${formatter.portString}${article.bestSquareImageHref}/alt-600-400.png")
                                                     #end
                                                     <a title="$!article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$!linkStyles">
-                                                        <img src="$bg" width="100%" height="auto" alt="$!article.title" style="display: block; border: 0;" />
+                                                        <img src="$bg" width="$imageWidth" height="auto" alt="$!article.title" style="display: block; border: 0;" />
                                                     </a>
                                                     <h4 style="font-size: $!{fontSizeH4}px; line-height: $!{lineHeightH4}px;margin-top:0;margin-bottom: 0;"><a title="$!article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$!linkStyles">$article.title</a>
                                                     </h4>
@@ -105,6 +106,7 @@
         <tbody>
             #set ($leftWidth = $width / 3)
             #set ($rightWidth = $width - $leftWidth)
+            #set ($imageWidth = $leftWidth - 15)
 
             #foreach($article in $articles)
                 <tr>
@@ -125,7 +127,7 @@
                                                     #set($bg = "http://${rootFolder.domainName}${formatter.portString}${article.bestSquareImageHref}/alt-600-400.png")
                                                 #end
                                                 <a title="$!article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$!baseStyles">
-                                                    <img src="$!bg" width="100%" height="auto" alt="$!article.title" style="display: block; border: 0;" />
+                                                    <img src="$!bg" width="$imageWidth" height="auto" alt="$!article.title" style="display: block; border: 0;" />
                                                 </a>
                                             </td>
                                         </tr>
