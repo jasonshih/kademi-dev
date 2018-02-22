@@ -203,7 +203,7 @@
                     var autostart = img.attr('data-autostart') === 'true';
                     var repeat = img.attr('data-repeat') === 'true';
                     var controls = true; // Force showing controls for now
-                    buildJWPlayer(img, 100, src, posterUrl, aspectratio, autostart, repeat, controls);
+                    buildJWPlayer(img, 999, src, posterUrl, aspectratio, autostart, repeat, controls);
                 });
             });
         },
