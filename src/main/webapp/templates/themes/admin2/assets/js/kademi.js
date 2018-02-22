@@ -1610,7 +1610,7 @@ function initImagePicker(target, basePath, pagePath) {
         }
         var modalId = 'modal-fullscreen-' + id;
         var modal = $(
-            '<div id="' + modalId + '" class="modal ' + (isContentEditor || isEdmEditor ? 'modal-full' : '') + ' fullscreen-editor-modal fade" tabindex="-1">' +
+            '<div id="' + modalId + '" class="modal ' + (isContentEditor || isEdmEditor ? 'modal-full' : '') + ' fullscreen-editor-modal fade" data-backdrop="static" data-keyboard="false">' +
             '    <div class="modal-dialog modal-lg">' +
             '        <div class="modal-content">' +
             '            <div class="modal-body">' +
