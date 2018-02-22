@@ -1,0 +1,70 @@
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12">Points bucket</label>
+        <div class="col-sm-12">
+            <select class="form-control select-store">
+                <option value="" selected="selected">- None -</option>
+                #foreach($store in $applications.rewardStore.pointsBuckets)
+                <option value="$store.name">$store.title</option>
+                #end
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Start date</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control start-date" value="" />
+            <p class="help-block">Leave empty as 7 days ago</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">End date</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control end-date" value="" />
+            <p class="help-block">Leave empty as today</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Transaction type</label>
+        <div class="col-sm-12">
+            <select class="form-control select-tx-type">
+                <option value="">All</option>
+                <option value="C">Only credit</option>
+                <option value="D">Only debit</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Points type</label>
+        <div class="col-sm-12">
+            <select class="form-control select-points-type">
+                <option value="">Individual</option>
+                <option value="org">Organisation</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group pointOrg hide">
+        <label class="col-sm-12">Points group</label>
+        <div class="col-sm-12">
+            <select name="pointsGroup" class="form-control select-points-group">
+                #set ($groups = $rootFolder.allGroups)
+                <option value="">[Select a group]</option>
+                #foreach($g in $groups)
+                <option value="$g.name">$formatter.firstNotNull($g.title, $g.name)</option>
+                #end
+            </select>
+        </div>
+    </div>
+    <div class="form-group pointOrg hide">
+        <label class="col-sm-12">Points organisation type</label>
+        <div class="col-sm-12">
+            <select class="form-control select-orgtype">
+                <option value="">[Select a type]</option>
+                <option value="NONE">[No type]</option>
+                #foreach($orgType in $rootFolder.orgTypes)
+                <option value="$orgType.name">$orgType.displayName</option>
+                #end
+            </select>
+        </div>
+    </div>
+</form>
