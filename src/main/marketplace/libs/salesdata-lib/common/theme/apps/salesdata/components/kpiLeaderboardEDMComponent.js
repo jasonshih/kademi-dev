@@ -2,26 +2,54 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['pointsLeaderboardEDM'] = {
+    KEditor.components['kpiLeaderboardEDM'] = {
         settingEnabled: true,
-
         settingTitle: 'Points Leaderboard',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "pointsLeaderboardEDM" component', form, keditor);
+            flog('initSettingForm "kpiLeaderboardEDM" component', form, keditor);
 
             return $.ajax({
-                url: '_components/pointsLeaderboardEDM?settings',
+                url: '_components/kpiLeaderboardEDM?settings',
                 type: 'get',
                 dataType: 'html',
                 success: function (resp) {
                     form.html(resp);
 
-                    form.find('.select-store').on('change', function () {
+                    form.find('.select-sales-data-series').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-sales-data-series', this.value);
+                        keditor.initDynamicContent(dynamicElement);
 
-                        component.attr('data-points-bucket', this.value);
+
+                        $.ajax({
+                            url: "/sales/" + this.value + "?kpis",
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (resp) {
+                                flog(resp);
+                                if (resp.status) {
+                                    $.each(resp.data, function () {
+                                        form.find(".select-kpis").append($("<option />").val(this.name).text(this.title));
+                                    });
+                                }
+                            }
+                        });
+
+                    });
+
+                    form.find('.select-kpis').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-kpi', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    form.find('.select-period').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-period', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
@@ -41,42 +69,43 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    $.getScriptOnce('/static/inputmask/min/inputmask/inputmask.min.js', function () {
-                        $.getScriptOnce('/static/inputmask/min/inputmask/inputmask.date.extensions.min.js', function () {
-                            $.getScriptOnce('/static/inputmask/min/inputmask/jquery.inputmask.min.js', function () {
-                                form.find('.start-date').inputmask("dd/mm/yyyy");
-                                form.find('.end-date').inputmask("dd/mm/yyyy");
-                            });
-                        });
-                    });
-
-                    form.find('.start-date').on('change', function () {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-start-date', this.value);
-                        keditor.initDynamicContent(dynamicElement);
-                    });
-
-                    form.find('.end-date').on('change', function () {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-end-date', this.value);
-                        keditor.initDynamicContent(dynamicElement);
-                    });
                 }
             });
         },
 
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "pointsLeaderboardEDM" component', form, component, keditor);
+            flog('showSettingForm "kpiLeaderboardEDM" component', form, component, keditor);
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.select-store').val(dataAttributes['data-points-bucket']);
 
+
+            var salesDataSeries = dataAttributes['data-sales-data-series'];
+            var kpi = dataAttributes['data-kpi'];
+
+            form.find('.select-sales-data-series').val(salesDataSeries);
+
+            if (salesDataSeries !== "") {
+
+                $.ajax({
+                    url: "/sales/" + salesDataSeries + "?kpis",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (resp) {
+                        flog(resp);
+                        if (resp.status) {
+                            $.each(resp.data, function () {
+                                form.find(".select-kpis").append($("<option />").val(this.name).text(this.title));
+                            });
+                        }
+                        form.find('.select-kpis').val(kpi);
+                    }
+                });
+            }
+
+            form.find('input.select-period').val(dataAttributes['data-period']);
             form.find('input.num-users').val(dataAttributes['data-num-users'] || 5);
             form.find('input.txt-height').val(dataAttributes['data-row-height'] || 25);
-            form.find('input.start-date').val(dataAttributes['data-start-date']);
-            form.find('input.end-date').val(dataAttributes['data-end-date']);
+
         }
     };
 
