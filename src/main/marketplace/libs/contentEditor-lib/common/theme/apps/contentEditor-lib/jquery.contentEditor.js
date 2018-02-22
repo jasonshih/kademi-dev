@@ -1160,8 +1160,8 @@
             keditor.initDynamicContent(dynamicElement);
         });
         
-        initMSelectImage(form.find('.logo-edit'), keditor, function (url, relativeUrl, fileType, hash) {
-            var imageUrl = '/_hashes/files/' + hash;
+        initMSelectImage(form.find('.logo-edit'), keditor, function (url, relativeUrl, fileType, hash, isAsset) {
+            var imageUrl = isAsset ? url : '/_hashes/files/' + hash;
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
             
