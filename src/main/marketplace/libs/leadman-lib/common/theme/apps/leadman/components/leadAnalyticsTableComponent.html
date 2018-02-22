@@ -24,6 +24,8 @@
                 #foreach( $hit in $leads.hits.hits )
                 <tr>
                     <td>
+                        
+                        <a href='/custs/$!hit.fields.get("profile.userName").value'>
                         #if( $hit.fields.get("organisation.title").value )
                         #if($!hit.fields.get("profile.firstName").value || $!hit.fields.get("profile.surName").value)
                         $!hit.fields.get("profile.firstName").value
@@ -36,6 +38,7 @@
                         $!hit.fields.get("profile.firstName").value
                         $!hit.fields.get("profile.surName").value
                         #end
+                        </a>
                     </td>
                     <td class="text-right">$!hit.fields.get("dealAmount").value</td>
                     <td class="text-right">$!hit.fields.get("stageName").value</td>

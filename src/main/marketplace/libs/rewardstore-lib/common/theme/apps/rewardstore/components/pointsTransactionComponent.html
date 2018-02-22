@@ -1,0 +1,63 @@
+#if ($startDate && $startDate != "")
+#set ($since = $formatter.toDate($startDate))
+#else
+#set($since = $formatter.addDays( $formatter.now, -7 ) )
+#end
+
+#if ($endDate && $endDate != "")
+#set ($to = $formatter.toDate($endDate))
+#else
+#set ($to = $formatter.now)
+#end
+
+#if ($pointsType == "org")
+    #set ($mb = false)
+    #set ($pmbs = $userResource.primaryMemberships)
+        #if ($pointsGroup && $pointsGroup != "")
+            #set ($mb = $pmbs.get($pointsGroup))
+        #end
+        #if ($pointsOrgType && $pointsOrgType != "")
+            #set ($mbs = $pmbs.filterByOrgType($pointsOrgType))
+            #if ($mbs.size() > 0)
+                #set ($mb = $mbs[0])
+            #end
+        #end
+    #set ($trans = $applications.rewardStore.transactions($mb.org, $pointsBucket, $since, $to))
+#else
+    #set ($trans = $applications.rewardStore.transactions($userResource.profile, $pointsBucket, $since, $to))
+#end
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Amount</th>
+        <th>Date</th>
+        <th>Reason</th>
+    </tr>
+    </thead>
+    <tbody>
+    #if (!$trans || $trans.size() < 1)
+    <tr>
+        <td colspan="99">There are no points transaction yet</td>
+    </tr>
+    #else
+    #foreach( $t in $trans )
+        #if ($txType && $txType != "")
+            #if ($txType == $t.txType)
+                #render($t)
+            #end
+        #else
+        #render($t)
+        #end
+    #end
+    #end
+    </tbody>
+</table>
+
+#macro (render $t)
+<tr>
+    <td>$!t.numPoints Pts</td>
+    <td>$!formatter.formatDate($t.date)</td>
+    <td>$!t.description</td>
+</tr>
+#end

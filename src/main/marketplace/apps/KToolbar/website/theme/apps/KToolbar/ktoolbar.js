@@ -8,7 +8,12 @@
         var body = $(document.body);
         
         if (htmleditor.length) {
-            btnEditInline.removeClass('hide');
+            
+        } else {
+            // copy the template edit link
+            var btnTemplateEdit = ktoolbar.find("a.btn-edit-template");
+            btnEditInline.attr("href", btnTemplateEdit.attr("href"));
+            
         }
         
         btnSave.on('click', function (e) {
