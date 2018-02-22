@@ -379,37 +379,36 @@ function buildJWAudioPlayer(count, src, autostart) {
 }
 
 function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autostart, repeat, controls) {
-    flog("itemToReplace", itemToReplace);
+    flog('buildJWPlayer', itemToReplace);
     
     var h = itemToReplace.height();
     if (h < 100) {
         h = 360;
     }
+    
     var w = itemToReplace.width();
     if (w < 100) {
         w = 640;
     }
     
     if (!aspectratio) {
-        aspectratio = w + ":" + h;
+        aspectratio = w + ':' + h;
     }
     
     var div = buildJWPlayerContainer(count);
-    flog("buildJWPlayer", src, "size=", h, w);
     itemToReplace.replaceWith(div);
     
-    var innerId = div.find(".jw-video").attr("id");
-    
+    var innerId = div.find('.jw-video').attr('id');
     var m3u8Url = src + '/alt-hls.m3u8';
     var webmUrl = src + '/alt-640-360.webm';
     var m4vUrl = src + '/alt-640-360.m4v';
     
-    flog('Url: ' + src + ' \nwebmUrl: ' + webmUrl + '\nm4vUrl: ' + m4vUrl);
+    flog('buildJWPlayer:\n - src=' + src + ' \n - size=' + h + '-' + w + '\n - m3u8Url=' + m3u8Url + ' \n - webmUrl=' + webmUrl + '\n - m4vUrl=' + m4vUrl);
     
     jwplayer(innerId).setup({
-        flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
-        html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
-        width: "100%",
+        flashplayer: '/static/jwplayer/6.10/jwplayer.flash.swf',
+        html5player: '/static/jwplayer/6.10/jwplayer.html5.js',
+        width: '100%',
         aspectratio: aspectratio,
         autostart: autostart,
         repeat: repeat,
@@ -425,13 +424,13 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
                 file: m4vUrl
             }]
         }]
-        , primary: "flash"
+        , primary: 'flash'
     });
     
     jwplayer(innerId).onReady(function () {
         var wrapperId = innerId;
-        var wrapper = $("#" + wrapperId);
-        wrapper.addClass("jwplayer-wrapper");
+        var wrapper = $('#' + wrapperId);
+        wrapper.addClass('jwplayer-wrapper');
     });
 }
 

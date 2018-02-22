@@ -249,11 +249,11 @@
                     
                     switch (fileType) {
                         case 'video':
-                            previewContainer.html('<div class="jp-video"></div>');
+                            previewContainer.html('<img class="jp-video" />');
                             $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
                                 $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
                                     jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                                    buildJWPlayer(previewContainer.find('div.jp-video'), 100, previewUrl, previewUrl + '/alt-640-360.png');
+                                    buildJWPlayer(previewContainer.find('img.jp-video'), 100, previewUrl, previewUrl + '/alt-640-360.png');
                                     
                                     if (typeof options.onPreviewFile === 'function') {
                                         options.onPreviewFile.call(container, fileType, selectedUrl, hash);
