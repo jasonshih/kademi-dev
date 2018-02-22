@@ -12,18 +12,19 @@
 #end
 
 #if($page)
+    #set ($auctionsPage = $page.find("/auctions"))
     <div class="row" id="auctions-list">
-        #foreach($auction in $page.childrenWithPermission.sortByExpr("auctionEndDate"))
+        #foreach($auction in $auctionsPage.childrenWithPermission.sortByExpr("auctionEndDate"))
             #if (!$auction.auctionClosed && $auction.auctionState == 'open')
                 #renderAuction($auction $clsName)
             #end
         #end
-        #foreach($auction in $page.childrenWithPermission.sortByExpr("auctionStartDate"))
+        #foreach($auction in $auctionsPage.childrenWithPermission.sortByExpr("auctionStartDate"))
             #if (!$auction.auctionClosed && $auction.auctionState == 'active')
                 #renderAuction($auction $clsName)
             #end
         #end
-        #foreach($auction in $page.childrenWithPermission.sortByExpr("auctionEndDate"))
+        #foreach($auction in $auctionsPage.childrenWithPermission.sortByExpr("auctionEndDate"))
             #if ($auction.auctionClosed)
                 #renderAuction($auction $clsName)
             #end
@@ -31,7 +32,6 @@
     </div>
 #else
     <div class="row" id="fake-auctions-list">
-
         #set($bg = "/theme/img/photo_holder.png")
         <div class="col-sm-6 col-md-4 auction-item">
             <div class="thumbnail auction">

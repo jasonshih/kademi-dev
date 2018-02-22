@@ -6,6 +6,7 @@
         init: function (contentArea, container, component, keditor) {
             flog('init "video" component', component);
             
+            var self = this;
             var componentContent = component.children('.keditor-component-content');
             var dynamicElement = componentContent.find('[data-dynamic-href]');
             
@@ -24,7 +25,7 @@
                 
                 componentContent.html(dynamicElement);
                 keditor.initDynamicContent(dynamicElement).done(function () {
-                    doInitVideos();
+                    self.buildVideoPreview(component);
                 });
                 img.remove();
                 if (wrapper.length > 0) {
@@ -33,7 +34,7 @@
                 flog('Converted to new video component');
             } else {
                 keditor.initDynamicContent(dynamicElement).done(function () {
-                    doInitVideos();
+                    self.buildVideoPreview(component);
                 });
             }
             
@@ -85,7 +86,7 @@
                         
                         component.attr('data-video-border-style', this.value);
                         keditor.initDynamicContent(dynamicElement).done(function () {
-                            doInitVideos();
+                            self.buildVideoPreview(component);
                         });
                     });
                     
@@ -102,7 +103,7 @@
                         
                         component.attr('data-video-border-width', width);
                         keditor.initDynamicContent(dynamicElement).done(function () {
-                            doInitVideos();
+                            self.buildVideoPreview(component);
                         });
                     });
                     
@@ -113,7 +114,7 @@
                         
                         component.attr('data-video-border-color', color);
                         keditor.initDynamicContent(dynamicElement).done(function () {
-                            doInitVideos();
+                            self.buildVideoPreview(component);
                         });
                     });
                     
@@ -127,7 +128,7 @@
                         
                         component.attr('data-video-border', this.checked);
                         keditor.initDynamicContent(dynamicElement).done(function () {
-                            doInitVideos();
+                            self.buildVideoPreview(component);
                         });
                     });
                     
@@ -142,7 +143,7 @@
                             
                             component.attr('data-video-src', url);
                             keditor.initDynamicContent(dynamicElement).done(function () {
-                                doInitVideos();
+                                self.buildVideoPreview(component);
                             });
                         }
                     });
@@ -153,7 +154,7 @@
                         
                         component.attr('data-video-autostart', this.checked);
                         keditor.initDynamicContent(dynamicElement).done(function () {
-                            doInitVideos();
+                            self.buildVideoPreview(component);
                         });
                     });
                     
@@ -163,7 +164,7 @@
                         
                         component.attr('data-video-repeat', this.checked);
                         keditor.initDynamicContent(dynamicElement).done(function () {
-                            doInitVideos();
+                            self.buildVideoPreview(component);
                         });
                     });
                     
@@ -173,7 +174,7 @@
                         
                         component.attr('data-video-ratio', this.value);
                         keditor.initDynamicContent(dynamicElement).done(function () {
-                            doInitVideos();
+                            self.buildVideoPreview(component);
                         });
                     });
                     
@@ -183,10 +184,27 @@
                         
                         component.attr('data-video-controls', this.checked);
                         keditor.initDynamicContent(dynamicElement).done(function () {
-                            doInitVideos();
+                            self.buildVideoPreview(component);
                         });
                     });
                 }
+            });
+        },
+        
+        buildVideoPreview: function (component) {
+            $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
+                $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
+                    jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
+                    
+                    var img = component.find('.video-jw');
+                    var src = img.attr("data-video-src");
+                    var posterUrl = img.attr("src");
+                    var aspectratio = img.attr("data-aspectratio");
+                    var autostart = img.attr('data-autostart') === 'true';
+                    var repeat = img.attr('data-repeat') === 'true';
+                    var controls = true; // Force showing controls for now
+                    buildJWPlayer(img, 999, src, posterUrl, aspectratio, autostart, repeat, controls);
+                });
             });
         },
         

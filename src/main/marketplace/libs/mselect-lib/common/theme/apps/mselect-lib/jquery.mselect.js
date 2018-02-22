@@ -249,11 +249,11 @@
                     
                     switch (fileType) {
                         case 'video':
-                            previewContainer.html('<div class="jp-video"></div>');
+                            previewContainer.html('<img class="jp-video" />');
                             $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
                                 $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
                                     jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                                    buildJWPlayer(previewContainer.find('div.jp-video'), 100, previewUrl, previewUrl + '/alt-640-360.png');
+                                    buildJWPlayer(previewContainer.find('img.jp-video'), 100, previewUrl, previewUrl + '/alt-640-360.png');
                                     
                                     if (typeof options.onPreviewFile === 'function') {
                                         options.onPreviewFile.call(container, fileType, selectedUrl, hash);
@@ -477,18 +477,20 @@
                                     'data-hash': resp.hash,
                                     'data-url': url
                                 });
+                                
                                 $('<img />').attr('src', url).on('load', function () {
                                     var realWidth = this.width;
                                     var realHeight = this.height;
                                     var ratio = realWidth / realHeight;
                                     
-                                    self.previewContainer.html('<img src="' + url + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" />');
+                                    self.previewContainer.html('<img src="' + url + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" width="' + realWidth + '" height="' + realHeight + '" />');
                                     
                                     if (typeof options.onPreviewFile === 'function') {
                                         options.onPreviewFile.call(container, 'image', url, resp.hash);
                                     }
+                                    
+                                    self.options.onSelectFile.call(container, url, url, 'image', resp.hash, false);
                                 });
-                                self.options.onSelectFile.call(container, url, url, 'image', resp.hash, false);
                             }
                             editModal.modal('hide');
                         } else {

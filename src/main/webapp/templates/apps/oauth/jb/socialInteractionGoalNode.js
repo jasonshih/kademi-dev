@@ -27,12 +27,6 @@ JBNodes['socialInteractionGoal'] = {
         form.append(
                 '<div class="form-group">' +
                 '    <div class="col-md-12">' +
-                '        <label>Website</label>' +
-                '        <select class="form-control websiteName"></select>' +
-                '    </div>' +
-                '</div>' +
-                '<div class="form-group">' +
-                '    <div class="col-md-12">' +
                 '        <label>Type</label>' +
                 '        <select class="form-control interactionType">' +
                 '            <option value="">[No type selected]</option>' +
@@ -65,9 +59,6 @@ JBNodes['socialInteractionGoal'] = {
                 var interactionType = form.find('.interactionType').val();
                 JBApp.currentSettingNode.interactionType = interactionType || null;
 
-                var websiteName = form.find('.websiteName').val();
-                JBApp.currentSettingNode.websiteName = websiteName || null;
-
                 JBApp.saveStandardGoalSetting(form);
 
                 JBApp.saveFunnel('Funnel is saved');
@@ -80,7 +71,6 @@ JBNodes['socialInteractionGoal'] = {
         JBApp.showStandardGoalSettingControls(form, node);
 
         form.find('.interactionType').val(node.interactionType !== null ? node.interactionType : '');
-        form.find('.websiteName').val(node.websiteName !== null ? node.websiteName : '');
 
         JBApp.showSettingPanel(node);
     }

@@ -7,7 +7,6 @@
     var cbbAlign;
     var previewContainer;
     
-    
     CKEDITOR.plugins.add('fuse-image', {
         init: function (editor) {
             var that = this;
@@ -56,8 +55,8 @@
                                 hashId = hashId || previewContainer.attr('data-hash');
                                 var imageUrl = isAsset ? '/assets/' + uniqueId : '/_hashes/files/' + hashId;
                                 imageUrl = (editor.config.fullUrl ? 'http://' + window.location.host : '') + imageUrl;
-                                var width = previewImg.width();
-                                var height = previewImg.height();
+                                var width = previewImg.attr('width');
+                                var height = previewImg.attr('height');
                                 var alt = previewImg.attr('alt');
                                 
                                 that.element.setAttribute('data-hash', hashId);
@@ -67,8 +66,6 @@
                                 that.element.setAttribute('width', width);
                                 that.element.setAttribute('height', height);
                                 that.element.setAttribute('alt', alt);
-                                that.element.$.style.width = width + 'px';
-                                that.element.$.style.height = height + 'px';
                                 that.element.$.removeAttribute('data-cke-saved-src');
                                 that.element.addClass('img-responsive');
                                 
@@ -302,8 +299,8 @@
             that.insertMode = false;
             var hash = element.getAttribute('data-hash') || '';
             var uniqueId = element.getAttribute('data-uniqueid') || '';
-            var width = (element.$.style.width || '').replace('px', '') || element.getAttribute('width');
-            var height = (element.$.style.height || '').replace('px', '') || element.getAttribute('height');
+            var width = element.getAttribute('width');
+            var height = element.getAttribute('height');
             var src = element.getAttribute('src');
             var alt = element.getAttribute('alt');
             if (!alt) {
@@ -316,7 +313,7 @@
                 var ratio = realWidth / realHeight;
                 var align = element.getAttribute('align') || '';
                 
-                previewContainer.html('<img alt="' + alt + '" src="' + src + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" style="width: ' + width + 'px; height: ' + height + 'px;" align="' + align + '" />');
+                previewContainer.html('<img alt="' + alt + '" src="' + src + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" width="' + width + '" height="' + height + '" align="' + align + '" />');
                 previewContainer.attr({
                     'data-hash': hash,
                     'data-uniqueid': uniqueId,

@@ -1,64 +1,70 @@
 #if (!$rowHeight)
 #set ($rowHeight = 25)
 #end
-
 #if (!$numUsers)
 #set ($numUsers = 5)
 #end
 
-#if ($startDate && $startDate != "")
-#set ($since = $formatter.toDate($startDate))
-#else
-#set($since = $formatter.addDays( $formatter.now, -7 ) )
-#end
+#set( $kpiFolder = $rootFolder.find("/sales").child($salesDataSeries).find($kpi))
+#set ($startDate = $formatter.yearStart)
+#set ($endDate = $formatter.yearEnd())
 
-#if ($endDate && $endDate != "")
-#set ($to = $formatter.toDate($endDate))
-#end
+#set( $lb = $kpiFolder.getLeaderboard($startDate, $endDate))
+#if( $lb )
 
-#if ($pointsBucket && $pointsBucket != "")
-#if ($to)
-#set( $myPointsInfo = $applications.rewardStore.myPointsInfo($pointsBucket, $formatter.toInteger($numUsers), $since, $to) )
-#else
-#set( $myPointsInfo = $applications.rewardStore.myPointsInfo($pointsBucket, $formatter.toInteger($numUsers), $since) )
-#end
-
-#if( $myPointsInfo.hasPoints )
-<table cellpadding="0" cellspacing="0" width="100%" bgcolor="$!{bgcolor}">
-    #foreach($leader in $myPointsInfo.allMemberPoints )
-    #set($foundThis = false)
-    #if( $leader.member.userId == $user.id)
-    #set($foundThis = true)
-    #end
-    <tr>
-        <td height="$rowHeight">
-            #set ($ur = $applications.userApp.findUserResourceById($leader.member.userId))
-            $ur.extProfileBean.formattedName()
-        </td>
-        <td>
-            $!leader.numPoints pts
-        </td>
-    </tr>
-    #end
-
-    #if( !$foundThis )
-    #set( $thisExtProfileBean = $userResource.extProfileBean )
-    <tr>
-        <td height="$rowHeight">
-            $thisExtProfileBean.formattedName()
-        </td>
-        <td>
-            $!myPointsInfo.myPointsTotal pts
-        </td>
-    </tr>
-    #end
+<table cellpadding="0" cellspacing="0" width="100%" class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Amount</th>
+            <th>Raw value</th>
+            <th>Baseline</th>
+            <th>Participant</th>
+        </tr>
+    </thead>
+    <tbody id="leaderboardBody">
+        #foreach($item in $lb.highestResults )
+        #set( $plusOne = $item.rank + 1 )
+        <tr>
+            <td>$plusOne</td>
+            <td>
+                #if( $item.amount )
+                $formatter.formatCurrency($item.amount)
+                #else
+                No value
+                #end
+            </td>
+            <td>$!formatter.formatCurrency($item.rawAmount)</td>
+            <td>$!formatter.formatCurrency($item.baseline)</td>
+            <td>
+                <!-- either a profilebean or orgdata -->
+                #if( $item.profile) <!-- is individual -->
+                $item.profile.name $item.profile.class($item.profile.userName)
+                #else
+                $item.org.title
+                #end
+            </td>
+            <td>
+                #if( $item.profile)
+                #foreach($orgAndGroup in $item.profile.primaryMemberships().groupByOrg.entrySet() )
+                <span class="label label-success">
+                    <b>$orgAndGroup.value.first.groupName</b>
+                    in
+                    $orgAndGroup.key.title
+                </span>
+                #end
+                #end
+            </td>
+        </tr>
+        #end
+    </tbody>
 </table>
-#end
+
 #else
 <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="$!{bgcolor}">
     <tr>
         <td colspan="2">
-            No points bucket selected
+            No KPI selected
         </td>
     </tr>
 </table>

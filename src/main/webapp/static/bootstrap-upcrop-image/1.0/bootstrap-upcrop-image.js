@@ -479,6 +479,7 @@
                     useJsonPut: false, // Just do a POST
                     maxFiles: 1,
                     useDropzone: true,
+                    acceptedFiles: 'image/*',
                     oncomplete: function (data, name, href) {
                         dataContinue = arguments;
                         flog('uploaded image: ', data, name, data.result.nextHref);

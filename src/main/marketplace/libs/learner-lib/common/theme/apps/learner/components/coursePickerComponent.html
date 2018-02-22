@@ -32,7 +32,7 @@
                     <li id="courses-wrapper" class="col-md-6">
                         <p>Courses</p>
                         <div class="courses-list">
-                            #foreach($course in $curProgram.availCourses)
+                            #foreach($course in $formatter.sortByProperty($curProgram.availCourses, "order"))
                                 <a class="course ${formatter.ifEqual('active','', $curCourse.href, $course.href)}" href="$course.href" class="">$course.title</a>
                             #end
                         </div>

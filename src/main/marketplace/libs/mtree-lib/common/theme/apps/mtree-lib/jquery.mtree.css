@@ -21,6 +21,8 @@
 
 .mtree-wrapper .mtree-tabs {
     margin: 0;
+    position: relative;
+    z-index: 1;
 }
 
 .mtree-wrapper .mtree-assets-finder-wrapper {

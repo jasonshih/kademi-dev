@@ -7,7 +7,7 @@
             var panel = $(n);
             initPanel(panel);
             $(document).on('pageDateChanged', function (e, startDate, endDate) {
-                flog("queryTable date change", e, startDate, endDate);
+                flog("queryTable date change1", startDate, endDate);
                 initPanel(panel);
             });
 
@@ -40,13 +40,19 @@
                     url: '/queries/' + queryName + '/?run&from=' + from + '&size=' + size,
                     dataType: 'json',
                     success: function (resp) {
-                        var tbody = '';
+                        flog("queryTable: response ", queryName, resp.hits);
+                        var tbodyHtml = '';
                         var hits = resp.hits;
                         if (hits.total > 0) {
                             for (var i = 0; i < hits.hits.length; i++) {
-                                tbody += renderRowRawES(hits.hits[i], panel);
+                                var hit = hits.hits[i];
+                                flog("queryTable: render", hit);
+                                tbodyHtml += renderRowRawES(hit, panel);
                             }
-                            panel.find('table tbody').html(tbody);
+                            var tbody = panel.find('table tbody');
+                            flog("queryTable", tbody);
+                            flog("queryTable: html", tbodyHtml);
+                            tbody.html(tbodyHtml);
                             renderPagination(panel, resp, from, size);
                         }
                     },
@@ -191,16 +197,24 @@
             function renderRowRawES(row, panel) {
                 var rowStr = '<tr>';
                 var ths = panel.find('table thead th');
-                ths.each(function () {
-                    var f = $(this).attr('data-field');
-                    if (row.fields[f]) {
-                        rowStr += '<td>' + row.fields[f][0] + '</td>';
-                    } else {
-                        rowStr += '<td>&nbsp;</td>';
+                if( ths.length == 0 ) {
+                    for( i=0; i<row.fields.length; i++) {
+                        var f = row.fields[i];
+                        flog("renderRowRawES: ", f);
                     }
-                });
+                } else {
+                    ths.each(function () {
+                        var f = $(this).attr('data-field');
+                        if (row.fields[f]) {
+                            rowStr += '<td>' + row.fields[f][0] + '</td>';
+                        } else {
+                            rowStr += '<td>&nbsp;</td>';
+                        }
+                    });
+                }
 
                 rowStr += '</tr>';
+                flog("queryTable: renderRowRawES", rowStr);
                 return rowStr;
             }
 

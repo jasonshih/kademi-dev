@@ -215,12 +215,119 @@ function initAddNewOrder() {
         }
     });
 
+    var storeType = "";
     form.on('change', '#storeType', function () {
         var inp = $(this);
-
-        form.find('.storeSelect').hide();
-        form.find('#storeSelect_' + inp.val()).show();
+        storeType = inp.val();
+        form.find('.storeWrapper').hide();
+        form.find('#storeWrapper_' + storeType).show();
     });
+
+    var apiURL = "";
+    form.on('change', '.storeSelect', function () {
+        form.find('.productWrapper').show();
+        var storeSelected = $(this).val();
+        flog("storeType=", storeType + " storeSelected=", storeSelected);
+        if (storeType == "rewardStore") {
+            apiURL = "/reward-store/" + storeSelected;
+        } else {
+            apiURL = "/ecommerce/" + storeSelected;
+        }
+        apiURL = apiURL + "?searchProducts=true";
+    });
+
+    form.on('keyup keypress change', "#searchProduct", function () {
+        $(".productsDropdown").show();
+        var search = $(this).val();
+        doProductSearch(search);
+    });
+
+    function doProductSearch(search) {
+        if (search !== "" && search.length > 2) {
+            $.ajax({
+                type: "GET",
+                url: apiURL + "&q=" + search,
+                dataType: 'json',
+                success: function (resp) {
+                    flog('response', resp);
+                    if (resp.status) {
+                        $(".productsDropdown").html("");
+                        var data = resp.data;
+                        $.each(data, function () {
+                            $(".productsDropdown").append($("<li data-id='" + this.productId + "'>" + this.title + "</li>"));
+                        });
+                    }
+                }
+            });
+        }
+    }
+
+    $(".productsDropdown").on("click", "li", function () {
+        $(".productsDropdown").hide();
+
+        var title = $(this).text();
+        var id = $(this).data("id");
+
+        var append = $("#selectedProducts").find(".form-group").length > 0;
+
+        var html = $.parseHTML(`<div class='form-group' id='product_` + id + `'>
+                        <div class='col-sm-9'>
+                            <select class='form-control'>
+                            </select>
+                        </div>
+                        <div class='col-sm-2'><input type='number' data-id='` + id + `' value='1' class='form-control changeQuantity'></div>
+                        <div class='col-sm-1' style='padding-left:0px'><button type='button' data-id='` + id + `' class='btn btn-sm btn-danger removeSelectedProduct'><i class='glyphicon glyphicon-trash'></i></button></div>
+                    </div>`);
+
+        $.ajax({
+            type: "GET",
+            url: '/products/' + id + '/?variants',
+            dataType: 'json',
+            success: function (resp) {
+                if (resp.status) {
+                    var select = $(html).find("select");
+                    var empty = true;
+                    var data = resp.data;
+                    flog('data', data);
+                    $.map(data, function (val, key) {
+                        flog(val, " ", key);
+                        $(select).attr("name", "product_" + id + "-" + key);
+                        $(select).append($('<option></option>').val(1).html(title + " - " + val));
+                        empty = false;
+                    });
+                    if (empty) {
+                        $(select).append($('<option></option>').val(id).html(title));
+                        $(select).attr("disabled", true);
+                    }
+                }
+            }
+        });
+
+        if (append) {
+            $("#selectedProducts").append(html);
+        } else {
+            $("#selectedProducts").html(html);
+        }
+
+    });
+
+    form.on("click", ".removeSelectedProduct", function () {
+        var id = $(this).data("id");
+        $("#product_" + id).remove();
+        var empty = $("#selectedProducts").find(".form-group").length == 0;
+        if (empty) {
+            $("#selectedProducts").append("<p>No products selected.</p>");
+        }
+    });
+
+    form.on("keyup keypress change ", ".changeQuantity", function () {
+        var newVal = $(this).val();
+        var id = $(this).data("id");
+        $.each($("#product_" + id).find("select option"), function () {
+            $(this).val(newVal)
+        });
+    });
+
 
     modal.on('hidden.bs.modal', function (e) {
         form.trigger('reset');
@@ -231,6 +338,7 @@ function initAddNewOrder() {
         onSuccess: function (resp) {
             modal.modal('hide');
             Msg.success(resp.messages);
+            $("#auction-wrapper").reloadFragment();
         }
     });
 }
