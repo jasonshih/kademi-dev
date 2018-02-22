@@ -477,18 +477,20 @@
                                     'data-hash': resp.hash,
                                     'data-url': url
                                 });
+                                
                                 $('<img />').attr('src', url).on('load', function () {
                                     var realWidth = this.width;
                                     var realHeight = this.height;
                                     var ratio = realWidth / realHeight;
                                     
-                                    self.previewContainer.html('<img src="' + url + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" />');
+                                    self.previewContainer.html('<img src="' + url + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" width="' + realWidth + '" height="' + realHeight + '" />');
                                     
                                     if (typeof options.onPreviewFile === 'function') {
                                         options.onPreviewFile.call(container, 'image', url, resp.hash);
                                     }
+                                    
+                                    self.options.onSelectFile.call(container, url, url, 'image', resp.hash, false);
                                 });
-                                self.options.onSelectFile.call(container, url, url, 'image', resp.hash, false);
                             }
                             editModal.modal('hide');
                         } else {
