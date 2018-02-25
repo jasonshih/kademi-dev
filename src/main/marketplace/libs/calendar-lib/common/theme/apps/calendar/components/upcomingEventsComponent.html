@@ -7,14 +7,15 @@
         #set ($calendars = $page.find('/Calendars/'))    
     #end
     
-    #if( $calendar )
+    #if( $calendar && $calendar == '_default')
+        #set ($defaultCalendar = '/users/' + $userResource.name + '/Calendars/default/')
+        #set ($upcomingEvents = $page.find($defaultCalendar).upcomingEvents)
+    #elseif ( $calendar )
         #set ($upcomingEvents = $calendars.child($calendar).upcomingEvents)
     #else
         #set ($upcomingEvents = $calendars.getUpcomingAfter(30))
     #end    
-    
-    
-    
+       
     <div class="calendar-events">
         #foreach($event in $upcomingEvents )
         #renderUpcoming($event)
