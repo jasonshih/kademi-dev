@@ -557,7 +557,6 @@
                     var selectpicker = $(this);
                     var searchMore = selectpicker.find('.search-more');
                     var needAjaxSearch = searchMore.length > 0;
-
                     if (searchMore.length > 0) {
                         searchMore.remove();
                     }
@@ -584,6 +583,8 @@
                             },
                             cache: false,
                             preserveSelected: true,
+                            preserveSelectedPosition: 'before',
+                            emptyRequest: true,
                             preprocessData: function (resp) {
                                 var categories = [];
                                 if (resp && resp.status) {
