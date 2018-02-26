@@ -4,6 +4,7 @@
         <div class="col-sm-12">
             <select class="form-control select-calendar">
                 <option value="" selected="selected">- None -</option>
+                <option value="_default" selected="selected">Personal calendar</option>
                 #foreach($calendar in $rootFolder.find("/Calendars").children.ofType.calendar)
                 <option value="$calendar.name">$calendar.title</option>
                 #end

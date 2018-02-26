@@ -725,7 +725,7 @@ jsPlumb.ready(function () {
                         flog('Use default handler when connected');
 
                         if (nodeInfo[0] === 'customGoal' || nodeInfo[0] === 'customAction') {
-                            if (nodeData['customNextNodes'] === undefined) {
+                            if (nodeData['customNextNodes'] === undefined || nodeData['customNextNodes'] === null) {
                                 nodeData['customNextNodes'] = {};
                             }
 

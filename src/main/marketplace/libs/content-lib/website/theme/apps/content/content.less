@@ -1,68 +1,67 @@
-.accordionWrap .panel-title a.collapsed .panelIcon:before{
+.accordionWrap .panel-title a.collapsed .panelIcon:before {
     content: "\f103";
 }
 
-.accordionWrap .panel-title a .panelIcon:before{
+.accordionWrap .panel-title a .panelIcon:before {
     content: "\f102";
 }
 
 .htmlPanel {
     min-height: 30px;
-    .textEdit{
+    .textEdit {
         float: left;
         display: inline-block;
         width: calc(~"100% - 100px");
-        &.noIcon{
+        &.noIcon {
             width: 100%;
         }
     }
-    .panelIconWrap{
+    .panelIconWrap {
         float: left;
         display: inline-block;
         width: 100px;
     }
-    &.bg-success{
+    &.bg-success {
         color: @panel-success-text;
     }
-    &.bg-info{
+    &.bg-info {
         color: @panel-info-text;
     }
-    &.bg-warning{
+    &.bg-warning {
         color: @panel-warning-text;
     }
-    &.bg-danger{
+    &.bg-danger {
         color: @panel-danger-text;
     }
 }
 
-.kratingWrap{
-    &.editing{
+.kratingWrap {
+    &.editing {
         padding-top: 30px;
     }
 }
-.panel-heading
-{
-    .collapsed
-    {
+
+.panel-heading {
+    .collapsed {
         .panelIconCollapsed {
             display: block;
-        } 
-        .panelIconExpanded{
+        }
+        .panelIconExpanded {
             display: none;
         }
     }
-    a:not(collapsed){
+    a:not(collapsed) {
         .panelIconCollapsed {
             display: none;
-        } 
-        .panelIconExpanded{
+        }
+        .panelIconExpanded {
             display: block;
         }
     }
 }
 
-.tileComponent{
-    .tileImage{
+.tileComponent {
+    .tileImage {
         display: block;
         background-repeat: no-repeat;
         background-size: cover;
@@ -70,15 +69,50 @@
     }
 }
 
-
-.content-editor-page .panel-expandable-tpl{
-    .panel-body{
+.content-editor-page .panel-expandable-tpl {
+    .panel-body {
         display: block !important;
     }
 }
 
-.panel-expandable-tpl{
-    &>.panel-body{
+.panel-expandable-tpl {
+    & > .panel-body {
         display: none;
+    }
+}
+
+[data-type="component-menu"] {
+    .navbar {
+        z-index: 9;
+    }
+
+    @media (max-width: @screen-md-max) {
+        .navbar {
+            .navbar-search {
+                .navbar-form {
+                    padding-top: 0;
+                    padding-bottom: 0;
+                    margin: 0;
+                }
+
+                .form-group {
+                    width: 100%;
+                }
+
+                .input-group {
+                    width: 100%;
+
+                    .input-group-btn {
+                        width: 1%;
+                    }
+                }
+
+                .omni-search-wrapper{
+                    input {
+                        width: 100% !important;
+                    }
+                }
+            }
+        }
     }
 }

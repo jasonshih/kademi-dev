@@ -7,14 +7,15 @@
         #set ($calendars = $page.find('/Calendars/'))    
     #end
     
-    #if( $calendar )
+    #if( $calendar && $calendar == '_default')
+        #set ($defaultCalendar = '/users/' + $userResource.name + '/Calendars/default/')
+        #set ($upcomingEvents = $page.find($defaultCalendar).upcomingEvents)
+    #elseif ( $calendar )
         #set ($upcomingEvents = $calendars.child($calendar).upcomingEvents)
     #else
         #set ($upcomingEvents = $calendars.getUpcomingAfter(30))
     #end    
-    
-    
-    
+       
     <div class="calendar-events">
         #foreach($event in $upcomingEvents )
         #renderUpcoming($event)
@@ -39,10 +40,18 @@
 </div>
 #end
 
-#macro (renderUpcoming $event)
+#macro (renderUpcoming $event )
 <article class="calendar-events-item">
+        
+    #if( $event.calendar.baseEntity.asProfile() )
+        #set( $eventHref = "/users/$userResource.name/Calendars/default/$event.name/" )
+    #else
+        #set( $eventHref = "/Calendars/$event.calendar.name/$event.name/" )
+    #end    
     <header class="calendar-events-header">
-        <h3><a href="/Calendars/${event.calendar.name}/${event.name}">$event.summary</a></h3>
+        
+        <h3><a href="$eventHref">$event.summary</a></h3>
+        
         <div class="calendar-event-byline">
             #if( $event.organisor )
             <small class="author">By <a href="/users/$event.organisor.name/public">$event.organisor.formattedName</a></small>
@@ -55,7 +64,7 @@
     </header>
     <div class="calendar-event-text clearfix">
         <div class="clearfix">$!event.description</div>
-        <a href="/Calendars/${event.calendar.name}/${event.name}" class="btn btn-sm btn-success pull-right">Register</a>
+        <a href="$eventHref" class="btn btn-sm btn-success pull-right">Register</a>
     </div>
 </article>
 #end

@@ -7,7 +7,13 @@ controllerMappings.addComponent("rewardstore/components", "pointsEarned", "html"
 controllerMappings.addComponent("rewardstore/components", "pointsTransaction", "html", "Shows all points transactions, or only credits or only debits for the current participant, for a selected points bucket and optionally filtered by a points tag", "Reward Store");
 
 /* EDM Components */
-controllerMappings.addComponent("rewardstore/components", "singleProductEDM", "edm", "Show single product for EDM Editor", "Reward Store");
+controllerMappings.addComponent("rewardstore/components", "singleProductEDM")
+    .addType("edm")
+    .desc("Show single product for EDM Editor")
+    .categories("Reward Store")
+    .addDefaultAtt("viewmore-color", "#2BAADF")
+    .build();
+
 controllerMappings.addComponent("rewardstore/components", "rewardCategoriesListEDM", "edm", "Show reward store categories list for EDM Editor", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "pointsLeaderboardEDM", "edm", "Shows points leaderboard that includes current participant, for a selected points bucket", "Reward Store");
 
