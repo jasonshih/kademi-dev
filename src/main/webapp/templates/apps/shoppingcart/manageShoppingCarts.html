@@ -264,7 +264,12 @@
                                     <div class="form-group">
                                         <label for="country" class="col-sm-3 control-label">Country</label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="form-control" name="country" placeholder="Country">
+                                            <select name="country" class="form-control chosen-select required" id="country">
+                                                <option value="">[No country selected]</option>
+                                                #foreach($cc in $formatter.countryCodes.list)
+                                                $formatter.option( $cc.alpha2Code, $cc.englishShortName, $page.organisation.country )
+                                                #end
+                                            </select>
                                         </div>
                                     </div>
 

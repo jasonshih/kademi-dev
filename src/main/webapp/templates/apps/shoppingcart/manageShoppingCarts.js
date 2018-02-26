@@ -220,6 +220,7 @@ function initAddNewOrder() {
         var inp = $(this);
         storeType = inp.val();
         form.find('.storeWrapper').hide();
+        form.find('#storeWrapper_' + storeType).find("select").addClass("required");
         form.find('#storeWrapper_' + storeType).show();
     });
 
@@ -264,6 +265,7 @@ function initAddNewOrder() {
 
     $(".productsDropdown").on("click", "li", function () {
         $(".productsDropdown").hide();
+        $("#searchProduct").val("");
 
         var title = $(this).text();
         var id = $(this).data("id");
@@ -296,8 +298,8 @@ function initAddNewOrder() {
                         empty = false;
                     });
                     if (empty) {
-                        $(select).append($('<option></option>').val(id).html(title));
-                        $(select).attr("disabled", true);
+                        $(select).attr("name", "product_" + id);
+                        $(select).append($('<option></option>').val(1).html(title));
                     }
                 }
             }
