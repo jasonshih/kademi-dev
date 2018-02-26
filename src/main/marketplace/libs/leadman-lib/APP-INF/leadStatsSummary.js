@@ -1,16 +1,21 @@
-/* global applications, queryManager, views, controllerMappings */
+/* global applications, queryManager, views, controllerMappings, securityManager */
 
 controllerMappings
         .websiteController()
         .path('/_leadManStatsSummary')
         .addMethod('GET', 'loadLeadManStatsSummary')
         .enabled(true)
+        .isPublic(true)
         .build();
 
 function loadLeadManStatsSummary(page, params) {
     var funnelName = params.funnelName;
     var startDate = queryManager.commonStartDate;
     var finishDate = queryManager.commonFinishDate;
+
+    if (!isAuthorisedLeadManStats()) {
+        return page.throwNotAuthorized("You are not authorized to access this resource");
+    }
 
     return views
             .jsonObjectView(
@@ -21,6 +26,19 @@ function loadLeadManStatsSummary(page, params) {
                     }
             )
             .wrapJsonResult();
+}
+
+function isAuthorisedLeadManStats() {
+    var currentUser = securityManager.currentUser;
+    if (currentUser === null || typeof currentUser === 'undefined') {
+        return false;
+    }
+
+    if (currentUser.hasRole("Sales") || currentUser.hasRole("SalesManager")) {
+        return true;
+    }
+
+    return false;
 }
 
 function loadTaskStats(funnelName, startDate, finishDate) {
