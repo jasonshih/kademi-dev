@@ -8,7 +8,9 @@
 
 #set( $completed = $page.find("/programs").completedModules )
 <div class="panel panel-default">
-    <div class="panel-heading">Certificates</div>
+    <div class="panel-heading">$tableTitle</div>
+
+    <div style="overflow: auto; height: ${height}px;">
 
         <table class="table table-striped">
             <cols>
@@ -58,5 +60,5 @@
                 #end
             </tbody>
         </table>
-
+    </div>
 </div>

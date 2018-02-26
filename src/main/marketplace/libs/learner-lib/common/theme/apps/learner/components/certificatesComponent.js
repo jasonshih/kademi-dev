@@ -1,14 +1,14 @@
 (function ($) {
     var KEditor = $.keditor;
 
-    KEditor.components['moduleStatuses'] = {
+    KEditor.components['certificates'] = {
         settingEnabled: true,
 
-        settingTitle: 'Module Statuses Table',
+        settingTitle: 'Certificates',
 
         initSettingForm: function (form, keditor) {
             return $.ajax({
-                url: '_components/moduleStatuses?settings',
+                url: '_components/certificates?settings',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
@@ -35,7 +35,6 @@
                         component.attr('data-table-title', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
-
                 }
             });
         },
