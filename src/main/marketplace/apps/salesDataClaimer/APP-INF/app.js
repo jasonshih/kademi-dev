@@ -128,10 +128,12 @@ function initSalesDataClaimerApp(orgRoot, webRoot, enabled) {
 
 function saveSettings(page, params) {
     log.info('saveSettings > page={}, params={}', page, params);
-
+    
     // BM: we must not do this! https://github.com/Kademi/kademi-dev/issues/4987
-    //page = page.find('/manageApps/');
-
+    if(page.is("apps") == false && page.is("websiteVersion") == false){
+        page = page.find('/manageApps/');        
+    }
+    
     if (params.dataSeries) {
         var dataSeries = params.dataSeries || '';
         page.setAppSetting(APP_NAME, 'dataSeries', dataSeries);
