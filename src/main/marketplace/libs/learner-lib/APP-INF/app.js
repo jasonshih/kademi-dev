@@ -3,6 +3,7 @@ controllerMappings.addComponent("learner/components", "modulesList", "html", "Di
 controllerMappings.addComponent("learner/components", "coursePicker", "html", "Displays course picker", "Learning App");
 controllerMappings.addComponent("learner/components", "courseDescription", "html", "Displays course description", "Learning App");
 controllerMappings.addComponent("learner/components", "moduleStatuses", "html", "Displays table of module statuses", "Learning App");
+controllerMappings.addComponent("learner/components", "certificates", "html", "Lists the user's certificates", "Learning App");
 
 function buildTableModuleStatuses(programCode, courseCode, moduleCode, complete, profile) {
     var query = {
