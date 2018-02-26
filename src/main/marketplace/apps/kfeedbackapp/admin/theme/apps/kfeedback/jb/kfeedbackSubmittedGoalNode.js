@@ -18,11 +18,5 @@ JBNodes['kfeedbackSubmittedGoal'] = {
 
     nodeTypeClass: 'customGoal',
 
-    settingEnabled: false,
-
-    initSettingForm: function (form) {
-    },
-
-    showSettingForm: function (form, node) {
-    }
+    settingEnabled: false
 };
