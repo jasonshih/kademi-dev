@@ -340,7 +340,7 @@
                 cbbCountry.selectpicker().on('change', function () {
                     autocomplete.setComponentRestrictions(this.value !== 'all' ? {
                         country: this.value
-                    } : []);
+                    } : {country: []});
                     txtQ.val('');
                 });
             } else {
@@ -423,7 +423,7 @@
             }
             
             if (options.orgTypes && $.isArray(options.orgTypes) && options.orgTypes.length > 0) {
-                data.orgTypes = self.formSearch.find('.org-finder-orgType').val();
+                data.orgTypes = self.formSearch.find('.org-finder-orgType').selectpicker('val');
             }
             
             if (typeof options.beforeSearch === 'function') {
