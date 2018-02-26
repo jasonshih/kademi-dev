@@ -62,7 +62,7 @@
                     #set ($cateLink = "http://${rootFolder.domainName}${formatter.portString}/$reward/$cateResource.name/")
                     #set($cateImage = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
                     #if( $cateResource.imageHref )
-                        #set($cateImage = "http://${rootFolder.domainName}${formatter.portString}${$cateResource.imageHref}/alt-600-400.png")
+                        #set($cateImage = "http://${rootFolder.domainName}${formatter.portString}${cateResource.imageHref}/alt-600-400.png")
                     #end
                 <table data-index="$foreach.index" data-count="$foreach.count" data-new="$!newLine" data-end="$!endLine" cellpadding="0" cellspacing="0" border="0" width="$!tableWidth" align="left" class="col">
                         <tbody>

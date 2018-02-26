@@ -20,8 +20,10 @@
                 <tr>
                    <th>Title</th>
                    <th>Name</th>
-                   <th>Start date</th>
+                   <th>Started</th>
+                   <th>Completed</th>
                    <th>Status</th>
+                   <th>CPD Hours</th>
                 </tr>
                 </thead>
                 <tbody id="$queryTableId">
@@ -40,11 +42,29 @@
                             <td>$!usr.extProfileBean.formattedName()</td>
                             #end
                             <td>$!formatter.formatDate($formatter.parseDate($hit.source.createdDate))</td>
+                            <td>
+                                #if ($hit.source.complete)
+                                    $!formatter.formatDate($formatter.parseDate($hit.source.modifiedDate))
+                                #end
+                            </td>
                             #if ($hit.source.complete)
                             <td><i class="fa fa-check-circle text-success"></i></td>
                             #else
                             <td>$hit.source.percentComplete%</td>
                             #end
+
+                            <td>
+                                #set( $hours = $formatter.toDouble(0) )
+								#foreach($cert in $mf.certificates)
+                                cert - $cert
+									#set( $hours = $hours + $formatter.toDouble($mf.cpdPoints.get( $cert.name )) )
+								#end
+
+                                $hours
+                                #if( $hours > 0 )
+                                $hours
+                                #end
+                            </td>
                         </tr>
                     #end
                 </tbody>
