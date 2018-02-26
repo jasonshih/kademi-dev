@@ -1,0 +1,19 @@
+{
+    "appDependencies": [
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "//platform.linkedin.com/in.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/sociallogin-lib/sociallogin.js" 
+            }
+        }
+    ]
+}
+
