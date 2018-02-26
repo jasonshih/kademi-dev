@@ -1,0 +1,47 @@
+<div class="form-group">
+    <label for="connectXero" class="col-sm-5 control-label">Link to Xero</label>
+    <div class="col-sm-6">
+        #if($xeroConnected)
+        <a href="/xero?gotoProvider" class="btn btn-info"><i class="fa fa-check"></i> Connected to $!xeroOrgName</a>
+        <small><i>Click to refresh your Xero credentials</i></small>
+        #else
+        <a href="/xero?gotoProvider" class="btn btn-success">Connect with Xero</a>
+        #end
+    </div>
+</div>
+
+#if($xeroConnected)
+<div class="form-group">
+    <label for="disconnectXero" class="col-sm-5 control-label"></label>
+    <div class="col-sm-6">
+        <button type="button" class="btn btn-warning btn-xero-disconnect"><i class="fa fa-times"></i> Disconnect from Xero</button>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('body').on('click', '.btn-xero-disconnect', function (e) {
+            e.preventDefault();
+
+            Kalert.confirm("You want to disconnect from Xero?", function () {
+                $.ajax({
+                    url: '/xero',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        disconnectXero: true
+                    },
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.status) {
+                            Msg.success(data.messages);
+                            window.location.reload(true);
+                        } else {
+                            Msg.warning(data.messages);
+                        }
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+#end
