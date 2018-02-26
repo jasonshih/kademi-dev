@@ -339,13 +339,17 @@
                                     </div>
                                 </div>
 
-                                OR
+                                <p class="text-center">- OR -</p>
 
                                 <div class="form-group">
                                     <label for="groupFolderName" class="control-label col-md-4">Group folder</label>
 
                                     <div class="col-md-8">
-                                        <input type="text" class="form-control" name="groupFolderName" value="" />
+                                        <select name="groupFolderName" class="form-control">
+                                            #foreach( $groupFolder in $page.find("/groups").groupFolders )
+                                            <option value="$groupFolder.name">$groupFolder.name</option>
+                                            #end
+                                        </select>
                                     </div>
                                 </div>
                             </div>
