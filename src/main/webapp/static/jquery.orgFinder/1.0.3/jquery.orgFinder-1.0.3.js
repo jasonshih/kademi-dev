@@ -342,8 +342,8 @@
                 cbbCountry.selectpicker().on('change', function () {
                     autocomplete.setComponentRestrictions(this.value !== 'all' ? {
                         country: this.value
-                    } : []);
-                    txtQuery.val('');
+                    } : {country: []});
+                    txtQ.val('');
                 });
             } else {
                 flog('[jquery.orgFinder] Remove "Country" select box', cbbCountry, allowedCountries);
@@ -425,7 +425,7 @@
             }
             
             if (options.orgTypes && $.isArray(options.orgTypes) && options.orgTypes.length > 0) {
-                data.orgTypes = self.formSearch.find('.org-finder-orgType').val();
+                data.orgTypes = self.formSearch.find('.org-finder-orgType').selectpicker('val');
             }
             
             if (typeof options.beforeSearch === 'function') {

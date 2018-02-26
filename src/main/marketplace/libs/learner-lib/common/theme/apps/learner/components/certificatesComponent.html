@@ -1,0 +1,64 @@
+#if( !$height )
+#set( $height = 300 )
+#end
+
+#if( !$tableTitle || $tableTitle=="" )
+#set( $tableTitle = "Certificates" )
+#end
+
+#set( $completed = $page.find("/programs").completedModules )
+<div class="panel panel-default">
+    <div class="panel-heading">$tableTitle</div>
+
+    <div style="overflow: auto; height: ${height}px;">
+
+        <table class="table table-striped">
+            <cols>
+                <col />
+                <col style="min-width: 200px; width: 30%" />
+                <col style="width: 100px" />
+            </cols>
+            <thead>
+                <tr>
+                    <th>Course</th>
+                    <th>Completed</th>
+                    <th>Certificate</th>
+                </tr>
+            </thead>
+            <tbody>
+                #if( $completed.isEmpty() )
+                <tr>
+                    <td colspan="3">You haven't been awarded any certificates yet</td>
+                </tr>
+                #else
+                    #foreach($mf in $completed)
+                        #set( $certClass = "hideThis" )
+                        #foreach($cert in $mf.certificates)
+                            #if( $cert.name == 'hidden' )
+                                #set( $certClass = "hideThis" )
+                            #else
+                                #set( $certClass = "showThis" )
+                            #end
+                        #end
+
+                        #if( $certClass.equals("showThis") )
+                        <tr>
+                            <td><a href='$mf.href'>$mf.parent.title</a></td>
+                            <td>
+                                <abbr title="$formatter.formatDateISO8601($mf.moduleStatus.modifiedDate)" class="timeago">$mf.moduleStatus.modifiedDate</abbr>
+                            </td>
+                            <td>
+                                #foreach($certHref in $mf.certificateHrefs)
+                                <a class='btn btn-success' href='$certHref'>
+                                    <span class='glyphicon glyphicon-download'></span>
+                                </a>
+                                #end
+                            </td>
+                        </tr>
+                        #end
+                    #end
+                #end
+            </tbody>
+        </table>
+    </div>
+</div>

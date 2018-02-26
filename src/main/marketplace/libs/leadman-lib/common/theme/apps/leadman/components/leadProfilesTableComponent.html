@@ -21,22 +21,23 @@
                     <div class="row">
                         <div class="col-md-11">
                         <h3 class="media-heading">
-                            #if($p.fields.nickName.value)
-                            <a href="$p.fields.userName.value">
-                                $formatter.htmlEncode($p.fields.nickName.value)
-                            </a>
-                            #elseif($p.fields.firstName.value)
+                            #if($p.fields.firstName.value)
                             <a href="$p.fields.userName.value">
                                 $!formatter.htmlEncode($p.fields.firstName.value)
                                 $!formatter.htmlEncode($p.fields.surName.value)
                             </a>
+                            #elseif($p.fields.nickName.value)
+                            <a href="$p.fields.userName.value">
+                                $formatter.htmlEncode($p.fields.nickName.value)
+                            </a>
+
                             #else
                             <a href="$p.fields.userName.value">No Name</a>
                             #end
                         </h3>
                         </div>
                         <div class="col-md-1" style="text-align:right;">
-                            <input type="checkbox" name="custId" value="$p.fields.userId.value"> 
+                            <input type="checkbox" name="custId" value="$p.fields.userId.value">
                         </div>
                     </div>
 

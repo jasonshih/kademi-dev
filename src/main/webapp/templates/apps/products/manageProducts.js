@@ -281,6 +281,7 @@ function doHistorySearch() {
 
     uri.setSearch('dataQuery', $("#data-query").val());
     uri.setSearch('supplier', $("#supplierFinder").val());
+    uri.setSearch('searchOrg', $("#search-library").val());
 
     var data = {
         dataQuery: $("#data-query").val(),
@@ -300,8 +301,6 @@ function doHistorySearch() {
         url: uri.toString(),
         dataType: 'html',
         success: function (content) {
-            flog('response', content);
-
             Msg.info("Search complete", "manageProducts", 1000);
 
             var newBody = $(content).find("#productsTableContainer");
@@ -350,34 +349,6 @@ function getSearchValue(search, key) {
     return '';
 }
 
-function doProductSearch() {
-    flog('doProductSearch');
-    var query = $('#data-query').val();
-    var orgId = $('#search-library').val();
-
-    flog('doSearch', query, orgId);
-    var newUrl = window.location.pathname + '?q=' + query + '&l=' + orgId;
-
-    var sortfield = getSearchValue(window.location.search, 'sortfield');
-    var sortdir = getSearchValue(window.location.search, 'sortdir');
-
-    if (sortfield && sortdir) {
-        newUrl += '&sortfield=' + sortfield + '&sortdir=' + sortdir;
-    }
-
-    window.history.replaceState('', '', newUrl);
-    $.ajax({
-        type: 'GET',
-        url: newUrl,
-        success: function (data) {
-            var fragment = $(data).find('#searchResults');
-            $('#searchResults').replaceWith(fragment);
-        },
-        error: function (resp) {
-            Msg.error('An error occured doing the search. Please check your internet connection and try again', 'manageAddProducts');
-        }
-    });
-}
 
 function initSearchProduct() {
     var txtQuery = $('#data-query');

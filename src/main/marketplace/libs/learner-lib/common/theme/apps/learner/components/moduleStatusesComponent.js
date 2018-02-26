@@ -73,6 +73,30 @@
                         component.attr('data-module-code', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('.chk-show-cpd-hours').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-show-cpd-hours', this.checked);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    form.find('.chk-show-start-date').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-show-start-date', this.checked);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    form.find('.chk-show-person-name').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-show-person-name', this.checked);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -85,7 +109,9 @@
             form.find('.programCode').val(dataAttributes['data-program-code']);
             form.find('.courseCode').val(dataAttributes['data-course-code']);
             form.find('.moduleCode').val(dataAttributes['data-module-code']);
-
+            form.find('.chk-show-cpd-hours').prop('checked', dataAttributes['data-show-cpd-hours'] === 'true');
+            form.find('.chk-show-start-date').prop('checked', dataAttributes['data-show-start-date'] === 'true');
+            form.find('.chk-show-person-name').prop('checked', dataAttributes['data-show-person-name'] === 'true');
         }
     };
 })(jQuery);
