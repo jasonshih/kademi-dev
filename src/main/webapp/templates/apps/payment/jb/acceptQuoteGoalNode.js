@@ -2,7 +2,6 @@ JBNodes['acceptQuoteGoal'] = {
     icon: 'fa fa-dollar',
     title: 'Quote accepted',
     type: JB_NODE_TYPE.GOAL,
-    previewUrl: '/theme/apps/payment/jb/acceptQuoteGoalNode.png',
     ports: {
         timeoutNode: {
             label: 'timeout',
