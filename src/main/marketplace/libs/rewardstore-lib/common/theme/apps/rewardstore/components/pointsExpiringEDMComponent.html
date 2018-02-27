@@ -1,11 +1,10 @@
-#if( $store.length() > 0 )
-    #set( $days = $formatter.toInteger($months) * 30 )
-    #set($pEndDate = $formatter.addDays($formatter.now, $days))
-    #set( $points = $applications.rewardStore.findAllExpiring( $store, $profile, $pEndDate) )
-    #set( $pointsMonths = $points.groupByExpiryMonth )
-    #if ($height)
-        #set ($height = $formatter.toInteger($height) - 38 - 30 - 15)
-    #end
+#set( $days = $formatter.toInteger($months) * 30 )
+#set($pEndDate = $formatter.addDays($formatter.now, $days))
+#set( $points = $applications.rewardStore.findAllExpiring( $store, $profile, $pEndDate) )
+#set( $pointsMonths = $points.groupByExpiryMonth )
+#if ($height)
+    #set ($height = $formatter.toInteger($height) - 38 - 30 - 15)
+#end
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
@@ -16,24 +15,30 @@
     <tr>
         <td bgcolor="$!{bodyBgcolor}" valign="top" style="background-color: ${bodyBgcolor}; padding-top: 15px; padding-bottom: 15px; padding-left: 20px; padding-right: 20px;" #if($height) height="$!{height}" #end>
             <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                #if( $pointsMonths.isEmpty() )
-                    <tr>
-                        <td colspan="2">No points expiring in next #if ($months != 1) $months months #else month #end </td>
-                    </tr>
+                #if ($store && $store != "")
+                    #if( $pointsMonths.isEmpty() )
+                        <tr>
+                            <td colspan="2">No points expiring in next #if ($months != 1) $months months #else month #end </td>
+                        </tr>
+                    #else
+                        <tr>
+                            <td colspan="2" style="color: #282828; font-family: Helvetica, Arial, sans-serif, Roboto; font-size: 15px; line-height: 15px; padding-bottom: 12px;">Keep track of your points that are soon to expire.</td>
+                        </tr>
+                        #foreach($pg in $pointsMonths.entrySet())
+                            <tr>
+                                #set($expiringYear = $formatter.getYear($pg.key))
+                                #set($totalExpiring = $totalExpiring + $pg.value)
+                                <td width="86" align="center" style="color: #ffffff; font-family: Helvetica, Arial, sans-serif, Roboto; font-size: 15px; padding-bottom: 6px;" valign="middle">
+                                    <div style="line-height: 24px; background-color: #37b34a; border-radius: 10px;"><span style="font-weight: 900;">$pg.value</span> pts</div>
+                                </td>
+                                <td style="padding-left: 10px; color: #282828; font-family: Helvetica, Arial, sans-serif, Roboto; font-size: 15px; line-height: 15px; padding-bottom: 6px;"  valign="middle">$formatter.formatJodaDate($pg.key, "MMMM") $expiringYear</td>
+                            </tr>
+                        #end
+                    #end
                 #else
                     <tr>
-                        <td colspan="2" style="color: #282828; font-family: Helvetica, Arial, sans-serif, Roboto; font-size: 15px; line-height: 15px; padding-bottom: 12px;">Keep track of your points that are soon to expire.</td>
+                        <td colspan="2" align="center">[No store selected]</td>
                     </tr>
-                    #foreach($pg in $pointsMonths.entrySet())
-                        <tr>
-                            #set($expiringYear = $formatter.getYear($pg.key))
-                            #set($totalExpiring = $totalExpiring + $pg.value)
-                            <td width="86" align="center" style="color: #ffffff; font-family: Helvetica, Arial, sans-serif, Roboto; font-size: 15px; padding-bottom: 6px;" valign="middle">
-                                <div style="line-height: 24px; background-color: #37b34a; border-radius: 10px;"><span style="font-weight: 900;">$pg.value</span> pts</div>
-                            </td>
-                            <td style="padding-left: 10px; color: #282828; font-family: Helvetica, Arial, sans-serif, Roboto; font-size: 15px; line-height: 15px; padding-bottom: 6px;"  valign="middle">$formatter.formatJodaDate($pg.key, "MMMM") $expiringYear</td>
-                        </tr>
-                    #end
                 #end
             </table>
         </td>
@@ -47,6 +52,3 @@
         </td>
     </tr>
 </table>
-#else
-<i>Please select a store</i>
-#end
