@@ -1,0 +1,5 @@
+#if($useCurrent == "true" || "$useCurrent" == "")
+#set($shareUrl = "${formatter.baseWebsiteUrl}$!{page.href}")
+#end
+
+<button type="button" data-shareurl="$!shareUrl" class="btn btn-facebook btn-icon facebookShareButton">&nbsp;Share</button>

@@ -32,6 +32,7 @@ JBNodes['socialInteractionGoal'] = {
                 '            <option value="">[No type selected]</option>' +
                 '            <option value="like">Like</option>' +
                 '            <option value="comment">Comment</option>' +
+                '            <option value="share">Share</option>' +
                 '        </select>' +
                 '    </div>' +
                 '</div>' + JBApp.standardGoalSettingControls

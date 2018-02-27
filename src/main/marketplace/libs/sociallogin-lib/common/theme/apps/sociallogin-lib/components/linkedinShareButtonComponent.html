@@ -1,0 +1,6 @@
+#if($formatter.isNull($useCurrent) || $useCurrent)
+#set($shareUrl = "${formatter.baseWebsiteUrl}$!{page.href}")
+#end
+
+<script type="IN/Share" data-url="$!shareUrl" data-onerror="socialLoginLinkedInOnSuccess" data-onsuccess="socialLoginLinkedInOnSuccess"></script>
+<script type="text/javascript">$(function () {if (typeof (IN) != 'undefined' && typeof (IN.parse) === 'function') {IN.parse()}})</script>

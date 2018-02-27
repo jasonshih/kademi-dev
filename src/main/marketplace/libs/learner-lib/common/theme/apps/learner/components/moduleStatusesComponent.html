@@ -40,7 +40,15 @@
                 #foreach($hit in $resp.hits.hits)
                     #set ($usr = $applications.userApp.findUserResourceById($hit.source.profile.toString()))
                     <tr>
-                        <td>$hit.source.moduleTitle</td>
+
+                        <td>
+                            #if( $hit.source.moduleTitle )
+                            $hit.source.moduleTitle
+                            #else
+                            $hit.source.programCode / $hit.source.courseCode / $hit.source.moduleCode
+                            #end
+                        </td>
+
                         #if ($showPersonName == "true")
                             #if ($linkedProfile == "true")
                             <td><a href="/custs/${usr.name}">$!applications.userApp.findUserResourceById($hit.source.profile.toString()).extProfileBean.formattedName()</a></td>

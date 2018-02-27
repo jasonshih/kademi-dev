@@ -1,14 +1,48 @@
+// Social link color variables
+@rss-color: #F56505;
+@facebook-color: #3B5998;
+@twitter-color:#33ccff;
+@google-color: #d34836;
+@vimeo-color: #0590B8;
+@linkedin-color: #007bb7;
+@instagram-color: #548bb5;
+@youtube-color: #ee4e40;
+
+.social-color-mixin() {
+    &,
+    &:hover {
+        color: #fff;
+    }
+}
+
+.social-icon-mixin(@icon){
+    &.btn-icon {
+        font: normal normal normal 14px/1 FontAwesome;
+        &:before{
+            content: @icon;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        &:after{
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+    }
+}
+
 ul.socialLinks {
     list-style: none;
     display: inline-block;
     margin-left: 0 !important;
     padding: 0;
-    
+
     li {
         display: inline;
         margin: 0 5px;
     }
-    
+
     a {
         display: inline-block;
         position: relative;
@@ -17,65 +51,117 @@ ul.socialLinks {
         width: 50px;
         height: 50px;
         font-size: 20px;
-        
+
         &,
         &:hover i {
             color: #fff;
         }
     }
-    
+
     i {
         margin: 0;
         line-height: 50px;
         text-align: center;
     }
-    
+
     a.icoRss {
-        background-color: #F56505;
+        background-color: @rss-color;
     }
-    
+
     a.icoFacebook {
-        background-color: #3B5998;
+        background-color: @facebook-color;
     }
-    
+
     a.icoTwitter {
-        background-color: #33ccff;
+        background-color: @twitter-color;
     }
-    
+
     a.icoGoogle {
-        background-color: #d34836;
+        background-color: @google-color;
     }
-    
+
     a.icoVimeo {
-        background-color: #0590B8;
+        background-color: @vimeo-color;
     }
-    
+
     a.icoLinkedin {
-        background-color: #007bb7;
+        background-color: @linkedin-color;
     }
-    
+
     a.icoInstagram {
-        background-color: #548bb5;
+        background-color: @linkedin-color;
     }
-    
+
     a.icoYoutube {
-        background-color: #ee4e40;
+        background-color: @youtube-color;
     }
-    
+
     &.socialLinks-circle-animated li a {
         border-radius: 50%;
-        
+
         i {
             transition: all 0.8s;
         }
-        
+
         &:hover i {
             transform: rotate(360deg);
             transition: all 0.2s;
         }
     }
-    
+
     &.socialLinks-rounded li a {
         border-radius: 10px;
+    }
+}
+
+/* Social buttons */
+.btn {
+
+    &.btn-rss {
+        background-color: @rss-color;
+        .social-color-mixin;
+        .social-icon-mixin("\f09e");
+    }
+
+    &.btn-facebook {
+        background-color: @facebook-color;
+        .social-color-mixin;
+        .social-icon-mixin("\f09a");
+    }
+
+    &.btn-twitter {
+        background-color: @twitter-color;
+        .social-color-mixin;
+        .social-icon-mixin("\f099");
+    }
+
+    &.btn-google {
+        background-color: @google-color;
+        .social-color-mixin;
+        .social-icon-mixin("\f0d5");
+    }
+
+    &.btn-vimeo {
+        background-color: @vimeo-color;
+        .social-color-mixin;
+        .social-icon-mixin("\f27d");
+    }
+
+    &.btn-linkedin {
+        background-color: @linkedin-color;
+        .social-color-mixin;
+        .social-icon-mixin("\f0e1");
+    }
+
+    &.btn-instagram {
+        background-color: @linkedin-color;
+        .social-color-mixin;
+        .social-icon-mixin("\f16d");
+    }
+
+    &.btn-youtube {
+        background-color: @youtube-color;
+        .social-color-mixin;
+        .social-icon-mixin("\f16a");
     }
 }

@@ -1,0 +1,23 @@
+{
+    "appDependencies": [
+        {
+            "appId": "facebook-lib",
+            "branch": "1.0.0"
+        }
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "//platform.linkedin.com/in.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/sociallogin-lib/sociallogin.js" 
+            }
+        }
+    ]
+}
+
