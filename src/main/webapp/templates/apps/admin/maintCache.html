@@ -232,7 +232,9 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Status</th>
+                                <th>Max size</th>
+                                <th>TTL</th>
+                                <th>Timeout</th>
                                 <th>Size</th>
                             </tr>
                         </thead>
@@ -240,7 +242,9 @@
                             #foreach($cache in $caches )
                             <tr>
                                 <td>$cache.name</td>
-                                <td>$cache.status</td>
+                                <td>$cache.maxSize</td>
+                                <td>$cache.ttlMins</td>
+                                <td>$cache.timeout</td>
                                 <td>$cache.size</td>
                             </tr>
                             #end
