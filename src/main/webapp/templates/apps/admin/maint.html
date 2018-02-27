@@ -51,46 +51,7 @@
                             </table>
                         </div>
                     </article>
-                    <article class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Memory</h3>
-                        </div>
-                        <div class="panel-body">
-                            <table class="table table-striped">
-                                #if($page.kademiVersion)
-                                <tr>
-                                    <th>Version</th>
-                                    <td>$page.kademiVersion</td>
-                                </tr>
-                                #end
-                                <tr>
-                                    <th>Scheduler enabled</th>
-                                    <td>$page.schedulerEnabled</td>
-                                </tr>
-                                <tr>
-                                    <th>Free %</th>
-                                    <td>$formatter.toPercent( $page.freeMemory, $page.maxMemory )</td>
-                                </tr>
 
-                                <tr>
-                                    <th>Free</th>
-                                    <td>$formatter.formatBytes( $page.freeMemory )</td>
-                                </tr>
-                                <tr>
-                                    <th>Total</th>
-                                    <td>$formatter.formatBytes($page.totalMemory)</td>
-                                </tr>
-                                <tr>
-                                    <th>Max</th>
-                                    <td>$formatter.formatBytes($page.maxMemory)</td>
-                                </tr>
-                                <tr>
-                                    <th>Processors</th>
-                                    <td>$page.numProcessors</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </article>
 
                     <article class="panel panel-default">
                         <div class="panel-heading">

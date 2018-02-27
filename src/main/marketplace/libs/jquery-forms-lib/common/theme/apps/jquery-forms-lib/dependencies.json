@@ -1,0 +1,16 @@
+{
+    "appDependencies": [
+        {
+            "appId": "moment-lib",
+            "branch": "2.18.3"
+        }
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/jquery-forms-lib/jquery.forms.js"
+            }
+        }
+    ]
+}
