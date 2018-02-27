@@ -177,13 +177,23 @@ function initItemQuantity() {
 
         clearTimeout(quantityUpdateTimer);
         quantityUpdateTimer = setTimeout(function () {
-
             var val = inpt.val();
             var row = inpt.closest('.item-row');
             var itemHref = row.find('.itemHref');
             var href = itemHref.val();
 
-            doQuantityUpdate(href, val);
+            if (isNaN(val)) {
+                val = 1;
+                inpt.val(val);
+            } else {
+                val = +val;
+
+                if (val > 0) {
+                    doQuantityUpdate(href, val);
+                } else {
+                    doRemoveFromCart(href);
+                }
+            }
         }, 500);
     });
 }
