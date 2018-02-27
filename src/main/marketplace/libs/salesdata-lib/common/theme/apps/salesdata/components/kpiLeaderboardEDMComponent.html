@@ -27,12 +27,9 @@
             <td>
                 <!-- either a profilebean or orgdata -->
                 #if( $item.profile) <!-- is individual -->
-                $item.profile.name 
-                #if($item.profile.userName) 
-                ($item.profile.userName) 
-                #end
+                    $item.profile.formattedName() 
                 #else
-                $item.org.title
+                    $item.org.title
                 #end
             </td>
         </tr>
