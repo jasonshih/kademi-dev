@@ -1,5 +1,8 @@
-#if($useCurrent == "true" || "$useCurrent" == "")
+#if($useCurrent == "true" || "$!useCurrent" == "")
 #set($shareUrl = "${formatter.baseWebsiteUrl}$!{page.href}")
 #end
 
-<button type="button" data-shareurl="$!shareUrl" class="btn btn-facebook btn-icon facebookShareButton">&nbsp;Share</button>
+#set($successMessage = $formatter.firstNotNull($successMessage, "Thank you for sharing."))
+#set($successMessage = $formatter.htmlEncode($successMessage))
+
+<button type="button" data-shareurl="$!shareUrl" data-successmsg="$!successMessage" class="btn btn-facebook btn-icon facebookShareButton">&nbsp;Share</button>
