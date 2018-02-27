@@ -1,0 +1,35 @@
+<script type="text/javascript">
+    window.linkedinInitDone = false;
+    if (window.linkedinInitFunctions === null || typeof window.linkedinInitFunctions === 'undefined') {
+        window.linkedinInitFunctions = [];
+    }
+
+    window.linkedinInitOnLoad = function () {
+        flog("linkedinInitOnLoad");
+        window.linkedinInitDone = true;
+
+        if (window.linkedinInitFunctions !== null && typeof window.linkedinInitFunctions !== 'undefined' && window.linkedinInitFunctions.length > 0) {
+            for (var i = 0; i < window.linkedinInitFunctions.length; i++) {
+                if (typeof window.linkedinInitFunctions[i] === 'function') {
+                    window.linkedinInitFunctions[i]();
+                }
+            }
+        }
+    };
+
+    $.ajax({
+        type: 'GET',
+        url: '//platform.linkedin.com/in.js?async=true',
+        dataType: 'script',
+        success: function () {
+            IN.init({
+                api_key: "$!appSettings.apiKey",
+                onLoad: "linkedinInitOnLoad",
+                authorize: true
+            });
+        },
+        error: function () {
+            flog('Error loading LinkedIn SDK');
+        }
+    });
+</script>

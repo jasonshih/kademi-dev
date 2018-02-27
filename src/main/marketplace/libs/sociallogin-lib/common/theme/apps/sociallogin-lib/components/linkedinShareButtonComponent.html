@@ -1,6 +1,8 @@
-#if($formatter.isNull($useCurrent) || $useCurrent)
+#if($useCurrent == "true" || "$!useCurrent" == "")
 #set($shareUrl = "${formatter.baseWebsiteUrl}$!{page.href}")
 #end
 
-<script type="IN/Share" data-url="$!shareUrl" data-onerror="socialLoginLinkedInOnSuccess" data-onsuccess="socialLoginLinkedInOnSuccess"></script>
-<script type="text/javascript">$(function () {if (typeof (IN) != 'undefined' && typeof (IN.parse) === 'function') {IN.parse()}})</script>
+#set($successMessage = $formatter.firstNotNull($successMessage, "Thank you for sharing."))
+#set($successMessage = $formatter.htmlEncode($successMessage))
+
+<button type="button" data-shareurl="$!shareUrl" data-successmsg="$!successMessage" class="btn btn-linkedin btn-icon linkedinShareButton">&nbsp;Share</button>

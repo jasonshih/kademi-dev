@@ -4,19 +4,19 @@
 
 <div id="ktoolbar">
     <div class="ktoolbarWrap">
-        <a title="Go to Administrator Dashboard" class="btn btn-link" href="http://$website.adminDomainName/" target="_blank"><i class="fa fa-tachometer"></i></a>        
+        <a title="Go to Administrator Dashboard" class="btn btn-link" href="http://$website.adminDomainName/" target="_blank"><i class="fa fa-tachometer"></i></a>
         <a title="Go to Websites Management" class="btn btn-link" href="http://$website.adminDomainName/websites/$website.websiteName/$website.branch.name/" target="_blank"><i class="fa fa-globe"></i></a>
         <a title="Go to Files Management" class="btn btn-link" href="http://$website.adminDomainName/repositories/$website.websiteName/$website.branch.name/" target="_blank"><i class="fa fa-folder-open-o"></i></a>
         <a title="Go to Users Management" class="btn btn-link" href="http://$website.adminDomainName/manageUsers/" target="_blank"><i class="fa fa-users"></i></a>
-  
+
         #set( $templatePageName = $formatter.getFileName($templateName) )
         #set( $themeTemplatePageName = $formatter.getFileName($themeTemplate) )
 
         <div class="btn-group pull-right">
             #if( $page.is("folder") )
-            <a href="../contenteditor?fileName=$page.name" target="_blank"  class="btn btn-sm btn-link btn-inline-edit"><i class="fa fa-pencil"></i> </a>
+            <a href="../contenteditor?fileName=$page.name" target="_blank"  class="btn btn-sm btn-link btn-inline-edit"><i class="fa fa-edit"></i> </a>
             #else
-            <a href="contenteditor?fileName=$page.name" target="_blank"  class="btn btn-sm btn-link btn-inline-edit"><i class="fa fa-pencil"></i> </a>
+            <a href="contenteditor?fileName=$page.name" target="_blank"  class="btn btn-sm btn-link btn-inline-edit"><i class="fa fa-edit"></i> </a>
             #end
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="caret"></span>
