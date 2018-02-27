@@ -24,7 +24,8 @@
                             <li><a href="relation" data-target="#modal-field-relation" data-toggle="modal">Relation field</a></li>
                             <li><a href="derived" data-target="#modal-field-derived" data-toggle="modal">Derived field</a></li>
                             <li><a href="stored" data-target="#modal-field-stored" data-toggle="modal">Simple stored field</a></li>
-                            
+                            <li><a href="group" data-target="#modal-field-group" data-toggle="modal">Group selection field</a></li>
+
                         </ul>
                     </div>
                     <button type="button" class="btn btn-xs btn-danger btn-delete-fields"><i class="fa fa-times"></i> Delete fields</button>
@@ -279,6 +280,76 @@
 
                                     <div class="col-md-8">
                                         <input type="text" class="form-control" name="text" value="" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modal-field-group" class="modal fade" aria-hidden="true" tabindex="-1">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">New group selection field</h4>
+                        </div>
+                        <form class="form-horizontal" action="$page.href" method="POST">
+                            <input type="hidden" name="newFieldType" value="group" />
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="name" class="control-label col-md-4">Name</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="name" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="title" class="control-label col-md-4">title</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="title" value="" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="text" class="control-label col-md-4">Text</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" name="text" value="" />
+                                    </div>
+                                </div>
+
+                                <hr/>
+
+                                <p>Please enter ONE of the following</p>
+
+                                <div class="form-group">
+                                    <label for="allowedGroups" class="control-label col-md-4">Allowed groups</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" name="allowedGroups" value="" />
+                                        <i>Comma seperated list of group codes</i>
+                                    </div>
+                                </div>
+
+                                <p class="text-center">- OR -</p>
+
+                                <div class="form-group">
+                                    <label for="groupFolderName" class="control-label col-md-4">Group folder</label>
+
+                                    <div class="col-md-8">
+                                        <select name="groupFolderName" class="form-control">
+                                            #foreach( $groupFolder in $page.find("/groups").groupFolders )
+                                            <option value="$groupFolder.name">$groupFolder.name</option>
+                                            #end
+                                        </select>
                                     </div>
                                 </div>
                             </div>
