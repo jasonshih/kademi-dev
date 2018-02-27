@@ -1664,7 +1664,6 @@
             type: 'GET',
             dataType: 'HTML',
             success: function (response, status, xhr) {
-                //flog('Dynamic content is loaded', dynamicElement, response, status, xhr);
                 dynamicElement.html(response);
                 
                 if (typeof options.onDynamicContentLoaded === 'function') {
