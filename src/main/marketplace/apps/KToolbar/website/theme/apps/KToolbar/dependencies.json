@@ -15,6 +15,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/jquery.forms/1.1.5/jquery.forms-1.1.5.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/static/bootstrap-colorpicker/2.5.1/js/bootstrap-colorpicker.min.js"
             }
         },
