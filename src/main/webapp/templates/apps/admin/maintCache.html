@@ -49,6 +49,48 @@
             <div class="tab-content">
 
                 <div id="hibernate" class="tab-pane">
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Memory</h3>
+                        </div>
+                        <div class="panel-body">
+                            #set( $maintPage = $page.find("/maint") )
+                            <table class="table table-striped">
+                                #if($maintPage.kademiVersion)
+                                <tr>
+                                    <th>Version</th>
+                                    <td>$maintPage.kademiVersion</td>
+                                </tr>
+                                #end
+                                <tr>
+                                    <th>Scheduler enabled</th>
+                                    <td>$maintPage.schedulerEnabled</td>
+                                </tr>
+                                <tr>
+                                    <th>Free %</th>
+                                    <td>$formatter.toPercent( $maintPage.freeMemory, $maintPage.maxMemory )</td>
+                                </tr>
+
+                                <tr>
+                                    <th>Free</th>
+                                    <td>$formatter.formatBytes( $maintPage.freeMemory )</td>
+                                </tr>
+                                <tr>
+                                    <th>Total</th>
+                                    <td>$formatter.formatBytes($maintPage.totalMemory)</td>
+                                </tr>
+                                <tr>
+                                    <th>Max</th>
+                                    <td>$formatter.formatBytes($maintPage.maxMemory)</td>
+                                </tr>
+                                <tr>
+                                    <th>Processors</th>
+                                    <td>$maintPage.numProcessors</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </article>
+
                     <table class="table table-striped">
                         <tbody>
                             <tr>
