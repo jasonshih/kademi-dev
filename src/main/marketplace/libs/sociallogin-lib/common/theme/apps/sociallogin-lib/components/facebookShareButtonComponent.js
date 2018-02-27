@@ -1,21 +1,21 @@
 /*
- Created by Wesley on 23/02/2018.
+ Created by Wesley on 27/02/2018.
  */
 
 (function ($) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['linkedinShareButton'] = {
+    KEditor.components['facebookShareButton'] = {
         settingEnabled: true,
 
-        settingTitle: 'LinkedIn Share Settings',
+        settingTitle: 'Facebook Share Settings',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "linkedinShareButton" component', form, keditor);
+            flog('initSettingForm "facebookShareButton" component', form, keditor);
 
             return $.ajax({
-                url: '_components/linkedinShareButton?settings',
+                url: '_components/facebookShareButton?settings',
                 type: 'GET',
                 dataType: 'html',
                 success: function (resp) {
@@ -46,7 +46,7 @@
         },
 
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "linkedinShareButton" component', form, component, keditor);
+            flog('showSettingForm "facebookShareButton" component', form, component, keditor);
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
 

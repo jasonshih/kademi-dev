@@ -1,0 +1,8 @@
+{
+    "appDependencies": [
+        {
+            "appId": "xero",
+            "branch": "1.0.0"
+        }
+    ]
+}

@@ -1,5 +1,9 @@
 {
     "appDependencies": [
+        {
+            "appId": "facebook-lib",
+            "branch": "1.0.0"
+        }
     ],
     "dependencies": [
         {
