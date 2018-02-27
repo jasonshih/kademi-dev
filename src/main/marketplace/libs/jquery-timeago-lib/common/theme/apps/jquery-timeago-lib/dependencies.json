@@ -5,7 +5,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/contactus/contactus.js"
+                "path": "/theme/apps/jquery-timeago-lib/jquery.timeago.js"
             }
         }
     ]
