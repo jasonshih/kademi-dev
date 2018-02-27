@@ -9,7 +9,7 @@
         <link rel="stylesheet" type="text/css" href="/theme/apps/admin/textEditor.css" />
     </head>
     <body>
-        <h4>Query: $page.name  - <b>Indexes: </b> #foreach( $index in $page.indexes)<a href="/manageSearch/$index" class="label label-primary">$index</a>#end</h4>   
+        <h4>Query: $page.name  - <b>Indexes: </b> #foreach( $index in $page.indexes)<a href="/manageSearch/$index" class="label label-primary">$index</a>#end</h4>
         #set($qbbPage = $page.isQueryBuilderQuery())
         <input name="fieldsSelected" id="fieldsSelected" vlaue="" type="hidden" />
 
@@ -53,17 +53,17 @@
                                                 <div class="rule-operator-container">
                                                     <select class="form-control orderField" name="orderField">
                                                         <option value="-1">------</option>
-                                                    </select>                    
+                                                    </select>
                                                 </div>
                                                 <div class="rule-operator-container">
                                                     <select class="form-control orderField" name="orderField">
                                                         <option value="-1">------</option>
-                                                    </select>                    
+                                                    </select>
                                                 </div>
                                                 <div class="rule-operator-container">
                                                     <select class="form-control orderField" name="orderField">
                                                         <option value="-1">------</option>
-                                                    </select>                    
+                                                    </select>
                                                 </div>
                                             </li>
                                         </ul>
@@ -96,13 +96,8 @@
                                             #if($qbbPage)<th><b><button class="btn btn-xs btn-info" data-toggle="modal" data-target="#modal-select-fields"><i class="fa fa-plus"></i> Select fields</button></b></th> #else <th>Type</th>#end
                                             #foreach( $field in $page.queryFieldNames )
                                             #set( $selected = $page.fieldSelected($field))
-                                            <th>#if($selected)
-                                                <a class="btn btn-xs  #if($selected)btn-remove-th btn-danger #end" data-text="$field">
-                                                    <i class="#if($selected) clip-minus-circle #end"></i> $field
-                                                </a>
-                                                #else
+                                            <th>
                                                 $field
-                                                #end
                                             </th>
                                             #end
                                         </tr>
@@ -157,7 +152,7 @@ $page.records
                                                         </select>
                                                     </div>
                                                     <div class="rule-operator-container">
-                                                        <select class="form-control aggFields" name="aggFields[]"></select>                    
+                                                        <select class="form-control aggFields" name="aggFields[]"></select>
                                                     </div>
                                                     <div class="rule-operator-container" style="display: none;">
                                                         <label>Size</label>
@@ -177,7 +172,7 @@ $page.records
                                                         <label>To</label>
                                                         <input type="text" value="" class="form-control aggTo" name="aggTo[]"/>
                                                     </div>
-                                                    <div class="btn-group pull-right rule-actions">       
+                                                    <div class="btn-group pull-right rule-actions">
                                                         <button type="button" class="btn btn-xs btn-danger clearAgg"><i class="glyphicon glyphicon-remove"></i> Delete</button>
                                                     </div>
                                                 </li>
@@ -242,15 +237,20 @@ $page.records
                                 <div class="col-md-12">
                                     <div class="blocks-wrapper">
                                         #foreach($field in $page.allFieldNames)
-                                        <span class="block" style="margin-right: 6px; margin-bottom: 6px;">
+                                        <span class="block" style="margin-right: 6px; margin-bottom: 6px; width: 180px; position: relative; overflow: none">
                                             <span class="block-name">$field</span>
                                             #set( $selected = $page.fieldSelected($field))
-                                            <a class="btn btn-xs btn-add-field #if($selected) btn-danger #else btn-success #end" data-text="$field"><i class="#if($selected) clip-minus-circle #else fa fa-plus #end"></i></a>
+                                            <a class="btn btn-xs btn-add-field #if($selected) btn-danger #else btn-success #end" data-text="$field" title="$field"  style="position: absolute; right: 5px; top: 5px;" >
+                                                <i class="#if($selected) clip-minus-circle #else fa fa-plus #end"></i>
+                                            </a>
                                         </span>
                                         #end
+                                        <div class="clearfix"></div>
                                     </div>
+                                    <div class="clearfix"></div>
                                 </div>
                             </div>
+                            <div class="clearfix"></div>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
