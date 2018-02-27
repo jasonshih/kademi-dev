@@ -41,6 +41,13 @@
 
                         keditor.initDynamicContent(dynamicElement);
                     });
+                    
+                    form.find('.successMessage').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-success-message', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -52,8 +59,9 @@
 
             form.find('.shareUrl').val(dataAttributes['data-share-url']);
             form.find('.useCurrent').val(dataAttributes['data-use-current'] || 'true');
+            form.find('.successMessage').val(dataAttributes['data-success-message'] || 'Thank you for sharing.');
 
-            if (dataAttributes['data-use-current'] == 'true') {
+            if (form.find('.useCurrent').val() == 'true') {
                 form.find('.shareUrlWrapper').hide();
             } else {
                 form.find('.shareUrlWrapper').show();
