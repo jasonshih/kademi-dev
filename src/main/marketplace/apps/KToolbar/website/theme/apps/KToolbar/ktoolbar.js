@@ -6,19 +6,19 @@
         var btnSave = ktoolbar.find('.btn-inline-edit-save');
         var btnDone = ktoolbar.find('.btn-inline-edit-done');
         var body = $(document.body);
-        
+
         if (htmleditor.length) {
-            
+
         } else {
             // copy the template edit link
             var btnTemplateEdit = ktoolbar.find("a.btn-edit-template");
             btnEditInline.attr("href", btnTemplateEdit.attr("href"));
-            
+
         }
-        
+
         btnSave.on('click', function (e) {
             e.preventDefault();
-            
+
             $.ajax({
                 url: window.location.pathname,
                 type: 'post',
@@ -46,10 +46,10 @@
                 }
             })
         });
-        
+
         btnDone.on('click', function (e) {
             e.preventDefault();
-            
+
             if (body.hasClass('content-changed')) {
                 var c = confirm('Would you like to save changes before leaving the editor?');
                 if (c) {
@@ -60,9 +60,9 @@
             } else {
                 btnDone.trigger('ktoolbar.done');
             }
-            
+
         });
-        
+
         btnDone.on('ktoolbar.done', function () {
             // Todo: call Keditor destroy or disable method here
             // Just a workaround
@@ -71,26 +71,26 @@
             }, 500);
         });
     }
-    
+
     function initKToolbarToggler() {
         var ktoolbar = $('#ktoolbar');
         var ktoolbarToggle = ktoolbar.find('.ktoolbarToggle');
-        
+
         ktoolbarToggle.on('click', function (e) {
             e.preventDefault();
-            
+
             ktoolbar.toggleClass('showed');
         });
     }
-    
+
     function initKToolbarSideBar() {
         var sidebar = $('#ktoolbar-sidebar');
         $('.btn-edit-variables').on('click', function (e) {
             e.preventDefault();
-            
+
             sidebar.toggleClass('showed');
         });
-        
+
         $('.color-picker').each(function () {
             var colorPicker = $(this);
             colorPicker.wrap('<div class="input-group"></div>');
@@ -98,7 +98,7 @@
             wrapper.wrap('<div class="colorpicker-container"></div>');
             colorPicker.before('<span class="input-group-addon"><i></i></span>');
             var previewer = wrapper.find('i');
-            
+
             wrapper.colorpicker({
                 format: 'hex',
                 container: wrapper.parent(),
@@ -112,9 +112,9 @@
                     previewer.css('background-color', '');
                 }
             });
-            
+
         });
-        
+
         var form = sidebar.find('form')
         form.forms({
             onSuccess: function () {
@@ -130,16 +130,16 @@
                 }
             }
         });
-        
+
         sidebar.find('.btn-save').on('click', function (e) {
             e.preventDefault();
-            
+
             form.trigger('submit');
         });
-        
+
         sidebar.find('.btn-close').on('click', function (e) {
             e.preventDefault();
-            
+
             sidebar.removeClass('showed');
         });
     }
@@ -183,11 +183,15 @@
     }
 
     $(function () {
-        initKToolbarInlineBtns();
-        initKToolbarToggler();
-        initKToolbarSideBar();
-        initHeadingColor();
-        initNavbarBorderColor();
+        try {
+            initKToolbarInlineBtns();
+            initKToolbarToggler();
+            initKToolbarSideBar();
+            initHeadingColor();
+            initNavbarBorderColor();
+        } catch(e) {
+            flog("Exception initialisng KToolbar ", e);
+        }
 
         window.onbeforeunload = function () {
             var body = $("body");
@@ -196,5 +200,5 @@
             }
         };
     });
-    
+
 })(jQuery);
