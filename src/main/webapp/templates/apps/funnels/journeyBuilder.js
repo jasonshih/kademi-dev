@@ -426,7 +426,7 @@ var JBApp = {
             '<div class="form-group">' +
             '    <div class="col-md-12">' +
             '        <label>Time</label>' +
-            '        <input type="number" class="form-control time" value="" />' +
+            '        <input type="text" class="form-control time" value="" />' +
             '        <em class="small help-block text-muted">(Optional) If set this will cause a timer to execute at a particular time, as well as after the specified delay.</em>' +
             '    </div>' +
             '</div>' +
@@ -447,6 +447,10 @@ var JBApp = {
 
             form.find('.timeout-units').val(value);
             form.find('.timeout-units-preview').html(text);
+        });
+
+        form.find('.time').datetimepicker({
+            format: 'HH:mm'
         });
     },
     saveStandardGoalSetting: function (form) {

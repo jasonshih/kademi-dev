@@ -215,6 +215,10 @@
     display: block !important;
 }
 
+#builder .bootstrap-datetimepicker-widget.dropdown-menu {
+    width: 218px !important;
+}
+
 /* ====================================================================
    Node
    ==================================================================== */
