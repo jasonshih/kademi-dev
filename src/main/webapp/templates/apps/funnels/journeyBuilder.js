@@ -373,7 +373,7 @@ var JBApp = {
         settingPanelHeading.find(titleSelector).addClass('active');
 
         setTimeout(function () {
-            formPanel.find('input:text').first().trigger('focus');
+            formPanel.find('input:text, input[type=number], select').first().trigger('focus');
         }, 250);
     },
 
