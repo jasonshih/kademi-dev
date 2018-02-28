@@ -53,7 +53,7 @@
                     
                     form.find('.queryType').on('click', function () {
                         var cls = this.value;
-                        
+
                         cbbQuery.val('');
                         cbbQuery.find('option').addClass('hide');
                         form.find('.' + cls).removeClass('hide');
@@ -200,35 +200,38 @@
         },
         initSelect: function (aggsSelect, selectedQuery, selectedAgg) {
             flog("initSelect", selectedQuery, selectedAgg);
-            
-            $.ajax({
-                url: "/queries/" + selectedQuery + "?run",
-                type: 'GET',
-                dataType: 'json',
-                success: function (resp) {
-                    flog('resp', resp);
-                    
-                    var aggsHtml = '<option value""> - None - </option>';
-                    var aggs = resp.aggregations;
-                    for (var key in aggs) {
-                        aggsHtml += '<option value="' + key + '">' + key + '</option>';
+
+            if (selectedQuery) {
+                $.ajax({
+                    url: "/queries/" + selectedQuery + "?run",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (resp) {
+                        flog('resp', resp);
+
+                        var aggsHtml = '<option value""> - None - </option>';
+                        var aggs = resp.aggregations;
+                        for (var key in aggs) {
+                            aggsHtml += '<option value="' + key + '">' + key + '</option>';
+                        }
+                        aggsSelect.html(aggsHtml);
+
+                        if (selectedAgg) {
+                            aggsSelect.val(selectedAgg);
+                        }
+                    },
+                    error: function (e) {
+                        Msg.error(e.status + ': ' + e.statusText);
                     }
-                    aggsSelect.html(aggsHtml);
-                    
-                    if (selectedAgg) {
-                        aggsSelect.val(selectedAgg);
-                    }
-                },
-                error: function (e) {
-                    Msg.error(e.status + ': ' + e.statusText);
-                }
-            });
+                });
+            }
         },
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "pieChart" component');
             
             var self = this;
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
+            var selectedQueryType = dataAttributes['data-query-type'] || 'query';
             var selectedQuery = dataAttributes['data-query'];
             var selectedAgg = dataAttributes['data-agg'];
             
@@ -239,9 +242,8 @@
             form.find('.txt-title').val(dataAttributes['data-title']);
             form.find('.show-legend').prop("checked", toBool(dataAttributes['data-legend']));
             
-            form.find('.queryType[value=' + dataAttributes['data-query-type'] + ']').prop("checked", true);
-            form.find('.select-query option').addClass('hide');
-            form.find('.' + dataAttributes['data-query-type']).removeClass('hide');
+            form.find('.queryType[value=' + selectedQueryType + ']').prop("checked", true);
+            form.find('.select-query option').addClass('hide').filter('.' + selectedQueryType).removeClass('hide');
             
             form.find('.color-picker').val('').trigger('update');
             form.find('.colors-wrapper').html('');

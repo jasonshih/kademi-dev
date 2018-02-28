@@ -89,28 +89,35 @@
     }
 
     function showPieChart(resp, container, graphOptions, config) {
+        flog('showPieChart', resp, container, graphOptions, config);
+
         var svg = container.find('svg');
         svg.empty();
 
-        flog('showPieChart', svg);
         nv.addGraph(function () {
             var total = 0;
             var data = [];
 
             if (graphOptions.queryTable) {
-                for (var i = 0; i < resp.headers.length; i++) {
-                    data.push({
-                        key: resp.headers[i],
-                        doc_count: resp.rows[0][i]
-                    });
-                    total += resp.rows[0][i];
+                if (resp.numRows > 0) {
+                    for (var i = 0; i < resp.headers.length; i++) {
+                        data.push({
+                            key: resp.headers[i],
+                            doc_count: resp.rows[0][i]
+                        });
+                        total += resp.rows[0][i];
+                    }
                 }
             } else {
-                var aggr = resp.aggregations[graphOptions.aggName];
-                data = aggr.buckets;
-                for (var i in data) {
-                    var b = data[i];
-                    total += b.doc_count;
+                if (resp.aggregations) {
+                    var aggr = resp.aggregations[graphOptions.aggName];
+                    if (aggr && aggr.buckets) {
+                        data = aggr.buckets;
+                        for (var i in data) {
+                            var b = data[i];
+                            total += b.doc_count;
+                        }
+                    }
                 }
             }
 
@@ -118,7 +125,7 @@
 
             var chart = nv.models.pieChart()
                 .x(function (d) {
-                    if (graphOptions.showLegendValues){
+                    if (graphOptions.showLegendValues) {
                         return config.xLabel(d, graphOptions.aggName) + ' (' + d.doc_count + ')';
                     } else {
                         return config.xLabel(d, graphOptions.aggName);
