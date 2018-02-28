@@ -1,0 +1,92 @@
+#if ($page)
+    #foreach($r in $page.find("/rewards").myRewardStores )
+        #renderTranstionsPanel($r)
+    #end
+#else
+    #renderTranstionsPanel()
+#end
+
+#macro(renderTranstionsPanel $r)
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><b><a href="$!r.href">$formatter.ifNull($r.title, "Reward Store")</a></b> transactions</h3>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Credits</th>
+                    <th>Debits</th>
+                    <th>Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                #if ($r.myTransactions.size() > 0)
+                    #foreach($p in $r.myTransactions)
+                        <tr>
+                            <td>$p.date</td>
+                            <td>
+                                #if( $p.txType == "C" )
+                                $p.numPoints
+                                #end
+                            </td>
+                            <td>
+                                #if( $p.txType == "D" )
+                                $p.numPoints
+                                #end
+                            </td>
+                            <td>
+                                #if( $p.itemHref )
+                                <a href="$p.itemHref">$p.description</a>
+                                #else
+                                $p.description
+                                #end
+                            </td>
+                        </tr>
+                    #end
+                    <tr>
+                        <th>Current</th>
+                        <td colspan="3">$r.myBalance pts</td>
+                    </tr>
+                    <tr>
+                        <th>Available</th>
+                        <td colspan="3">$r.myAvailableBalance pts</td>
+                    </tr>
+                #else
+                    #if ($page)
+                    <tr>
+                        <td colspan="4">You don't have any transactions yet</td>
+                    </tr>
+                    #else
+                        <tr>
+                            <td>$formatter.formatDateTime($formatter.now)</td>
+                            <td>1000</td>
+                            <td></td>
+                            <td>Test</td>
+                        </tr>
+                        <tr>
+                            <td>$formatter.formatDateTime($formatter.now)</td>
+                            <td></td>
+                            <td>300</td>
+                            <td>Points Expired from $formatter.formatDate($formatter.now)</td>
+                        </tr>
+                        <tr>
+                            <td>$formatter.formatDateTime($formatter.now)</td>
+                            <td></td>
+                            <td>300</td>
+                            <td>Purchase Product #1</td>
+                        </tr>
+                        <tr>
+                            <th>Current</th>
+                            <td colspan="3">400 pts</td>
+                        </tr>
+                        <tr>
+                            <th>Available</th>
+                            <td colspan="3">400 pts</td>
+                        </tr>
+                    #end
+                #end
+            </tbody>
+        </table>
+    </div>
+#end

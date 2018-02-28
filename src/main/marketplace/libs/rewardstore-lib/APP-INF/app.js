@@ -5,6 +5,7 @@ controllerMappings.addComponent("rewardstore/components", "pointsRangeList", "ht
 controllerMappings.addComponent("rewardstore/components", "productSort", "html", "Shows products sorting dropdown list", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "pointsEarned", "html", "Shows points earned for the current participant, for a selected points bucket and optionally filtered by a points tag", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "pointsTransaction", "html", "Shows all points transactions, or only credits or only debits for the current participant, for a selected points bucket and optionally filtered by a points tag", "Reward Store");
+controllerMappings.addComponent("rewardstore/components", "transactions", "html", "Shows all points transactions of the current participant", "Reward Store");
 
 /* EDM Components */
 controllerMappings.addComponent("rewardstore/components", "singleProductEDM")
