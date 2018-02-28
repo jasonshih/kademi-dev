@@ -170,7 +170,7 @@ body.opened-keditor-sidebar div.cke_float[id*="cke_keditor-section-"] {
    Customize KEditor
 /* ==================================================================================== */
 body.highlighted-container-content .keditor-container {
-  margin: 0 !important;
+    margin: 0 !important;
 }
 
 /* ====================================================================================
@@ -183,6 +183,12 @@ body.highlighted-container-content .keditor-container {
 .keditor-container-content {
     height: 50px;
     vertical-align: top;
+}
+
+.keditor-component .keditor-toolbar {
+    top: -26px !important;
+    padding: 2px !important;
+    left: -2px !important;
 }
 
 /*Customize colorpicker for EDM*/
