@@ -22,7 +22,7 @@
 
                         form.find('.select-query').val('');
                         form.find('.select-query option').addClass('hide');
-                        form.find('.'+cls).removeClass('hide');
+                        form.find('.' + cls).removeClass('hide');
 
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -100,15 +100,17 @@
             flog('showSettingForm "queryTable" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
+            var selectedQueryType = dataAttributes['data-query-type'] || 'query';
+
             form.find('.select-query').val(dataAttributes['data-query']);
             form.find('.select-items-per-page').val(dataAttributes['data-items-per-page']);
             form.find('.query-height').val(dataAttributes['data-height']);
             form.find('.txt-title').val(dataAttributes['data-title']);
             form.find('.show-headers').prop("checked", toBool(dataAttributes['data-headers']));
             form.find('.show-paginator').prop("checked", toBool(dataAttributes['data-showpaginator']));
-            form.find('.queryType[value='+dataAttributes['data-query-type']+']').prop("checked", true);
+            form.find('.queryType[value=' + selectedQueryType + ']').prop("checked", true);
             form.find('.select-query option').addClass('hide');
-            form.find('.'+dataAttributes['data-query-type']).removeClass('hide');
+            form.find('.' + selectedQueryType).removeClass('hide');
 
         }
     };
