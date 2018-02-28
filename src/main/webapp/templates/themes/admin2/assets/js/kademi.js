@@ -1295,8 +1295,8 @@ function initImagePicker(target, basePath, pagePath) {
         basePath: basePath,
         pagePath: pagePath,
         contentType: 'image',
-        onSelectFile: function (selectedUrl, relativeUrl, type, hash) {
-            var newUrl = '/_hashes/files/' + hash;
+        onSelectFile: function (selectedUrl, relativeUrl, type, hash, isAsset) {
+            var newUrl = isAsset ? selectedUrl : '/_hashes/files/' + hash;
             
             target.val(newUrl);
             preview.attr('src', newUrl);
