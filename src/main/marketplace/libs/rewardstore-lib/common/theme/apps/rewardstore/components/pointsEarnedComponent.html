@@ -2,7 +2,7 @@
     #set( $height = 200 )
 #end
 
-#if( !$label )
+#if( !$label || $label == "" )
     #set( $label = "Points Earned" )
 #end
 
@@ -29,7 +29,12 @@
                                 #end
                             #end
 
-                            #set($points = $applications.rewardStore.sumPoints( $be, $pointsBucket, $pointsEarnedTag, $queryManager.commonStartDate, $formatter.endofDay($queryManager.commonFinishDate)))
+                            #if ($useDateRange == "true")
+                                #set ($componentStartDate = $queryManager.commonStartDate)
+                                #set ($componentEndDate = $formatter.endofDay($queryManager.commonFinishDate))
+                            #end
+
+                            #set($points = $applications.rewardStore.sumPoints( $be, $pointsBucket, $pointsEarnedTag, $componentEndDate, $componentEndDate) )
 
                             #if(!$points)
                             #set($points = 0)

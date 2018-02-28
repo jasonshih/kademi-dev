@@ -40,6 +40,14 @@
                         
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('.chk-use-date-range').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-use-date-range', this.checked);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                     
                     $.getStyleOnce('/static/bootstrap-iconpicker/1.7.0/css/bootstrap-iconpicker.min.css');
                     $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/iconset/iconset-fontawesome-4.2.0.min.js', function () {
@@ -71,6 +79,7 @@
             form.find('.points-earned-select-store').val(dataAttributes['data-points-earned-store']);
             form.find('.points-earned-select-tag').val(dataAttributes['data-points-earned-tag']);
             form.find('.value-label').val(dataAttributes['data-label']);
+            form.find('.chk-use-date-range').prop('checked', dataAttributes['use-date-range'] === 'true');
             form.find('.value-icon').find('i').attr('class', 'fa ' + dataAttributes['data-icon']);
         }
     };
