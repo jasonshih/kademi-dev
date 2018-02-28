@@ -1,0 +1,59 @@
+#if (!$rowHeight)
+#set ($rowHeight = 25)
+#end
+
+#if (!$numUsers)
+#set ($numUsers = 5)
+#end
+
+
+#if ($pointsBucket && $pointsBucket != "")
+#set( $myPointsInfo = $applications.rewardStore.myPointsInfo($pointsBucket, $formatter.toInteger($numUsers), null) )
+#end
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Participant</th>
+            <th>Points</th>
+        </tr>
+    </thead>
+    <tbody>
+    #if( $myPointsInfo.hasPoints )
+        #foreach($leader in $myPointsInfo.allMemberPoints($pointsTag) )
+            #set($foundThis = false)
+            #if( $leader.member.userId == $user.id)
+                #set($foundThis = true)
+            #end
+
+            #set ($ur = $applications.userApp.findUserResourceById($leader.member.userId))
+            $ur.extProfileBean.formattedName()
+            #renderLeaderRow($foreach.count, $ur.extProfileBean.formattedName(), $leader.numPoints)
+        #end
+
+        #if( !$foundThis )
+            #set( $thisExtProfileBean = $userResource.extProfileBean )
+            #renderLeaderRow( "N/A", $thisExtProfileBean.formattedName(), $!myPointsInfo.myPointsTotal)
+        #end
+    #else
+    <tr>
+        #renderLeaderRow( "1", "[Please select a points bucket]", 999)
+        #renderLeaderRow( "2", "[Please select a points bucket]", 998)
+    </tr>
+    #end
+    </tbody>
+</table>
+
+#macro (renderLeaderRow $rank $participantName $points)
+    <tr>
+        <td>$rank</td>
+        <td>
+            $participantName
+        </td>
+        <td>
+            $!points pts
+        </td>
+    </tr>
+#end

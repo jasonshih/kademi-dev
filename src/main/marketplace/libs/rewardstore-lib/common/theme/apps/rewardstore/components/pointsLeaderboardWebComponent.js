@@ -2,16 +2,16 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['pointsLeaderboardEDM'] = {
+    KEditor.components['pointsLeaderboardWeb'] = {
         settingEnabled: true,
 
-        settingTitle: 'Points Leaderboard (Email)',
+        settingTitle: 'Points Leaderboard (Web)',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "pointsLeaderboardEDM" component', form, keditor);
+            flog('initSettingForm "pointsLeaderboardWeb" component', form, keditor);
 
             return $.ajax({
-                url: '_components/pointsLeaderboardEDM?settings',
+                url: '_components/pointsLeaderboardWeb?settings',
                 type: 'get',
                 dataType: 'html',
                 success: function (resp) {
@@ -22,6 +22,14 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
 
                         component.attr('data-points-bucket', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    form.find('.select-tag').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-points-tag', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
@@ -41,42 +49,21 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    $.getScriptOnce('/static/inputmask/min/inputmask/inputmask.min.js', function () {
-                        $.getScriptOnce('/static/inputmask/min/inputmask/inputmask.date.extensions.min.js', function () {
-                            $.getScriptOnce('/static/inputmask/min/inputmask/jquery.inputmask.min.js', function () {
-                                form.find('.start-date').inputmask("dd/mm/yyyy");
-                                form.find('.end-date').inputmask("dd/mm/yyyy");
-                            });
-                        });
-                    });
 
-                    form.find('.start-date').on('change', function () {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-start-date', this.value);
-                        keditor.initDynamicContent(dynamicElement);
-                    });
-
-                    form.find('.end-date').on('change', function () {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-end-date', this.value);
-                        keditor.initDynamicContent(dynamicElement);
-                    });
                 }
             });
         },
 
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "pointsLeaderboardEDM" component', form, component, keditor);
+            flog('showSettingForm "pointsLeaderboardWeb" component', form, component, keditor);
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-store').val(dataAttributes['data-points-bucket']);
+            form.find('.select-tag').val(dataAttributes['data-points-tag']);
 
             form.find('input.num-users').val(dataAttributes['data-num-users'] || 5);
             form.find('input.txt-height').val(dataAttributes['data-row-height'] || 25);
-            form.find('input.start-date').val(dataAttributes['data-start-date']);
-            form.find('input.end-date').val(dataAttributes['data-end-date']);
+
         }
     };
 
