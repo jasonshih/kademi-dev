@@ -23,30 +23,51 @@
 #set( $myPointsInfo = $applications.rewardStore.myPointsInfo($pointsBucket, $formatter.toInteger($numUsers), $since) )
 #end
 
+#if(!$showUsername)
+#set($showUsername = true)
+#end
+
 #if( $myPointsInfo.hasPoints )
 <table cellpadding="0" cellspacing="0" width="100%" bgcolor="$!{bgcolor}">
+    <thead>
+        <tr>
+            <th style="text-align: left;">Rank</th>
+            #if($showUsername)
+            <th style="text-align: left;">Participant</th>
+            #end
+            <th style="text-align: left;">Points</th>
+        </tr>
+    </thead>
+    #set( $rank = 1 )
     #set($foundThis = false)
     #foreach($leader in $myPointsInfo.allMemberPoints )
     #if( $leader.member.userId == $user.id)
     #set($foundThis = true)
     #end
     <tr>
-        <td height="$rowHeight">
+        <td height="$rowHeight">$rank</td>
+        #if($showUsername)
+        <td>
             #set ($ur = $applications.userApp.findUserResourceById($leader.member.userId))
             $ur.extProfileBean.formattedName()
         </td>
+        #end
         <td>
             $!leader.numPoints pts
         </td>
     </tr>
+    #set( $rank = $rank + 1 )
     #end
 
     #if( !$foundThis )
     #set( $thisExtProfileBean = $userResource.extProfileBean )
     <tr>
-        <td height="$rowHeight">
+        <td height="$rowHeight">$rank</td>
+        #if($showUsername)
+        <td>
             $thisExtProfileBean.formattedName()
         </td>
+        #end
         <td>
             $!myPointsInfo.myPointsTotal pts
         </td>
