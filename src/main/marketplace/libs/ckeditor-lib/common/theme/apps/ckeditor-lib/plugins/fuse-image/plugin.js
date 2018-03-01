@@ -94,7 +94,7 @@
                                 // Extra textboxes for plugin
                                 modalBody.find('.milton-btn-upload-file').after(
                                     '<div class="input-group input-group-sm" style="float: left; width: 90px; margin: 0 10px 10px 10px;">' +
-                                    '    <input type="text" class="form-control txt-width" placeholder="Image width" title="Image height" />' +
+                                    '    <input type="text" class="form-control txt-width" placeholder="Image width" title="Image width" />' +
                                     '</div>' +
                                     '<div class="input-group input-group-sm" style="float: left; width: 95px; margin: 0 10px 10px 0">' +
                                     '    <input type="text" class="form-control txt-height" placeholder="Image height" title="Image height" />' +
