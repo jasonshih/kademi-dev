@@ -46,9 +46,9 @@
                 graphOptions.showControls = toBool(component.attr("data-controls"));
                 graphOptions.showLegend = toBool(component.attr("data-legend"));
 
-                if (graphOptions.colors){
+                if (graphOptions.colors) {
                     var colors = graphOptions.colors.split(',');
-                    for(var i = 0; i < colors.length; i++){
+                    for (var i = 0; i < colors.length; i++) {
                         colors[i] = colors[i].trim();
                     }
                     graphOptions.userColors = colors;
@@ -58,12 +58,12 @@
 
             $(document).on('pageDateChanged', function (e, startDate, endDate) {
                 flog("dateAgg: page date changed", cont);
-                if (queryType === 'query'){
+                if (queryType === 'query') {
                     loadGraphData(queryHref, graphOptions, {
                         startDate: startDate,
                         endDate: endDate
                     }, cont);
-                } else if (queryType === 'queryTable'){
+                } else if (queryType === 'queryTable') {
                     loadGraphDataQueryTable(queryHref, graphOptions, {
                         startDate: startDate,
                         endDate: endDate
@@ -95,7 +95,7 @@
         });
     }
 
-    function loadGraphDataQueryTable(href, graphOptions, opts, container){
+    function loadGraphDataQueryTable(href, graphOptions, opts, container) {
         if (!$.contains(document, container[0])) {
             return;
         }
@@ -121,10 +121,10 @@
 
             var myData = [];
 
-            if (resp.headers && resp.headers.length){
-                for (var i = 1; i < resp.headers.length; i++){
+            if (resp.headers && resp.headers.length) {
+                for (var i = 1; i < resp.headers.length; i++) {
                     var series = {key: resp.headers[i], values: []};
-                    for (var j = 0; j < resp.rows.length; j++){
+                    for (var j = 0; j < resp.rows.length; j++) {
                         var value = resp.rows[j][i];
                         flog("value", value, "x", resp.rows[j][0]);
                         series.values.push({x: resp.rows[j][0], y: value});
@@ -153,7 +153,7 @@
                     .showYAxis(true)
                     .clipEdge(true);
             }
-            if (graphOptions.userColors){
+            if (graphOptions.userColors) {
                 chart.color(graphOptions.userColors);
             }
 
@@ -190,7 +190,7 @@
         var subAgg = graphOptions.subAgg;
         var metricAgg = graphOptions.metricAgg;
 
-        var aggr = resp.aggregations[aggName];
+        var aggr = resp.aggregations ? resp.aggregations[aggName] : null;
         var svg = container.find("svg");
         svg.empty();
 
@@ -198,52 +198,54 @@
         nv.addGraph(function () {
 
             var myData = [];
-            if (subAgg) {
-                var mapOfSeries = [];
-                $.each(aggr.buckets, function (b, dateBucket) {
-                    // Iterate over all date buckets, and create a series for each bucket in the subagg
-                    var sagg = dateBucket[subAgg];
-                    $.each(sagg.buckets, function (b, subAggBucket) {
-                        var series = mapOfSeries[subAggBucket.key];
-                        if (series) {
-                        } else {
-                            var series = {
-                                key: subAggBucket.key,
-                                values: []
-                            };
-                            myData.push(series);
-                            mapOfSeries[series.key] = series;
-                        }
-                    });
-                });
-
-                $.each(aggr.buckets, function (b, dateBucket) {
-                    // Iterate over each series and attempt to locate a value
-                    var sagg = dateBucket[subAgg];
-                    $.each(myData, function (b, series) {
-                        var subAggBucket = findBucket(sagg.buckets, series.key);
-                        var v = 0;
-                        if (subAggBucket) {
-                            v = findValue(subAggBucket, graphOptions);
-                        }
-                        //flog("subAgg", subAgg, "date=", dateBucket.key, "v=", v);
-                        series.values.push({x: dateBucket.key, y: v});
-                    });
-
-                });
-            } else {
-                if (aggName){
-                    var series = {
-                        key: aggName,
-                        values: []
-                    };
-                    myData.push(series);
+            if (aggr && aggr.buckets) {
+                if (subAgg) {
+                    var mapOfSeries = [];
                     $.each(aggr.buckets, function (b, dateBucket) {
-                        var v = findValue( dateBucket, graphOptions );
-                        series.values.push({x: dateBucket.key, y: v});
+                        // Iterate over all date buckets, and create a series for each bucket in the subagg
+                        var sagg = dateBucket[subAgg];
+                        $.each(sagg.buckets, function (b, subAggBucket) {
+                            var series = mapOfSeries[subAggBucket.key];
+                            if (series) {
+                            } else {
+                                var series = {
+                                    key: subAggBucket.key,
+                                    values: []
+                                };
+                                myData.push(series);
+                                mapOfSeries[series.key] = series;
+                            }
+                        });
                     });
-                }
 
+                    $.each(aggr.buckets, function (b, dateBucket) {
+                        // Iterate over each series and attempt to locate a value
+                        var sagg = dateBucket[subAgg];
+                        $.each(myData, function (b, series) {
+                            var subAggBucket = findBucket(sagg.buckets, series.key);
+                            var v = 0;
+                            if (subAggBucket) {
+                                v = findValue(subAggBucket, graphOptions);
+                            }
+                            //flog("subAgg", subAgg, "date=", dateBucket.key, "v=", v);
+                            series.values.push({x: dateBucket.key, y: v});
+                        });
+
+                    });
+                } else {
+                    if (aggName) {
+                        var series = {
+                            key: aggName,
+                            values: []
+                        };
+                        myData.push(series);
+                        $.each(aggr.buckets, function (b, dateBucket) {
+                            var v = findValue(dateBucket, graphOptions);
+                            series.values.push({x: dateBucket.key, y: v});
+                        });
+                    }
+
+                }
             }
 
             flog("graph opts", graphOptions);
@@ -265,7 +267,7 @@
                     .showYAxis(true)
                     .clipEdge(true);
             }
-            if (graphOptions.userColors){
+            if (graphOptions.userColors) {
                 chart.color(graphOptions.userColors);
             }
 
@@ -285,8 +287,8 @@
 
             flog("select data", myData, chart, svg.get(0));
             d3.select(svg.get(0))
-                    .datum(myData)
-                    .call(chart);
+                .datum(myData)
+                .call(chart);
 
             nv.utils.windowResize(chart.update);
 
@@ -297,9 +299,9 @@
 
     function findValue(bucket, options) {
         var v;
-        if( options.metricAgg ) {
+        if (options.metricAgg) {
             var agg = bucket[options.metricAgg];
-            if( agg ) {
+            if (agg) {
                 v = agg.value;
             }
         } else {
@@ -329,7 +331,7 @@
         return b;
     }
 
-    $(function(){
+    $(function () {
         var panels = $(".panel-date-histogram");
         panels.dateAgg();
     })
