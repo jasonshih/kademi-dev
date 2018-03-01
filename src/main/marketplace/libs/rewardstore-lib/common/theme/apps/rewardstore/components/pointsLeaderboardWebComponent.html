@@ -6,11 +6,9 @@
 #set ($numUsers = 5)
 #end
 
-
 #if ($pointsBucket && $pointsBucket != "")
 #set( $myPointsInfo = $applications.rewardStore.myPointsInfo($pointsBucket, $formatter.toInteger($numUsers), null) )
 #end
-
 
 <table class="table table-striped">
     <thead>
@@ -21,15 +19,15 @@
         </tr>
     </thead>
     <tbody>
+
     #if( $myPointsInfo.hasPoints )
+        #set($foundThis = false)
         #foreach($leader in $myPointsInfo.allMemberPoints($pointsTag) )
-            #set($foundThis = false)
             #if( $leader.member.userId == $user.id)
                 #set($foundThis = true)
             #end
 
             #set ($ur = $applications.userApp.findUserResourceById($leader.member.userId))
-            $ur.extProfileBean.formattedName()
             #renderLeaderRow($foreach.count, $ur.extProfileBean.formattedName(), $leader.numPoints)
         #end
 
