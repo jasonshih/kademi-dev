@@ -1,0 +1,12 @@
+{
+  "appDependencies": [
+        {
+            "appId": "oauth",
+            "branch" : ""
+        },
+        {
+            "appId": "sociallogin-lib",
+            "branch": "1.1.0"
+        }    
+  ]
+}
