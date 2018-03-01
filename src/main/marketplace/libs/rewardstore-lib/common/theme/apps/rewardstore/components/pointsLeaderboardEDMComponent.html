@@ -25,8 +25,8 @@
 
 #if( $myPointsInfo.hasPoints )
 <table cellpadding="0" cellspacing="0" width="100%" bgcolor="$!{bgcolor}">
-    #foreach($leader in $myPointsInfo.allMemberPoints )
     #set($foundThis = false)
+    #foreach($leader in $myPointsInfo.allMemberPoints )
     #if( $leader.member.userId == $user.id)
     #set($foundThis = true)
     #end
