@@ -379,8 +379,14 @@ var JBApp = {
 
     standardGoalSettingControls: '<div class="form-group">' +
             '    <div class="col-md-12">' +
-            '        <label>Stage</label>' +
-            '        <select class="form-control stageName"></select>' +
+            '        <label>Enter stage</label>' +
+            '        <select class="form-control stage-select stageName"></select>' +
+            '    </div>' +
+            '</div>' +
+            '<div class="form-group">' +
+            '    <div class="col-md-12">' +
+            '        <label>Achieved stage</label>' +
+            '        <select class="form-control stage-select achievedStageName"></select>' +
             '    </div>' +
             '</div>' +
             '<div class="form-group">' +
@@ -457,6 +463,7 @@ var JBApp = {
         var timeoutUnits = form.find('.timeout-units').val();
         var timeoutMultiples = form.find('.timeout-multiples').val();
         var stageName = form.find('.stageName').val();
+        var achievedStageName = form.find('.achievedStageName').val();
         var source = form.find('.source').val();
         var cost = form.find('.cost').val();
         var probability = form.find('.probability').val();
@@ -466,12 +473,14 @@ var JBApp = {
         JBApp.currentSettingNode.timeoutUnits = timeoutUnits || null;
         JBApp.currentSettingNode.timeoutMultiples = timeoutMultiples || null;
         JBApp.currentSettingNode.stageName = stageName || null;
+        JBApp.currentSettingNode.achievedStageName = achievedStageName || null;
         JBApp.currentSettingNode.source = source || null;
         JBApp.currentSettingNode.cost = cost || null;
         JBApp.currentSettingNode.probability = probability || null;
         JBApp.currentSettingNode.timerTime = time || null;
         JBApp.currentSettingNode.timeoutRelativeDateMVEL = timeoutRelativeDateMVEL || null;
     },
+
     showStandardGoalSettingControls: function (form, node) {
         if (node.timeoutUnits !== null) {
             form.find('.timeout-units-selector li a').filter('[data-value=' + node.timeoutUnits + ']').trigger('click');
@@ -488,6 +497,7 @@ var JBApp = {
             }
         }
         form.find('.stageName').html(stagesOptionStr).val(node.stageName !== null ? node.stageName : '');
+        form.find('.achievedStageName').html(stagesOptionStr).val(node.achievedStageName !== null ? node.achievedStageName : '');
 
         var sourceOptionStr = '<option value="">[No source selected]</option>';
         if (JBApp.funnel.sources && $.isArray(JBApp.funnel.sources)) {
