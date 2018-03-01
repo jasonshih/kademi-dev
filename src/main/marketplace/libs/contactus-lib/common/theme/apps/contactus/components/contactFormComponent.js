@@ -132,7 +132,15 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
                         component.attr('data-optins', arr.join(","));
                         keditor.initDynamicContent(dynamicElement);
-                    })
+                    });
+
+                    form.find('#redirectUrl').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-redirect-url', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -147,18 +155,19 @@
             form.find('#chkCompany').prop('checked', dataAttributes['data-company'] === 'true');
             form.find('#chkPhone').prop('checked', dataAttributes['data-phone'] === 'true');
             form.find('#chkMessage').prop('checked', dataAttributes['data-message'] === 'true');
-            form.find('#txtSubmitText').val(dataAttributes['data-submit-text']);
-            form.find('#cbbSubmitSize').val(dataAttributes['data-submit-size']);
-            form.find('#cbbSubmitColor').val(dataAttributes['data-submit-color']);
-            form.find('#txtSubmitClass').val(dataAttributes['data-submit-class']);
-            form.find('#thankYou').val(dataAttributes['data-thank-you']);
-            form.find('#path').val(dataAttributes['data-path']);
+            form.find('#txtSubmitText').val(dataAttributes['data-submit-text'] || '');
+            form.find('#cbbSubmitSize').val(dataAttributes['data-submit-size'] || '');
+            form.find('#cbbSubmitColor').val(dataAttributes['data-submit-color'] || '');
+            form.find('#txtSubmitClass').val(dataAttributes['data-submit-class'] || '');
+            form.find('#thankYou').val(dataAttributes['data-thank-you'] || '');
+            form.find('#path').val(dataAttributes['data-path'] || '');
             form.find('[name=showOptins][value='+dataAttributes['data-show-optins']+']').prop('checked', true);
             form.find('.optins').each(function () {
                 if (dataAttributes['data-optins'].indexOf(this.value) != -1){
                     this.checked = true;
                 }
-            })
+            });
+            form.find('#redirectUrl').val(dataAttributes['data-redirect-url'] || '');
         }
     };
 
