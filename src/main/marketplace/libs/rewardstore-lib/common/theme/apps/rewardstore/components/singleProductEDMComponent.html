@@ -11,19 +11,33 @@
     #end
 #end
 
-#if ($product)
-    #set ($productUrl = "http://${rootFolder.domainName}${formatter.portString}/${store}/${productId}")
 
-    #if ($layout == "vertical")
+#if ($layout == "vertical")
+    #if ($product)
+        #set ($productUrl = "http://${rootFolder.domainName}${formatter.portString}/${store}/${productId}")
+        #renderVerticalProduct($productUrl $product.primaryImageHref $product.title $!product.notes $product.finalPoints)
+    #else
+        #renderVerticalProduct("" false "Example Product" "[Please select a product]" "900")
+    #end
+#else
+    #if ($product)
+        #set ($productUrl = "http://${rootFolder.domainName}${formatter.portString}/${store}/${productId}")
+        #renderHorizontalProduct($productUrl $product.primaryImageHref $product.title $!product.notes $product.finalPoints)
+    #else
+        #renderHorizontalProduct("" false "Example Product" "[Please select a product]" "900")
+    #end
+#end
+
+#macro(renderVerticalProduct $productUrl $productImage $productTitle $productDesc $productPrice)
     <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
             <td style="$!baseStyles">
                 #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
-                #if( $product.primaryImageHref )
-                    #set($bg = "http://${rootFolder.domainName}${formatter.portString}${product.primaryImageHref}")
+                #if( $productImage )
+                #set($bg = "http://${rootFolder.domainName}${formatter.portString}${productImage}")
                 #end
-                <a title="$!product.title" href="$!{productUrl}">
-                    <img src="$!bg" width="$!width" height="auto" alt="$!product.title" style="display: block; border: 0;" />
+                <a title="$productTitle" href="$!{productUrl}">
+                    <img src="$!bg" width="$!width" height="auto" alt="$productTitle" style="display: block; border: 0;" />
                 </a>
             </td>
         </tr>
@@ -32,17 +46,17 @@
         </tr>
         <tr>
             <td style="$baseStyles">
-                <h4 style="font-size: $!{fontSizeH4}px; line-height: $!{lineHeightH4}px;margin-top:0;margin-bottom: 0;"><a href="$!{productUrl}" style="$!linkStyles">$product.title</a></h4>
+                <h4 style="font-size: $!{fontSizeH4}px; line-height: $!{lineHeightH4}px;margin-top:0;margin-bottom: 0;"><a href="$!{productUrl}" style="$!linkStyles">$productTitle</a></h4>
             </td>
         </tr>
         <tr>
             <td style="$!baseStyles">
-                <b>Price: $product.finalPoints pts</b>
+                <b>Price: $productPrice pts</b>
             </td>
         </tr>
         <tr>
             <td style="$!baseStyles">
-                $!formatter.truncate( $formatter.toPlain( $product.notes), 100)
+                $!formatter.truncate( $formatter.toPlain( $productDesc ), 100)
             </td>
         </tr>
         <tr>
@@ -52,19 +66,21 @@
             <td style="$!baseStyles">
                 <table align="center" border="0" cellpadding="0" cellspacing="0" class="button-wrapper" bgcolor="$!viewmoreColor" style="border-radius: 3px;background-color:$!viewmoreColor;">
                     <tbody>
-                        <tr>
-                            <td align="center" valign="middle" class="button-inner" style="padding-top: 5px; padding-bottom: 5px; padding-left: 10px; padding-right: 10px; $!baseStyles">
-                                <a title="$!product.title" href="$!productUrl" target="_blank" style="font-size: 12px; font-weight: bold; text-align: center; text-decoration: none;color:#ffffff;">View details</a>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td align="center" valign="middle" class="button-inner" style="padding-top: 5px; padding-bottom: 5px; padding-left: 10px; padding-right: 10px; $!baseStyles">
+                            <a title="$productTitle" href="$!productUrl" target="_blank" style="font-size: 12px; font-weight: bold; text-align: center; text-decoration: none;color:#ffffff;">View details</a>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </td>
         </tr>
     </table>
-    #else
-        #set ($leftWidth = $width / 3)
-        #set ($rightWidth = $width - $leftWidth)
+#end
+
+#macro(renderHorizontalProduct $productUrl $productImage $productTitle $productDesc $productPrice)
+    #set ($leftWidth = $width / 3)
+    #set ($rightWidth = $width - $leftWidth)
 
     <!--[if (gte mso 9)|(IE)]>
     <table cellspacing="0" cellpadding="0" width="100%" border="0">
@@ -78,11 +94,11 @@
                     <tr>
                         <td>
                             #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
-                            #if( $product.primaryImageHref )
-                                #set($bg = "http://${rootFolder.domainName}${formatter.portString}${product.primaryImageHref}")
+                            #if( $productImage )
+                            #set($bg = "http://${rootFolder.domainName}${formatter.portString}${productImage}")
                             #end
-                            <a title="$!product.title" href="$!{productUrl}">
-                                <img src="$bg" width="$!leftWidth" height="auto" alt="$!product.title" style="display: block; border: 0;" />
+                            <a title="$productTitle" href="$!{productUrl}">
+                                <img src="$bg" width="$!leftWidth" height="auto" alt="$productTitle" style="display: block; border: 0;" />
                             </a>
                         </td>
                     </tr>
@@ -97,12 +113,12 @@
     <table cellpadding="0" cellspacing="0" border="0" width="$!rightWidth" align="right" class="col">
         <tr>
             <td class="wrapper" style="$!baseStyles; padding-left: 15px;">
-                <h4 style="font-size: $!{fontSizeH4}px; line-height: $!{lineHeightH4}px;margin-top:0;margin-bottom: 0;"><a href="$!{productUrl}" style="$!linkStyles">$product.title</a></h4>
+                <h4 style="font-size: $!{fontSizeH4}px; line-height: $!{lineHeightH4}px;margin-top:0;margin-bottom: 0;"><a href="$!{productUrl}" style="$!linkStyles">$productTitle</a></h4>
                 <p>
-                    <b>Price: $product.finalPoints pts</b>
+                    <b>Price: $productPrice pts</b>
                 </p>
                 <p>
-                    $!formatter.truncate( $formatter.toPlain( $product.notes), 100)
+                    $!formatter.truncate( $formatter.toPlain( $productDesc ), 100)
                 </p>
                 <p><a href="$!{productUrl}" style="$!linkStyles">View details</a></p>
             </td>
@@ -113,7 +129,4 @@
     </tr>
     </table>
     <![endif]-->
-    #end
-#else
-No product found
 #end
