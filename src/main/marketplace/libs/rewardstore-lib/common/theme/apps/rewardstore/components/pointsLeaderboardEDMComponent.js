@@ -44,6 +44,7 @@
                     form.find('.txt-show-username').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
+
                         component.attr('data-show-username', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
@@ -82,7 +83,7 @@
 
             form.find('input.num-users').val(dataAttributes['data-num-users'] || 5);
             form.find('input.txt-height').val(dataAttributes['data-row-height'] || 25);
-            form.find('input.txt-show-username').val(dataAttributes['data-show-username'] || true);
+            form.find('input.txt-show-username').val(dataAttributes['data-show-username'] || 'true');
             form.find('input.start-date').val(dataAttributes['data-start-date']);
             form.find('input.end-date').val(dataAttributes['data-end-date']);
         }

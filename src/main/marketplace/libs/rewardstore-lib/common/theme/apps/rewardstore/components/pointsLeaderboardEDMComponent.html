@@ -1,37 +1,38 @@
 #if (!$rowHeight)
-#set ($rowHeight = 25)
+    #set ($rowHeight = 25)
 #end
 
 #if (!$numUsers)
-#set ($numUsers = 5)
+    #set ($numUsers = 5)
 #end
 
 #if ($startDate && $startDate != "")
-#set ($since = $formatter.toDate($startDate))
+    #set ($since = $formatter.toDate($startDate))
 #else
-#set($since = $formatter.addDays( $formatter.now, -7 ) )
+    #set($since = $formatter.addDays( $formatter.now, -7 ) )
 #end
 
 #if ($endDate && $endDate != "")
-#set ($to = $formatter.toDate($endDate))
+    #set ($to = $formatter.toDate($endDate))
 #end
 
 #if ($pointsBucket && $pointsBucket != "")
-#if ($to)
-#set( $myPointsInfo = $applications.rewardStore.myPointsInfo($pointsBucket, $formatter.toInteger($numUsers), $since, $to) )
-#else
-#set( $myPointsInfo = $applications.rewardStore.myPointsInfo($pointsBucket, $formatter.toInteger($numUsers), $since) )
+    #if ($to)
+        #set( $myPointsInfo = $applications.rewardStore.myPointsInfo($pointsBucket, $formatter.toInteger($numUsers), $since, $to) )
+    #else
+        #set( $myPointsInfo = $applications.rewardStore.myPointsInfo($pointsBucket, $formatter.toInteger($numUsers), $since) )
+    #end
 #end
 
 #if(!$showUsername)
-#set($showUsername = true)
+    #set($showUsername = "true")
 #end
 
 <table cellpadding="0" cellspacing="0" width="100%" bgcolor="$!{bgcolor}">
     <thead>
         <tr>
             <th style="text-align: left;">Rank</th>
-            #if($showUsername)
+            #if($showUsername == "true")
             <th style="text-align: left;">Participant</th>
             #end
             <th style="text-align: left;">Points</th>
@@ -44,38 +45,30 @@
             #if( $leader.member.userId == $user.id)
                 #set($foundThis = true)
             #end
-            <tr>
-                <td height="$rowHeight">$rank</td>
-                #if($showUsername)
-                    <td>
-                        #set ($ur = $applications.userApp.findUserResourceById($leader.member.userId))
-                        $ur.extProfileBean.formattedName()
-                    </td>
-                #end
-                <td>
-                    $!leader.numPoints pts
-                </td>
-            </tr>
+            #set ($ur = $applications.userApp.findUserResourceById($leader.member.userId))
+            #renderPointRecord($rank $ur.extProfileBean.formattedName() $leader.numPoints)
             #set( $rank = $rank + 1 )
         #end
-    #else
-    #end
 
-    #if( !$foundThis )
-    #set( $thisExtProfileBean = $userResource.extProfileBean )
-    <tr>
-        <td height="$rowHeight">$rank</td>
-        #if($showUsername)
-        <td>
-            $thisExtProfileBean.formattedName()
-        </td>
+        #if( !$foundThis )
+        #set( $thisExtProfileBean = $userResource.extProfileBean )
+            #renderPointRecord($rank $thisExtProfileBean.formattedName() $myPointsInfo.myPointsTotal)
         #end
-        <td>
-            $!myPointsInfo.myPointsTotal pts
-        </td>
-    </tr>
+    #else
+        #renderPointRecord("1" "[Please select point bucket]" "99")
+        #renderPointRecord("2" "[Please select point bucket]" "88")
+        #renderPointRecord("3" "[Please select point bucket]" "77")
     #end
 </table>
-#end
 
-#macro (render
+#macro (renderPointRecord $rank $name $point)
+    <tr>
+        <td height="$rowHeight">$rank</td>
+        #if($showUsername == "true")
+        <td>$name</td>
+        #end
+        <td>
+            $formatter.ifNull($point, 0) pts
+        </td>
+    </tr>
+#end
