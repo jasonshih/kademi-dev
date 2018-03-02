@@ -14,13 +14,15 @@ JBNodes['branchGoal'] = {
             title: 'Make new branch',
             maxConnections: -1,
             onInitConnection: function (node) {
-                for( var i=0; i<node.branchNodeIds.length; i++) {
-                    var nodeId = node.branchNodeIds[i];
-                    JBApp.jspInstance.connect({
-                        source: node.nodeId,
-                        target: nodeId,
-                        type: 'nextGoals'
-                    });
+                if (node.branchNodeIds) {
+                    for (var i = 0; i < node.branchNodeIds.length; i++) {
+                        var nodeId = node.branchNodeIds[i];
+                        JBApp.jspInstance.connect({
+                            source: node.nodeId,
+                            target: nodeId,
+                            type: 'nextGoals'
+                        });
+                    }
                 }
             },
             onConnected: function (connection, sourceNodeData) {
@@ -33,7 +35,7 @@ JBNodes['branchGoal'] = {
                 var index = sourceNodeData.branchNodeIds.indexOf(connection.targetId);
                 if (index > -1) {
                     sourceNodeData.branchNodeIds.splice(index, 1);
-                }                
+                }
 
             }
         },
@@ -41,12 +43,13 @@ JBNodes['branchGoal'] = {
             label: 'past time',
             title: 'When entered while timeout has passed',
             maxConnections: 1
-        }        
+        }
     },
-
     settingEnabled: true,
-
     initSettingForm: function (form) {
+        form.append(
+                JBApp.standardGoalSettingControls
+                );
 
         JBApp.initStandardGoalSettingControls(form);
 
@@ -60,9 +63,10 @@ JBNodes['branchGoal'] = {
             }
         });
     },
-
     showSettingForm: function (form, node) {
+        flog("showSettingForm.1");
         JBApp.showStandardGoalSettingControls(form, node);
         JBApp.showSettingPanel(node);
+        flog("showSettingForm.2");
     }
 };
