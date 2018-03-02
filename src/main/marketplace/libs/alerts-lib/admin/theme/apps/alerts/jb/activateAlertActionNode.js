@@ -1,6 +1,6 @@
 JBNodes['activateAlertAction'] = {
     icon: 'fa fa-exclamation-triangle',
-    title: 'Activate Alert',
+    title: 'Alerts',
     type: JB_NODE_TYPE.ACTION,
     previewUrl: '/theme/apps/alerts/jb/activateAlertActionNode.png',
     ports: {
