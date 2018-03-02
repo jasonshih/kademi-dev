@@ -37,6 +37,7 @@
             <th>Size (bytes)</th>
             <th>Referrer</th>
             <th>Request date</th>
+            <th>From IP</th>
         </tr>
     </thead>
     <tbody>
@@ -56,6 +57,7 @@
                 #end
             </td>
             <td>$!formatter.formatDateTime($formatter.toDate($hit.fields.reqDate.value), $rootFolder.organisation.timezone)</td>
+            <td>$hit.fields.reqFrom.value</td>
         </tr>
         #end
     </tbody>
