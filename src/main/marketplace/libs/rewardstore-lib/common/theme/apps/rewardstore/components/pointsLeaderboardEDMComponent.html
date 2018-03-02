@@ -27,7 +27,6 @@
 #set($showUsername = true)
 #end
 
-#if( $myPointsInfo.hasPoints )
 <table cellpadding="0" cellspacing="0" width="100%" bgcolor="$!{bgcolor}">
     <thead>
         <tr>
@@ -40,23 +39,26 @@
     </thead>
     #set( $rank = 1 )
     #set($foundThis = false)
-    #foreach($leader in $myPointsInfo.allMemberPoints )
-    #if( $leader.member.userId == $user.id)
-    #set($foundThis = true)
-    #end
-    <tr>
-        <td height="$rowHeight">$rank</td>
-        #if($showUsername)
-        <td>
-            #set ($ur = $applications.userApp.findUserResourceById($leader.member.userId))
-            $ur.extProfileBean.formattedName()
-        </td>
+    #if( $myPointsInfo.hasPoints )
+        #foreach($leader in $myPointsInfo.allMemberPoints )
+            #if( $leader.member.userId == $user.id)
+                #set($foundThis = true)
+            #end
+            <tr>
+                <td height="$rowHeight">$rank</td>
+                #if($showUsername)
+                    <td>
+                        #set ($ur = $applications.userApp.findUserResourceById($leader.member.userId))
+                        $ur.extProfileBean.formattedName()
+                    </td>
+                #end
+                <td>
+                    $!leader.numPoints pts
+                </td>
+            </tr>
+            #set( $rank = $rank + 1 )
         #end
-        <td>
-            $!leader.numPoints pts
-        </td>
-    </tr>
-    #set( $rank = $rank + 1 )
+    #else
     #end
 
     #if( !$foundThis )
@@ -75,12 +77,5 @@
     #end
 </table>
 #end
-#else
-<table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="$!{bgcolor}">
-    <tr>
-        <td colspan="2">
-            No points bucket selected
-        </td>
-    </tr>
-</table>
-#end
+
+#macro (render
