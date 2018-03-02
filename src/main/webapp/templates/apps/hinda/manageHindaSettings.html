@@ -122,6 +122,16 @@
                     </div>
                 </div>  
 
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="hindaSendProductOrder">Send Product Order</label>
+                    <div class="col-sm-9">
+                        <select name="hindaSendProductOrder" class="form-control">
+                            <option value="true" #if($page.sendProductOrder == "true") selected="selected" #end>Order is placed</option>
+                            <option value="false" #if($page.sendProductOrder == "false") selected="selected" #end>Cart status change to: Complete</option>
+                        </select>
+                    </div>
+                </div>  
+
                 #macro(genCategories $categories)
                 #foreach($cat in $categories)
                 #set( $size = $cat.childCategories.size())
