@@ -7,7 +7,10 @@
             flog('init "panelKpiTarget" component');
             
             $.getScriptOnce('/static/jquery-knob/1.2.13/dist/jquery.knob.min.js', function () {
-                initCircleSales(component);
+                var dynamicElement = component.find('[data-dynamic-href]');
+                keditor.initDynamicContent(dynamicElement).done(function () {
+                    initCircleSales(dynamicElement);
+                });
             });
         },
         settingEnabled: true,

@@ -24,6 +24,8 @@
     });
     
     window.initCircleSales = function(target) {
+        flog('initCircleSales', target);
+
         var colours = target.find('.circle-sales-colors');
         
         target.find('.circle-sales-knob').each(function () {
