@@ -34,7 +34,7 @@
                                 #set ($componentEndDate = $formatter.endofDay($queryManager.commonFinishDate))
                             #end
 
-                            #set($points = $applications.rewardStore.sumPoints( $be, $pointsBucket, $pointsEarnedTag, $componentEndDate, $componentEndDate) )
+                            #set($points = $applications.rewardStore.sumPoints( $be, $pointsBucket, $pointsEarnedTag, $componentStartDate, $componentEndDate) )
 
                             #if(!$points)
                             #set($points = 0)
