@@ -211,7 +211,7 @@
             #set( $tasks = $lead.tasks() )
             #if( $tasks.empty )
                 <tr>
-                    <td>There are no tasks</td>
+                    <td colspan="6">There are no tasks</td>
                 </tr>
             #else
                 #foreach( $task in $tasks )
@@ -230,6 +230,19 @@
 
         <h3>EDMs</h3>
         <table class="table">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>From</th>
+                    <th>Sent</th>
+                </tr>
+            </thead>
+            <tbody>
+                #if( $lead.funnelEdms.isEmpty() )
+                <tr>
+                    <th>No emails have been sent</th>
+                </tr>
+                #else
             #foreach($funnelEdm in $lead.funnelEdms)
                 <tr>
                     <td>
@@ -239,9 +252,16 @@
                             SMS
                         #end
                     </td>
-                    <td></td>
+                    <td>$funnelEdm.emailItem.fromAddress</td>
+                    <td>
+                        <abbr title="$formatter.formatDateISO8601($funnelEdm.emailItem.sendStatusDate, $page.organisation.timezone)" class="timeago">
+                            $formatter.formatDateTime($funnelEdm.emailItem.sendStatusDate, $page.organisation.timezone)
+                        </abbr>                        
+                    </td>
                 </tr>
             #end
+                #end
+            </tbody>
         </table>
     </div>
 </div>
