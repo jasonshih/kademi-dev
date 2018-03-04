@@ -128,21 +128,23 @@ function initSalesDataClaimerApp(orgRoot, webRoot, enabled) {
 
 function saveSettings(page, params) {
     log.info('saveSettings > page={}, params={}', page, params);
-    
+
     // BM: we must not do this! https://github.com/Kademi/kademi-dev/issues/4987
-    if(page.is("apps") == false && page.is("websiteVersion") == false){
-        page = page.find('/manageApps/');        
-    }
-    
-    if (params.dataSeries) {
-        var dataSeries = params.dataSeries || '';
-        page.setAppSetting(APP_NAME, 'dataSeries', dataSeries);
+    if (page.is("apps") == false && page.is("websiteVersion") == false) {
+        page = page.find('/manageApps/');
     }
 
-    if (params.dataSeries) {
-        var allowAnonymous = params.allowAnonymous || '';
-        page.setAppSetting(APP_NAME, 'allowAnonymous', allowAnonymous);
-    }
+    transactionManager.runInTransaction(function () {
+        if (params.dataSeries) {
+            var dataSeries = params.dataSeries || '';
+            page.setAppSetting(APP_NAME, 'dataSeries', dataSeries);
+        }
+
+        if (params.dataSeries) {
+            var allowAnonymous = params.allowAnonymous || '';
+            page.setAppSetting(APP_NAME, 'allowAnonymous', allowAnonymous);
+        }
+    });
 
     return views.jsonResult(true);
 }
@@ -191,11 +193,11 @@ function checkRedirect(page, params) {
 }
 
 controllerMappings.addTableDef("tableClaims", "Table claims", "loadTableClaims")
-    .addHeader("Date")
-    .addHeader("Dealer")
-    .addHeader("Product SKU")
-    .addHeader("Amount")
-    .addHeader("Status");
+        .addHeader("Date")
+        .addHeader("Dealer")
+        .addHeader("Product SKU")
+        .addHeader("Amount")
+        .addHeader("Status");
 
 
 function loadTableClaims(start, maxRows, rowsResult, rootFolder) {
@@ -218,8 +220,8 @@ function loadTableClaims(start, maxRows, rowsResult, rootFolder) {
 }
 
 controllerMappings.addTableDef("tableClaimsOverTime", "Claims over time", "loadTableClaimsOverTime")
-    .addHeader("Date")
-    .addHeader("Total");
+        .addHeader("Date")
+        .addHeader("Total");
 
 
 function loadTableClaimsOverTime(start, maxRows, rowsResult, rootFolder) {
