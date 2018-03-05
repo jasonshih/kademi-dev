@@ -61,7 +61,7 @@ function getLastFeedbackResult(lead, exitingNode, funnel, vars) {
     log.info("getLastFeedbackResult: profileid={}", profileId);
     var jsonDB = applications.KongoDB.findDatabase(dbName);
     log.info('jsondb is {}', jsonDB);
-    
+
     var db = jsonDB;
     if (db == null) {
         log.error("Could not find database " + dbName);
@@ -81,7 +81,7 @@ function getLastFeedbackResult(lead, exitingNode, funnel, vars) {
             {"created": "desc"}
         ]
     };
-    
+
     if (vars != null && vars['surveyId'] != null) {
         queryJson['query']['bool']['filter'] =  [
             {
@@ -91,7 +91,7 @@ function getLastFeedbackResult(lead, exitingNode, funnel, vars) {
             }
         ];
     }
-    
+
     // find most recent response from this profile
     var searchResult = db.search(JSON.stringify(queryJson));
     log.info('search hit {}', searchResult.hits.totalHits);
@@ -104,23 +104,23 @@ function getLastFeedbackResult(lead, exitingNode, funnel, vars) {
 
 function initApp(orgRoot, webRoot, enabled) {
     log.info("initApp Kfeedback: orgRoot={}", orgRoot);
-    
+
     var dbs = orgRoot.find(JSON_DB);
     if (isNull(dbs)) {
-        page.throwNotFound('KongoDB is disabled. Please enable it for continue with this app!');
+        orgRoot.throwNotFound('KongoDB is disabled. Please enable it for continue with this app!');
         return;
     }
     var db = dbs.child(dbName);
-    
+
     if (isNull(db)) {
         log.info('{} does not exist!', dbTitle);
         db = dbs.createDb(dbName, dbTitle, dbName);
-        
+
         if (!db.allowAccess) {
             setAllowAccess(db, true);
         }
     }
-    
+
     saveMapping(db);
 }
 
@@ -134,11 +134,11 @@ function uploadFile(page, params, files) {
     log.info('uploadFile > page {} params {} files {}', page, params, files);
     if (files !== null || !files.isEmpty()) {
         var filesArray = files.entrySet().toArray();
-        
+
         for (var i = 0; i < filesArray.length; i++) {
             var file = filesArray[i].getValue();
             var fileHash = fileManager.uploadFile(file);
-            
+
             return views.jsonObjectView({
                 type: file.contentType,
                 size: file.size,
