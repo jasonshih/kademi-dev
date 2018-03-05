@@ -159,7 +159,7 @@ function trimToNull(val) {
  * @returns {string|*}
  */
 function replaceYuckyChars(s) {
-    s = s.toLowerCase().replace('/', '');
+    s = (s || '').toLowerCase().replace('/', '');
     s = s.replace(/[^A-Za-z0-9]/g, '-');
 
     while (s.contains('--')) {

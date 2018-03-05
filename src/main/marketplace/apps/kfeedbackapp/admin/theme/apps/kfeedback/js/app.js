@@ -249,7 +249,7 @@ App.controller('SurveysDetailCtrl', function ($scope, $state, Surveys, $statePar
     $scope.$watch('survey.name', function () {
         if ($scope.edit)
             return;
-        $scope.survey.slug = $scope.survey.name.toLowerCase()
+        $scope.survey.slug = ($scope.survey.name || '').toLowerCase()
             .replace(/[^\w ]+/g, '')
             .replace(/ +/g, '-')
         ;
@@ -287,7 +287,7 @@ App.controller('SurveysDetailCtrl', function ($scope, $state, Surveys, $statePar
                 if (!$scope.survey.options[i].title) {
                     valid = false;
                 } else {
-                    $scope.survey.options[i].slug = $scope.survey.options[i].title.toLowerCase()
+                    $scope.survey.options[i].slug = ($scope.survey.options[i].title || '').toLowerCase()
                         .replace(/[^\w ]+/g, '')
                         .replace(/ +/g, '-');
                 }
@@ -321,7 +321,7 @@ App.controller('SurveysDetailCtrl', function ($scope, $state, Surveys, $statePar
     
     function slugOptions() {
         angular.forEach($scope.survey.options, function (value, key) {
-            $scope.survey.options[key].slug = key + '-' + $scope.survey.options[key].title.toLowerCase()
+            $scope.survey.options[key].slug = key + '-' + ($scope.survey.options[key].title || '').toLowerCase()
                     .replace(/[^\w ]+/g, '')
                     .replace(/ +/g, '-')
             ;
