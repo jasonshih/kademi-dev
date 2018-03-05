@@ -54,7 +54,7 @@
                                 <div class="col-md-9">
                                     <div class="input-group">
                                         <input id="option-{{option.slug}}" type="text" class="form-control form-copied" readonly="readonly" value="{{survey.website}}{{kApp}}{{option.slug}}" />
-                                        <a class="input-group-addon" href="#" data-clipboard-target="#option-{{option.slug}}"><i class="fa fa-clipboard"></i></a>
+                                        <a class="input-group-addon btn-copy" href="javascript:;" data-clipboard-target="#option-{{option.slug}}"><i class="fa fa-clipboard"></i></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
@@ -78,7 +78,7 @@
                     <textarea rows="10" class="form-control" id="htmlcode" readonly="readonly">{{htmlcode}}</textarea>
                 </p>
                 <p class="text-center">
-                    <a class="btn btn-lg btn-danger" data-clipboard-target="#htmlcode" href="javascript:;"><i class="fa fa-clipboard"></i> Copy Survey to Email</a>
+                    <a class="btn btn-lg btn-danger btn-copy-template" data-clipboard-target="#htmlcode" href="javascript:;"><i class="fa fa-clipboard"></i> Copy Survey to Email</a>
                 </p>
             </div>
         </div>

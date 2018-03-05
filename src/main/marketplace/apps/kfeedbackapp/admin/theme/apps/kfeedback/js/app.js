@@ -384,28 +384,25 @@ App.controller('SurveysViewCtrl', function ($scope, $state, Surveys, $stateParam
         $scope.htmlcode = Surveys.getEmailTemplate($scope.survey.website, $scope.kApp, $scope.survey);
     });
     
-    var clipboard = new Clipboard('.btn-copy-template');
-    
-    clipboard.on('success', function (e) {
+    var templateClipboard = new Clipboard('.btn-copy-template');
+    templateClipboard.on('success', function (e) {
         Msg.info('Copied to clipboard');
         e.clearSelection();
     });
     
-    clipboard.on('error', function (e) {
+    templateClipboard.on('error', function (e) {
         document.getElementById("htmlcode").select();
         Msg.error('Could not copy to clipboard. Press Ctrl + C (Cmd + C) to copy manually');
     });
     
-    var clipboard1 = new Clipboard('.btn-copy');
-    
-    clipboard1.on('success', function (e) {
-        
+    var optionsClipboard = new Clipboard('.btn-copy');
+    optionsClipboard.on('success', function (e) {
         Msg.info('Copied to clipboard');
         e.clearSelection();
     });
     
-    clipboard1.on('error', function (e) {
-        clipboard1.clipboardAction.trigger.siblings('input').select();
+    optionsClipboard.on('error', function (e) {
+        optionsClipboard.clipboardAction.trigger.siblings('input').select();
         Msg.error('Could not copy to clipboard. Press Ctrl + C (Cmd + C) to copy manually');
     });
 });
@@ -427,7 +424,7 @@ App.controller('SurveysReportCtrl', function ($scope, $state, Surveys, Feedbacks
         row.processed = !row.processed;
         Feedbacks.update(row, survey.id);
         Msg.info('State changed');
-    }
+    };
     
     $scope.date = {
         startDate: moment().subtract(2, "weeks"),
@@ -701,7 +698,7 @@ App.service('Surveys', function ($q, config, $http, config) {
     
     this.getOptionLink = function (website, app, option) {
         var link = website + app + option.slug;
-        var img = '<img src="' + (website + option.emoji).replace(/\/\//g, '/') + '" width="40" height="40" alt="' + option.title + '" />';
+        var img = '<img src="' + (website + option.emoji).replace('//theme', '/theme') + '" width="40" height="40" alt="' + option.title + '" />';
         var html = '<a href="' + link + '">' + img + '</a>';
         
         return html;
