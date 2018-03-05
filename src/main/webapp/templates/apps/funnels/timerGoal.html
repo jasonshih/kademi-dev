@@ -87,7 +87,7 @@
         <p><strong>Timers due in the next 24 hours: </strong>$!page.dueToFire(1)</p>
         <p><strong>Timers due in the next 7 days: </strong>$!page.dueToFire(7)</p>
 
-        #set($dueLeads = $page.getDueLeads(10))
+        #set($dueLeads = $page.getLeadsInQueue(100))
         <table class="table table-striped">
             <thead>
                 <tr>
