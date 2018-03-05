@@ -145,8 +145,8 @@ function initItemQuantity() {
             quantity--;
         }
 
-        if (quantity < 1) {
-            quantity = 1;
+        if (quantity < 0) {
+            quantity = 0;
         }
 
         txtQuantity.val(quantity).trigger('change');
