@@ -62,6 +62,8 @@ function initManagePoints() {
         });
     });
 
+    $("#new-debit-points-form").find('[name=email]').entityFinder();
+
     $("#new-debit-points-form").forms({
         onSuccess: function (resp) {
             if (resp.status) {
@@ -75,6 +77,7 @@ function initManagePoints() {
         }
     });
 
+    $("#new-points-form").find('#awardToEmail').entityFinder();
     $("#new-points-form").forms({
         onSuccess: function (resp) {
             if (resp.status) {
