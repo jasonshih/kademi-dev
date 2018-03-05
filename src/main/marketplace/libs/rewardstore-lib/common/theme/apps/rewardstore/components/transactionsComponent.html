@@ -1,6 +1,8 @@
 #if ($page)
-    #foreach($r in $page.find("/rewards").myRewardStores )
-        #renderTranstionsPanel($r)
+    #foreach($r in $applications.rewardStore.stores )
+        #if ($r.isForUser( $userResource.thisUser))
+            #renderTranstionsPanel($r)
+        #end
     #end
 #else
     #renderTranstionsPanel()
