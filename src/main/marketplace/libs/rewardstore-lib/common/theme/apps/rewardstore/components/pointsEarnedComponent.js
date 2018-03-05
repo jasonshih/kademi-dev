@@ -79,7 +79,7 @@
             form.find('.points-earned-select-store').val(dataAttributes['data-points-earned-store']);
             form.find('.points-earned-select-tag').val(dataAttributes['data-points-earned-tag']);
             form.find('.value-label').val(dataAttributes['data-label']);
-            form.find('.chk-use-date-range').prop('checked', dataAttributes['use-date-range'] === 'true');
+            form.find('.chk-use-date-range').prop('checked', dataAttributes['data-use-date-range'] === 'true');
             form.find('.value-icon').find('i').attr('class', 'fa ' + dataAttributes['data-icon']);
         }
     };
