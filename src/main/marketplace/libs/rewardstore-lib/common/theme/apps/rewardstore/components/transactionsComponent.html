@@ -1,17 +1,25 @@
 #if ($page)
     #foreach($r in $applications.rewardStore.stores )
         #if ($r.isForUser( $userResource.thisUser))
-            #renderTranstionsPanel($r)
+            #set( $participants = $applications.rewardStore.findParticipantsForReward($userResource.thisUser, $r.reward))
+            #foreach( $participant in $participants )
+                #renderTranstionsPanel($r, $participant, $participants.size() )
+            #end
         #end
     #end
 #else
     #renderTranstionsPanel()
 #end
 
-#macro(renderTranstionsPanel $r)
+#macro(renderTranstionsPanel $r $participant $numParticipants)
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title"><b><a href="$!r.href">$formatter.ifNull($r.title, "Reward Store")</a></b> transactions</h3>
+            <h3 class="panel-title">
+                Transactions
+                #if( $numParticipants > 1 )
+                for <b>$participant.formattedName</b>
+                #end
+                in <b>$formatter.ifNull($r.title, "Points")</b></h3>
         </div>
         <table class="table table-striped">
             <thead>
@@ -23,10 +31,11 @@
                 </tr>
             </thead>
             <tbody>
-                #if ($r.myTransactions.size() > 0)
-                    #foreach($p in $r.myTransactions)
+                #set( $transactions = $applications.rewardStore.transactions($participant, $r.reward) )
+                #if ($transactions.size() > 0)
+                    #foreach($p in $transactions)
                         <tr>
-                            <td>$p.date</td>
+                            <td>$formatter.formatDate($p.date)</td>
                             <td>
                                 #if( $p.txType == "C" )
                                 $p.numPoints
@@ -48,11 +57,11 @@
                     #end
                     <tr>
                         <th>Current</th>
-                        <td colspan="3">$r.myBalance pts</td>
+                        <td colspan="3">$applications.rewardStore.balance($participant, $r.reward) pts</td>
                     </tr>
                     <tr>
                         <th>Available</th>
-                        <td colspan="3">$r.myAvailableBalance pts</td>
+                        <td colspan="3">$applications.rewardStore.availableBalance($participant, $r.reward) pts</td>
                     </tr>
                 #else
                     #if ($page)
@@ -61,13 +70,13 @@
                     </tr>
                     #else
                         <tr>
-                            <td>$formatter.formatDateTime($formatter.now)</td>
+                            <td>$formatter.formatDate($formatter.now)</td>
                             <td>1000</td>
                             <td></td>
                             <td>Test</td>
                         </tr>
                         <tr>
-                            <td>$formatter.formatDateTime($formatter.now)</td>
+                            <td>$formatter.formatDate($formatter.now)</td>
                             <td></td>
                             <td>300</td>
                             <td>Points Expired from $formatter.formatDate($formatter.now)</td>
