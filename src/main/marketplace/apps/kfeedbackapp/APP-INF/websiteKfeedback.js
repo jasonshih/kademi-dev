@@ -67,7 +67,6 @@ function createFeedback(page, params) {
 
     var cur = (new Date).getTime();
 
-
     var surveyId = params.survey;
     var survey = null;
     if (!surveyId) {
@@ -93,7 +92,7 @@ function createFeedback(page, params) {
         db.createNew(cur, JSON.stringify(feedback), TYPE_FEEDBACK);
     });
 
-    if (params.miltonUserUrl) {
+    if (params.miltonUserUrl && params.miltonUserUrl !== '') {
         var userResource = page.find(params.miltonUserUrl);
         if (userResource) {
             var profileBean = userResource.profile;
