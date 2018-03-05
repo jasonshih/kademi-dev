@@ -1,6 +1,4 @@
-$(document).ready(function () {
-
-    var $doc = $(document);
+$(function () {
     var lo = window.location;
     var website = lo.origin;
     var config = {
@@ -43,7 +41,7 @@ $(document).ready(function () {
                 redirectLink = window.survey.options[i].redirectLink;
             }
         }
-        //debugger;
+
         $.ajax({
             url: config.apiUrl,
             type: 'POST',
@@ -57,12 +55,13 @@ $(document).ready(function () {
                 'miltonUserUrl': window.survey.miltonUserUrl
             },
             success: function (data) {
-                console.log(data)
+                flog(data);
+                $('#alert-feedback').attr('class', 'alert alert-success').html('<i class="fa fa-check-circle"></i> Submitted feedback. Redirecting...');
                 countDownRedirect(config.TIME, redirectLink);
             },
             error: function (err) {
-                console.log(err)
-                countDownRedirect(config.TIME, redirectLink);
+                flog('Error when submitting feedback', err);
+                $('#alert-feedback').attr('class', 'alert alert-danger').html('<i class="fa fa-times-circle"></i> Error in submitting feedback. Please contact your administrator to resolve this issue.');
             }
         })
     }
