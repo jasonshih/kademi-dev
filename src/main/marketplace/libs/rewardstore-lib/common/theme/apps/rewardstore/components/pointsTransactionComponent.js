@@ -17,39 +17,12 @@
                 success: function (resp) {
                     form.html(resp);
 
+
                     form.find('.select-store').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
                         component.attr('data-points-bucket', this.value);
-                        keditor.initDynamicContent(dynamicElement);
-                    });
-
-                    form.find('.select-points-type').on('change', function () {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-
-                        component.attr('data-points-type', this.value);
-                        keditor.initDynamicContent(dynamicElement);
-
-                        if (this.value == "org"){
-                            form.find('.pointOrg').removeClass('hide');
-                        } else {
-                            form.find('.pointOrg').addClass('hide');
-                        }
-                    });
-
-                    form.find('.select-orgtype').on('change', function () {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-points-org-type', this.value);
-                        keditor.initDynamicContent(dynamicElement);
-                    });
-
-                    form.find('.select-points-group').on('change', function () {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-points-group', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
@@ -94,18 +67,10 @@
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-store').val(dataAttributes['data-points-bucket']);
 
-            form.find('.select-points-type').val(dataAttributes['data-points-type'] || '');
-            form.find('.select-orgtype').val(dataAttributes['data-points-org-type'] || '');
-            form.find('.select-points-group').val(dataAttributes['data-points-group'] || '');
             form.find('.select-tx-type').val(dataAttributes['data-tx-type'] || '');
             form.find('input.start-date').val(dataAttributes['data-start-date']);
             form.find('input.end-date').val(dataAttributes['data-end-date']);
 
-            if (dataAttributes['data-points-type'] == "org"){
-                form.find('.pointOrg').removeClass('hide');
-            } else {
-                form.find('.pointOrg').addClass('hide');
-            }
         }
     };
 

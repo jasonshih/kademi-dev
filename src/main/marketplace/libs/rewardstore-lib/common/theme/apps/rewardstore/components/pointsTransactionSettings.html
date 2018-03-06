@@ -34,37 +34,4 @@
             </select>
         </div>
     </div>
-    <div class="form-group">
-        <label class="col-sm-12">Points type</label>
-        <div class="col-sm-12">
-            <select class="form-control select-points-type">
-                <option value="">Individual</option>
-                <option value="org">Organisation</option>
-            </select>
-        </div>
-    </div>
-    <div class="form-group pointOrg hide">
-        <label class="col-sm-12">Points group</label>
-        <div class="col-sm-12">
-            <select name="pointsGroup" class="form-control select-points-group">
-                #set ($groups = $rootFolder.allGroups)
-                <option value="">[Select a group]</option>
-                #foreach($g in $groups)
-                <option value="$g.name">$formatter.firstNotNull($g.title, $g.name)</option>
-                #end
-            </select>
-        </div>
-    </div>
-    <div class="form-group pointOrg hide">
-        <label class="col-sm-12">Points organisation type</label>
-        <div class="col-sm-12">
-            <select class="form-control select-orgtype">
-                <option value="">[Select a type]</option>
-                <option value="NONE">[No type]</option>
-                #foreach($orgType in $rootFolder.orgTypes)
-                <option value="$orgType.name">$orgType.displayName</option>
-                #end
-            </select>
-        </div>
-    </div>
 </form>

@@ -10,22 +10,9 @@
 #set ($to = $formatter.now)
 #end
 
-#if ($pointsType == "org")
-    #set ($mb = false)
-    #set ($pmbs = $userResource.primaryMemberships)
-        #if ($pointsGroup && $pointsGroup != "")
-            #set ($mb = $pmbs.get($pointsGroup))
-        #end
-        #if ($pointsOrgType && $pointsOrgType != "")
-            #set ($mbs = $pmbs.filterByOrgType($pointsOrgType))
-            #if ($mbs.size() > 0)
-                #set ($mb = $mbs[0])
-            #end
-        #end
-    #set ($trans = $applications.rewardStore.transactions($mb.org, $pointsBucket, $since, $to))
-#else
-    #set ($trans = $applications.rewardStore.transactions($userResource.profile, $pointsBucket, $since, $to))
-#end
+
+#set ($trans = $applications.rewardStore.transactions($userResource, $pointsBucket, $since, $to))
+
 
 <table class="table table-striped">
     <thead>
