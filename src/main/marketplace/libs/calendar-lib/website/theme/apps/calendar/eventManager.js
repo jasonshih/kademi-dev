@@ -21,6 +21,7 @@
             
             var eventForm = $('#event-manager-form');
             var btnEdit = eventManager.find('.btn-edit-event');
+            var btnDelete = eventManager.find('.btn-delete-event');
             var btnSave = eventManager.find('.btn-save-edit-event');
             var btnClose = eventManager.find('.btn-cancel-edit-event');
             
@@ -28,6 +29,26 @@
                 e.preventDefault();
                 
                 eventForm.find('form').trigger('submit');
+            });
+
+            btnDelete.on('click', function (e) {
+                e.preventDefault();
+                var c = confirm('Are you sure you want to delete this event?');
+                if (c){
+                    $.ajax({
+                        url: window.location.pathname,
+                        type: 'delete',
+                        success: function (resp) {
+                            Msg.success('Event deleted');
+                            setTimeout(function () {
+                                window.location.pathname = '/Calendars';
+                            }, 1000);
+                        },
+                        error: function () {
+                            Msg.error('Error when deleting event');
+                        }
+                    })
+                }
             });
             
             btnEdit.on('click', function (e) {
