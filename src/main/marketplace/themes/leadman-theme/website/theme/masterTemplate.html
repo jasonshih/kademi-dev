@@ -9,40 +9,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="templateName" content="$templateName" />
         <meta name='pageType' value='$templater.getClassName($page)' />
-        <script type="text/javascript">
-            // Templates should push page init function into this array. It will then be run after outer template init functions.
-            var pageInitFunctions = [];
-        </script>
-
-        <script src="/static/jquery/1.11.0/jquery-1.11.0.js">//</script>
-        <script src="/theme/js/kademi.js">//</script>
-        <script src="/theme/js/kademi.jquery.js">//</script>
-        <script src="/theme/js/kademi.theme.js">//</script>
-
-        <script src="/static/js/jquery.pjax.js" type="text/javascript">//</script>
-        <script src="/theme/js/bootstrap.min.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.cookie.js">//</script>
-        <script type="text/javascript" src="/static/jquery-ui/1.10.4/js/jquery-ui-1.10.4.custom.min.js">//</script>
-        <script type="text/javascript" src="/theme/js/jquery.user.js">//</script>
-        <script type="text/javascript" src="/static/jquery.comments/1.0.4/jquery.comments-1.0.4.js">//</script>
-
-        <script type="text/javascript" src="/static/jquery.placeholder/2.3.1/jquery.placeholder.min.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.autogrow-textarea-1.0.0.js">//</script>
-        <script type="text/javascript" src="/static/bootstrap-msg/0.3/bootstrap-msg.min.js">//</script>
 
         $templater.pushLess("/theme/less/bootstrap.less", "all", 0)
         $templater.pushLess("/theme/less/app.less", "all")
         $templater.pushLess("/theme/theme-params.less", "all")
- 
-        <link rel="stylesheet" href="/static/bootstrap-msg/0.3/bootstrap-msg.min.css" type="text/css" />
-        <link rel="stylesheet" href="/static/font-awesome/4.4.0/css/font-awesome.min.css" />
+
         <link href="/theme/apps/leadman/quickLead.css" rel="stylesheet" type="text/css" />
 
         #foreach( $lessSource in $templater.lessSources.entrySet())
-            <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$!lessSource.key" />
+            <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
         #end
-
-        <link rel="stylesheet" href="/theme/overrides.css" />
 
         <!-- Injected CSS sources -->
         #foreach($groupEntry in $templater.cssSources.entrySet())
@@ -56,12 +32,18 @@
             <script src="$path" type="text/javascript">//</script>
             #end
         #end
-        <!-- End injected JS sources -->
+        <!-- End injected CSS sources -->
+
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+        <script src="/js/html5shiv.js" type="text/javascript"></script>
+        <script src="/static/js/respond.src.js" type="text/javascript">//</script>
+        <![endif]-->
+
+        #portlets("header")
 
         <!-- merged includes and leadManIncludes. Now being called from LeadManApp header portler -->
         <!-- parse("/templates/apps/leadman/leadManIncludes.html") -->
-
-        #portlets("header")
     </head>
 
     #if ($page.getParam("pageBgColor") && $page.getParam("pageBgColor") != "")

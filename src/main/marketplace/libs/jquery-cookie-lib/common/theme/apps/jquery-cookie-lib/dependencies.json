@@ -1,0 +1,12 @@
+{
+    "appDependencies": [
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/jquery-cookie-lib/jquery.cookie.js"
+            }
+        }
+    ]
+}

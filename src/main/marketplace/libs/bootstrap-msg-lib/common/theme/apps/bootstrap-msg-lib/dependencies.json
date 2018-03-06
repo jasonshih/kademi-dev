@@ -1,0 +1,18 @@
+{
+    "appDependencies": [
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/bootstrap-msg-lib/bootstrap-msg.min.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/bootstrap-msg-lib/bootstrap-msg.min.css"
+            }
+        }
+    ]
+}

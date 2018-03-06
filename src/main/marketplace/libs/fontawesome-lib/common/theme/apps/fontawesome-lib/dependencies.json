@@ -1,0 +1,12 @@
+{
+    "appDependencies": [
+    ],
+    "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/fontawesome-lib/css/font-awesome.min.css"
+            }
+        }
+    ]
+}

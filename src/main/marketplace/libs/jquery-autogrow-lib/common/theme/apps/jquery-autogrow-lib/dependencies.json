@@ -1,0 +1,12 @@
+{
+    "appDependencies": [
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/jquery-autogrow-lib/jquery.autogrow-textarea-1.0.0.js"
+            }
+        }
+    ]
+}

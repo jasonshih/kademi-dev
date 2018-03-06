@@ -1,0 +1,12 @@
+{
+    "appDependencies": [
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/jquery-placeholder-lib/jquery.placeholder.min.js"
+            }
+        }
+    ]
+}

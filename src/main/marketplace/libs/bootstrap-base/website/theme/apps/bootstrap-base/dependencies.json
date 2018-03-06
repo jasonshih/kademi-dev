@@ -1,6 +1,22 @@
 {
     "appDependencies": [
         {
+            "appId": "jquery-lib",
+            "branch": "1.12.4"
+        },
+        {
+            "appId": "jquery-ui-lib",
+            "branch": "1.12.1"
+        },
+        {
+            "appId": "jquery-pjax-lib",
+            "branch": "1.0.0"
+        },
+        {
+            "appId": "jquery-cookie-lib",
+            "branch": "1.4.1"
+        },
+        {
             "appId": "jquery-forms-lib",
             "branch": "1.0.0"
         },
@@ -15,6 +31,63 @@
         {
             "appId": "contentEditor-lib",
             "branch": "1.0.9"
+        },
+        {
+            "appId": "bootstrap-msg-lib",
+            "branch": "0.3.0"
+        },
+        {
+            "appId": "fontawesome-lib",
+            "branch": "4.7.0"
+        },
+        {
+            "appId": "bootstrap-dropdown-hover-lib",
+            "branch": "1.0.0"
+        },
+        {
+            "appId": "jquery-placeholder-lib",
+            "branch": "2.3.1"
+        },
+        {
+            "appId": "jquery-user-lib",
+            "branch": "1.0.0"
+        }
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/js/bootstrap-base-lib.js",
+                "position": 0
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/js/kademi.js",
+                "position": 1
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/js/kademi.jquery.js",
+                "position": 1
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/js/kademi.theme.js",
+                "position": 1
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/js/bootstrap.min.js",
+                "position": 1
+            }
         }
     ]
 }
