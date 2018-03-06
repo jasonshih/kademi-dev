@@ -16,13 +16,13 @@
         },
         {
             "js": {
-                "group": "admin",
+                "group": "main",
                 "path": "/theme/apps/mtree-lib/jstree/dist/jstree.min.js"
             }
         },
         {
             "js": {
-                "group": "admin",
+                "group": "main",
                 "path": "/theme/apps/mtree-lib/jquery.mtree.js"
             }
         }

@@ -16,7 +16,7 @@
     "dependencies": [
         {
             "js": {
-                "group": "admin",
+                "group": "main",
                 "path": "/theme/apps/keditor-lib/keditor-lib.js"
             }
         }

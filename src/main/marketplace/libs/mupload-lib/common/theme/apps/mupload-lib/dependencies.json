@@ -4,7 +4,7 @@
     "dependencies": [
         {
             "js": {
-                "group": "admin",
+                "group": "main",
                 "path": "/theme/apps/mupload-lib/jquery.mupload.js"
             }
         }

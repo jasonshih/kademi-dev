@@ -23,10 +23,8 @@
     <body class="edm-editor-page">
         <!-- Injected JS sources -->
         #foreach($groupEntry in $templater.jsSources.entrySet())
-            #if ($groupEntry.key == "admin")
-                #foreach($jsFile in $groupEntry.value)
-                    <script type="text/javascript" src="$jsFile">//</script>
-                #end
+            #foreach($jsFile in $groupEntry.value)
+                <script type="text/javascript" src="$jsFile" data-lib="edmEditor-lib">//</script>
             #end
         #end
         <!-- End injected JS sources -->

@@ -11,7 +11,7 @@
         },
         {
             "js": {
-                "group": "admin",
+              "group": "main",
                 "path": "/theme/apps/cropperjs-lib/dist/cropper.min.js"
             }
         }

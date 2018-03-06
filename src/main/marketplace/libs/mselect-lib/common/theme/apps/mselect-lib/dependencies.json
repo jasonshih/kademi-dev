@@ -22,7 +22,7 @@
         },
         {
             "js": {
-                "group": "admin",
+                "group": "main",
                 "path": "/theme/apps/mselect-lib/jquery.mselect.js"
             }
         }

@@ -14,7 +14,7 @@
         },
         {
             "js": {
-                "group": "admin",
+                "group": "main",
                 "path": "/theme/apps/photoeditor-lib/photoeditor.js"
             }
         }

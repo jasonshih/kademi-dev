@@ -12,7 +12,7 @@
     "dependencies": [
         {
             "js": {
-                "group": "admin",
+                "group": "main",
                 "path": "/theme/apps/ckeditor-lib/ckeditor-lib.js"
             }
         }
