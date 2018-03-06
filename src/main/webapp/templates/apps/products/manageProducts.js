@@ -417,7 +417,6 @@ function initSelectPicker() {
                 cache: false,
                 preserveSelected: true,
                 preserveSelectedPosition : 'before',
-                log : 4,
                 clearOnEmpty : false,
                 minLength : 0,
                 emptyRequest : true,
@@ -478,49 +477,47 @@ function initAddCategories() {
         });
 
 
-            flog("initAddCategories.4");
-            flog("initAddCategories: ", selectpicker);
-            selectpicker.ajaxSelectPicker({
-                ajax: {
-                    url: '/categories/',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: function () {
-                        var params = {
-                            search: '{{{q}}}'
-                        };
+        selectpicker.ajaxSelectPicker({
+            ajax: {
+                url: '/categories/',
+                type: 'POST',
+                dataType: 'json',
+                data: function () {
+                    var params = {
+                        search: '{{{q}}}'
+                    };
 
-                        return params;
-                    }
-                },
-                cache: false,
-                preserveSelected: true,
-                preserveSelectedPosition : 'before',
-                log : 4,
-                clearOnEmpty : false,
-                minLength : 0,
-                emptyRequest : true,
-
-                preprocessData: function (resp) {
-                    flog(resp);
-                    var categories = [];
-                    if (resp && resp.status) {
-                        $.each(resp.data, function (i, n) {
-                            categories.push({
-                                'value': n.name,
-                                'text': n.title,
-                                'data': {'subtext': n.parentTitle},
-                                'disabled': false
-                            });
-                        });
-                    }
-                    flog(categories);
-                    return categories;
-                },
-                locale: {
-                    statusInitialized: 'Search to see more...'
+                    return params;
                 }
-            });
+            },
+            cache: false,
+            preserveSelected: true,
+            preserveSelectedPosition : 'before',
+            log : 4,
+            clearOnEmpty : false,
+            minLength : 0,
+            emptyRequest : true,
+
+            preprocessData: function (resp) {
+                flog(resp);
+                var categories = [];
+                if (resp && resp.status) {
+                    $.each(resp.data, function (i, n) {
+                        categories.push({
+                            'value': n.name,
+                            'text': n.title,
+                            'data': {'subtext': n.parentTitle},
+                            'disabled': false
+                        });
+                    });
+                }
+                flog(categories);
+                return categories;
+            },
+            locale: {
+                statusInitialized: 'Search to see more...'
+            }
+        });
     });
 
     $(".btnSaveCategories").on('click', function (e) {

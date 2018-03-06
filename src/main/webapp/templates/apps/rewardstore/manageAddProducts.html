@@ -14,8 +14,8 @@
                 display: block;
             }
         </style>
-        <script type="text/javascript" src="/static/bootstrap-select/1.10.0/dist/js/bootstrap-select.min.js">//</script>
-        <script type="text/javascript" src="/static/bootstrap-select-ajax/1.4.3/dist/js/ajax-bootstrap-select.min.js">//</script>
+        <script type="text/javascript" src="/static/bootstrap-select/1.10.0/dist/js/bootstrap-select.js">//</script>
+        <script type="text/javascript" src="/static/bootstrap-select-ajax/1.4.3/dist/js/ajax-bootstrap-select.js">//</script>
         <link rel="stylesheet" href="/static/bootstrap-select/1.10.0/dist/css/bootstrap-select.min.css" />
         <link rel="stylesheet" href="/static/bootstrap-select-ajax/1.4.3/dist/css/ajax-bootstrap-select.min.css" />
     </head>
@@ -25,7 +25,10 @@
                 <span class="fa fa-arrow-left"></span>
                 Manage reward store
             </a>
-            <h2>Add products to reward store: $page.title</h2>
+            <h2>
+                <span class="fa fa-plus-circle text-success"></span>
+                Add products to reward store: $page.title
+            </h2>
             <hr/>
             <div id="products" class="tab-pane">
                 <div class="clearfix form-horizontal">
@@ -41,12 +44,9 @@
                             </p>
                         </div>
                         <div class="col-sm-3">
-                            <select name="categoryName" id="categoryName" class="category form-control input-sm selectpicker" multiple="multiple">
-                                #set( $catCount = 0 )
-                                #genCategories($page.getCategoryBeans(20))
-
-                                #if( $catCount >= 20 )
-                                    <option class="search-more"></option>
+                            <select name="categoryName" id="categoryName" class="category form-control selectpicker" multiple="multiple">
+                                #foreach($cat in $page.selectedCategories)
+                                $formatter.option($cat.name, $cat.title, $cat.name )
                                 #end
                             </select>
                         </div>
