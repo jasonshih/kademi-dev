@@ -11,7 +11,7 @@
         #if( $rootFolder.is("website") )
             #set( $path = $fields.path )
         #else
-            #set( $path = "/pages/$fields.repository/$fields.branch/$fields.path/.." )
+            #set( $path = "/pages/$fields.repository/${fields.branch}${fields.path}/.." )
         #end
         <a href="$path">
             <span>
