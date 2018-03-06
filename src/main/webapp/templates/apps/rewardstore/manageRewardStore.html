@@ -16,11 +16,11 @@
         </style>
         <link href="https://gitcdn.github.io/bootstrap-toggle/2.1.0/css/bootstrap-toggle.min.css" rel="stylesheet" />
         <script src="https://gitcdn.github.io/bootstrap-toggle/2.1.0/js/bootstrap-toggle.min.js">//</script>
-        <script type="text/javascript" src="/static/bootstrap-select/1.10.0/dist/js/bootstrap-select.min.js">//</script>
-        <script type="text/javascript" src="/static/bootstrap-select-ajax/1.4.3/dist/js/ajax-bootstrap-select.min.js">//</script>
+
+        <script type="text/javascript" src="/static/bootstrap-select/1.10.0/dist/js/bootstrap-select.js">//</script>
+        <script type="text/javascript" src="/static/bootstrap-select-ajax/1.4.3/dist/js/ajax-bootstrap-select.js">//</script>
         <link rel="stylesheet" href="/static/bootstrap-select/1.10.0/dist/css/bootstrap-select.min.css" />
         <link rel="stylesheet" href="/static/bootstrap-select-ajax/1.4.3/dist/css/ajax-bootstrap-select.min.css" />
-
     </head>
     <body>
         <div id="rewardStoreContent">
@@ -152,32 +152,12 @@
                                     </p>
                                 </div>
                                 <div class="col-md-3">
-                                    <select name="categoryName" id="categoryName" class="category form-control input-sm selectpicker" multiple="multiple" data-live-search="true">
-                                        #set( $catCount = 0 )
-                                        #genCategories($page.getCategoryBeans(20))
-
-                                        #if( $catCount >= 20 )
-                                        <option class="search-more">Search to see more</option>
+                                    <select name="categoryName" id="categoryName" class="category form-control selectpicker" multiple="multiple">
+                                        #foreach($cat in $page.selectedCategories)
+                                        $formatter.option($cat.name, $cat.title, $cat.name )
                                         #end
                                     </select>
                                 </div>
-
-                                #macro(genCategories $categories)
-                                    #foreach($cat in $categories)
-                                        #set( $size = $cat.childCategories.size())
-
-                                        #set( $catCount = $catCount + 1 )
-
-                                        #if( $catCount > 20 )
-                                            #break
-                                        #end
-
-                                        $formatter.option($cat.name, "$formatter.padWith('-', '', $cat.level) $cat.title", $request.params.categoryName)
-                                        #if( $size > 0 )
-                                            #genCategories($cat.childCategories)
-                                        #end
-                                    #end
-                                #end
 
                                 <div class="col-md-6">
                                     <div class="pull-right">
@@ -555,11 +535,6 @@
             function initSelectPicker() {
                 $('.selectpicker').each(function () {
                     var selectpicker = $(this);
-                    var searchMore = selectpicker.find('.search-more');
-                    var needAjaxSearch = searchMore.length > 0;
-                    if (searchMore.length > 0) {
-                        searchMore.remove();
-                    }
 
                     selectpicker.selectpicker({
                         liveSearch: true,
@@ -567,7 +542,7 @@
                         style: 'btn btn-sm btn-default'
                     });
 
-                    if (selectpicker.hasClass('category') && needAjaxSearch) {
+                    if (selectpicker.hasClass('category') ) {
                         selectpicker.ajaxSelectPicker({
                             ajax: {
                                 url: '/categories/',
@@ -585,6 +560,8 @@
                             preserveSelected: true,
                             preserveSelectedPosition: 'before',
                             emptyRequest: true,
+                            clearOnEmpty : false,
+                            minLength : 0,
                             preprocessData: function (resp) {
                                 var categories = [];
                                 if (resp && resp.status) {

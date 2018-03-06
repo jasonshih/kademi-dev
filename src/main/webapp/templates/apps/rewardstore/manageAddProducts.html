@@ -51,23 +51,6 @@
                             </select>
                         </div>
 
-                        #macro(genCategories $categories)
-                            #foreach($cat in $categories)
-                                #set( $size = $cat.childCategories.size())
-
-                                #set( $catCount = $catCount + 1 )
-
-                                #if( $catCount > 20 )
-                                    #break
-                                #end
-
-                                $formatter.option($cat.name, "$formatter.padWith('-', '', $cat.level) $cat.title", $request.params.categoryName)
-                                #if( $size > 0 )
-                                    #genCategories($cat.childCategories)
-                                #end
-                            #end
-                        #end
-
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label for="search-library" class="col-sm-2 control-label">Library: </label>
