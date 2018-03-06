@@ -49,7 +49,7 @@ function initCopyVersionModal(managePage) {
         '                   <div class="form-group">' +
         '                       <label for="copyVersion_" class="control-label col-md-3">Enter a name</label>' +
         '                       <div class="col-md-8">' +
-        '                           <input type="text" class="form-control regex required" required="true" id="copyVersion_" name="copyToName" data-regex="^[a-zA-Z0-9-]+$" data-message="Version name is invalid" placeholder="Enter a simple name for the version, eg version2" />' +
+        '                           <input type="text" class="form-control regex required" required="true" id="copyVersion_" name="copyToName" data-regex="^[a-z0-9-]+$" data-message="Version name is invalid" placeholder="Enter a simple name for the version, eg version2" />' +
         '                           <small class="help-block">Simple characters only, no punctuation, dots, etc, all lower case</small>' +
         '                       </div>' +
         '                   </div>' +
@@ -65,6 +65,10 @@ function initCopyVersionModal(managePage) {
     );
     
     $(document.body).append(modal);
+
+    modal.find('[name=copyToName]').on('change', function () {
+        this.value = (this.value || '').toLowerCase();
+    });
     
     modal.find('form').forms({
         onSuccess: function (resp) {
