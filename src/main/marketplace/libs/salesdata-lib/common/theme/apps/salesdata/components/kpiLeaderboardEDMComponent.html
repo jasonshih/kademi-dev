@@ -1,48 +1,52 @@
 #if (!$rowHeight)
-#set ($rowHeight = 25)
-#end
-#if (!$numUsers)
-#set ($numUsers = 5)
+    #set ($rowHeight = 25)
 #end
 
+#if (!$numUsers)
+    #set ($numUsers = 5)
+#end
+
+#set ($cellStyles = 'padding-top: ' + $cellPadding + 'px; padding-bottom:' + $cellPadding + 'px; padding-right: ' + $cellPadding + 'px; padding-left: ' + $cellPadding + 'px')
+#set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
 
 #set( $lb = $applications.salesData.pointsLeaderboard($salesDataSeries, $kpi, $period, $numUsers))
-#if( $lb )
 
-<table cellpadding="0" cellspacing="0" width="100%" class="table table-striped table-hover">
+<table cellpadding="0" cellspacing="0" width="100%" bgcolor="$!bodyBgColor">
     <thead>
-        <tr>
-            <th style="text-align: left;">Rank</th>
-            <th style="text-align: left;">Participant</th>
+        <tr bgcolor="$!headerBgColor">
+            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>Rank</strong></th>
+            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>Participant</strong></th>
         </tr>
     </thead>
     <tbody id="leaderboardBody">
-        #foreach($item in $lb )
-        #set( $plusOne = $item.rank + 1 )
-        #if($plusOne > $numUsers)
-        #break
-        #end
-        <tr>
-            <td>$plusOne</td>
-            <td>
-                <!-- either a profilebean or orgdata -->
-                #if( $item.profile) <!-- is individual -->
-                    $item.profile.formattedName() 
-                #else
-                    $item.org.title
+        #if ($lb)
+            #foreach($item in $lb )
+                #set( $plusOne = $item.rank + 1 )
+                #if($plusOne > $numUsers)
+                    #break
                 #end
-            </td>
-        </tr>
+
+                #set ($itemName = $item.org.title)
+                #if( $item.profile) <!-- is individual -->
+                    #set ($itemName = $item.profile.formattedName())
+                #end
+
+                #renderLeaderboardRecord($plusOne $itemName)
+            #end
+        #else
+            #renderLeaderboardRecord("1" "[Please select data series and KPI]")
+            #renderLeaderboardRecord("2" "[Please select data series and KPI]")
+            #renderLeaderboardRecord("3" "[Please select data series and KPI]")
         #end
     </tbody>
 </table>
 
-#else
-<table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="$!{bgcolor}">
-    <tr>
-        <td colspan="2">
-            No KPI selected
+
+#macro (renderLeaderboardRecord $rank $name)
+    <tr bgcolor="$!bodyBgColor">
+        <td height="$rowHeight" valign="top" style="$baseStyles; ${cellStyles}">$rank</td>
+        <td valign="top" style="$baseStyles; ${cellStyles}">
+            $name
         </td>
     </tr>
-</table>
 #end

@@ -4,7 +4,15 @@ controllerMappings.addComponent("salesdata/components", "salesTable", "html", "D
 controllerMappings.addComponent("salesdata/components", "salesDataCompare", "html", "Displays chart to compare sale amount between last year and current", "Sales data");
 controllerMappings.addComponent("salesdata/components", "onTrackAllKpis", "html", "Shows indicators if the user is on track to achieve all available KPIs", "Sales data");
 
-controllerMappings.addComponent("salesdata/components", "kpiLeaderboardEDM", "edm", "Shows a leaderboard that includes current participant, for a selected KPI", "Sales data");
+
+controllerMappings.addComponent("salesdata/components", "kpiLeaderboardEDM")
+    .addType("edm")
+    .desc("Shows a leaderboard that includes current participant, for a selected KPI")
+    .categories("Sales data")
+    .addDefaultAtt("header-bg-color", "#eeeeee")
+    .addDefaultAtt("body-bg-color", "#fafafa")
+    .addDefaultAtt("cell-padding", "5")
+    .build();
 
 controllerMappings
     .websiteController()
