@@ -336,6 +336,9 @@
                 var data = c.data;
                 
                 if (data) {
+                    // Remove any elements that don't have a message ID, This is caused when a message is sent.
+                    self.$elem.find('[data-messageid=]').remove();
+                    
                     data.sort(function (a, b) {
                         var result = (a['timestamp'] < b['timestamp']) ? -1 : (a['timestamp'] > b['timestamp']) ? 1 : 0;
                         return result * 1;
