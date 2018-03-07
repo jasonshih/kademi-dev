@@ -18,7 +18,14 @@ controllerMappings.addComponent("rewardstore/components", "singleProductEDM")
     .build();
 
 controllerMappings.addComponent("rewardstore/components", "rewardCategoriesListEDM", "edm", "Show reward store categories list for EDM Editor", "Reward Store");
-controllerMappings.addComponent("rewardstore/components", "pointsLeaderboardEDM", "edm", "Shows points leaderboard that includes current participant, for a selected points bucket", "Reward Store");
+controllerMappings.addComponent("rewardstore/components", "pointsLeaderboardEDM")
+    .addType("edm")
+    .desc("Shows points leaderboard that includes current participant, for a selected points bucket")
+    .categories("Reward Store")
+    .addDefaultAtt("header-bg-color", "#eeeeee")
+    .addDefaultAtt("body-bg-color", "#fafafa")
+    .addDefaultAtt("cell-padding", "5")
+    .build();
 
 controllerMappings
         .websitePortletController()

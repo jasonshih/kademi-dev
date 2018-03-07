@@ -1,5 +1,6 @@
 (function ($) {
     var KEditor = $.keditor;
+    var edmEditor = $.edmEditor;
     var flog = KEditor.log;
 
     KEditor.components['pointsLeaderboardEDM'] = {
@@ -71,6 +72,37 @@
                         component.attr('data-end-date', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('.txt-cell-padding').on('change', function () {
+                        var number = this.value;
+
+                        if (isNaN(number) || +number < 0) {
+                            number = 0;
+                            this.value = number;
+                        }
+
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-cell-padding', number);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    edmEditor.initSimpleColorPicker(form.find('.txt-header-bg-color'), function (color) {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-header-bg-color', color);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    edmEditor.initSimpleColorPicker(form.find('.txt-body-bg-color'), function (color) {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-body-bg-color', color);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -86,6 +118,9 @@
             form.find('input.txt-show-username').val(dataAttributes['data-show-username'] || 'true');
             form.find('input.start-date').val(dataAttributes['data-start-date']);
             form.find('input.end-date').val(dataAttributes['data-end-date']);
+            form.find('.txt-cell-padding').val(dataAttributes['data-cell-padding']);
+            form.find('.txt-header-bg-color').val(dataAttributes['data-header-bg-color'] || '').trigger('update');
+            form.find('.txt-body-bg-color').val(dataAttributes['data-body-bg-color'] || '').trigger('update');
         }
     };
 

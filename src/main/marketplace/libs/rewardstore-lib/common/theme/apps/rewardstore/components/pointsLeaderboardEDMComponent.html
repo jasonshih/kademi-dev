@@ -28,14 +28,17 @@
     #set($showUsername = "true")
 #end
 
+#set ($cellStyles = 'padding-top: ' + $cellPadding + 'px; padding-bottom:' + $cellPadding + 'px; padding-right: ' + $cellPadding + 'px; padding-left: ' + $cellPadding + 'px')
+#set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
+
 <table cellpadding="0" cellspacing="0" width="100%" bgcolor="$!{bgcolor}">
     <thead>
-        <tr>
-            <th style="text-align: left;">Rank</th>
+        <tr bgcolor="$!headerBgColor">
+            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>Rank</strong></th>
             #if($showUsername == "true")
-            <th style="text-align: left;">Participant</th>
+            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>Participant</strong></th>
             #end
-            <th style="text-align: left;">Points</th>
+            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>Points</strong></th>
         </tr>
     </thead>
     #set( $rank = 1 )
@@ -62,12 +65,12 @@
 </table>
 
 #macro (renderPointRecord $rank $name $point)
-    <tr>
-        <td height="$rowHeight">$rank</td>
+    <tr bgcolor="$!bodyBgColor">
+        <td height="$rowHeight" valign="top" style="$baseStyles; ${cellStyles}">$rank</td>
         #if($showUsername == "true")
-        <td>$name</td>
+        <td valign="top" style="$baseStyles; ${cellStyles}">$name</td>
         #end
-        <td>
+        <td valign="top" style="$baseStyles; ${cellStyles}">
             $formatter.ifNull($point, 0) pts
         </td>
     </tr>
