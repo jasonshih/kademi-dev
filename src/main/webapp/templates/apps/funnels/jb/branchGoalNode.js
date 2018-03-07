@@ -17,11 +17,7 @@ JBNodes['branchGoal'] = {
                 if (node.branchNodeIds) {
                     for (var i = 0; i < node.branchNodeIds.length; i++) {
                         var nodeId = node.branchNodeIds[i];
-                        JBApp.jspInstance.connect({
-                            source: node.nodeId,
-                            target: nodeId,
-                            type: 'nextGoals'
-                        });
+                        JBApp.connectNode(node.nodeId, nodeId, 'branchGoal', 'nextGoals');
                     }
                 }
             },

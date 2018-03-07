@@ -16,11 +16,7 @@ JBNodes['taskGoal'] = {
             onInitConnection: function (node) {
                 if (node.taskOutcomes && $.isArray(node.taskOutcomes)) {
                     for (var i = 0; i < node.taskOutcomes.length; i++) {
-                        JBApp.jspInstance.connect({
-                            source: node.nodeId,
-                            target: node.taskOutcomes[i].nextNodeId,
-                            type: 'taskOutcomes'
-                        });
+                        JBApp.connectNode(node.nodeId, node.taskOutcomes[i].nextNodeId, 'taskGoal', 'taskOutcomes');
                     }
                 }
             },

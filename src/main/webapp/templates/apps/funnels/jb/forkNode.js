@@ -16,11 +16,7 @@ JBNodes['fork'] = {
             onInitConnection: function (node) {
                 if (node.secondaryNextNodeIds && $.isArray(node.secondaryNextNodeIds)) {
                     for (var i = 0; i < node.secondaryNextNodeIds.length; i++) {
-                        JBApp.jspInstance.connect({
-                            source: node.nodeId,
-                            target: node.secondaryNextNodeIds[i],
-                            type: 'secondaryNextNodeIds'
-                        });
+                        JBApp.connectNode(node.nodeId, node.secondaryNextNodeIds[i], 'fork', 'secondaryNextNodeIds');
                     }
                 }
             },

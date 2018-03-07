@@ -134,7 +134,7 @@ var JBApp = {
                     portClass = 'node-endpoint-basic';
             }
 
-            nodePorts += '<span title="' + portData.title + '" class="node-endpoint ' + portClass + '" data-name="' + portName + '"></span>';
+            nodePorts += '<span title="' + portData.title + '" class="node-endpoint ' + portClass + '" data-name="' + type + '-' + portName + '"></span>';
         }
 
         var nodeName = node.title ? '<span class="node-title-inner">' + node.title + '</span>' : '<span class="node-title-inner">Enter title</span>';
@@ -216,9 +216,9 @@ var JBApp = {
 
         for (var portName in nodeDef.ports) {
             JBApp.jspInstance.makeSource(nodeDiv, {
-                filter: '[data-name=' + portName + ']',
+                filter: '[data-name=' + type + '-' + portName + ']',
                 connectorStyle: JBApp.getConnectorStyle(portName),
-                connectionType: portName,
+                connectionType: type + '-' + portName,
                 maxConnections: -1
             });
         }
@@ -230,7 +230,6 @@ var JBApp = {
             allowLoopback: false
         });
     },
-    connectionTypes: {},
     initConnection: function (node, type) {
         flog('initConnection', node, type);
 
@@ -241,7 +240,6 @@ var JBApp = {
 
         for (var portName in nodeDef.ports) {
             var portData = nodeDef.ports[portName];
-            var connectionType = portName;
 
             if (typeof portData.onInitConnection === 'function') {
                 flog('Call "onInitConnection" handler of "' + portName + '" port of "' + type + '" node');
@@ -250,11 +248,7 @@ var JBApp = {
                 flog('Use default handler when initializing existing connection');
 
                 if (node[portName]) {
-                    JBApp.jspInstance.connect({
-                        source: node.nodeId,
-                        target: node[portName],
-                        type: connectionType
-                    });
+                    JBApp.connectNode(node.nodeId, node[portName], type, portName);
                 }
             }
         }
@@ -378,71 +372,71 @@ var JBApp = {
     },
 
     standardGoalSettingControls: '<div class="form-group">' +
-            '    <div class="col-md-12">' +
-            '        <label>Enter stage</label>' +
-            '        <select class="form-control stage-select stageName"></select>' +
-            '    </div>' +
-            '</div>' +
-            '<div class="form-group">' +
-            '    <div class="col-md-12">' +
-            '        <label>Achieved stage</label>' +
-            '        <select class="form-control stage-select achievedStageName"></select>' +
-            '    </div>' +
-            '</div>' +
-            '<div class="form-group">' +
-            '    <div class="col-md-12">' +
-            '        <label>Source</label>' +
-            '        <select class="form-control source"></select>' +
-            '    </div>' +
-            '</div>' +
-            '<div class="form-group">' +
-            '    <div class="col-md-12">' +
-            '        <label>Cost</label>' +
-            '        <input type="number" class="form-control cost" value="" />' +
-            '    </div>' +
-            '</div>' +
-            '<div class="form-group">' +
-            '    <div class="col-md-12">' +
-            '        <label>Probability</label>' +
-            '        <input type="number" class="form-control probability" value="" />' +
-            '    </div>' +
-            '</div>' +
-            '<div class="form-group">' +
-            '    <div class="col-md-12">' +
-            '        <label>Timeout</label>' +
-            '        <div class="input-group">' +
-            '            <input type="number" class="form-control timeout-multiples numeric" />' +
-            '            <div class="input-group-btn">' +
-            '                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="timeout-units-preview"></span>' +
-            '                    <span class="caret"></span>' +
-            '                </button>' +
-            '                <input type="hidden" class="timeout-units" value="" />' +
-            '                <ul class="dropdown-menu dropdown-menu-right timeout-units-selector">' +
-            '                    <li><a href="#" data-value="y">Years</a></li>' +
-            '                    <li><a href="#" data-value="M">Months</a></li>' +
-            '                    <li><a href="#" data-value="w">Weeks</a></li>' +
-            '                    <li><a href="#" data-value="d">Days</a></li>' +
-            '                    <li><a href="#" data-value="h">Hours</a></li>' +
-            '                    <li><a href="#" data-value="m">Minutes</a></li>' +
-            '                </ul>' +
-            '            </div>' +
-            '        </div>' +
-            '    </div>' +
-            '</div>' +
-            '<div class="form-group">' +
-            '    <div class="col-md-12">' +
-            '        <label>Time</label>' +
-            '        <input type="text" class="form-control time" value="" />' +
-            '        <em class="small help-block text-muted">(Optional) If set this will cause a timer to execute at a particular time, as well as after the specified delay.</em>' +
-            '    </div>' +
-            '</div>' +
-            '<div class="form-group">' +
-            '    <div class="col-md-12">' +
-            '        <label>Timeout Relative to Date</label>' +
-            '        <input class="form-control timeoutRelativeDateMVEL datetime" value="" />' +
-            '        <em class="small help-block text-muted">(Optional) If set this will cause a timer to calculate execution time relative to this date.</em>' +
-            '    </div>' +
-            '</div>',
+    '    <div class="col-md-12">' +
+    '        <label>Enter stage</label>' +
+    '        <select class="form-control stage-select stageName"></select>' +
+    '    </div>' +
+    '</div>' +
+    '<div class="form-group">' +
+    '    <div class="col-md-12">' +
+    '        <label>Achieved stage</label>' +
+    '        <select class="form-control stage-select achievedStageName"></select>' +
+    '    </div>' +
+    '</div>' +
+    '<div class="form-group">' +
+    '    <div class="col-md-12">' +
+    '        <label>Source</label>' +
+    '        <select class="form-control source"></select>' +
+    '    </div>' +
+    '</div>' +
+    '<div class="form-group">' +
+    '    <div class="col-md-12">' +
+    '        <label>Cost</label>' +
+    '        <input type="number" class="form-control cost" value="" />' +
+    '    </div>' +
+    '</div>' +
+    '<div class="form-group">' +
+    '    <div class="col-md-12">' +
+    '        <label>Probability</label>' +
+    '        <input type="number" class="form-control probability" value="" />' +
+    '    </div>' +
+    '</div>' +
+    '<div class="form-group">' +
+    '    <div class="col-md-12">' +
+    '        <label>Timeout</label>' +
+    '        <div class="input-group">' +
+    '            <input type="number" class="form-control timeout-multiples numeric" />' +
+    '            <div class="input-group-btn">' +
+    '                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="timeout-units-preview"></span>' +
+    '                    <span class="caret"></span>' +
+    '                </button>' +
+    '                <input type="hidden" class="timeout-units" value="" />' +
+    '                <ul class="dropdown-menu dropdown-menu-right timeout-units-selector">' +
+    '                    <li><a href="#" data-value="y">Years</a></li>' +
+    '                    <li><a href="#" data-value="M">Months</a></li>' +
+    '                    <li><a href="#" data-value="w">Weeks</a></li>' +
+    '                    <li><a href="#" data-value="d">Days</a></li>' +
+    '                    <li><a href="#" data-value="h">Hours</a></li>' +
+    '                    <li><a href="#" data-value="m">Minutes</a></li>' +
+    '                </ul>' +
+    '            </div>' +
+    '        </div>' +
+    '    </div>' +
+    '</div>' +
+    '<div class="form-group">' +
+    '    <div class="col-md-12">' +
+    '        <label>Time</label>' +
+    '        <input type="text" class="form-control time" value="" />' +
+    '        <em class="small help-block text-muted">(Optional) If set this will cause a timer to execute at a particular time, as well as after the specified delay.</em>' +
+    '    </div>' +
+    '</div>' +
+    '<div class="form-group">' +
+    '    <div class="col-md-12">' +
+    '        <label>Timeout Relative to Date</label>' +
+    '        <input class="form-control timeoutRelativeDateMVEL datetime" value="" />' +
+    '        <em class="small help-block text-muted">(Optional) If set this will cause a timer to calculate execution time relative to this date.</em>' +
+    '    </div>' +
+    '</div>',
     initStandardGoalSettingControls: function (form) {
         form.find('.timeout-units-selector li').on('click', function (e) {
             e.preventDefault();
@@ -517,6 +511,13 @@ var JBApp = {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         }));
+    },
+    connectNode: function (source, target, nodeType, portName) {
+        JBApp.jspInstance.connect({
+            source: source,
+            target: target,
+            type: nodeType + '-' + portName
+        });
     }
 };
 
@@ -526,99 +527,94 @@ jsPlumb.ready(function () {
     // setup some defaults for jsPlumb.
     var instance = jsPlumb.getInstance({
         Endpoint: ['Dot', {
-                radius: 2
-            }],
+            radius: 2
+        }],
         Connector: ['Flowchart', {
-                cornerRadius: 5,
-                gap: 1,
-                stub: 20,
-                alwaysRespectStubs: true,
-                midpoint: 1
-            }],
+            cornerRadius: 5,
+            gap: 1,
+            stub: 20,
+            alwaysRespectStubs: true,
+            midpoint: 1
+        }],
         HoverPaintStyle: {
             strokeStyle: '#1e8151',
             lineWidth: 2
         },
         ConnectionOverlays: [
             ['Arrow', {
-                    location: 1,
-                    id: 'arrow',
-                    length: 10,
-                    width: 10,
-                    foldback: 0.5
-                }],
+                location: 1,
+                id: 'arrow',
+                length: 10,
+                width: 10,
+                foldback: 0.5
+            }],
             ['Label', {
-                    label: '',
-                    id: 'label',
-                    cssClass: 'node-connection-label'
-                }],
+                label: '',
+                id: 'label',
+                cssClass: 'node-connection-label'
+            }],
             ['Custom', {
-                    create: function () {
-                        return $('<div><a href="#" title="Click to delete connection" class="btn-delete-node-connection"><i class="fa fa-times-circle"></i></a></div>');
-                    },
-                    events: {
-                        click: function (labelOverlay, e) {
-                            flog('Click on label overlay', labelOverlay, labelOverlay.component);
+                create: function () {
+                    return $('<div><a href="#" title="Click to delete connection" class="btn-delete-node-connection"><i class="fa fa-times-circle"></i></a></div>');
+                },
+                events: {
+                    click: function (labelOverlay, e) {
+                        flog('Click on label overlay', labelOverlay, labelOverlay.component);
 
-                            e.preventDefault();
-                            e.stopPropagation();
-                            e.stopImmediatePropagation();
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
 
-                            labelOverlay.component.setParameter('clickedButtonX', true);
+                        labelOverlay.component.setParameter('clickedButtonX', true);
 
-                            if (confirm('Are you sure you want to delete this connection?')) {
-                                labelOverlay.component.setParameter('clickedButtonXCancelled', false);
-                            } else {
-                                labelOverlay.component.setParameter('clickedButtonXCancelled', true);
-                            }
+                        if (confirm('Are you sure you want to delete this connection?')) {
+                            labelOverlay.component.setParameter('clickedButtonXCancelled', false);
+                        } else {
+                            labelOverlay.component.setParameter('clickedButtonXCancelled', true);
                         }
-                    },
-                    location: 0.7,
-                    id: 'node-connection-label',
-                    visible: false
-                }]
+                    }
+                },
+                location: 0.7,
+                id: 'node-connection-label',
+                visible: false
+            }]
         ],
         Container: 'paper'
     });
     JBApp.jspInstance = instance;
 
 
-    JBApp.connectionTypes = {
-        nextNodeId: [1, 0.775, 1, 0],
-        timeoutNode: [1, 0.94, 1, 0]
-    }
+    JBApp.connectionTypes = {};
 
     // Load connection types position from JBNodes
     for (var nodeName in JBNodes) {
         var index = 0;
         $.each(JBNodes[nodeName].ports, function (portName) {
-            if (portName !== 'timeoutNode' && portName !== 'nextNodeId') {
-                var positionValue;
+            var positionValue;
 
-                switch (index) {
-                    case 0:
-                        positionValue = [1, 0.94, 1, 0];
-                        break;
+            switch (index) {
+                case 0:
+                    positionValue = [1, 0.94, 1, 0];
+                    break;
 
-                    case 1:
-                        positionValue = [1, 0.8, 1, 0];
-                        break;
+                case 1:
+                    positionValue = [1, 0.8, 1, 0];
+                    break;
 
-                    case 2:
-                        positionValue = [1, 0.665, 1, 0];
-                        break;
+                case 2:
+                    positionValue = [1, 0.665, 1, 0];
+                    break;
 
-                    case 3:
-                        positionValue = [1, 0.52, 1, 0];
-                        break;
+                case 3:
+                    positionValue = [1, 0.52, 1, 0];
+                    break;
 
-                    case 4:
-                        positionValue = [1, 0.39, 1, 0];
-                        break;
-                }
-
-                JBApp.connectionTypes[portName] = positionValue;
+                case 4:
+                    positionValue = [1, 0.39, 1, 0];
+                    break;
             }
+
+            JBApp.connectionTypes[nodeName + '-' + portName] = positionValue;
 
             index++;
         });
@@ -662,6 +658,7 @@ jsPlumb.ready(function () {
     instance.bind('connection', function (info) {
         var type = info.source.getAttribute('data-type');
         var portName = info.sourceEndpoint.connectionType;
+        portName = portName.split('-')[1];
         var div = $(info.source);
         var nodeId = div.attr("id");
         var node = JBApp.getNodeInfoById(nodeId)[1];
@@ -791,6 +788,16 @@ jsPlumb.ready(function () {
 function initJourneyBuilder() {
     flog('initJourneyBuilder');
 
+    initFullScreenMode();
+    initSideBar();
+    initSaveButton();
+    initNodeActions();
+    initSettingPanel();
+    initBuilderHeight();
+    initBuilderDragScroll();
+}
+
+function initFullScreenMode() {
     var builder = $('#builder');
     var btnFullscreen = $('#builder-fullscreen');
     btnFullscreen.on('click', function (e) {
@@ -809,13 +816,6 @@ function initJourneyBuilder() {
         builder.removeClass('fullscreen-mode');
         btnFullscreen.attr('title', 'Enter fullscreen mode')
     });
-
-    initSideBar();
-    initSaveButton();
-    initNodeActions();
-    initSettingPanel();
-    initBuilderHeight();
-    initBuilderDragScroll();
 }
 
 function initBuilderDragScroll() {

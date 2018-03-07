@@ -373,21 +373,27 @@ path,
     transition: box-shadow 0.25s ease-in;
 }
 
-.node-endpoint-basic + .node-endpoint-basic {
+.node-endpoint {
+    bottom: 3px;
+}
+
+.node-endpoint + .node-endpoint {
+    bottom: 21px;
+}
+
+.node-endpoint + .node-endpoint + .node-endpoint {
     bottom: 39px;
 }
 
-.node-endpoint-basic + .node-endpoint-basic + .node-endpoint-basic {
+.node-endpoint + .node-endpoint + .node-endpoint + .node-endpoint {
     bottom: 57px;
 }
 
-.node-endpoint-basic + .node-endpoint-basic + .node-endpoint-basic + .node-endpoint-basic {
+.node-endpoint + .node-endpoint + .node-endpoint + .node-endpoint + .node-endpoint {
     bottom: 75px;
 }
 
 .node-endpoint.node-endpoint-timeout {
-    bottom: 3px;
-    top: auto;
     background-color: #e5910f;
 }
 
@@ -397,8 +403,6 @@ path,
 
 .node-endpoint.node-endpoint-red {
     background-color: red;
-    bottom: 3px;
-    top: auto;
 }
 
 .node-endpoint:hover {

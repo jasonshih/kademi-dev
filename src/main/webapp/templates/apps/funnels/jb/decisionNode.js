@@ -10,11 +10,7 @@ JBNodes['decision'] = {
             maxConnections: 1,
             onInitConnection: function (node) {
                 if (node['nextNodeId']) {
-                    JBApp.jspInstance.connect({
-                        source: node.nodeId,
-                        target: node['nextNodeId'],
-                        type: 'decisionDefault'
-                    });
+                    JBApp.connectNode(node.nodeId, node['nextNodeId'], 'decision', 'decisionDefault');
                 }
             },
             onConnected: function (connection, sourceNodeData) {
@@ -30,11 +26,7 @@ JBNodes['decision'] = {
             maxConnections: -1,
             onInitConnection: function (node) {
                 for (var key in node.choices) {
-                    JBApp.jspInstance.connect({
-                        source: node.nodeId,
-                        target: key,
-                        type: 'decisionChoices'
-                    });
+                    JBApp.connectNode(node.nodeId, key, 'decision', 'decisionChoices');
                 }
             },
             onConnected: function (connection, sourceNodeData) {
