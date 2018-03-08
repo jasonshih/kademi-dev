@@ -296,6 +296,7 @@ var JBApp = {
         flog('deleteConnection', connection);
 
         var portName = connection.endpoints[0].connectionType;
+        portName = portName.split('-')[1];
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
             var nodeInfo = JBApp.getNodeInfo(node);
