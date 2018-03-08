@@ -111,7 +111,7 @@ function getFeedbackBySurvey(page, params) {
         if (obj.profileId !== null && obj.profileId !== undefined){
             var user = applications.userApp.findUserResourceById(formatter.toString(obj.profileId));
             if (user !== null) {
-                obj.name = user.firstName + ' ' + user.surName;
+                obj.name = user.extProfileBean.formattedName();
             }
         }
         obj.id = obj.name;

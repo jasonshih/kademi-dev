@@ -18,8 +18,7 @@ $(function () {
                 url: config.apiUrl,
                 type: 'GET',
                 data: {
-                    survey: surveySlug,
-                    miltonUserUrl: miltonUserUrl
+                    survey: surveySlug
                 },
                 dataType: 'json',
                 success: function (data) {
@@ -50,9 +49,7 @@ $(function () {
                 'survey': surveySlug,
                 'option_slug': optionSlug,
                 'option_text': optionText,
-                'website': website,
-                'profileId': window.survey.userId,
-                'miltonUserUrl': window.survey.miltonUserUrl
+                'website': website
             },
             success: function (data) {
                 flog(data);
