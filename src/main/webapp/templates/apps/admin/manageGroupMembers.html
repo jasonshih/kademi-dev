@@ -85,7 +85,11 @@
                 <a class="btn btn-info btn-sm pull-right" href="../">
                     <span class="fa fa-cog"></span>
                     Settings
-                </a>                
+                </a>
+                <button class="btn btn-info btn-sm pull-right" data-toggle="modal" data-target="#modal-add-user">
+                    <span class="fa fa-plus"></span>
+                    Add user
+                </button>
                 <i class="clip-users"></i> Members
             </div>
             <div id="manageGroup" class="panel-body MainContent">
@@ -98,16 +102,16 @@
                     <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
                     </button>
-                    
+
                     <ul class="dropdown-menu" role="menu">
                         <li class="presentation" role="menuitem"><a href="#" class="btn-upload-users-csv">Upload CSV</a></li>
                         <li class="presentation" role="menuitem"><a role="button" href="members.csv" download="members.csv">Open CSV</a></li>
                         <li class="divider" />
                         <li class="presentation" role="menuitem"><a role="button" href="unsubscribers.csv" download="unsubscribers.csv">Open Unsubscribers CSV</a></li>
                     </ul>
-                    #end    
+                    #end
                 </div>
-                
+
                 <div class="col-md-3">
                     <h5>
                         <label class="label-control">Showing: </label>
@@ -144,7 +148,7 @@
                         </div>
                     </div>
                 </div>
-                #end                
+                #end
 
                 <table class="Summary members table table-hover">
                     <thead>
@@ -162,7 +166,7 @@
                             <th><input type="checkbox" name="toRemoveId" class="users selectAll"/></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="members-list">
 
                         #foreach($gm in $page.paginator.records)
 
@@ -176,7 +180,7 @@
                         #end
 
                         <tr class="$rowClass">
-                            <td class="truncate">    
+                            <td class="truncate">
                                 <a href="/manageUsers/$gm.member.userId/">$!gm.member.name</a>
                             </td>
                             <td>$!gm.member.firstName</td>
@@ -218,6 +222,35 @@
             </div>
         </div>
 
+        <div id="modal-add-user" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Add an existing user</h4>
+                    </div>
+                    <form class="form-horizontal" action="" method="post">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="addUserEmail">Email</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="addUserEmail" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-success" type="submit">
+                                <span class="fa fa-plus"></span>
+                                Add
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
         <script type="text/javascript">
             $(function () {
                 jQuery("abbr.timeago").timeago();
@@ -237,6 +270,13 @@
                         var orgId = $(suggestion).attr("data-id");
                         $("#filterOrgId").val(orgId);
                         updateURL();
+                    }
+                });
+                var addUserModal = $("#modal-add-user form");
+                addUserModal.forms({
+                    onSuccess: function (resp) {
+                        Msg.success("Added user", "adduser");
+                        $('#members-list').reloadFragment();
                     }
                 });
 
