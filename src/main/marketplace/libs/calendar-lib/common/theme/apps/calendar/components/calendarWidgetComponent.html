@@ -1,12 +1,10 @@
 
 #if( $calendar && $calendar == '_default')
     #set ($defaultCalendar = '/users/' + $userResource.name + '/Calendars/default/')
-#else
-
 #end
 
 #if ($page)
-<div data-calendar="$!calendar" class="calendar-container" style=""></div>
+<div data-calendar="$!calendar" data-default-calendar="$!defaultCalendar" class="calendar-container" style=""></div>
 #else
 <div data-calendar="$!calendar" class="calendar-container" style=""></div>
 <script>

@@ -91,7 +91,11 @@ function initFullCalendar() {
     $('.calendar-container').each(function(){
         if($(this).find('table').length > 0) return;
         var calendar = $(this).attr('data-calendar');
+        var defaultCalendar = $(this).attr('data-default-calendar');
         var eventsUrl = calendar? '/Calendars/'+calendar : window.location.pathname;
+        if (calendar == '_default' && defaultCalendar){
+            eventsUrl = defaultCalendar;
+        }
         $(this).fullCalendar({
             header: {
                 left: 'prev,next today',
