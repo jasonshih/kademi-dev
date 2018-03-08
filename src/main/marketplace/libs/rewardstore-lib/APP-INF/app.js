@@ -17,7 +17,14 @@ controllerMappings.addComponent("rewardstore/components", "singleProductEDM")
     .addDefaultAtt("viewmore-color", "#2BAADF")
     .build();
 
-controllerMappings.addComponent("rewardstore/components", "rewardCategoriesListEDM", "edm", "Show reward store categories list for EDM Editor", "Reward Store");
+controllerMappings.addComponent("rewardstore/components", "rewardCategoriesListEDM")
+    .addType("edm")
+    .desc("Show reward store categories list for EDM Editor")
+    .categories("Reward Store")
+    .addDefaultAtt("items-per-row", "3")
+    .addDefaultAtt("horizontal-padding", "5")
+    .build();
+
 controllerMappings.addComponent("rewardstore/components", "pointsLeaderboardEDM")
     .addType("edm")
     .desc("Shows points leaderboard that includes current participant, for a selected points bucket")
