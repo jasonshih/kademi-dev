@@ -6,7 +6,7 @@
     KEditor.components['rewardCategoriesListEDM'] = {
         settingEnabled: true,
         
-        settingTitle: 'Product List Settings',
+        settingTitle: 'Categories List Settings',
         
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "rewardCategoriesListEDM" component', form, keditor);
