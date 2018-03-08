@@ -26,12 +26,6 @@ function getSurvey(page, params) {
                 status: 1,
                 survey: JSON.parse(exists.jsonObject)
             };
-            var currentUser = page.find(params.miltonUserUrl);
-            if (currentUser !== null) {
-                log.info('current user {}', currentUser);
-                result.survey.userId = currentUser.userId;
-                result.survey.miltonUserUrl = params.miltonUserUrl;
-            }
         }
     }
 
@@ -78,30 +72,36 @@ function createFeedback(page, params) {
         survey = db.child(surveyId);
     }
 
-    var feedback = {
-        survey_id: surveyId,
-        option_slug: params.option_slug,
-        option_text: params.option_text,
-        website: params.website,
-        created: cur,
-        profileId: params.profileId,
-        processed: false
-    };
-
-    securityManager.runAsUser(survey.jsonObject.profileId, function () {
-        db.createNew(cur, JSON.stringify(feedback), TYPE_FEEDBACK);
-    });
-
     var curUser = securityManager.currentUser;
+
     if (curUser) {
+        var feedback = {
+            survey_id: surveyId,
+            option_slug: params.option_slug,
+            option_text: params.option_text,
+            website: params.website,
+            created: cur,
+            profileId: curUser.userId,
+            processed: false
+        };
+
+        securityManager.runAsUser(survey.jsonObject.profileId, function () {
+            db.createNew(cur, JSON.stringify(feedback), TYPE_FEEDBACK);
+        });
+
         var profileBean = curUser.profile;
         eventManager.goalAchieved("kfeedbackSubmittedGoal", profileBean, {feedback: surveyId});
+
+        return views.jsonObjectView(JSON.stringify({
+            status: 1,
+            feedback: feedback
+        }));
     } else {
-        eventManager.goalAchieved("kfeedbackSubmittedGoal", {feedback: surveyId});
+        return views.jsonObjectView(JSON.stringify({
+            status: 0,
+            msg: 'Please login to submit feedback'
+        }));
     }
 
-    return views.jsonObjectView(JSON.stringify({
-        status: 1,
-        feedback: feedback
-    }));
+
 }

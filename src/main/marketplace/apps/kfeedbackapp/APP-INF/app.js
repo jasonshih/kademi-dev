@@ -51,6 +51,7 @@ controllerMappings
 controllerMappings.addGoalNodeType("kfeedbackSubmittedGoal", "kfeedback/jb/kfeedbackSubmittedGoalNode.js", null);
 
 controllerMappings.addComponent("kfeedback", "kfeedbackEmail", "email", "Shows emoticons with links", "Kfeedback App component");
+controllerMappings.addComponent("kfeedback", "kfeedbackForm", "html", "Shows kfeedbackForm", "Kfeedback App component");
 
 controllerMappings.addTextJourneyField("kfeedback-result", "KFeedback result", "getLastFeedbackResult"); // see function below
 
