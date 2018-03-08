@@ -5,7 +5,7 @@
 
     KEditor.components['kpiLeaderboardEDM'] = {
         settingEnabled: true,
-        settingTitle: 'Points Leaderboard',
+        settingTitle: 'KPI Leaderboard',
 
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "kpiLeaderboardEDM" component', form, keditor);
