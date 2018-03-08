@@ -402,7 +402,7 @@ function initTasks() {
 
 function initOrgSelector() {
     flog("initOrgSelector", $(".selectOrg a"));
-    if ($.cookie('org') === null || typeof $.cookie('org') === 'undefined' || $(".selectOrg a[href=" + $.cookie('org') + "]").length < 1) {
+    if ($.cookie('org') === null || typeof $.cookie('org') === 'undefined' || $('.selectOrg a[href="' + $.cookie('org') + '"]').length < 1) {
         if ($(".selectOrg a").length) {
             $.cookie("org", $(".selectOrg a").attr('href'), {path: '/'});
             window.location.reload();
