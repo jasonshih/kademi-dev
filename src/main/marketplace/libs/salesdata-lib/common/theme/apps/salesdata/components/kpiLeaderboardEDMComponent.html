@@ -11,6 +11,11 @@
 
 #set( $lb = $applications.salesData.pointsLeaderboard($salesDataSeries, $kpi, $period, $numUsers))
 
+<!--[if (gte mso 9)|(IE)]>
+<table cellspacing="0" cellpadding="0" width="$width" border="0">
+    <tr>
+        <td>
+<![endif]-->
 <table cellpadding="0" cellspacing="0" width="100%" bgcolor="$!bodyBgColor">
     <thead>
         <tr bgcolor="$!headerBgColor">
@@ -40,7 +45,11 @@
         #end
     </tbody>
 </table>
-
+<!--[if (gte mso 9)|(IE)]>
+        </td>
+    </tr>
+</table>
+<![endif]-->
 
 #macro (renderLeaderboardRecord $rank $name)
     <tr bgcolor="$!bodyBgColor">
