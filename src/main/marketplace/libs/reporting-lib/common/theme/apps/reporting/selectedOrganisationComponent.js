@@ -5,7 +5,7 @@
     KEditor.components['selectedOrganisation'] = {
         settingEnabled: true,
         
-        settingTitle: 'Selected Organisation Settings',
+        settingTitle: 'Selected Organisation',
         
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "selectedOrganisation" component');
