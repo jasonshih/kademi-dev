@@ -31,6 +31,11 @@
 #set ($cellStyles = 'padding-top: ' + $cellPadding + 'px; padding-bottom:' + $cellPadding + 'px; padding-right: ' + $cellPadding + 'px; padding-left: ' + $cellPadding + 'px')
 #set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
 
+<!--[if (gte mso 9)|(IE)]>
+<table cellspacing="0" cellpadding="0" width="$width" border="0">
+    <tr>
+        <td>
+<![endif]-->
 <table cellpadding="0" cellspacing="0" width="100%" bgcolor="$!bodyBgColor">
     <thead>
         <tr bgcolor="$!headerBgColor">
@@ -63,6 +68,11 @@
         #renderPointRecord("3" "[Please select point bucket]" "77")
     #end
 </table>
+<!--[if (gte mso 9)|(IE)]>
+        </td>
+    </tr>
+</table>
+<![endif]-->
 
 #macro (renderPointRecord $rank $name $point)
     <tr bgcolor="$!bodyBgColor">

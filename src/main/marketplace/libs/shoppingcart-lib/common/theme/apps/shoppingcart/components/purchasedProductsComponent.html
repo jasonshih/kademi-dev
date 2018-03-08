@@ -4,6 +4,11 @@
 #set ($footerBg = '#eeeeee')
 #set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
 
+<!--[if (gte mso 9)|(IE)]>
+<table cellspacing="0" cellpadding="0" width="$width" border="0">
+    <tr>
+        <td>
+<![endif]-->
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tbody>
         <tr>
@@ -88,13 +93,11 @@
                                     <tfoot>
                                         <tr bgcolor="${footerBg}">
                                             #if ($event)
-                                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto==
-                                                    "true") colspan="4" #else colspan="3" #end valign="top">Total
+                                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto == "true") colspan="4" #else colspan="3" #end valign="top">Total
                                                 </td>
                                                 <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">$formatter.formatCurrency($event.cart.totalCost, false) Points</td>
                                             #else
-                                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto==
-                                                    "true") colspan="4" #else colspan="3" #end valign="top">Total
+                                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto == "true") colspan="4" #else colspan="3" #end valign="top">Total
                                                 </td>
                                                 <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">1000 Points</td>
                                             #end
@@ -110,3 +113,8 @@
         </tr>
     </tbody>
 </table>
+<!--[if (gte mso 9)|(IE)]>
+        </td>
+    </tr>
+</table>
+<![endif]-->
