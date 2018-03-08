@@ -21,31 +21,36 @@
     #set ($iconWidth = $formatter.toInteger($iconWidth))
 #end
 
-#if( $survey )
-    #if ($showQuestion == "true")
-        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-            <tr>
-                <td class="wrapper" style="$baseStyles">
-                    #if (!$questionTag || $questionTag == "")
-                        $survey.question
-                    #else
-                        #set ($fontSizeName = "$" + "fontSize" + $questionTag.toUpperCase())
-                        #set ($lineHeightName = "$" + "lineHeight" + $questionTag.toUpperCase())
-                        <$questionTag style="font-size: #evaluate($fontSizeName)px; line-height: #evaluate($lineHeightName)px;margin-top:0;margin-bottom: 0;">
-                        $survey.question
-                    </$questionTag>
-                    #end
-                </td>
-            </tr>
-            <tr>
-                <td style="font-size: 0; line-height: 0;" height="10">&nbsp;</td>
-            </tr>
-        </table>
-    #end
+#if ($showQuestion == "true")
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td class="wrapper" style="$baseStyles">
+                #set ($surveyQuestion = "Example question")
+                #if ($survey)
+                    #set ($surveyQuestion = $survey.question)
+                #end
 
-    #if ($display == "text")
-        <table border="0" cellspacing="0" cellpadding="0">
-            <tr>
+                #if (!$questionTag || $questionTag == "")
+                    $surveyQuestion
+                #else
+                    #set ($fontSizeName = "$" + "fontSize" + $questionTag.toUpperCase())
+                    #set ($lineHeightName = "$" + "lineHeight" + $questionTag.toUpperCase())
+                    <$questionTag style="font-size: #evaluate($fontSizeName)px; line-height: #evaluate($lineHeightName)px;margin-top:0;margin-bottom: 0;">
+                        $surveyQuestion
+                    </$questionTag>
+                #end
+            </td>
+        </tr>
+        <tr>
+            <td style="font-size: 0; line-height: 0;" height="10">&nbsp;</td>
+        </tr>
+    </table>
+#end
+
+#if ($display == "text")
+    <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            #if ($survey)
                 #foreach( $option in $survey.jsonObject.options )
                     #set ($emoLength = $option.emoji.length())
                     #set ($emoLink = $option.emoji.substring(1, $emoLength))
@@ -54,73 +59,92 @@
                         <a href="${website.externalUrl}send-feedback/?survey=$surveyname&option=$option.slug" style="$linkStyles">$option.title</a>
                     </td>
                 #end
-            </tr>
-        </table>
-    #else
-        #set ($tableWidth = $width / $itemsPerRow)
-        <table border="0" cellspacing="0" cellpadding="0" width="100%">
-            <tr>
-                <td>
-                    <!--[if (gte mso 9)|(IE)]>
-                    <table cellspacing="0" cellpadding="0" width="100%" border="0">
-                    <![endif]-->
+            #else
+                <td align="left" class="wrapper col" style="$baseStyles; padding-right: 20px; padding-bottom: 10px;" valign="top">
+                    <a href="#" style="$linkStyles">Happy</a>
+                </td>
+                <td align="left" class="wrapper col" style="$baseStyles; padding-right: 20px; padding-bottom: 10px;" valign="top">
+                    <a href="#" style="$linkStyles">Neutral</a>
+                </td>
+                <td align="left" class="wrapper col" style="$baseStyles; padding-right: 20px; padding-bottom: 10px;" valign="top">
+                    <a href="#" style="$linkStyles">Sad</a>
+                </td>
+            #end
+        </tr>
+    </table>
+#else
+    #set ($tableWidth = $width / $itemsPerRow)
+    <table border="0" cellspacing="0" cellpadding="0" width="100%">
+        <tr>
+            <td>
+                <!--[if (gte mso 9)|(IE)]>
+                <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                <![endif]-->
+                #if ($survey)
                     #foreach( $option in $survey.jsonObject.options )
                         #set ($emoLength = $option.emoji.length())
                         #set ($emoLink = $option.emoji.substring(1, $emoLength))
+                        #set ($optionLink = "${website.externalUrl}send-feedback/?survey=$surveyname&option=$option.slug")
 
-                        #set ($newLine = false)
-                        #if ($foreach.index % $itemsPerRow == 0)
-                            #set ($newLine = true)
-                        #end
-
-                        #set ($endLine = false)
-                        #if ($foreach.count % $itemsPerRow == 0)
-                            #set ($endLine = true)
-                        #end
-
-                        #if ($newLine)
-                            #if ($foreach.index != 0)
-                                <div style="clear: both"></div>
-                            #end
-                            <!--[if (gte mso 9)|(IE)]>
-                            <tr>
-                                <td width="$tableWidth">
-                            <![endif]-->
-                        #else
-                            <!--[if (gte mso 9)|(IE)]>
-                            </td>
-                            <td width="$tableWidth">
-                            <![endif]-->
-                        #end
-                        <table data-index="$foreach.index" data-count="$foreach.count" data-new="$newLine" data-end="$endLine" cellpadding="0" cellspacing="0" border="0" width="$tableWidth" align="left" class="col">
-                            <tr>
-                                <td align="center" class="wrapper" style="$baseStyles; padding-right: 10px; padding-left: 10px; padding-bottom: 20px;" valign="midle">
-                                    <a href="${website.externalUrl}send-feedback/?survey=$surveyname&option=$option.slug" style="$linkStyles">
-                                        #if ($display == "text-icon" || $display == "icon")
-                                            <img src="${website.externalUrl}${emoLink}" alt="$option.title" style="display: block; border: 0;" width="$iconWidth" />
-                                        #end
-                                        #if ($display == "text-icon")
-                                            <div style="font-size: 5px; line-height: 5px;">&nbsp;</div>
-                                            <div>$option.title</div>
-                                        #end
-                                    </a>
-                                </td>
-                            </tr>
-                        </table>
-                        #if ($endLine)
-                            <!--[if (gte mso 9)|(IE)]>
-                            </td>
-                            </tr>
-                            <![endif]-->
-                        #end
+                        #renderOption( $option.title $optionLink "${website.externalUrl}${emoLink}" $foreach.index $foreach.count)
                     #end
-                    <!--[if (gte mso 9)|(IE)]>
-                    </table>
-                    <![endif]-->
-                </td>
-            </tr>
-        </table>
+                #else
+                    #renderOption( "Happy" "#" "/theme/apps/kfeedback/emoji/happy.png" 0 1)
+                    #renderOption( "Neutral" "#" "/theme/apps/kfeedback/emoji/neutral.png" 1 2)
+                    #renderOption( "Sad" "#" "/theme/apps/kfeedback/emoji/sad.png" 2 3)
+                #end
+                <!--[if (gte mso 9)|(IE)]>
+                </table>
+                <![endif]-->
+            </td>
+        </tr>
+    </table>
+#end
+
+#macro (renderOption $title $link $imageLink $index $count)
+    #set ($newLine = false)
+    #if ($index % $itemsPerRow == 0)
+        #set ($newLine = true)
     #end
-#else
-    <p>No survey selected, or it has been removed</p>
+
+    #set ($endLine = false)
+    #if ($count % $itemsPerRow == 0)
+        #set ($endLine = true)
+    #end
+
+    #if ($newLine)
+        #if ($index != 0)
+            <div style="clear: both"></div>
+        #end
+        <!--[if (gte mso 9)|(IE)]>
+        <tr>
+            <td width="$tableWidth">
+        <![endif]-->
+    #else
+        <!--[if (gte mso 9)|(IE)]>
+        </td>
+        <td width="$tableWidth">
+        <![endif]-->
+    #end
+    <table data-index="$index" data-count="$count" data-new="$newLine" data-end="$endLine" cellpadding="0" cellspacing="0" border="0" width="$tableWidth" align="left" class="col">
+        <tr>
+            <td align="center" class="wrapper" style="$baseStyles; padding-right: 10px; padding-left: 10px; padding-bottom: 20px;" valign="midle">
+                <a href="$link" style="$linkStyles">
+                    #if ($display == "text-icon" || $display == "icon")
+                        <img src="$imageLink" alt="$title" style="display: block; border: 0;" width="$iconWidth" />
+                    #end
+                    #if ($display == "text-icon")
+                        <div style="font-size: 5px; line-height: 5px;">&nbsp;</div>
+                        <div>$title</div>
+                    #end
+                </a>
+            </td>
+        </tr>
+    </table>
+    #if ($endLine)
+        <!--[if (gte mso 9)|(IE)]>
+        </td>
+        </tr>
+        <![endif]-->
+    #end
 #end
