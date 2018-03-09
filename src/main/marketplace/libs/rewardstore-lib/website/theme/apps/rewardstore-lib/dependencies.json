@@ -103,7 +103,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/rewardstore/debitsActivityComponent.js"
+                "path": "/theme/apps/rewardstore/debitsActivity.js"
             }
         }
     ]
