@@ -11,28 +11,6 @@
 
         <title>Edit: $!fileTitle</title>
         <link href="/theme/apps/admin/contentEditor.css" rel="stylesheet" type="text/css" />
-        
-        <script type="text/javascript">
-            // Templates should push page init function into this array. It will then be run after outer template init functions. X2
-            var pageInitFunctions = new Array();
-        </script>
-
-        <script src="/static/jquery/1.11.0/jquery-1.11.0.js">//</script>
-        <script src="/theme/js/kademi.js">//</script>
-        <script src="/theme/js/kademi.jquery.js">//</script>
-        <script src="/theme/js/kademi.theme.js">//</script>
-
-        <script src="/theme/js/bootstrap.min.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.cookie.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
-        <script type="text/javascript" src="/static/jquery.forms/1.1.0/jquery.forms-1.1.0.js">//</script>
-        <script type="text/javascript" src="/theme/js/jquery.user.js">//</script>
-        <script type="text/javascript" src="/static/jquery.comments/1.0.4/jquery.comments-1.0.4.js">//</script>
-
-        <script type="text/javascript" src="/static/bootstrap-msg/0.3/bootstrap-msg.min.js">//</script>
-        <script type="text/javascript" src="/static/jquery-ui/1.12.1-noui/jquery-ui.min.js">//</script>
-        <script type="text/javascript" src="/static/js/keymap.js">//</script>
-        <script type="text/javascript" src="/theme/apps/admin/contentEditor.js">//</script>
 
         $templater.pushLess("/theme/less/bootstrap.less", "all", 0)
         $templater.pushLess("/theme/theme-params.less", "all")
@@ -40,8 +18,6 @@
         #foreach( $lessSource in $templater.lessSources.entrySet())
             <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
         #end
-
-        <link rel="stylesheet" href="/static/bootstrap-msg/0.3/bootstrap-msg.min.css" type="text/css" />
 
         <!-- Injected CSS sources -->
         #foreach($groupEntry in $templater.cssSources.entrySet())
@@ -326,9 +302,10 @@
         #set($snippetsUrl = "_components?fileName=$fname")
         #set($snippetsHandlersUrl = "${page.parent.href}_components?handlers&fileName=$fname")
 
+        <script type="text/javascript" src="/theme/apps/admin/contentEditor.js">//</script>
         <div id="file-jsparams">
             <code class="hide">$!bodyCssBgColor $!bodyCssBgImg</code>
-            <script type="text/javascript" >
+            <script type="text/javascript">
                 var metas = [];
                 #foreach($metaName in $file.metaNames)
                     metas.push({
@@ -357,6 +334,3 @@
 
     </body>
 </html>
-#macro( groupTitle $group )
-    #if($group.title) '$group.title' #else '$group.name' #end
-#end
