@@ -25,8 +25,6 @@
     var KWebsocket = function (options) {
         var $this = this;
 
-        flog('THIS', this, $this);
-
         // Ping/Pong variables
         $this._pingMsg = ':::::ping:::::';
         $this._pongMsg = ':::::pong:::::';
