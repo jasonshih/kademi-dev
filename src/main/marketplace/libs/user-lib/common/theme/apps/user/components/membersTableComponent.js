@@ -62,12 +62,13 @@
                     //    });
                     //});
 
-                    form.find('.table-columns').on('click', function () {
+                    var tableColumnChks = form.find('.table-columns');
+                    tableColumnChks.on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         var arr = [];
-                        form.find('.table-columns').each(function () {
-                            if (this.checked){
+                        tableColumnChks.each(function () {
+                            if (this.checked) {
                                 arr.push(this.value);
                             }
                         });
@@ -75,7 +76,7 @@
                         component.attr('data-columns', arr.join(','));
                         keditor.initDynamicContent(dynamicElement);
                     });
-                    
+
                     form.find('.txt-title').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -83,7 +84,7 @@
                         component.attr('data-title', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
-                    
+
                     form.find('.includeInactiveUsers').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -116,14 +117,15 @@
             form.find('.show-paginator').prop("checked", toBool(dataAttributes['data-showpaginator']));
             form.find('.includeInactiveUsers').prop("checked", toBool(dataAttributes['data-inactive-users']));
             form.find('.select-query option').addClass('hide');
-            if (dataAttributes['data-columns']){
-                form.find('.table-columns').each(function () {
-                    if (dataAttributes['data-columns'].indexOf(this.value) != -1){
-                        this.checked = true;
-                    }
+
+            var tableColumnChks = form.find('.table-columns');
+            tableColumnChks.prop('checked', false);
+
+            if (dataAttributes['data-columns']) {
+                $.each(dataAttributes['data-columns'].split(','), function (index, value) {
+                    tableColumnChks.filter('[value=' + value + ']').prop('checked', true);
                 });
             }
-
         }
     };
 
