@@ -17,6 +17,8 @@
 #set ($resp = $queryManager.runQuery("membersTable"))
 #end
 
+#set ($columns = $columns.split(","))
+
 #set ($fields = ["lastVisit", "firstName", "surName", "email", "phone", "groupNames", "orgName", "parentOrg", "orgAddress", "groupName", "createdDate", "pointsBalance", "pointsDebit"])
 #set ($fieldsNames = {"lastVisit": "Last active", "firstName": "First name", "surName": "Last name", "email": "Email", "phone": "Phone", "groupNames": "Primary groups", "orgName": "Organisation name", "orgAddress": "Organisation address", "groupName": "Group", "pointsBalance": "Points Balance", "pointsDebit": "Spent points", "createdDate": "Date registered", "parentOrg": "Parent Org"})
 
@@ -31,17 +33,14 @@
             #else
             <table class="table table-striped table-condensed">
                 <thead>
-                    #foreach( $f in $fields )
-                    #if ($columns && $columns.contains($f))
+                    #foreach( $f in $columns )
                     <th>$!fieldsNames[$f]</th>
-                    #end
                     #end
                 </thead>
                 <tbody>
                     #foreach( $row in $resp.hits.hits )
                     <tr>
-                        #foreach( $f in $fields )
-                        #if ($columns && $columns.contains($f))
+                        #foreach( $f in $columns )
                         #if ($f == "pointsBalance")
                             #set ($pb = "")
                             #foreach ($p in $row.source.points)
@@ -134,7 +133,6 @@
                         <td>$!row.source.get($f)</td>
                         #end
 
-                        #end
                         #end
                     </tr>
                     #end
