@@ -18,7 +18,7 @@
             initLatLng: [initLat, initLng],
             initZoomLevel: 15,
             orgTypes: window[id + '-orgTypes'],
-            allowedCountries: window[id + '-allowedCountriess'],
+            allowedCountries: window[id + '-allowedCountries'],
             onReady: function (formSearch, itemsWrapper, mapDiv) {
                 win.on('resize', function () {
                     var mapWrapper = mapDiv.parent();
