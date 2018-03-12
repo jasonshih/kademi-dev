@@ -543,6 +543,14 @@
                 // ===============================================================================
                 // Settings for grid
                 // ===============================================================================
+                form.on('change', '.select-row-size', function () {
+                    var container = keditor.getSettingContainer();
+                    var row = contentEditor.getContainerElement(container, '.row');
+                    flog('===============================', this.value, row);
+                    row.removeClass('row-sm row-no-gutter');
+                    row.addClass(this.value);
+                });
+
                 form.on('change', '.txt-extra-class-column', function () {
                     var txt = $(this);
                     var index = txt.attr('data-index');
@@ -808,6 +816,18 @@
         form.find('.multiple-background').prop('checked', isMultiBg);
         var transition = containerBg.attr('data-bg-transition');
         form.find('.txt-transition').val(transition || 2);
+
+        var row = contentEditor.getContainerElement(container, '.row');
+        var rowSizes = ['row-sm', 'row-no-gutter'];
+        var rowSize = '';
+        $.each(rowSizes, function (i, value) {
+            if (row.hasClass(value)) {
+                rowSize = value;
+
+                return false;
+            }
+        });
+        form.find('.select-row-size').val(rowSize);
         
         var tabbable = container.find('.tabbable');
         if (tabbable.length > 0) {
