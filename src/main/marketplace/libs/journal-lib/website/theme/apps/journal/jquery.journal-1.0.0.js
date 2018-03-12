@@ -125,7 +125,7 @@
         
         sortJournalEntries(container);
         
-        container.on('keyup', 'textarea', function (e) {
+        container.on('keyup', '.journal-entry textarea', function (e) {
             typewatch(function () {
                 flog('[jquery.journal] Do save', config);
                 try {
@@ -136,7 +136,7 @@
             }, 500);
         });
         
-        container.on('focus', 'textarea', function (e) {
+        container.on('focus', '.journal-entry textarea', function (e) {
             flog('[jquery.journal] focus', e.target);
             container.find('textarea').parent().removeClass('active');
             $(e.target).parent().addClass('active');
@@ -144,7 +144,7 @@
         
         $(document).on('pjaxComplete', function () {
             try {
-                var textareas = container.find('textarea');
+                var textareas = container.find('.journal-entry textarea');
                 textareas.parent().removeClass('active');
                 var thisPage = getFileName(window.location.pathname);
                 var newSelected = textareas.parent().find('[name="' + thisPage + '"]').parent();
