@@ -797,6 +797,7 @@ function getSurveyStatistic(page, surveyId) {
 }
 
 function getUserSurveyStatsByUserId(page, surveyId, userId) {
+    log.info("getUserSurveyStatsByUserId {} {}", surveyId, userId);
     var result;
     if (userId) {
         securityManager.runAsUser(userId, function () {
@@ -981,4 +982,38 @@ function getSurveyCSV(page) {
     arr.push(['Total Submits', totalSumits]);
     
     return views.csvView(arr);
+}
+
+function getSurveySubmissions(page, surveyId) {
+    var queryJson = {
+        'size': 10000,
+        'query': {
+            'bool': {
+                'must': [
+                    {'type': {'value': RECORD_TYPES.SUBMIT}},
+                    {'term': {'surveyId': surveyId}}
+                ]
+            }
+        }
+    };
+    var result = doDBSearch(page, queryJson);
+    log.info('getSurveySubmissions {}', result);
+    return result;
+}
+
+function getUserSubmissions(page, userId) {
+    var queryJson = {
+        'size': 100,
+        'query': {
+            'bool': {
+                'must': [
+                    {'type': {'value': RECORD_TYPES.SUBMIT}},
+                    {'term': {'userId': userId}}
+                ]
+            }
+        }
+    };
+    var result = doDBSearch(page, queryJson);
+    log.info('getUserSubmissions {}', result);
+    return result;
 }

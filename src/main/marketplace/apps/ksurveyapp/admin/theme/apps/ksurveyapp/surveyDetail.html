@@ -16,6 +16,7 @@
                     <li role="presentation" class="active"><a href="#detail" aria-controls="detail" role="tab" data-toggle="tab"><i class="fa fa-edit"></i> Detail</a></li>
                     <li role="presentation"><a href="#questions" aria-controls="questions" role="tab" data-toggle="tab"><i class="fa fa-list"></i> Questions</a></li>
                     <li class="" role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab"><i class="fa fa-users"></i> Group Access</a></li>
+                    <li role="presentation"><a href="#submissions" aria-controls="submissions" role="tab" data-toggle="tab"><i class="fa fa-area-chart"></i> Submissions</a></li>
                     <li role="presentation"><a href="#statistic" aria-controls="statistic" role="tab" data-toggle="tab"><i class="fa fa-area-chart"></i> Statistic</a></li>
                 </ul>
                 <div id="preview-area" class="btn-group pull-right">
@@ -248,7 +249,30 @@
 
                     </div>
                 </div>
-                
+
+                <div class="tab-pane" id="submissions">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #set ($submissions = $page.controllerMappings.call('getSurveySubmissions', $page, $survey.name))
+                            #if ($submissions.hits.totalHits > 0)
+                                #foreach($s in $submissions.hits.hits)
+                                    #set ($usrSubmission = $applications.userApp.findUserResource($s.source.userId))
+                                    <tr>
+                                        <td><a href="/manageUsers/$usrSubmission.userId">$usrSubmission.extProfileBean.formattedName()</a></td>
+                                        <td><a href="/ksurvey/$survey.name/result/?profileId=$usrSubmission.userId" class="btn btn-sm btn-info">View result <i class="fa fa-info-circle"></i></a></td>
+                                    </tr>
+                                #end
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+
                 <div role="tabpanel" class="tab-pane" id="statistic">
                     #set ($surveyStatistic = $page.controllerMappings.call('getSurveyStatistic', $page, $survey.name))
                     #set ($surveyResult = $surveyStatistic.get('surveyResult'))

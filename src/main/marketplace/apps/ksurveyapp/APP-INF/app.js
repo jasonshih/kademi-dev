@@ -92,6 +92,16 @@ controllerMappings
     .addMethod('POST', 'migrateDB')
     .build();
 
+controllerMappings
+    .adminController()
+    .path('/ksurvey/(?<surveyId>[^/]*)/result/')
+    .enabled(true)
+    .addPathResolver('surveyId', 'findSurvey')
+    .defaultView(views.templateView('ksurveyapp/surveyResult.html'))
+    .addMethod('GET', 'getSurvey')
+    .title('generateWebsiteTitle')
+    .build();
+
 // website controllers
 controllerMappings
     .websiteController()
@@ -333,4 +343,30 @@ function onKsurveySubmittedGoal(rootFolder, lead, funnel, eventParams, customNex
         return customSettings.survey === eventParams.survey;
     }
     return true;
+}
+
+controllerMappings.setUserTimelineFunction('generateTimelineItems');
+
+function generateTimelineItems(page, user, list){
+    var sumissions =  getUserSubmissions(page, user.name);
+    var db = getDB(page);
+    if (sumissions.hits.totalHits > 0){
+        for (var i in sumissions.hits.hits){
+            var hit = sumissions.hits.hits[i];
+            var survey = db.child(hit.source.surveyId);
+            var streamItem = applications.stream.streamEventBuilder()
+                .profile(user)
+                .title('Submitted survey: ' + survey.jsonObject.title)
+                .desc(survey.jsonObject.description)
+                .date(formatter.toDate(hit.source.createdDate))
+                .category('info')
+                .inbound(true)
+                .path('/ksurvey/' + survey.name + '/result/?profileId=' + user.userId)
+                .icon('fa-trophy')
+                .build();
+
+            list.add(streamItem);
+        }
+
+    }
 }
