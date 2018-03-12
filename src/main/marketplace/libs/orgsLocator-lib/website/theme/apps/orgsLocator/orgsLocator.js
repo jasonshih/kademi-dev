@@ -34,7 +34,7 @@
                     } else if (winWidth < 992) {
                         itemsWrapper.css('max-height', 300);
                     } else {
-                        itemsWrapper.css('height', mapWrapper.innerHeight() - 39);
+                        itemsWrapper.css('height', mapWrapper.innerHeight());
                     }
                 }).trigger('resize');
             }
@@ -46,9 +46,9 @@
         if (searchWhenInit) {
             options.searchWhenInit = searchWhenInit;
             options.initSearchOptions = {
-                query: params.query,
-                lat: +params.lat,
-                lng: +params.lng
+                query: params.query || '',
+                lat:  params.lat ? +params.lat : null,
+                lng: params.lng ? +params.lng : null
             };
         }
         
