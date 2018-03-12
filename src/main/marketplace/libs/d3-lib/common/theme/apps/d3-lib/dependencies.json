@@ -7,7 +7,7 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/d3-lib/d3.min.js",
-                "position": 0
+                "position": 10
             }
         }
     ]

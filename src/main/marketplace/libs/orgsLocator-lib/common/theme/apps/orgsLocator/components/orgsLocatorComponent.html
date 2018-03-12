@@ -3,18 +3,18 @@
 <div class="orgs-locator-component" id="${orgsLocatorId}" data-lat="$!page.organisation.lat" data-lng="$!page.organisation.lng"></div>
 
 <script type="text/javascript">
-    window['$orgsLocatorId' + '-orgTypes'] = [];
+    window['${orgsLocatorId}-orgTypes'] = [];
 
     #foreach($orgType in $page.find("/").orgTypes)
-        window['$orgsLocatorId' + '-orgTypes'].push({
+        window['${orgsLocatorId}-orgTypes'].push({
             title: "$orgType.displayName",
             value: '$orgType.name'
         });
     #end
 
-    window['$orgsLocatorId' + '-allowedCountries'] = [];
+    window['${orgsLocatorId}-allowedCountries'] = [];
     #foreach($cc in $formatter.countryCodes.list)
-        window['$orgsLocatorId' + '-allowedCountries'].push({
+        window['${orgsLocatorId}-allowedCountries'].push({
             value: '$cc.alpha2Code',
             title: "$cc.englishShortName"
         });

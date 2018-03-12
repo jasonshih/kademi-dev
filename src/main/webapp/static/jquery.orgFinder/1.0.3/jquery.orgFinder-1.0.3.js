@@ -403,11 +403,11 @@
             var self = this;
             var options = self.options;
             var map = self.map;
-            
+
             if (typeof options.onSearch === 'function') {
                 options.onSearch.call(self, query);
             }
-            
+
             var searchUrl = (options.searchUrl || '').trim();
             if (searchUrl.length === 0) {
                 $.error('[jquery.orgFinder] Search Url is empty!');
@@ -416,22 +416,26 @@
             var data = {
                 maxResults: options.maxResults
             };
-            
-            if (lat !== undefined && lng !== undefined) {
+
+            if (lat !== undefined && lng !== undefined && !isNaN(lat) && !isNaN(lng)) {
                 data.lat = lat;
                 data.lng = lng;
             } else {
                 data.jsonQuery = query;
             }
-            
+
             if (options.orgTypes && $.isArray(options.orgTypes) && options.orgTypes.length > 0) {
-                data.orgTypes = self.formSearch.find('.org-finder-orgType').selectpicker('val');
+                data.orgTypes = self.cbbOrgType.selectpicker('val');
+
+                if (typeof data.orgTypes === 'function') {
+                    data.orgTypes = '';
+                }
             }
-            
+
             if (typeof options.beforeSearch === 'function') {
                 data = options.beforeSearch.call(self, query, data);
             }
-            
+
             $.ajax({
                 url: options.searchUrl,
                 dataType: 'json',
