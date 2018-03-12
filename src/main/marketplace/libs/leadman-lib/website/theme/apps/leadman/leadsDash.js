@@ -80,7 +80,9 @@
                     doLeadSearch($('#leadQuery').val());
                 }, 500);
             });
+        }
 
+        if ($('.leadsDash').length){
             leadDashUpdate();
         }
 
@@ -89,5 +91,4 @@
             leadDashUpdate();
         })
     });
-
 })(jQuery);

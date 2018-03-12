@@ -2,6 +2,7 @@ controllerMappings.addComponent("leadman/components", "leadCompanies", "html", "
 controllerMappings.addComponent("leadman/components", "leadsGeoLocation", "html", "Display leads in a map canvas", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadStatsSummary", "html", "Display stats for a funnel", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadsList", "html", "Display leads list", "Leadman App component");
+controllerMappings.addComponent("leadman/components", "leadSalesSummary", "html", "Displays sales and tasks summary for Team Leaders / Sales Managers ", "Leadman App component");
 
 controllerMappings.addComponent("leadman/components", "leadAnalyticsNewLeadsCreated", "html", "Display new leads created", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadAnalyticsLeadsLost", "html", "Display the leads lost", "Leadman App component");
