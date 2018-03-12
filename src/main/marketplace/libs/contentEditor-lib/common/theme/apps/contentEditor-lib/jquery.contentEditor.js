@@ -461,7 +461,7 @@
                     txt.on('change', function () {
                         var value = this.value || '';
                         var container = keditor.getSettingContainer();
-                        var containerContent = contentEditor.getContainerElement(container, '.container-content-wrapper').get(0);
+                        var containerContent = contentEditor.getContainerElement(container, '.container-bg').get(0);
                         
                         if (value.trim() === '') {
                             containerContent.style[styleName] = '';
