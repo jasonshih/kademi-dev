@@ -5,9 +5,14 @@
     KEditor.components['orgsLocator'] = {
         init: function (contentArea, container, component, keditor) {
             flog('init "orgsLocator" component', component);
-            
-            var orgsLocator = component.find('.orgs-locator-component');
-            window.initOrgsLocator(orgsLocator);
+
+            var componentContent = component.children('.keditor-component-content');
+            var dynamicElement = componentContent.find('[data-dynamic-href]');
+
+            keditor.initDynamicContent(dynamicElement).done(function () {
+                var orgsLocator = component.find('.orgs-locator-component');
+                window.initOrgsLocator(orgsLocator);
+            });
         },
         
         settingEnabled: true,
