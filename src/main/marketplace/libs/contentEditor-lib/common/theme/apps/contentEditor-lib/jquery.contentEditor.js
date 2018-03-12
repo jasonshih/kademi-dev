@@ -546,7 +546,6 @@
                 form.on('change', '.select-row-size', function () {
                     var container = keditor.getSettingContainer();
                     var row = contentEditor.getContainerElement(container, '.row');
-                    flog('===============================', this.value, row);
                     row.removeClass('row-sm row-no-gutter');
                     row.addClass(this.value);
                 });
