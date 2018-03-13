@@ -29,6 +29,7 @@
 
         <!-- Injected JS sources -->
         #foreach($groupEntry in $templater.jsSources.entrySet())
+            <!-- group $groupEntry.key  -->
             #foreach($path in $templater.getCombinedJsPaths($groupEntry.key))
             <script src="$path" type="text/javascript">//</script>
             #end
