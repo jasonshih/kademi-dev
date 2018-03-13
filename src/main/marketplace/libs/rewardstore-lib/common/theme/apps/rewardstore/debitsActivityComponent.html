@@ -1,8 +1,17 @@
 #if ( !$height )
     #set ( $height = 100 )
 #end
+#if( !$daysInt)
+    #set( $daysInt = 10)
+#end
 
 #set( $pointsBucket = $applications.rewardStore.findPointsBucket($bucket) )
+
+#if( $pointsBucket )
+    #set($bucketId = $pointsBucket.id)
+    #set($daysInt = $formatter.toInteger($days, false))
+    #set($jsonResp = $applications.rewardStore.getDebitsHistogram($bucketId, $daysInt))
+    
 <div class="panel panel-default debits-activity">
     <div class="panel-heading">
         <i class="fa fa-table"></i>
@@ -14,16 +23,18 @@
         </div>
     </div>
 
-    #if( $pointsBucket )
-    #set($bucketId = $pointsBucket.id)
-    #set($daysInt = $formatter.toInteger($days, false))
-
-    #set($jsonResp = $applications.rewardStore.getDebitsHistogram($bucketId, $daysInt))
-    #end
 
 
     <script>
-        $('.debits-activity').data("jsonresp", $jsonResp);
-        $('.debits-activity').data("bucketId", $bucketId);
+        #if($jsonResp)
+            $('.debits-activity').data("jsonresp", $jsonResp);
+        #end
+        #if($bucketId)
+            $('.debits-activity').data("bucketId", $bucketId);
+        #end
     </script>
 </div>
+#else
+    <p>Please select a points bucket.</p>
+#end
+
