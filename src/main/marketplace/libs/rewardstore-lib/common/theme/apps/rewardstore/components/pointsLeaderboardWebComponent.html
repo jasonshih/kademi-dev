@@ -37,8 +37,11 @@
         #if( !$foundThis )
             #set( $thisExtProfileBean = $userResource.extProfileBean )
             #set( $rank = $myPointsInfo.rank($thisExtProfileBean))
-            #renderLeaderRow( $rank.rank, $thisExtProfileBean.formattedName(), $rank.points.numPoints)
-            ##renderLeaderRow( "N/A", $thisExtProfileBean.formattedName(), $!myPointsInfo.myPointsTotal)
+            #if($rank)
+                #renderLeaderRow( $rank.rank, $thisExtProfileBean.formattedName(), $rank.points.numPoints)
+            #else
+                #renderLeaderRow( "N/A", $thisExtProfileBean.formattedName(), $!myPointsInfo.myPointsTotal)
+            #end
         #end
     #else
     <tr>
