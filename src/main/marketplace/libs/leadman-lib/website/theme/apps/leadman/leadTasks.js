@@ -87,4 +87,19 @@ $(function () {
             }
         }
     }
+
+    initTaskNav();
 });
+
+function initTaskNav() {
+    var nav = $('.taskAssigneeDropdown');
+    if (nav.length) {
+        var currentUser = nav.attr('data-current-user');
+        var uri = new URI(window.location.search);
+        var s = uri.search(true);
+        if (!uri.hasSearch('assignedTo') || !s.assignedTo){
+            uri = uri.addSearch('assignedTo', currentUser);
+            window.location.search = uri.search();
+        }
+    }
+}
