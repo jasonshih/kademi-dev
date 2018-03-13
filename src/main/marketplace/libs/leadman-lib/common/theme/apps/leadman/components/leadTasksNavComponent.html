@@ -38,7 +38,7 @@
                             Assignee
                             <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu" aria-labelledby="assigneeDropdown">
+                        <ul class="dropdown-menu taskAssigneeDropdown" aria-labelledby="assigneeDropdown" data-current-user="$userResource.name">
                             <li><a href="#" data-name="assignedTo" data-value="NONE" class="filter">Assigned to nobody</a></li>
                             #foreach($b in $aggr.aggregations.assignee.buckets)
                             #set($ur = false)
