@@ -22,5 +22,9 @@
         }
     ],
     "dependencies": [
+        {
+            "appId": "nvd3-lib",
+            "branch": "1.8.3"
+        }
     ]
 }
