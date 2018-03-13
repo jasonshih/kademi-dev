@@ -29,11 +29,13 @@
 
         <!-- Injected JS sources -->
         #foreach($groupEntry in $templater.jsSources.entrySet())
-            #foreach($jsFile in $groupEntry.value)
-                <script charset="utf-8" src="$jsFile">//</script>
+            #foreach($path in $templater.getCombinedJsPaths($groupEntry.key))
+            <script src="$path" type="text/javascript">//</script>
             #end
         #end
-        <!-- End injected CSS sources -->
+        <!-- End injected JS sources -->
+
+        
 
         #portlets("header")
 
@@ -313,7 +315,7 @@
                         'content': '$!file.getMeta($metaName)'
                     });
                 #end
-    
+
                 var params = {};
                 #foreach($paramName in $file.paramNames)
                     params['$paramName'] = '$!file.getParam($paramName)';
