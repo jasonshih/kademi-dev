@@ -10,7 +10,7 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/nvd3-lib/nv.d3.js",
-                "position": 1
+                "position": 20
             }
         },
         {

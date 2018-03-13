@@ -122,11 +122,12 @@
 
         <!-- Injected JS sources -->
         #foreach($groupEntry in $templater.jsSources.entrySet())
-            #foreach($jsFile in $groupEntry.value)
-                <script type="text/javascript" src="$jsFile">//</script>
+            <!-- group $groupEntry.key  -->
+            #foreach($path in $templater.getCombinedJsPaths($groupEntry.key))
+            <script src="$path" type="text/javascript">//</script>
             #end
         #end
-        <!-- End injected CSS sources -->
+        <!-- End injected JS sources -->
 
         <div id="kademi-container" #if ($request.getCookie("admin-sidebar").value == "collapsed") class="navigation-small" #end>
             <div class="navbar navbar-inverse navbar-fixed-top">
