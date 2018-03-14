@@ -5,7 +5,8 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/jquery-ui-lib/jquery-ui.min.js"
+                "path": "/theme/apps/jquery-ui-lib/jquery-ui.min.js",
+                "position": 10
             }
         }
     ]

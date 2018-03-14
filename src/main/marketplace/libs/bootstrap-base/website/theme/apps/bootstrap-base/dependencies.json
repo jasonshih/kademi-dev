@@ -6,7 +6,7 @@
         },
         {
             "appId": "jquery-ui-lib",
-            "branch": "1.12.1"
+            "branch": "1.12.1.1"
         },
         {
             "appId": "jquery-pjax-lib",
