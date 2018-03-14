@@ -2,7 +2,7 @@
     "appDependencies": [
         {
             "appId": "nvd3-lib",
-            "branch": "1.8.3"
+            "branch": "1.8.4"
         },
         {
             "appId": "search",

@@ -22,5 +22,13 @@
         }
     ],
     "dependencies": [
+        {
+            "appId": "nvd3-lib",
+            "branch": "1.8.4"
+        },
+        {
+            "appId": "handlebars-lib",
+            "branch": "3.0.3"
+        }
     ]
 }

@@ -1,4 +1,5 @@
 function initKChatAdmin() {
+    flog("initKChatAdmin");
     initSidebarToggle();
     initQuickSideBar();
     initKChatWebsocket();
@@ -6,12 +7,16 @@ function initKChatAdmin() {
 
 function initSidebarToggle() {
     var navBar = $('.navbar-tools .navbar-right');
-    if (navBar.find('li.fuse-header-item a.sb-toggle').length === 0) {
+    var existing = navBar.find('li.fuse-header-item a.sb-toggle');
+    if (existing.length === 0) {
+        flog("initSidebarToggle: add item to", navBar);
         navBar.append(
             '<li class="fuse-header-item">' +
             '    <a class="sb-toggle" href="#"><i class="fa fa-outdent"></i></a>' +
             '</li>'
         );
+    } else {
+        flog("initSidebarToggle: sidebar toggle exists"); 
     }
 
 }
