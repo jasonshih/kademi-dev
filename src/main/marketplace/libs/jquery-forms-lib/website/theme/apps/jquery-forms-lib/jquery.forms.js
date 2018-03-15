@@ -616,6 +616,13 @@ function validateFormFields(form, config) {
         var error = 0;
         var errorFields = [];
         var errorMessages = [];
+
+        var resultRequiredIfShown = checkRequiredIfShown(form, config);
+        if (resultRequiredIfShown.error > 0) {
+            error += resultRequiredIfShown.error;
+            errorFields = errorFields.concat(resultRequiredIfShown.errorFields);
+            errorMessages.push(config.requiredErrorMessage);
+        }
         
         var resultEmails = checkValidEmailAddress(form, config);
         if (resultEmails.error > 0) {
@@ -1148,6 +1155,35 @@ function checkValidEmailAddress(form, config) {
         }
     });
     
+    return {
+        error: error,
+        errorFields: errorFields
+    };
+}
+
+function checkRequiredIfShown(form, config) {
+    flog('[jquery.forms] checkRequiredIfShown', form, config);
+
+    config = getFormConfig(form, config);
+
+    var error = 0;
+    var errorFields = [];
+
+    form.find('.required-if-shown').not('.required').each(function () {
+        var input = $(this);
+        var shouldCheck = shouldCheckValue(input, config);
+
+        if (shouldCheck) {
+            var val = input.val();
+
+            if (val.length === 0) {
+                errorFields.push(input);
+                error++;
+                input.attr('error-message', config.requiredErrorMessage);
+            }
+        }
+    });
+
     return {
         error: error,
         errorFields: errorFields
@@ -1691,7 +1727,7 @@ function validatePassword(pw, options) {
 /**
  * Emulate FormData for some browsers
  * MIT License
- * (c) 2010 François de Metz
+ * (c) 2010 Franï¿½ois de Metz
  */
 (function (w) {
     if (w.FormData) {
