@@ -38,19 +38,19 @@
                             <td>$formatter.formatDate($p.date)</td>
                             <td>
                                 #if( $p.txType == "C" )
-                                $p.numPoints
+                                    $p.numPoints
                                 #end
                             </td>
                             <td>
                                 #if( $p.txType == "D" )
-                                $p.numPoints
+                                    $p.numPoints
                                 #end
                             </td>
                             <td>
                                 #if( $p.itemHref )
-                                <a href="$p.itemHref">$p.description</a>
+                                    <a href="$p.itemHref">$!p.description</a>
                                 #else
-                                $p.description
+                                    $!p.description
                                 #end
                             </td>
                         </tr>
