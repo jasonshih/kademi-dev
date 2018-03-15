@@ -20,7 +20,8 @@ function loadUserVisits(start, maxRows, rowsResult, rootFolder) {
         var top_hit = byUser.aggregations.get("top_hit").hits;
         var ur = applications.userApp.findUserResourceById(byUser.key);
         rowsResult.addRow();
-        rowsResult.addCell(ur.thisUser.formattedName);
+        var link = "<a href='/custs/" + ur.name + "'>" + ur.thisUser.formattedName + "</a>";
+        rowsResult.addCell(link);
         rowsResult.addCell(byUser.docCount);
         if (top_hit.totalHits > 0){
             rowsResult.addCell(formatter.formatDate(formatter.toDate(top_hit.hits[0].source.visitDate)));
