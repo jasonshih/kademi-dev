@@ -65,8 +65,6 @@
                     );
             self.toggle = navBar.find('.kchat-toggle');
         }
-        self.sidebar = $('#page-sidebar');
-
         self.$b64ContentId = Base64.encode(self.$orgId);
 
         self.$port = parseInt(window.location.port || 80) + 1;
@@ -297,12 +295,12 @@
 
                     var html = self.$kchat_user_templ(c);
 
-                    self.sidebar.find('.media-list').append(html);
+                    self.$elem.find('.media-list').append(html);
 
-                    self.sidebar.find('.user-chat').append(self.$kchat_user_chatlist_templ(c));
+                    self.$elem.find('.user-chat').append(self.$kchat_user_chatlist_templ(c));
                 } else if (c.action === "disconnected") {
-                    self.sidebar.find('.media-list').find('#user-' + c.visitorId).remove();
-                    self.sidebar.find('.user-chat').find('#chat-' + c.visitorId).remove();
+                    self.$elem.find('.media-list').find('#user-' + c.visitorId).remove();
+                    self.$elem.find('.user-chat').find('#chat-' + c.visitorId).remove();
                 } else if (c.action === "msg") {
                     var time = new moment(c.chatMessage.timestamp);
 
@@ -316,7 +314,7 @@
 
                     self._newMessage(c.chatMessage);
                 } else if (c.action === 'clients') {
-                    self.sidebar.find('.media-list').empty();
+                    self.$elem.find('.media-list').empty();
 
                     for (var i = 0; i < c.clients.length; i++) {
                         if ($('#user-' + c.clients[i].visitorId).length > 0) {
@@ -330,9 +328,9 @@
 
                             var html = self.$kchat_user_templ(c.clients[i]);
 
-                            self.sidebar.find('.media-list').append(html);
+                            self.$elem.find('.media-list').append(html);
 
-                            self.sidebar.find('.user-chat').append(self.$kchat_user_chatlist_templ(c.clients[i]));
+                            self.$elem.find('.user-chat').append(self.$kchat_user_chatlist_templ(c.clients[i]));
                         }
                     }
                 } else if (c.action === 'history') {
@@ -371,7 +369,7 @@
         _getMsgList: function (visitorId) {
             var self = this;
 
-            return self.sidebar.find('.user-chat').find('#chat-' + visitorId).find('.kchat-msg-list');
+            return self.$elem.find('.user-chat').find('#chat-' + visitorId).find('.kchat-msg-list');
         },
         scrollToBottom: function (visitorId) {
             var self = this;
@@ -542,30 +540,30 @@
                 $(document.body).toggleClass('kchat-opened');
             });
 
-            self.sidebar.on('click', '.media a', function (e) {
+            self.$elem.on('click', '.media a', function (e) {
                 e.preventDefault();
 
                 var btn = $(this);
                 var href = btn.attr('href');
 
-                var discussion = btn.closest('.tab-pane').find('.user-chat .discussion');
+                var discussion = self.$elem.find('.user-chat .discussion');
                 discussion.hide();
 
-                btn.closest('.tab-pane').find('#chat-' + href).show();
+                self.$elem.find('#chat-' + href).show();
 
-                self.sidebar.find('btn-send-msg').data('visitorid', href);
-                self.sidebar.addClass('showed-message');
+                self.$elem.find('btn-send-msg').data('visitorid', href);
+                self.$elem.addClass('showed-message');
 
                 self._kchatSend({action: 'history', visitorId: href});
             });
 
-            self.sidebar.find('.sidebar-back').on('click', function (e) {
+            self.$elem.find('.sidebar-back').on('click', function (e) {
                 e.preventDefault();
 
-                self.sidebar.removeClass('showed-message');
+                self.$elem.removeClass('showed-message');
             });
 
-            self.sidebar.find('.users-list').perfectScrollbar({
+            self.$elem.find('.users-list').perfectScrollbar({
                 wheelSpeed: 1,
                 minScrollbarLength: 20,
                 suppressScrollX: true
