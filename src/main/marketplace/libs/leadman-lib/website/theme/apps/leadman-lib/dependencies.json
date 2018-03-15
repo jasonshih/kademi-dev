@@ -94,12 +94,6 @@
         {
             "js": {
                 "group": "main",
-                "path": "/static/d3/d3.v3.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
                 "path": "/static/dotdotdot/1.7.4/jquery.dotdotdot.min.js"
             }
         },
