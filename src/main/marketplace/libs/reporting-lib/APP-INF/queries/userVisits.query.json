@@ -1,0 +1,41 @@
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "range": {
+                        "visitDate": {
+                            "gte": "$startDate",
+                            "lte": "$endDate"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "aggs": {
+        "byUsers": {
+            "terms": {
+                "field": "profileId"
+            },
+            "aggs": {
+                "top_hit": {
+                    "top_hits": {
+                        "sort": [
+                            {
+                                "visitDate": {
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "_source": {
+                            "includes": [ "visitDate" ]
+                        },
+                        "size" : 1
+                    }
+                }
+            }
+        }
+    },
+    "size": 0
+}
