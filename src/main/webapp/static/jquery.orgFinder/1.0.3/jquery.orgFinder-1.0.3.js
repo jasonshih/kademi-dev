@@ -14,6 +14,7 @@
  * @option {String} googleAPIKey Google API key
  * @option {String} searchUrl Search URL. Must be link to signup page of a group or /organisations/ (if you use this plugin in Kademi admin console)
  * @option {Array} orgTypes List of organisation types. It's optional
+ * @option {Array} orgTypesPreset List of preset organisation types. It's optional
  * @option {Array} allowedCountries List of countries which will available for searching. It's optional
  * @option {String} template Template string for orgFinder. Form search must has 'org-finder-search' class, query textbox must has 'org-finder-query', selectbox for organisation types must has 'org-finder-orgType' class and selectbox for allowed countries must has 'org-finder-allowedCountries' classs. Items list wrapper must has 'org-finder-list' class. Map div must has class 'org-finder-map'
  * @option {Function} onReady Callback will be called when orgFinder is ready. Arguments: 'formSearch', 'itemsWrapper', 'mapDiv'
@@ -277,6 +278,7 @@
             var cbbOrgType = self.cbbOrgType = formSearch.find('select.org-finder-orgType');
             var txtQuery = self.txtQuery = formSearch.find('.org-finder-query');
             var orgTypes = options.orgTypes;
+            var orgTypesPreset = options.orgTypesPreset;
             var allowedCountries = options.allowedCountries;
             
             flog('[jquery.orgFinder] Initialize Google Map Autocomplete', txtQuery);
@@ -311,7 +313,14 @@
                 var optionStr = '';
                 
                 for (var i = 0; i < orgTypes.length; i++) {
-                    optionStr += '<option value="' + orgTypes[i].value + '">' + orgTypes[i].title + '</option>';
+                    var filter = orgTypesPreset.filter(function (item) {
+                        return item.value == orgTypes[i].value;
+                    });
+                    var selected = '';
+                    if (filter.length > 0){
+                        selected = 'selected';
+                    }
+                    optionStr += '<option ' +selected+ ' value="' + orgTypes[i].value + '">' + orgTypes[i].title + '</option>';
                 }
                 
                 cbbOrgType.prop('multiple', true).html(optionStr).addClass('selectpicker');
