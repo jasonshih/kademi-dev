@@ -3,6 +3,10 @@
         {
             "appId": "googlemap-lib",
             "branch": "1.0.4"
+        },
+        {
+            "appId": "jquery-orgFinder-lib",
+            "branch": "1.0.3"
         }
     ],
     "dependencies": [
@@ -10,12 +14,6 @@
             "css": {
                 "cssMedia": "all",
                 "path": "/static/bootstrap-select/1.10.0/dist/css/bootstrap-select.min.css"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/jquery.orgFinder/1.0.3/jquery.orgFinder-1.0.3.css"
             }
         },
         {
@@ -34,12 +32,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/jquery.scrollTo/2.1.2/jquery.scrollTo.min.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/jquery.orgFinder/1.0.3/jquery.orgFinder-1.0.3.js"
             }
         },
         {
