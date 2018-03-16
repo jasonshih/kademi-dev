@@ -273,8 +273,8 @@
             var self = this;
             var options = self.options;
             var formSearch = self.formSearch;
-            var cbbCountry = self.cbbCountry = formSearch.find('.org-finder-allowedCountries');
-            var cbbOrgType = self.cbbOrgType = formSearch.find('.org-finder-orgType');
+            var cbbCountry = self.cbbCountry = formSearch.find('select.org-finder-allowedCountries');
+            var cbbOrgType = self.cbbOrgType = formSearch.find('select.org-finder-orgType');
             var txtQuery = self.txtQuery = formSearch.find('.org-finder-query');
             var orgTypes = options.orgTypes;
             var allowedCountries = options.allowedCountries;

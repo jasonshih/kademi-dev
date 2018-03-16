@@ -27,6 +27,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/bootstrap-select/1.10.0/dist/js/bootstrap-select.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/static/jquery.scrollTo/2.1.2/jquery.scrollTo.min.js"
             }
         },
@@ -34,12 +40,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/jquery.orgFinder/1.0.3/jquery.orgFinder-1.0.3.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/bootstrap-select/1.10.0/dist/js/bootstrap-select.min.js"
             }
         },
         {
