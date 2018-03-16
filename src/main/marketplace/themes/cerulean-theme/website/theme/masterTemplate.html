@@ -30,7 +30,7 @@
 
         <!-- Injected CSS sources -->
         #foreach($groupEntry in $templater.cssSources.entrySet())
-            <link href="/$templater.getCombinedCssPath($groupEntry.value)" rel="stylesheet" type="text/css" media="$!lessSource.key" />
+            <link href="/$templater.getCombinedCssPath($groupEntry.value)" rel="stylesheet" type="text/css" media="$!groupEntry.key" />
         #end
         <!-- End injected CSS sources -->
 
