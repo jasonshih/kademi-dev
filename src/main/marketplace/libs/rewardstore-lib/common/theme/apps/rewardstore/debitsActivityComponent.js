@@ -5,6 +5,17 @@
     KEditor.components['debitsActivity'] = {
         settingEnabled: true,
         settingTitle: 'Debits Activity Settings',
+        init: function (contentArea, container, component, keditor) {
+            var componentContent = component.children('.keditor-component-content');
+            var dynamicElement = componentContent.find('[data-dynamic-href]');
+
+            keditor.initDynamicContent(dynamicElement).done(function () {
+                var debits = component.find('.debits-activity');
+                debits.each(function () {
+                    window.initDebitActivityChart($(this));
+                })
+            });
+        },
         initSettingForm: function (form, keditor) {
             return $.ajax({
                 url: '_components/debitsActivity?settings',
@@ -18,12 +29,10 @@
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
-                        if (selectedBucket) {
-                            component.attr('data-bucket', selectedBucket);
-                            keditor.initDynamicContent(dynamicElement);
-                        } else {
-                            dynamicElement.html('<p>Please select a points bucket</p>');
-                        }
+                        component.attr('data-bucket', selectedBucket);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            window.initDebitActivityChart(component.find('.debits-activity'))
+                        });
                     });
 
                     form.find('.debitsActivityDays').on('change', function () {
@@ -38,7 +47,9 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
 
                         component.attr('data-days', number);
-                        keditor.initDynamicContent(dynamicElement);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            window.initDebitActivityChart(component.find('.debits-activity'))
+                        });
                     });
 
                     form.find('.debitsActivityHeight').on('change', function () {
@@ -53,7 +64,9 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
 
                         component.attr('data-height', number);
-                        keditor.initDynamicContent(dynamicElement);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            window.initDebitActivityChart(component.find('.debits-activity'))
+                        });
                     });
                 }
             });

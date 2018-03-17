@@ -23,18 +23,152 @@
         </div>
     </div>
 
-
-
     <script>
         #if($jsonResp)
-            $('.debits-activity').data("jsonresp", $jsonResp);
-        #end
-        #if($bucketId)
-            $('.debits-activity').data("bucketId", $bucketId);
+            $('#rewardDebitsActivityChart-${bucketId}').data("jsonresp", $jsonResp);
         #end
     </script>
 </div>
+
 #else
-    <p>Please select a points bucket.</p>
+
+<div class="panel panel-default debits-activity">
+    <div class="panel-heading">
+        <i class="fa fa-table"></i>
+        Sample Debits activity
+    </div>
+    <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
+        #set ($randomGuid = $formatter.randomGuid)
+        <div id="rewardDebitsActivityChart-${randomGuid}" style="height: 100%;">
+            <svg></svg>
+        </div>
+    </div>
+
+    <script>
+        #set ($jsonRespFake = '{
+            "took" : 1,
+                "timed_out" : false,
+                "_shards" : {
+                "total" : 5,
+                    "successful" : 5,
+                    "failed" : 0
+            },
+            "hits" : {
+                "total" : 2,
+                    "max_score" : 0.0,
+                    "hits" : [ ]
+            },
+            "aggregations" : {
+                "debits" : {
+                    "doc_count" : 2,
+                        "dates" : {
+                        "buckets" : [
+                            {
+                                "key_as_string" : "2018-03-06T00:00:00.000Z",
+                                "key" : 1520294400000,
+                                "doc_count" : 0,
+                                "sum" : {
+                                    "value" : 0.0
+                                }
+                            },
+                            {
+                                "key_as_string" : "2018-03-07T00:00:00.000Z",
+                                "key" : 1520380800000,
+                                "doc_count" : 0,
+                                "sum" : {
+                                    "value" : 0.0
+                                }
+                            },
+                            {
+                                "key_as_string" : "2018-03-08T00:00:00.000Z",
+                                "key" : 1520467200000,
+                                "doc_count" : 0,
+                                "sum" : {
+                                    "value" : 0.0
+                                }
+                            },
+                            {
+                                "key_as_string" : "2018-03-09T00:00:00.000Z",
+                                "key" : 1520553600000,
+                                "doc_count" : 0,
+                                "sum" : {
+                                    "value" : 0.0
+                                }
+                            },
+                            {
+                                "key_as_string" : "2018-03-10T00:00:00.000Z",
+                                "key" : 1520640000000,
+                                "doc_count" : 0,
+                                "sum" : {
+                                    "value" : 0.0
+                                }
+                            },
+                            {
+                                "key_as_string" : "2018-03-11T00:00:00.000Z",
+                                "key" : 1520726400000,
+                                "doc_count" : 0,
+                                "sum" : {
+                                    "value" : 0.0
+                                }
+                            },
+                            {
+                                "key_as_string" : "2018-03-12T00:00:00.000Z",
+                                "key" : 1520812800000,
+                                "doc_count" : 0,
+                                "sum" : {
+                                    "value" : 0.0
+                                }
+                            },
+                            {
+                                "key_as_string" : "2018-03-13T00:00:00.000Z",
+                                "key" : 1520899200000,
+                                "doc_count" : 1,
+                                "sum" : {
+                                    "value" : 233.0
+                                }
+                            },
+                            {
+                                "key_as_string" : "2018-03-14T00:00:00.000Z",
+                                "key" : 1520985600000,
+                                "doc_count" : 0,
+                                "sum" : {
+                                    "value" : 0.0
+                                }
+                            },
+                            {
+                                "key_as_string" : "2018-03-15T00:00:00.000Z",
+                                "key" : 1521072000000,
+                                "doc_count" : 1,
+                                "sum" : {
+                                    "value" : 322.0
+                                }
+                            },
+                            {
+                                "key_as_string" : "2018-03-16T00:00:00.000Z",
+                                "key" : 1521158400000,
+                                "doc_count" : 0,
+                                "sum" : {
+                                    "value" : 0.0
+                                }
+                            },
+                            {
+                                "key_as_string" : "2018-03-17T00:00:00.000Z",
+                                "key" : 1521244800000,
+                                "doc_count" : 0,
+                                "sum" : {
+                                    "value" : 0.0
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "serverTimeMillis" : 1521274556799
+        }')
+        #if($jsonRespFake)
+            $('#rewardDebitsActivityChart-${randomGuid}').data("jsonresp", $jsonRespFake);
+        #end
+    </script>
+</div>
 #end
 
