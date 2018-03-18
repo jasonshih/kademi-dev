@@ -92,7 +92,7 @@
         <script type="text/javascript" src="/theme/assets/js/main.js?v=20171009">//</script>
         <script type="text/javascript" src="/theme/assets/js/kademi.js?v=20180219">//</script>
 
-        
+
 
         <!-- end: MAIN JAVASCRIPTS -->
 
@@ -100,12 +100,8 @@
     <body>
         <script type="text/javascript">
             var defaultRegionCode = '$!page.parent.orgData.country';
-        </script>
-
-        <script>
             var KademiTimeZone = "$!page.find('/').orgData.timezone" || null;
         </script>
-        $templater.pushJs("/static/handlebars/3.0.3/handlebars-v3.0.3.js")
 
         <script type="text/javascript">
             $(function () {
@@ -113,22 +109,7 @@
             });
         </script>
 
-        <!-- Injected CSS sources -->
-        #foreach($groupEntry in $templater.cssSources.entrySet())
-            #foreach($cssFile in $groupEntry.value)
-                <link rel="stylesheet" href="$cssFile" />
-            #end
-        #end
-        <!-- End injected CSS sources -->
 
-        <!-- Injected JS sources -->
-        #foreach($groupEntry in $templater.jsSources.entrySet())
-            <!-- group $groupEntry.key  -->
-            #foreach($path in $templater.getCombinedJsPaths($groupEntry.key))
-            <script src="$path" type="text/javascript">//</script>
-            #end
-        #end
-        <!-- End injected JS sources -->
 
         <div id="kademi-container" #if ($request.getCookie("admin-sidebar").value == "collapsed") class="navigation-small" #end>
             <div class="navbar navbar-inverse navbar-fixed-top">
