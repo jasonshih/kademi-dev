@@ -20,6 +20,9 @@
         <th>Amount</th>
         <th>Date</th>
         <th>Reason</th>
+        #if (!$txType || $txType == "")
+            <th>Type</th>
+        #end
     </tr>
     </thead>
     <tbody>
@@ -31,20 +34,23 @@
     #foreach( $t in $trans )
         #if ($txType && $txType != "")
             #if ($txType == $t.txType)
-                #render($t)
+                #render($t, $txType)
             #end
         #else
-        #render($t)
+            #render($t, $txType)
         #end
     #end
     #end
     </tbody>
 </table>
 
-#macro (render $t)
+#macro (render $t, $txType)
 <tr>
     <td>$!t.numPoints Pts</td>
     <td>$!formatter.formatDate($t.date)</td>
     <td>$!t.description</td>
+    #if (!$txType || $txType == "")
+        <td>$t.txType</td>
+    #end
 </tr>
 #end
