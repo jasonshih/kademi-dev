@@ -17,12 +17,14 @@
 <table class="table table-striped">
     <thead>
     <tr>
-        <th>Amount</th>
+        #if (!$txType || $txType == "")
+            <th>Credit</th>
+            <th>Debit</th>
+        #else
+            <th>Amount</th>
+        #end
         <th>Date</th>
         <th>Reason</th>
-        #if (!$txType || $txType == "")
-            <th>Type</th>
-        #end
     </tr>
     </thead>
     <tbody>
@@ -46,11 +48,18 @@
 
 #macro (render $t, $txType)
 <tr>
-    <td>$!t.numPoints Pts</td>
+    #if (!$txType || $txType == "")
+        #if($t.txType == 'C')
+            <td>$!t.numPoints Pts </td>
+            <td></td>
+        #else
+            <td></td>
+            <td>$!t.numPoints Pts</td>
+        #end
+    #else
+        <td>$!t.numPoints Pts</td>
+    #end
     <td>$!formatter.formatDate($t.date)</td>
     <td>$!t.description</td>
-    #if (!$txType || $txType == "")
-        <td>$t.txType</td>
-    #end
 </tr>
 #end
