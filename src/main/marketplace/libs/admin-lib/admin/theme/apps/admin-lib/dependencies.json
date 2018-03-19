@@ -26,7 +26,7 @@
         },
         {
             "appId": "handlebars-lib",
-            "branch": "3.0.3"
+            "branch": "3.0.3.1"
         }
     ],
     "dependencies": [
