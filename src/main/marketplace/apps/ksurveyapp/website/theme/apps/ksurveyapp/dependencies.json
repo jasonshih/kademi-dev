@@ -1,12 +1,12 @@
 {
     "appDependencies": [
         {
-            "appId": "moment-lib",
-            "branch": "2.18.3"
-        },
-        {
             "appId": "KongoDB",
             "branch": ""
+        },
+        {
+            "appId": "moment-lib",
+            "branch": "2.18.3"
         },
         {
             "appId": "jquery-forms-lib",

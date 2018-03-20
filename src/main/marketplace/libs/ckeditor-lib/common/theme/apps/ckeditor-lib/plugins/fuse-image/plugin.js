@@ -299,12 +299,19 @@
             that.insertMode = false;
             var hash = element.getAttribute('data-hash') || '';
             var uniqueId = element.getAttribute('data-uniqueid') || '';
+
             var width = element.getAttribute('width');
             var height = element.getAttribute('height');
             var src = element.getAttribute('src');
             var alt = element.getAttribute('alt');
-            if (!alt) {
+            if ( alt == 'undefined' ) {
                 alt = '';
+            }
+            if ( width == 'undefined'){
+                width = '';
+            }
+            if ( height == 'undefined'){
+                height = '';
             }
             
             $('<img />').attr('src', src).attr('alt', alt).load(function () {

@@ -1140,6 +1140,8 @@ function initNewNoteForm() {
     var form = modal.find('form');
     form.find('.newLeadForm').hide();
 
+    initClipboard();
+
     $(document.body).on('click', '.createNote', function (e) {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
@@ -1918,5 +1920,12 @@ function initStatsSummaryComponents() {
                 }
             }
         });
+    });
+}
+
+function initClipboard() {
+    $('#newNoteModal [name=newNote]').inlineattachment({
+        uploadUrl: '/assets',
+        uploadMethod: "post"
     });
 }

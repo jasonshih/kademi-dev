@@ -1,0 +1,78 @@
+{
+    "appDependencies": [
+        {
+            "appId": "KongoDB",
+            "branch": ""
+        },
+        {
+            "appId": "moment-lib",
+            "branch": "2.18.3"
+        },
+        {
+            "appId": "jquery-forms-lib",
+            "branch": "1.0.1"
+        }
+    ],
+    "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "//vjs.zencdn.net/5.8.7/video-js.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/vidsurveyapp/videojs-record/css/videojs.record.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/vidsurveyapp/vidsurvey.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/uri/1.15.1/URI.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/vidsurveyapp/countdown.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "//vjs.zencdn.net/5.8.7/video.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/vidsurveyapp/RecordRTC.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/vidsurveyapp/videojs-record/js/videojs.record.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/vidsurveyapp/ksurvey.js"
+            }
+        }
+    ]
+}
