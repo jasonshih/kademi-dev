@@ -429,40 +429,50 @@
                     <div class="modal-body">
                         <h5>Role applies to:</h5>
 
-                        <div class="applies-to">
-                            <p>
-                                <input type="radio" name="appliesTo" value="ownOrg" id="appliesToOwnOrg" />
-                                <label for="appliesToOwnOrg">Their own organistion</label>
-                            </p>
-
-                            <p>
-                                <input type="radio" name="appliesTo" value="selectRepo" id="appliesToRepository" />
-                                <label for="appliesToRepository">A repository</label>
-                                <select class="hide">
-                                    <option value="">-- Select a repository --</option>
-                                    #foreach($r in $formatter.sortByProperty( $page.organisation.repositories(), "name" ) )
-                                    <option value="$r.name">$r.name</option>
-                                    #end
-                                </select>
-                            </p>
-                            <p>
-                                <input type="radio" name="appliesTo" value="selectOrg" id="appliesToOrg" />
-                                <label for="appliesToOrg">An organistion</label>
-                                <select class="hide">
-                                    <option value="">-- Select an organisation --</option>
-                                    <option value="$page.organisation.id">$page.organisation.formattedName (this organisation)</option>
-                                    #foreach($org in $page.organisation.childOrgs)
-                                    <option value="$org.id">$org.formattedName</option>
-                                    #end
-                                </select>
-                            </p>
+                        <div class="applies-to clearfix">
+                            <div class="col-sm-6">
+                                <p>
+                                    <input type="radio" name="appliesTo" value="selectRepo" id="appliesToRepository" />
+                                    <label for="appliesToRepository">A repository</label>
+                                    <select class="hide">
+                                        <option value="">-- Select a repository --</option>
+                                        #foreach($r in $formatter.sortByProperty( $page.organisation.repositories(), "name" ) )
+                                        <option value="$r.name">$r.name</option>
+                                        #end
+                                    </select>
+                                </p>
+                                <p>
+                                    <input type="radio" name="appliesTo" value="selectOrg" id="appliesToOrg" />
+                                    <label for="appliesToOrg">An organistion</label>
+                                    <select class="hide">
+                                        <option value="">-- Select an organisation --</option>
+                                        <option value="$page.organisation.id">$page.organisation.formattedName (this organisation)</option>
+                                        #foreach($org in $page.organisation.childOrgs)
+                                        <option value="$org.id">$org.formattedName</option>
+                                        #end
+                                    </select>
+                                </p>
+                            </div>
+                            <div class="col-sm-6">
+                                <p>
+                                    <input type="radio" name="appliesTo" value="ownOrg" id="appliesToOwnOrg" />
+                                    <label for="appliesToOwnOrg">Their own organistion</label>
+                                </p>
+                                <p>
+                                    <input type="radio" name="appliesTo" value="selectOrg" id="" />
+                                    <label for="appliesToAccount">This account</label>
+                                    <select class="hide">
+                                        <option value="$page.organisation.id">$page.organisation.formattedName (this organisation)</option>
+                                    </select>
+                                </p>
+                            </div>
                         </div>
-                        <div class="searchRoles">
+                        <div class="searchRoles clearfix">
                             <div class="input-group">
                                 <input type="text" class="form-control" id="roleFilter" placeholder="Filter roles...">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
-                                </span>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+                                    </span>
                             </div><!-- /input-group -->
                         </div>
                         <p>&nbsp;</p>
@@ -470,20 +480,20 @@
                             #foreach($role in $page.parent.allRoles)
                             #set ($v = $foreach.index % 3)
                             #if ($v == 0) <div class="row"> #end
-                            <div class="col-sm-4 role-wrapper">
-                                <article class="block">
+                                <div class="col-sm-4 role-wrapper">
+                                    <article class="block">
 
-                                    <span class="article-name">$role.name</span>
-                                    #if ($role.description && $role.description != "")
-                                    <br>
-                                    <small>$!role.description</small>
-                                    #end
-                                    <span class="article-action">
-                                        <button class="btn btn-xs btn-success btn-add-role" title="Add role"><i class="fa fa-plus-circle"></i></button>
-                                    </span>
-                                </article>
-                            </div>
-                            #if ($v == 2 || $foreach.index == $page.parent.allRoles.size() - 1) </div> #end
+                                        <span class="article-name">$role.name</span>
+                                        #if ($role.description && $role.description != "")
+                                        <br>
+                                            <small>$!role.description</small>
+                                            #end
+                                            <span class="article-action">
+                                                <button class="btn btn-xs btn-success btn-add-role" title="Add role"><i class="fa fa-plus-circle"></i></button>
+                                            </span>
+                                    </article>
+                                </div>
+                                #if ($v == 2 || $foreach.index == $page.parent.allRoles.size() - 1) </div> #end
                             #end
                         </div>
                     </div>
