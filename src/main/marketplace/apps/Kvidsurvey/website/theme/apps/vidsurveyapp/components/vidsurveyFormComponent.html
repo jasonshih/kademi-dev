@@ -1,0 +1,184 @@
+#set($survey = $page.attributes.survey)
+
+#set($accessGroups = $survey.jsonObject.groups.split(','))
+#set($canAccessSurvey = false)
+#foreach($groupName in $accessGroups)
+#if(!$canAccessSurvey)
+#set($canAccessSurvey = $userResource.isInGroup($groupName, $page.organisation.orgId))
+#end
+#end
+
+#set ($taken = $controllers.call('getSurveyResultByUser', $page, $user.name, $survey.name))
+#if($survey.jsonObject.endTime && $survey.jsonObject.startTime)
+#set($expired = $formatter.now.compareTo($formatter.toDate($survey.jsonObject.endTime)))
+#set($openingSoon = $formatter.now.compareTo($formatter.toDate($survey.jsonObject.startTime)))
+#end
+#if(!$canAccessSurvey)
+<div class="row">
+    <div class="col-sm-12">
+        <div class="alert alert-danger">
+            <h3><strong>Oops!</strong> You don't have permission to access this survey. <a href="/vidsurvey">Click here</a> to go back to survey list!</h3>
+        </div>
+    </div>
+</div>
+#elseif($taken.hits.totalHits>0)
+<div class="row">
+    <div class="col-sm-12">
+        <div class="alert alert-info">
+            <h3><strong>Thank you!</strong> You've just done this survey. <a href="/vidsurvey">Click here to go back to survey list</a>!</h3>
+        </div>
+    </div>
+</div>
+#elseif (!$survey.jsonObject.status)
+<div class="row">
+    <div class="col-sm-12">
+        <div class="alert alert-danger">
+            <h3><strong>Oops!</strong> This survey is currently disabled by administrator. <a href="/vidsurvey">Click here</a> to go back to survey list!</h3>
+        </div>
+    </div>
+</div>
+#elseif($expired && $expired>0)
+<div class="row">
+    <div class="col-sm-12">
+        <div class="alert alert-danger">
+            <h3><strong>Oops!</strong> This survey has expired. <a href="/vidsurvey">Click here</a> to go back to survey list!</h3>
+        </div>
+    </div>
+</div>
+#elseif($openingSoon && $openingSoon<0)
+<div class="row">
+    <div class="col-sm-12">
+        <div class="alert alert-info">
+            <h3><strong>Hello!</strong> This survey is opening in <span id="vidsurvey-cowndowntime" data-startTime="$survey.jsonObject.startTime">...</span> </h3>
+        </div>
+    </div>
+</div>
+#else
+<div class="row">
+    <div class="col-sm-12" id="kvidsurvey-wrap">
+
+        <h3>$survey.jsonObject.name</h3>
+
+        #if($survey.jsonObject.startTime)
+        <div><i class="fa fa-clock-o"></i> <span class="surveytime">$survey.jsonObject.startTime</span> - <span class="vidsurveytime">$survey.jsonObject.endTime</span></div>
+        #end
+        <p>$survey.jsonObject.description</p>
+        <hr>
+        #set($questions = $page.attributes.questionResult.hits.hits)
+        #set($answers = $page.attributes.answerResult.hits.hits)
+        #if($page.attributes.questionResult.hits.totalHits > 0)
+        <form id="vidsurveyform" data-survey="$survey.name" action="/vidsurvey/submitSurvey/" method="post">
+            <input type="hidden" name="temp-surveyId" value="$survey.name">
+            <input type="hidden" name="temp-user" value="$user.name">
+            <input type="hidden" name="temp-userAgentHeader" value="$request.userAgentHeader">
+            <input type="hidden" name="temp-fromAddress" value="$request.fromAddress">
+            <input type="hidden" name="temp-totalQuestions" value="$page.attributes.questionResult.hits.totalHits">
+
+            <div id="vidsurvey-questions">
+                #set ($count = 0)
+                #foreach($question in $questions)
+                #set ($count = $count + 1)
+                #set ($answered = $controllers.call('getQuestionResult', $page, $user.name, $survey.name, $question.id))
+
+                <div class="question-item $formatter.ifTrue($answered, 'hide','')" data-answered="$answered" data-questionId="$question.id">
+                    <h4>$count. $question.fields.title.value</h4>
+                    <div class="question-description">$question.fields.body.value</div>
+                    <div class="answers-vidsurvey">
+                        #if($question.fields.type.value=='PT')
+                        <!-- Plain text -->
+                        <div class="form-group">
+                            <textarea required="required" name="$question.id" class="form-control" placeholder="Please enter your answer here" id="exampleInputFile" ></textarea>
+                        </div>
+                        #end
+
+                        #if($question.fields.type.value=='V')
+                        <!-- Video -->
+                        #set ($maxLength = $question.fields.maxLength.value/60)
+                        <p style="margin-top: 15px" data-maxLength="$question.fields.maxLength.value"><strong>Max length</strong> (mins): $!maxLength</p>
+                        #if(!$answered)
+                        <a class="btn btn-danger btn-open-recorder" data-questionId="$question.id"><i class="fa fa-video-camera"></i> Record your answer</a>
+                        #end
+                        #end
+
+                        #if($page.attributes.answerResult.hits.totalHits > 0)
+                        #foreach($answer in $answers)
+                        #if($answer.fields.questionId.value == $question.id)
+                        #if($question.fields.type.value=='MC')
+                        <!-- Multichoices -->
+                        <div class="checkbox">
+                            <label>
+                                <input name="$question.id" value="$answer.id" type="checkbox"> $answer.fields.body.value
+                            </label>
+                        </div>
+                        #elseif($question.fields.type.value=='YN')
+                        <!-- Yes/No question -->
+                        <div class="radio">
+                            <label>
+                                <input required="required" name="$question.id" value="$answer.id" type="radio"> $answer.fields.body.value
+                            </label>
+                        </div>
+                        #elseif($question.fields.type.value=='SC')
+                        <!-- Single choice question -->
+
+                        #if($question.fields.answerLayout.value=="0")
+                        <div class="radio">
+                            <label>
+                                <input name="$question.id" value="$answer.id" type="radio"> $answer.fields.body.value
+                            </label>
+                        </div>
+                        #else
+                        <div class="radio-inline">
+                            <label>
+                                <input name="$question.id" value="$answer.id" type="radio"> $answer.fields.body.value
+                            </label>
+                        </div>
+                        #end
+                        #end
+                        #end
+                        #end
+                        #end
+                        #if($question.fields.type.value=='MC')
+                        <!-- Multichoices -->
+                        <input required="required" type="text" style="width:1px; height: 1px;opacity:0.01" name="temp-$question.id" value="">
+                        #end
+                    </div>
+                </div>
+                #end
+                <div id="vidsurvey-question-navigation">
+                    Question <span class="question-index"></span> / $questions.size()
+                </div>
+            </div>
+            <div class="vidsurvey-submit-alert alert alert-info hide"><h3><i class="fa fa-check"></i> You've done this survey. Please click submit button to continue</h3></div>
+            <div class="text-right"><button type="submit" id="btn-submit-vidsurvey" class="btn btn-primary hide">Submit</button></div>
+        </form>
+        #else
+        <p>No question found</p>
+        #end
+    </div>
+</div>
+#end
+
+<div id="modal-recorder" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="uploading-video hide">
+            <span style="font-size: 20px">Your answer is being uploaded. </span>
+            <br>
+            <span>This will take some time to complete...</span>
+            <br>
+            <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+        </div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Record your answer</h4>
+            </div>
+            <div class="modal-body text-center">
+                <video id="myVideo-vidsurvey" class="video-js vjs-default-skin"></video>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" disabled class="btn btn-primary btn-submit-video">Submit</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

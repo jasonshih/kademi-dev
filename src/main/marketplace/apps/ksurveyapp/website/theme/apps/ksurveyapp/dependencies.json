@@ -1,12 +1,16 @@
 {
     "appDependencies": [
         {
+            "appId": "KongoDB",
+            "branch": ""
+        },
+        {
             "appId": "moment-lib",
             "branch": "2.18.3"
         },
         {
-            "appId": "KongoDB",
-            "branch": ""
+            "appId": "jquery-forms-lib",
+            "branch": "1.0.1"
         }
     ],
     "dependencies": [
@@ -32,12 +36,6 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/ksurveyapp/countdown.min.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/jquery.forms/1.1.5/jquery.forms-1.1.5.js"
             }
         },
         {
