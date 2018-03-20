@@ -7,6 +7,14 @@
         {
             "appId": "search",
             "branch" : ""
+        },
+        {
+            "appId": "email",
+            "branch": ""
+        },
+        {
+            "appId": "email-lib",
+            "branch": "1.0.9"
         }
   ]
 }
