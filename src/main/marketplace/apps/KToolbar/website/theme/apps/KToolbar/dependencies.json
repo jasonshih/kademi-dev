@@ -1,4 +1,10 @@
 {
+    "appDependencies": [
+        {
+            "appId": "jquery-forms-lib",
+            "branch": "1.0.1"
+        }
+    ],
     "dependencies": [
         {
             "less": {
@@ -10,12 +16,6 @@
             "css": {
                 "cssMedia": "all",
                 "path": "/static/bootstrap-colorpicker/2.5.1/css/bootstrap-colorpicker.min.css"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/jquery.forms/1.1.5/jquery.forms-1.1.5.js"
             }
         },
         {

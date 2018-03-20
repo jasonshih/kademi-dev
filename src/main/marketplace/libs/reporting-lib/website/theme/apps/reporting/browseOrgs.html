@@ -25,7 +25,7 @@
     #set ($numOrgsInt = 20)
 #end
 
-#set($beans = $applications.Reporting.listUserOrgs($numOrgsInt, $rootFolder.orgData, true, $groups))
+#set($beans = $applications.Reporting.listUserOrgs($numOrgsInt, null, true, $groups))
 #if($beans.empty)
     <li><i class="fa fa-check" style="visibility: hidden"></i> No selections available</li>
 #else

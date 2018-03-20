@@ -1,7 +1,7 @@
 /**
    Component: timeline.less
 */
- 
+
 @timeline-badge-size:           50px;
 @timeline-badge-size-sm:        30px;
 @timeline-datetime-height:      20px;
@@ -15,7 +15,7 @@
   padding: 0 0 10px;
   position: relative;
   margin: 0;
-  
+
   // Timeline central line
   &:before {
     top: 0;
@@ -71,6 +71,7 @@
         position: relative;
         //float: right;
         margin-left: @timeline-separator-width + 10;
+        overflow: hidden;
 
         // Popover inside timeline panels
         .popover {
@@ -110,7 +111,7 @@
         }
       }
     }
-    
+
     // Timeline badges
     > .timeline-badge {
       position: absolute;
@@ -133,10 +134,10 @@
         line-height: @timeline-badge-size-sm;
         font-size: @timeline-badge-size-sm * .4;
       }
-      
-      
+
+
     }
-    
+
   }
 }
 
@@ -165,7 +166,7 @@
 // Timeline for Desktops
 // --------------------------------
 @media @desktop {
-    
+
     .timeline {
       &:before {
         left: 50%;
@@ -219,7 +220,7 @@
             right: -14px;
             left: auto;
           }
-          
+
           .popover .arrow {
             top: @timeline-badge-size/2;
             display: block;
@@ -246,5 +247,5 @@
 
       }
     }
-    
+
 }

@@ -9,30 +9,28 @@
         <br/>
         <p class="text-center">
             SCORE: $score
-        </p>                
+        </p>
         #end
 
     </div>
     <div class="media-body" style="padding-left: 20px; position: relative">
         <h3 class="media-heading">
-            <a class="text-success" href="/leads/$lead.id/">                
-                #if( $lead.profile )
-                    $lead.profile.formattedName
-                    #if($lead.organisation)
-                        ($lead.organisation.formattedName)
-                    #end
-                #elseif($lead.organisation)
-                    $lead.organisation.formattedName
+            <a class="text-success" href="/leads/$lead.id/">
+                #if( $lead.title )
+                    $lead.title
                 #else
-                    No contact information
+                    #if( $lead.profile )
+                        $lead.profile.formattedName
+                        #if($lead.organisation)
+                            ($lead.organisation.formattedName)
+                        #end
+                    #elseif($lead.organisation)
+                        $lead.organisation.formattedName
+                    #else
+                        No contact information
+                    #end
                 #end
             </a>
-            #if( $lead.createDate )
-                <small class="pull-right">
-                    Lead created:
-                    <abbr title="$formatter.formatDateISO8601($lead.createDate)" data-iso="$formatter.formatDateISO8601($lead.createDate)" class="timeago">$lead.createDate</abbr> for Journey $lead.funnel.title
-                </small>
-            #end
         </h3>
         #if($lead.organisation)
             #set($addressStr = "")
@@ -53,7 +51,7 @@
             #end
 
             #if ("$addressStr" != "")
-                <p>
+                <p class='pull-left'>
                     <i aria-hidden="true" class="fa fa-map-marker"></i>
                     $addressStr
                 </p>
@@ -61,18 +59,25 @@
         #end
         #if( $lead.profile )
             #if( $lead.profile.email )
-                <p>
+                <p class='pull-left'>
                     <i aria-hidden="true" class="fa fa-envelope"></i>
                     $lead.profile.email
                 </p>
             #end
             #if( $lead.profile.phone )
-                <p>
+                <p class='pull-left'>
                     <i aria-hidden="true" class="fa fa-mobile"></i>
                     $lead.profile.phone
                 </p>
             #end
         #end
+        #if( $lead.createDate )
+            <p class='pull-left' style='padding-left: 10px'>
+                <i aria-hidden="true" class="fa fa-clock-o"></i>
+                <abbr title="$formatter.formatDateISO8601($lead.createDate)" data-iso="$formatter.formatDateISO8601($lead.createDate)" class="timeago">Created $lead.createDate</abbr> for Journey $lead.funnel.title
+            </p>
+        #end
+        <div class='clearfix'></div>
 
         <div class="lead-desc">
             <div class="leadInner">

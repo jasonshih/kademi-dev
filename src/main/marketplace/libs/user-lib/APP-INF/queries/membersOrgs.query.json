@@ -1,0 +1,19 @@
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "type": {
+                        "value": "profile"
+                    }
+                },
+                {
+                    "terms": {
+                        "parentOrgs": "$orgIds"
+                    }
+                }
+            ]
+        }
+    },
+    "size": 10000
+}
