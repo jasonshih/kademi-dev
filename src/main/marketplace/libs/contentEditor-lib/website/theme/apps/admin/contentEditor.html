@@ -36,7 +36,7 @@
         #end
         <!-- End injected JS sources -->
 
-        
+
 
         #portlets("header")
 
@@ -302,8 +302,8 @@
             </span>
         </div>
 
-        #set($snippetsUrl = "_components?fileName=$fname")
-        #set($snippetsHandlersUrl = "${page.parent.href}_components?handlers&fileName=$fname")
+        #set($snippetsUrl = "_components?fileName=$!fname")
+        #set($snippetsHandlersUrl = "${page.parent.href}_components?handlers&fileName=$!fname")
 
         <script type="text/javascript" src="/theme/apps/admin/contentEditor.js">//</script>
         <div id="file-jsparams">
