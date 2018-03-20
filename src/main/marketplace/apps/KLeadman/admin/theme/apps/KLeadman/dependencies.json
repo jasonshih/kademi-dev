@@ -11,7 +11,7 @@
         {
             "appId": "userDashboardApp",
             "branch" : ""
-        },                
+        },
         {
             "appId": "alerts",
             "branch" : ""
@@ -19,6 +19,14 @@
         {
             "appId": "funnels",
             "branch" : ""
-        }                                
+        },
+        {
+            "appId": "email",
+            "branch": ""
+        },
+        {
+            "appId": "email-lib",
+            "branch": "1.0.9"
+        }
   ]
 }

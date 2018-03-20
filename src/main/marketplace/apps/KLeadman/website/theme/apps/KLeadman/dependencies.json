@@ -27,6 +27,14 @@
         {
             "appId": "KPayment",
             "branch": "1.0.0"
+        },
+        {
+            "appId": "email",
+            "branch": ""
+        },
+        {
+            "appId": "email-lib",
+            "branch": "1.0.9"
         }
   ]
 }
