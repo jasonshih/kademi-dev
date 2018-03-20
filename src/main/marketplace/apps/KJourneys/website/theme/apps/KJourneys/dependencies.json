@@ -7,6 +7,10 @@
         {
             "appId": "tracking",
             "branch" : ""
+        },
+        {
+          "appId": "email",
+          "branch" : ""
         }
   ]
 }
