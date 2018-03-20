@@ -71,7 +71,7 @@
                                     #foreach($reward in $page.rewards)
                                     $formatter.option($reward.name, $reward.name, $page.source.reward.name)
                                     #end
-                                </select>                                
+                                </select>
                             </div>
                         </div>
 
@@ -90,7 +90,7 @@
                                 <p><small>To tag the allocated points, select a tag here</small></p>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="control-label col-md-3" for="allocationType">
                                 Allocation Type
@@ -101,6 +101,19 @@
                                     $formatter.option("INDIVIDUAL", "Individual", $page.source.allocationType)
                                     $formatter.option("SUM", "Sum", $page.source.allocationType)
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+
+                            </label>
+                            <div class="col-md-8">
+                                <button class="btn btn-info btn-test-allocation" data-toggle="modal" data-target="#test-allocation-modal">
+                                    <span class="fa fa-cogs"></span>
+                                    Test
+                                </button>
+                                <i>Please save your edits before testing.</i>
                             </div>
                         </div>
 
@@ -146,7 +159,7 @@
                                 <col width="" />
                                 <col width="" />
                                 <col width="" />
-                            </colgroup>                            
+                            </colgroup>
                             <thead>
                                 <tr>
                                     <th>Issued to</th>
@@ -163,11 +176,33 @@
                                 </tr>
                                 #end
                             </tbody>
-                        </table>                        
+                        </table>
                     </div>
                 </div>
             </div>
         </form>
+
+        <div id="test-allocation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="panel-body">
+                        <form action="$page.href" method="post" class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="testAllocationId">Sales record ID</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="testAllocationId" value="" placeholder="" class="required form-control"  required="true" />
+                                    <p><small><a href="../#history-tab">Find records to test with here</a></small></p>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-primary" type="submit">Run test</button>
+                        </form>
+                        <div class="well alloc-messages" style="min-height: 200px">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script type="text/javascript" src="/static/ace/1.2.0/src-noconflict/ace.js">//</script>
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
@@ -220,8 +255,8 @@
                     });
                     $('#pointsMvelExpression').show();
                 }
-                
-                function initIgnoreMvel(){
+
+                function initIgnoreMvel() {
                     ignoreExpressionEditor = ace.edit('ignoreMvelExpression');
                     ignoreExpressionEditor.getSession().setMode("ace/mode/javascript");
                     ignoreExpressionEditor.setOptions({
@@ -261,11 +296,24 @@
                     });
                 }
 
+                function initTestAllocation() {
+                    $("#test-allocation-modal form").forms({
+                        onSuccess : function (data) {
+                            Msg.success("Finished. Check message panel for results");
+                            $(".alloc-messages").html(data.messages);
+                        },
+                        onError : function (resp) {
+                            Msg.error("There was a problem attempting the test. Please try again and contact the administrator if you still have problems");
+                        }
+                    });
+                }
+
                 $(function () {
                     initAllocateRewards();
                     initPointsMvel();
                     initIgnoreMvel();
                     initDetailsForm();
+                    initTestAllocation();
                 });
             })(jQuery);
         </script>
