@@ -130,7 +130,10 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3" for="ignoreExpression">Ignore expression</label>
+                            <label class="control-label col-md-3" for="ignoreExpression">
+                                Include expression
+                                <small>Return false to ignore</small>
+                            </label>
                             <div class="col-md-8">
                                 <textarea class="hide" id="ignoreExpression" name="ignoreExpression"></textarea>
                                 <div id="ignoreMvelExpression" class="expressionEditor" style="display:none;">$!formatter.htmlEncode($page.source.ignoreExpression)</div>

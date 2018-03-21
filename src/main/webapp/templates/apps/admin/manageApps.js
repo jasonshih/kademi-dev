@@ -44,23 +44,15 @@ function initApps() {
 }
 
 function initUpdates() {
-    $("body").on("click", ".update-all-apps", function (e) {
-        $.ajax({
-            type: 'POST',
-            url: window.location.pathname,
-            dataType: "json",
-            data: {
-                updateAll: true
-            },
-            success: function (data) {
-                Msg.info("Updated dependencies. Reloading page..");
-                window.location.reload();
-            },
-            error: function (resp) {
-                flog("error", resp);
-                Msg.error("Could not update dependencies");
-            }
-        });
+    $(".form-update-all-apps").forms({
+        onSuccess : function(result) {
+            flog("done update all", result);
+            Msg.info("Updated dependencies. Reloading page..");
+            window.location.reload();
+        },
+        onError : function() {
+            Msg.error("Could not update dependencies");
+        }
     });
 }
 
