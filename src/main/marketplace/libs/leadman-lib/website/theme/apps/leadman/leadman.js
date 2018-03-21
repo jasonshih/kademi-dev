@@ -1925,7 +1925,12 @@ function initStatsSummaryComponents() {
 
 function initClipboard() {
     $('#newNoteModal [name=newNote]').inlineattachment({
-        uploadUrl: '/assets',
-        uploadMethod: "post"
+        uploadUrl: '/assets/',
+        uploadMethod: "POST",
+        jsonFieldName : "nextHref",
+        urlText : function( nextHref, result) {
+            flog("initClipboard:urlText", nextHref)
+            return "<img class='img-responsive' src='" + nextHref + "'/>";
+        }
     });
 }

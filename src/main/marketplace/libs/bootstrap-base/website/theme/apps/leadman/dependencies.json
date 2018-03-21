@@ -2,7 +2,7 @@
     "appDependencies": [
         {
             "appId": "leadman-lib",
-            "branch": "1.8.6"
+            "branch": "1.9.0"
         }
     ]
 }

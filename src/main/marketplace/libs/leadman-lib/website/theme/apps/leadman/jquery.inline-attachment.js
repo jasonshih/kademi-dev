@@ -214,6 +214,7 @@
     onFileUploaded: function() {}
   };
 
+
   /**
    * Uploads the blob
    *
@@ -221,6 +222,7 @@
    * @return {XMLHttpRequest} request object which sends the file
    */
   inlineAttachment.prototype.uploadFile = function(file) {
+      flog("uploadFile");
     var me = this,
       formData = new FormData(),
       xhr = new XMLHttpRequest(),
@@ -256,7 +258,8 @@
       }
     }
 
-    xhr.open('POST', settings.uploadUrl);
+    flog("sending data");
+    xhr.open(settings.uploadMethod, settings.uploadUrl);
 
     // Add any available extra headers
     if (typeof settings.extraHeaders === "object") {
@@ -269,6 +272,7 @@
 
     xhr.onload = function() {
       // If HTTP status is OK or Created
+      flog("onload", xhr.status);
       if (xhr.status === 200 || xhr.status === 201) {
         me.onFileUploadResponse(xhr);
       } else {
@@ -302,12 +306,15 @@
    * @return {Void}
    */
   inlineAttachment.prototype.onFileUploadResponse = function(xhr) {
+      flog("onFileUploadResponse", xhr);
     if (this.settings.onFileUploadResponse.call(this, xhr) !== false) {
       var result = JSON.parse(xhr.responseText),
         filename = result[this.settings.jsonFieldName];
+        flog("onFileUploadResponse. filename=", filename, "result", result);
 
       if (result && filename) {
         var newValue;
+        flog("Build string", this.settings.urlText);
         if (typeof this.settings.urlText === 'function') {
           newValue = this.settings.urlText.call(this, filename, result);
         } else {
