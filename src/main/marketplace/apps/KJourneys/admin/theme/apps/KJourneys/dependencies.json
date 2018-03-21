@@ -1,28 +1,32 @@
 {
-  "appDependencies": [
+    "appDependencies": [
         {
             "appId": "search",
-            "branch" : ""
+            "branch": ""
         },
         {
             "appId": "userDashboardApp",
-            "branch" : ""
+            "branch": ""
         },
         {
             "appId": "alerts",
-            "branch" : ""
+            "branch": ""
         },
         {
             "appId": "funnels",
-            "branch" : ""
+            "branch": ""
         },
         {
             "appId": "leadMan",
-            "branch" : ""
+            "branch": ""
+        },
+        {
+            "appId": "email",
+            "branch": ""
         },
         {
             "appId": "email-lib",
             "branch": "1.0.9"
         }
-  ]
+    ]
 }

@@ -2,7 +2,7 @@
     "appDependencies": [
         {
             "appId": "reporting-lib",
-            "branch": "1.2.5"
+            "branch": "1.2.7"
         },
         {
             "appId": "moment-lib",
@@ -59,6 +59,12 @@
             "js": {
                 "group": "main",
                 "path": "/static/uri/1.15.1/URI.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/leadman/jquery.inline-attachment.js"
             }
         },
         {

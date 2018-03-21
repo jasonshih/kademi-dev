@@ -1,0 +1,31 @@
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "range": {
+                        "issuedDate": {
+                            "gte": "$startDate",
+                            "lte": "$endDate"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "aggs": {
+        "byOrgIds": {
+            "terms": {
+                "field": "issuedToOrgId"
+            },
+            "aggs": {
+                "totalPoints": {
+                    "sum": {
+                        "field": "numPoints"
+                    }
+                }
+            }
+        }
+    },
+    "size": 10000
+}

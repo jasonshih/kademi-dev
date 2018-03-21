@@ -40,6 +40,7 @@
                         </button>
                         <ul class="dropdown-menu taskAssigneeDropdown" aria-labelledby="assigneeDropdown" data-current-user="$userResource.name">
                             <li><a href="#" data-name="assignedTo" data-value="NONE" class="filter">Assigned to nobody</a></li>
+                            <li><a href="#" data-name="assignedTo" data-value="ALL" class="filter">Any assigment</a></li>
                             #foreach($b in $aggr.aggregations.assignee.buckets)
                             #set($ur = false)
                             #set($ur = $applications.userApp.findUserResourceById($b.key))

@@ -22,9 +22,7 @@
             <select name="pointsBucket" id="" class="points-bucket form-control">
                 <option value="" selected>No bucket</option>
                 #foreach($r in $rewardStore.pointsBuckets)
-                #if ($r.individual)
-                <option value="$r.name">$r.title</option>
-                #end
+                    <option value="$r.name">$r.title</option>
                 #end
             </select>
         </div>
