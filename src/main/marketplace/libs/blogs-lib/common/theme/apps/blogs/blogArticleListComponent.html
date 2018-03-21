@@ -181,6 +181,75 @@
     #end
 #else
     #if(!$page)
-        <p class="alert alert-warning">No blog articles found</p>
+            <div class="blog-articles-grid row #if ($showFullHeightThumbnail == "true") blog-article-full-height-thumb #end">
+                <div class="blog-article-item col-sm-4">
+                    #set($bg = "/static/images/photo_holder.png")
+                    <a href="javascript:;">
+                        <div class="blog-article-inner" style="height: ${gridHeight}px;">
+                            <div class="blog-article-thumb" style="background-image: url('$bg')"></div>
+                            <div class="blog-article-body">
+                                <h4>First sample blog article</h4>
+                                <div class="clearfix">
+                                    #if ($showTime == "true")
+                                    <small class="blog-article-time"><i class="fa fa-clock-o"></i> <abbr class="timeago" title="10/03/2017 13:43 PM">10/03/2017</abbr>
+                                    </small>
+                                    #end
+                                    #if ($showCateTag == "true")
+                                    <span>
+                                        <span class="label label-info">Sample Category</span>
+                                    </span>
+                                    #end
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="blog-article-item col-sm-4">
+                    #set($bg = "/static/images/photo_holder.png")
+                    <a href="javascript:;">
+                        <div class="blog-article-inner" style="height: ${gridHeight}px;">
+                            <div class="blog-article-thumb" style="background-image: url('$bg')"></div>
+                            <div class="blog-article-body">
+                                <h4>Second sample article title</h4>
+                                <div class="clearfix">
+                                    #if ($showTime == "true")
+                                    <small class="blog-article-time"><i class="fa fa-clock-o"></i> <abbr class="timeago" title="10/03/2017 13:43 PM">10/03/2017</abbr>
+                                    </small>
+                                    #end
+                                    #if ($showCateTag == "true")
+                                    <span>
+                                        <span class="label label-info">Sample Category</span>
+                                    </span>
+                                    #end
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="blog-article-item col-sm-4">
+                    #set($bg = "/static/images/photo_holder.png")
+                    <a href="javascript:;">
+                        <div class="blog-article-inner" style="height: ${gridHeight}px;">
+                            <div class="blog-article-thumb" style="background-image: url('$bg')"></div>
+                            <div class="blog-article-body">
+                                <h4>Third sample blog article title</h4>
+                                <div class="clearfix">
+                                    #if ($showTime == "true")
+                                    <small class="blog-article-time"><i class="fa fa-clock-o"></i> <abbr class="timeago" title="10/03/2017 13:43 PM">10/03/2017</abbr>
+                                    </small>
+                                    #end
+                                    #if ($showCateTag == "true")
+                                    <span>
+                                        <span class="label label-info">Sample Category</span>
+                                    </span>
+                                    #end
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
     #end
 #end
