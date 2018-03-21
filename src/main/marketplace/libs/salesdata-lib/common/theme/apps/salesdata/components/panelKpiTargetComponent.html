@@ -140,64 +140,71 @@
         </div>
     </div>
 #else
-    <div class="panel-circle-sales panel-kpi-target">
-        <div class="circle-sales-colors" style="display: none !important;">
-            <button type="button" class="btn btn-primary"></button>
-            <button type="button" class="btn btn-info"></button>
-            <button type="button" class="btn btn-success"></button>
-            <button type="button" class="btn btn-warning"></button>
-            <button type="button" class="btn btn-danger"></button>
-        </div>
+    #if (!$page)
+        fakeUI()
+    #end
 
-        <div class="row hidden-xs">
-            <div class="col-sm-4 text-center">
-                <div class="circle-sales-wrapper no-margin">
-                    <div class="circle-sales-title">Sample Sales 2017</div>
-                </div>
-            </div>
-            <div class="col-sm-4 text-center">
-                <div class="circle-sales-wrapper no-margin">
-                    <div class="circle-sales-title">Sample Actual Sales 2017</div>
-                </div>
-            </div>
-            <div class="col-sm-4 text-center">
-                <div class="circle-sales-wrapper no-margin">
-                    <div class="circle-sales-title">Sample KPI</div>
-                </div>
+#end
+
+#macro (fakeUI)
+<div class="panel-circle-sales panel-kpi-target">
+    <div class="circle-sales-colors" style="display: none !important;">
+        <button type="button" class="btn btn-primary"></button>
+        <button type="button" class="btn btn-info"></button>
+        <button type="button" class="btn btn-success"></button>
+        <button type="button" class="btn btn-warning"></button>
+        <button type="button" class="btn btn-danger"></button>
+    </div>
+
+    <div class="row hidden-xs">
+        <div class="col-sm-4 text-center">
+            <div class="circle-sales-wrapper no-margin">
+                <div class="circle-sales-title">Sample Sales 2017</div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-4 text-center">
-                <div class="circle-sales-wrapper">
-                    <div class="circle-sales-title visible-xs-block">Sample Sales 2018</div>
-                    <div class="circle-sales">
-                        <div class="circle-sales-knob-wrapper"><input class="circle-sales-knob circle-sales-primary" value="100" /></div>
-                        <div class="circle-sales-label">$100k</div>
-                    </div>
+        <div class="col-sm-4 text-center">
+            <div class="circle-sales-wrapper no-margin">
+                <div class="circle-sales-title">Sample Actual Sales 2017</div>
+            </div>
+        </div>
+        <div class="col-sm-4 text-center">
+            <div class="circle-sales-wrapper no-margin">
+                <div class="circle-sales-title">Sample KPI</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 text-center">
+            <div class="circle-sales-wrapper">
+                <div class="circle-sales-title visible-xs-block">Sample Sales 2018</div>
+                <div class="circle-sales">
+                    <div class="circle-sales-knob-wrapper"><input class="circle-sales-knob circle-sales-primary" value="100" /></div>
+                    <div class="circle-sales-label">$100k</div>
                 </div>
             </div>
-            <div class="col-sm-4 text-center">
-                <div class="circle-sales-wrapper">
-                    <div class="circle-sales-title visible-xs-block">Sample Actual Sales 2018</div>
-                    <div class="circle-sales">
-                        <div class="circle-sales-knob-wrapper"><input class="circle-sales-knob circle-sales-info" value="100" /></div>
-                        <div class="circle-sales-label">$120k</div>
-                    </div>
+        </div>
+        <div class="col-sm-4 text-center">
+            <div class="circle-sales-wrapper">
+                <div class="circle-sales-title visible-xs-block">Sample Actual Sales 2018</div>
+                <div class="circle-sales">
+                    <div class="circle-sales-knob-wrapper"><input class="circle-sales-knob circle-sales-info" value="100" /></div>
+                    <div class="circle-sales-label">$120k</div>
                 </div>
             </div>
-            <div class="col-sm-4 text-center">
-                <div class="circle-sales-wrapper">
-                    <span class="circle-sales-title visible-xs-block">Sample KPI</span>
-                    <div class="circle-sales">
-                        <div class="circle-sales-knob-wrapper"><input class="circle-sales-knob #if($isAchieved == true) circle-sales-success #else circle-sales-warning #end" value="$formatter.formatCurrency($percent)" /></div>
+        </div>
+        <div class="col-sm-4 text-center">
+            <div class="circle-sales-wrapper">
+                <span class="circle-sales-title visible-xs-block">Sample KPI</span>
+                <div class="circle-sales">
+                    <div class="circle-sales-knob-wrapper"><input class="circle-sales-knob #if($isAchieved == true) circle-sales-success #else circle-sales-warning #end" value="$formatter.formatCurrency($percent)" /></div>
 
-                        <div class="circle-sales-label">
-                            <i class="fa fa-check fa-3x"></i>
-                            <span>#if ($isAssessed == true) $achievedText #else $onTrackText #end</span>
-                        </div>
+                    <div class="circle-sales-label">
+                        <i class="fa fa-check fa-3x"></i>
+                        <span>#if ($isAssessed == true) $achievedText #else $onTrackText #end</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 #end
