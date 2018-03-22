@@ -3,7 +3,6 @@ $(function () {
         $('abbr.timeago').timeago();
         
         $('.productParameterSelect').change(function () {
-            debugger;
             var optSelect = $(this);
             flog('productParameterSelect changed', optSelect);
             var uri = URI(window.location);

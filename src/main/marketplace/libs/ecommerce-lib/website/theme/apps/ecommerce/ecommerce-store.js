@@ -17,7 +17,6 @@
         flog('initAddToCartForProductList');
 
         $(document).on('click', '.btn-ecom-add-to-cart', function (e) {
-            debugger;
             e.preventDefault();
 
             var btn = $(this);
