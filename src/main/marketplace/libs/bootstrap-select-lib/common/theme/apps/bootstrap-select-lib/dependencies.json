@@ -1,0 +1,17 @@
+{
+    "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/bootstrap-select-lib/dist/css/bootstrap-select.min.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/bootstrap-select-lib/dist/js/bootstrap-select.min.js"
+            }
+        }
+    ]
+}
+
