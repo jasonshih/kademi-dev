@@ -498,14 +498,18 @@
     }
 
     function reloadRow(reloadId, productId) {
-        flog('Reloading row', reloadId);
-
         if (!productId) {
             productId = $('#' + reloadId).find('td:first-child').attr('data-productid');
         }
-
+        var url = window.location.href;
+        if(url.indexOf("?") > 0){
+            url = url + '&reloadProductId=' + productId;
+        }else{
+            url = url + '?reloadProductId=' + productId;
+        }
+        flog('Reloading row', reloadId , ' URL: ', url);
         $('#' + reloadId).reloadFragment({
-            url: window.location.href + '?reloadProductId=' + productId,
+            url: url,
             whenComplete: function(){
                 loadSkuStockQuantity($('#' + reloadId));
             }
