@@ -57,7 +57,7 @@
         '    <div class="input-group">' +
         '        <input type="text" class="form-control org-finder-query" placeholder="Enter your address" id="q" value="" autocomplete="off" />' +
         '        <span class="input-group-btn">' +
-        '            <select class="selectpicker hidden-xs org-finder-allowedCountries"></select>' +
+        '            <select data-live-search="true" class="selectpicker hidden-xs org-finder-allowedCountries"></select>' +
         '            <select class="selectpicker clearfix org-finder-orgType"></select>' +
         '            <button class="btn btn-default btn-clear-query" type="button">&nbsp;<i class="fa fa-remove"></i>&nbsp;</button>' +
         '        </span>' +
@@ -311,7 +311,7 @@
             if (orgTypes && $.isArray(orgTypes) && orgTypes.length > 0) {
                 flog('[jquery.orgFinder] Initialize "Types" select box', cbbOrgType, orgTypes);
                 var optionStr = '';
-                
+                optionStr += '<option value="no-type"> NO TYPE</option>';
                 for (var i = 0; i < orgTypes.length; i++) {
                     var filter = orgTypesPreset.filter(function (item) {
                         return item.value == orgTypes[i].value;
@@ -345,9 +345,9 @@
                 }
                 
                 cbbCountry.html(optionStr).addClass('selectpicker');
-                if (!cbbCountry.attr('title')) {
-                    cbbCountry.attr('title', ' - All Countries - ')
-                }
+                // if (!cbbCountry.attr('title')) {
+                //     cbbCountry.attr('title', ' - All Countries - ')
+                // }
                 cbbCountry.selectpicker().on('change', function () {
                     autocomplete.setComponentRestrictions(this.value !== 'all' ? {
                         country: this.value

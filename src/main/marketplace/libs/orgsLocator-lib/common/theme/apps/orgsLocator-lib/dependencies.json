@@ -11,30 +11,6 @@
     ],
     "dependencies": [
         {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/bootstrap-select/1.10.0/dist/css/bootstrap-select.min.css"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/uri/1.15.1/URI.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/bootstrap-select/1.10.0/dist/js/bootstrap-select.min.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/jquery.scrollTo/2.1.2/jquery.scrollTo.min.js"
-            }
-        },
-        {
             "js": {
                 "group": "main",
                 "path": "/theme/apps/orgsLocator/orgsLocator.js"

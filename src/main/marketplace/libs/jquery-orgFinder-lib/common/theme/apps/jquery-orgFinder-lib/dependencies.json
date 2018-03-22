@@ -5,6 +5,30 @@
         {
             "css": {
                 "cssMedia": "all",
+                "path": "/static/bootstrap-select/1.12.4/dist/css/bootstrap-select.min.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/uri/1.15.1/URI.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/bootstrap-select/1.12.4/dist/js/bootstrap-select.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/jquery.scrollTo/2.1.2/jquery.scrollTo.min.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
                 "path": "/theme/apps/jquery-orgFinder-lib/jquery.orgFinder.css"
             }
         },
