@@ -391,16 +391,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    #set( $lbStartDate = $formatter.toDate( $request.params.lbStartDate ) )
-                                    #set( $lbFinishDate = $formatter.toDate( $request.params.lbFinishDate ) )
-                                    #if(!$lbFinishDate)
-                                    #set( $lbFinishDate = $formatter.now )
-                                    #end
                                     #set( $lbLimit = $formatter.toInteger($request.params.lbLimit, true) )
                                     #if(!$lbLimit)
-                                    #set( $lbLimit = 20 )
+                                        #set( $lbLimit = 20 )
                                     #end
-                                    #set($myPointsInfo = $page.myPointsInfo($lbLimit, $lbStartDate, $lbFinishDate))
+                                    #set($myPointsInfo = $page.myPointsInfo($lbLimit))
                                     $myPointsInfo.setExtendedProfiles(true)
 
                                     #set( $lb = $myPointsInfo.allMemberPoints )
