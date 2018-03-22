@@ -2,7 +2,7 @@
 <div class="contactFormComponent">
     <div class="row">
         <div class="col-sm-12">
-            <form action="/contactus" method="POST" class="contactus form-horizontal" role="form" data-redirect-url="$redirectUrl">
+            <form action="/contactus" method="POST" class="contactus form-horizontal" role="form" data-redirect-url="$!redirectUrl">
                 #if ($path && $path != "")
                 <input type="hidden" name="contactForm" value="$!path">
                 #end
