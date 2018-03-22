@@ -16,8 +16,8 @@
     function initAddToCartForProductList() {
         flog('initAddToCartForProductList');
 
-        var productsList = $('#products-list,.products-list');
-        productsList.on('click', '.btn-ecom-add-to-cart', function (e) {
+        $(document).on('click', '.btn-ecom-add-to-cart', function (e) {
+            debugger;
             e.preventDefault();
 
             var btn = $(this);
