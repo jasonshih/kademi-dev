@@ -168,18 +168,22 @@
 
         #macro( showApps )
             #set( $updates = $page.updates )
-            <div class="well">                
+            <div class="well">
                 #if( $updates.size() > 0 )
                 <h3>Updates available - $updates.size()</h3>
-                <button class="btn btn-success btn-lg pull-right update-all-apps">
-                    <span class="fa fa-cogs"></span>
-                    Update all
-                </button>
+                <form method="post" action="$page.href" class="form-update-all-apps">
+                    <input type="hidden" name="updateAll" value="true" />
+                    <button class="btn btn-success btn-lg pull-right update-all-apps" type="submit">
+                        <span class="fa fa-cogs"></span>
+                        Update all
+                    </button>
+                </form>
+
                 #foreach( $update in $updates )
                 <span class="label label-info">$update.title</span>
                 #end
                 <div class="clearfix"></div>
-                
+
                 #else
                 <p>Applications control large chunks of functionality, like forums or emails. You can add them to websites</p>
                 <p>Applications are made available for websites by activating them on your organisation's Manage Applications page. Available apps are then shown on the website apps list where they can be turned on or off as required.</p>

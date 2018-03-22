@@ -771,10 +771,13 @@
                     <div class="well">
                         #if( $updates.size() > 0 )
                         <h3>Updates available - $updates.size()</h3>
-                        <button class="btn btn-success btn-lg pull-right update-all-apps">
-                            <span class="fa fa-cogs"></span>
-                            Update all
-                        </button>
+                        <form method="post" action="$page.href" class="form-update-all-apps">
+                            <input type="hidden" name="updateAll" value="true" />
+                            <button class="btn btn-success btn-lg pull-right update-all-apps" type="submit">
+                                <span class="fa fa-cogs"></span>
+                                Update all
+                            </button>
+                        </form>
                         #foreach( $update in $updates )
                         <span class="label label-info">$update.title</span>
                         #end
