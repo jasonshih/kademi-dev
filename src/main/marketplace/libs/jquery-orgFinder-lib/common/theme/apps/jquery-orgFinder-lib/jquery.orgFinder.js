@@ -352,7 +352,7 @@
                     autocomplete.setComponentRestrictions(this.value !== 'all' ? {
                         country: this.value
                     } : {country: []});
-                    txtQ.val('');
+                    txtQuery.val('');
                 });
             } else {
                 flog('[jquery.orgFinder] Remove "Country" select box', cbbCountry, allowedCountries);
