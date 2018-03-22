@@ -2,7 +2,7 @@
     "appDependencies": [
         {
             "appId": "reporting-lib",
-            "branch": "1.2.7"
+            "branch": "1.2.8"
         },
         {
             "appId": "moment-lib",

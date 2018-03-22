@@ -181,7 +181,7 @@
                 var rowStr = '<tr>';
                 for (var i in row) {
                     var val = row[i];
-                    if( !isFunction(val)) {
+                    if (!isFunction(val)) {
                         rowStr += '<td>' + val + '</td>';
                     }
                 }
@@ -197,18 +197,27 @@
             function renderRowRawES(row, panel) {
                 var rowStr = '<tr>';
                 var ths = panel.find('table thead th');
-                if( ths.length == 0 ) {
-                    for( i=0; i<row.fields.length; i++) {
-                        var f = row.fields[i];
-                        flog("renderRowRawES: ", f);
+                if (ths.length == 0) {
+                    if (row.fields !== undefined) {
+                        for (i = 0; i < row.fields.length; i++) {
+                            var f = row.fields[i];
+                            flog("renderRowRawES: ", f);
+                        }
+                    } else {
+                        flog("The row has no fields");
                     }
                 } else {
                     ths.each(function () {
                         var f = $(this).attr('data-field');
-                        if (row.fields[f]) {
-                            rowStr += '<td>' + row.fields[f][0] + '</td>';
+                        if (row.fields !== undefined) {
+                            if (row.fields[f]) {
+                                rowStr += '<td>' + row.fields[f][0] + '</td>';
+                            } else {
+                                rowStr += '<td>&nbsp;</td>';
+                            }
                         } else {
                             rowStr += '<td>&nbsp;</td>';
+                            flog("The row has no fields");
                         }
                     });
                 }
