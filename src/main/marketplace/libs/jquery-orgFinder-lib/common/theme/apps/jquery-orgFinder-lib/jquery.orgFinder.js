@@ -191,15 +191,15 @@
                 self.initCurrentLocation();
                 self.initFormSearch();
                 
-                if (options.showAllOrgs) {
-                    flog('[jquery.orgFinder] Show all organisations');
-                    self.doSearch('');
-                }
-                
                 if ($.isPlainObject(options.initSearchOptions) && options.searchWhenInit) {
                     flog('[jquery.orgFinder] Do search when initializing...', options.initSearchOptions);
                     self.txtQuery.val(options.initSearchOptions.query);
                     self.doSearch(options.initSearchOptions.query, options.initSearchOptions.lat, options.initSearchOptions.lng);
+                } else {
+                    if (options.showAllOrgs) {
+                        flog('[jquery.orgFinder] Show all organisations');
+                        self.doSearch('');
+                    }
                 }
                 
                 if (typeof options.onReady === 'function') {
