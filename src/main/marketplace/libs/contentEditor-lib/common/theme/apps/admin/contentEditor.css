@@ -201,3 +201,12 @@ body.content-editor-page.iframe-mode .content-editor-nav {
 #editor-loading.loading {
     background: rgba(255, 255, 255, .7);
 }
+
+.visible-rules {
+    font-family: monospace;
+    overflow: scroll;
+    word-wrap: normal;
+    white-space: pre;
+    font-size: 12px !important;
+    height: 140px !important;
+}

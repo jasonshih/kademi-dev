@@ -222,4 +222,6 @@
     font-family: monospace;
     overflow: scroll;
     word-wrap: normal;
+    white-space: pre;
+    font-size: 12px
 }
