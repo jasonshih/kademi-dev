@@ -7,8 +7,13 @@
 #end
 
 #if ($pointsBucket && $pointsBucket != "")
+#set( $isOrgPoints = false )
 #set( $myPointsInfo = $applications.rewardStore.myPointsInfo($pointsBucket, $formatter.toInteger(1000), null) )
+    #if( $myPointsInfo.reward.pointsType == "POINTS_ORG" )
+        #set( $isOrgPoints = true )
+    #end
 #end
+
 
 <table class="table table-striped">
     <thead>
@@ -27,8 +32,7 @@
                 #set($foundThis = true)
             #end
 
-            #set ($ur = $applications.userApp.findUserResourceById($leader.member.userId))
-            #renderLeaderRow($foreach.count, $ur.extProfileBean.formattedName(), $leader.numPoints)
+            #renderLeaderRow($foreach.count, $leader.member.formattedName(), $leader.numPoints)
             #if($foreach.count == $numUsers)
                 #break
             #end

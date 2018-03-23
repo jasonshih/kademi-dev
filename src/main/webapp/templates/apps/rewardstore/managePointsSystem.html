@@ -243,7 +243,7 @@
                                 #foreach($points in $page.paginator.records)
                                 <tr>
                                     <td>$points.numPoints</td>
-                                    
+
                                     <td>$formatter.formatDateTime($points.issuedDate, $rootFolder.organisation.timezone)</td>
                                     <td>$!formatter.formatDateTime($points.expiryDate, $rootFolder.organisation.timezone)</td>
                                     <td>
@@ -391,18 +391,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    #set( $lbStartDate = $formatter.toDate( $request.params.lbStartDate ) )
-                                    #set( $lbFinishDate = $formatter.toDate( $request.params.lbFinishDate ) )
-                                    #if(!$lbFinishDate)
-                                    #set( $lbFinishDate = $formatter.now )
-                                    #end
                                     #set( $lbLimit = $formatter.toInteger($request.params.lbLimit, true) )
                                     #if(!$lbLimit)
-                                    #set( $lbLimit = 20 )
+                                        #set( $lbLimit = 20 )
                                     #end
-                                    #set($myPointsInfo = $page.myPointsInfo($lbLimit, $lbStartDate, $lbFinishDate))
+                                    #set($myPointsInfo = $page.myPointsInfo($lbLimit))
                                     $myPointsInfo.setExtendedProfiles(true)
-                                    #foreach($point in $myPointsInfo.allMemberPoints)
+
+                                    #set( $lb = $myPointsInfo.allMemberPoints )
+
+                                    #foreach($point in $lb)
                                     <tr>
                                         <td>$foreach.count</td>
                                         <td>
