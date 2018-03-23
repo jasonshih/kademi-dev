@@ -42,7 +42,7 @@
     #if ($displayNickname)
     <div class="form-group">
         #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="nickName">Nickname</label> #end
-        
+
         <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
             <input class="required form-control" type="text" name="nickName" id="nickName" placeholder="Your nickname for others to see" />
         </div>
@@ -105,7 +105,7 @@
     #end
     #end
 
-    #if( ($page.hasOrgs || $groupSignupPage.hasOrgs) && $showOrgs)
+    #if( ($groupSignupPage.hasOrgs || $groupSignupPage.hasOrgs) && $showOrgs)
     #if( $groupRegoPage.regoOrgType )
     #set($orgType = $groupRegoPage.regoOrgType)
     #else
@@ -122,7 +122,7 @@
     </div>
     #end
 
-    #if( ($page.hasOptins() || $groupSignupPage.hasOptins()) && $showOptins)
+    #if( ($groupSignupPage.hasOptins() || $groupSignupPage.hasOptins()) && $showOptins)
     <div class="form-group">
         <div class="col-md-9 #if($displayLabels) col-md-offset-3 #end">
             #foreach($optin in $pageOptins)
@@ -138,7 +138,7 @@
     #set($product = $pageRelatedProduct)
     #if( $product )
     #if( $pagePaymentProvider )
-    <input type="hidden" name="paymentProvider" value="$page.paymentProvider.instanceId" />
+    <input type="hidden" name="paymentProvider" value="$groupSignupPage.paymentProvider.instanceId" />
     <hr />
     <h2>Payment details</h2>
 
