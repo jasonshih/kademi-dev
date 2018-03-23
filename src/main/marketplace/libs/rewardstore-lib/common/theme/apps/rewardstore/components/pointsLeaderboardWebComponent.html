@@ -24,14 +24,27 @@
         </tr>
     </thead>
     <tbody>
-
+    #set ($selectedOrgs = $queryManager.selectedOrgs)
     #if( $myPointsInfo.hasPoints )
         #set($foundThis = false)
         #foreach($leader in $myPointsInfo.allMemberPoints($pointsTag) )
-            #if( $leader.member.userId == $user.id)
-                #set($foundThis = true)
+            #if ($isOrgPoints)
+                #set ($mbs = $userResources.primaryMemberships.filterByOrg($leader.member.orgId))
+                #if ($mbs.size() > 0)
+                    #set($foundThis = true)
+                    #set($foundThisOrg = $mbs.first().org)
+                #end
+                #if ($selectedOrgs.size() > 0)
+                    #if ($selectedOrgs[0].orgId == $leader.member.orgId)
+                        #set($foundThis = true)
+                        #set($foundThisOrg = $selectedOrgs[0])
+                    #end
+                #end
+            #else
+                #if( $leader.member.userId == $user.id)
+                    #set($foundThis = true)
+                #end
             #end
-
             #renderLeaderRow($foreach.count, $leader.member.formattedName(), $leader.numPoints)
             #if($foreach.count == $numUsers)
                 #break
@@ -39,12 +52,23 @@
         #end
 
         #if( !$foundThis )
-            #set( $thisExtProfileBean = $userResource.extProfileBean )
-            #set( $rank = $myPointsInfo.rank($thisExtProfileBean))
-            #if($rank)
-                #renderLeaderRow( $rank.rank, $thisExtProfileBean.formattedName(), $rank.points.numPoints)
+            #if ($isOrgPoints)
+                #if ($selectedOrgs.size() > 0 && $selectedOrgs[0].orgId != $foundThisOrg.orgId)
+                    #set ($rank = $myPointsInfo.rank($selectedOrgs[0]))
+                    #if($rank)
+                        #renderLeaderRow( $rank.rank, $selectedOrgs[0].formattedName(), $rank.points.numPoints)
+                    #else
+                        #renderLeaderRow( "N/A", $selectedOrgs[0].formattedName(), $applications.rewardstore.calcPointsBalance($selectedOrgs[0], $pointsBucket))
+                    #end
+                #end
             #else
-                #renderLeaderRow( "N/A", $thisExtProfileBean.formattedName(), $!myPointsInfo.myPointsTotal)
+                #set( $thisExtProfileBean = $userResource.extProfileBean )
+                #set( $rank = $myPointsInfo.rank($thisExtProfileBean))
+                #if($rank)
+                    #renderLeaderRow( $rank.rank, $thisExtProfileBean.formattedName(), $rank.points.numPoints)
+                #else
+                    #renderLeaderRow( "N/A", $thisExtProfileBean.formattedName(), $!myPointsInfo.myPointsTotal)
+                #end
             #end
         #end
     #else
