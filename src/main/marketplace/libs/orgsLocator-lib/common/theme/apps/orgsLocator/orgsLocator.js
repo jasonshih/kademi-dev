@@ -12,7 +12,7 @@
         initLat = +initLat || -33.867;
         var initLng = orgsLocator.attr('data-lng');
         initLng = +initLng || 151.195;
-
+        var initQuery = orgsLocator.attr('data-query');
         var options = {
             searchUrl: '/orgsLocator/',
             initLatLng: [initLat, initLng],
@@ -38,6 +38,12 @@
                         itemsWrapper.css('height', mapWrapper.innerHeight());
                     }
                 }).trigger('resize');
+            },
+            onPlaceChanged: function (data) {
+                var comp = orgsLocator.closest('[data-type=component-orgsLocator]');
+                comp.attr('data-lat', data.lat);
+                comp.attr('data-lng', data.lng);
+                comp.attr('data-query', data.query);
             }
         };
 
@@ -47,9 +53,9 @@
         if (searchWhenInit) {
             options.searchWhenInit = searchWhenInit;
             options.initSearchOptions = {
-                query: params.query || '',
-                lat: +params.lat,
-                lng: +params.lng
+                query: initQuery || '',
+                lat: initLat,
+                lng: initLng
             };
         }
 

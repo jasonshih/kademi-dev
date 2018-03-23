@@ -22,6 +22,7 @@
  * @option {Function} onSearch Callback will be called when search a keyword. Arguments: 'query'
  * @option {Function} beforeSearch Callback will be called before searching a keyword. This callback must be return data object which will be sent to server. Arguments: 'query', 'data'
  * @option {Function} onSearched Callback will be called after searching a keyword. Arguments: 'query', 'resp'
+ * @option {Function} onPlaceChanged Callback will be called after gmap place_changed. Arguments: {lat, lng, query}
  * @option {Function} renderItemContent Method for rendering content of an item in organization list. If you don't want to show this organization, just return null or empty. Arguments: 'orgData'
  * @option {Function} renderMarkerContent Method for rendering content for InfoWindow of a marker on Google Map. If you don't want to show this organization, just return null or empty. Arguments: 'orgData'
  * @option {String} emptyItemText Text will be showed when there is no result in organization list
@@ -280,7 +281,8 @@
             var orgTypes = options.orgTypes;
             var orgTypesPreset = options.orgTypesPreset;
             var allowedCountries = options.allowedCountries;
-            
+            var onPlaceChanged = options.onPlaceChanged;
+
             flog('[jquery.orgFinder] Initialize Google Map Autocomplete', txtQuery);
             var autocomplete = self.autocomplete = new google.maps.places.Autocomplete(txtQuery.get(0));
             
@@ -293,7 +295,9 @@
                     var lng = selectedPlace.geometry.location.lng();
                     var query = (txtQuery.val() || '').trim();
                     query = query === '' ? ' ' : query;
-                    
+                    if (typeof onPlaceChanged === 'function'){
+                        onPlaceChanged.call(null, {lat: lat, lng: lng, query: query});
+                    }
                     self.clear();
                     self.doSearch(query, lat, lng);
                 } else {
@@ -367,6 +371,9 @@
                 txtQuery.val('');
                 cbbCountry.selectpicker('val', 'all');
                 self.doSearch('');
+                if (typeof onPlaceChanged === 'function'){
+                    onPlaceChanged.call(null, {lat: '', lng: '', query: ''});
+                }
             });
             
             txtQuery.on('keydown', function (e) {

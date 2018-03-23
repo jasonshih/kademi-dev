@@ -28,7 +28,7 @@
                 dataType: 'HTML',
                 success: function (resp) {
                     form.html(resp);
-                    
+
                     form.find('.chk-search-when-init').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -62,7 +62,7 @@
             
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.chk-search-when-init').prop('checked', dataAttributes['data-search-when-init'] === 'true');
-            var arr = dataAttributes['data-org-types'].split(',');
+            var arr = (dataAttributes['data-org-types'] || '').split(',');
             form.find('.chk-org-type').each(function () {
                 if (arr.indexOf(this.value) != -1){
                     this.checked = true;
