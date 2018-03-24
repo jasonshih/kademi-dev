@@ -75,6 +75,40 @@
             </div>
         </form>
 
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Num delivered</th>
+                    <th>Currently processing</th>
+                    <th>Last started</th>
+                    <th>Last completed</th>
+                    <th>Last duration (ms)</th>
+                    <th>Total duration (ms)</th>
+                    <th>Avg duration (ms)</th>
+                </tr>
+            </thead>
+            <tbody>
+            #foreach( $thread in $page.deliveryThreadInfo )
+            <tr>
+                <td>$thread.numDelivered</td>
+                <td>$!thread.currentlyDeliveringEmail</td>
+                <td>$!formatter.formatDateTime($thread.timeLastStarted)</td>
+                <td>$!formatter.formatDateTime($thread.timeLastCompleted)</td>
+                <td>$!thread.lastDuration</td>
+                <td>$!thread.totalDuration</td>     
+                <td>$!thread.averageDuration</td>     
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="6">
+                    $thread.stackTrace
+                </td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+        
         <script type="text/javascript">
             $(function () {
                 $("form.maintForm").forms({
