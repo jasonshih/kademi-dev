@@ -50,11 +50,11 @@
     #set($foundThis = false)
     #if( $myPointsInfo.hasPoints )
         #foreach($leader in $myPointsInfo.allMemberPoints )
-            #if( $leader.member.userId == $user.id)
+
+            #if( $applications.rewardStore.isSameParticipant($leader.member, $profile) )
                 #set($foundThis = true)
             #end
-            #set ($ur = $applications.userApp.findUserResourceById($leader.member.userId))
-            #renderPointRecord($rank $ur.extProfileBean.formattedName() $leader.numPoints)
+            #renderPointRecord($rank $leader.member.formattedName() $leader.numPoints)
             #set( $rank = $rank + 1 )
         #end
 
