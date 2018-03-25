@@ -1,13 +1,13 @@
 
 function initMessage(markRead, page) {
     log("initMessage", $(".notificationBox .close"));
-    $(".notificationBox .close").click(function(e) {
+    $(".notificationBox .close").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
-        
+
         var link = $(this);
         var deletedHref = link.attr("href");
-        confirmDelete(deletedHref, getFileName(deletedHref), function() {
+        confirmDelete(deletedHref, getFileName(deletedHref), function () {
             log("deleted", link);
             var parent = link.closest("div");
             var next = parent.next();
@@ -25,21 +25,21 @@ function initMessage(markRead, page) {
                     window.location.href = "/inbox/";
                 } else {
                     $(".nav-menuNotifications span").text(messages.length);
-                    if( next.length == 0 ) {
+                    if (next.length == 0) {
                         next = messages.first();
                     }
                     var nextHref = next.find("h3 a").attr("href");
                     log("next page", next, nextHref);
-                    if( nextHref ) {
+                    if (nextHref) {
                         log("next href", nextHref);
                         window.location.href = nextHref;
                     }
                 }
             }
-            
+
         });
     });
-    $(".notificationBox div.message").click(function(e) {
+    $(".notificationBox div.message").click(function (e) {
         log("click", this);
         e.preventDefault();
         e.stopPropagation();
@@ -47,7 +47,7 @@ function initMessage(markRead, page) {
         window.location.href = href;
     });
 
-    if(!markRead) {
+    if (!markRead) {
         return;
     }
     log("mark read");
@@ -55,12 +55,34 @@ function initMessage(markRead, page) {
         type: 'POST',
         url: page,
         data: "read=true",
-        success: function(resp) {
+        success: function (resp) {
             log("set read status", resp);
         },
-        error: function(resp) {
+        error: function (resp) {
             log("Failed to set read flag", resp);
 
         }
     });
 }
+$(function () {
+    $("#resetEmail").click(function (e) {
+        jQuery.ajax({
+            type: 'POST',
+            data: {resetEmail: true},
+            success: function (resp) {
+                if (resp.status) {
+                    var msg = "The email was reseted. It'll be sent again";
+                    if (resp.messages !== undefined && resp.messages.length > 0) {
+                        msg = resp.messages[0];
+                    }
+                    Msg.info(msg);
+                }
+                $("#email-item-info").reloadFragment();
+            },
+            error: function (resp) {
+                flog(resp);
+                Msg.error("Failed to reset the email");
+            }
+        });
+    });
+});
