@@ -1,9 +1,22 @@
 <form class="form-horizontal">
     <div class="form-group">
-        <label class="col-sm-12">Group</label>
+        <label class="col-sm-12">Register to group</label>
         <div class="col-sm-12">
             <select class="form-control" name="group">
                 <option value="" selected="selected">- Default group -</option>
+                #set ($groups = $rootFolder.allGroups)
+                #foreach($g in $groups)
+                <option value="$g.name">$!g.title</option>
+                #end
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Also add to group</label>
+        <div class="col-sm-12">
+            <select class="form-control" name="extra-group">
+                <option value="" selected="selected">- None -</option>
                 #set ($groups = $rootFolder.allGroups)
                 #foreach($g in $groups)
                 <option value="$g.name">$!g.title</option>
@@ -21,7 +34,7 @@
             </select>
         </div>
     </div>
-    
+
     <div class="form-group">
         <label class="col-sm-12">Display Labels</label>
         <div class="col-sm-12">
@@ -39,7 +52,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="form-group">
         <label class="col-sm-12">Display name fields</label>
         <div class="col-sm-12">
@@ -57,7 +70,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="form-group">
         <label class="col-sm-12">Display Nickname field</label>
         <div class="col-sm-12">
@@ -75,7 +88,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="form-group">
         <label class="col-sm-12">Display Phone field</label>
         <div class="col-sm-12">
@@ -93,7 +106,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="form-group">
         <label class="col-sm-12">Display Password field</label>
         <div class="col-sm-12">
@@ -111,7 +124,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="form-group">
         <label class="col-sm-12">Show Cancel button</label>
         <div class="col-sm-12">
@@ -129,7 +142,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="form-group">
         <label class="col-sm-12">Show Orgs</label>
         <div class="col-sm-12">

@@ -135,6 +135,14 @@
     </div>
     #end
 
+    #if( $extraGroup )
+        #set( $extraGroupOb = $rootFolder.group( $extraGroup ) )
+        #if( $extraGroupOb )
+            <input type="hidden" name="optins" value="$extraGroupOb.name" />
+        #end
+    #end
+
+
     #set($product = $pageRelatedProduct)
     #if( $product )
     #if( $pagePaymentProvider )
