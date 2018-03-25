@@ -636,6 +636,14 @@
                     container.data('orgFinder', finder);
                 }
             });
+        },
+        onSelect: function(onSelectCallback) {
+            $(this).each(function () {
+                var container = $(this);
+                var finder = container.data('orgFinder');
+                finder.options.onSelect = onSelectCallback;
+                finder.init();
+            });
         }
     };
     
