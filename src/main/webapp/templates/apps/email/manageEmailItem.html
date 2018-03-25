@@ -2,7 +2,7 @@
     <head>
         <title>Notifications</title>
         <link href="myInbox.less" rel="stylesheet" type="text/css" media="all" />
-        <script type="text/javascript" src="myInbox.js">//</script>
+        <script type="text/javascript" src="myInbox.js?v=00001">//</script>
         <style>
 pre {
     white-space: pre-wrap;       /* Since CSS 2.1 */
@@ -132,6 +132,15 @@ pre {
                         #end
                     </td>
                 </tr>
+                #if( $page.sendStatus == 'f' )
+                <tr>
+                    <th>Resend email:</th>
+                    <td>
+                        <a href="#" id="resetEmail" class="btn btn-info">Resend</a>
+                    </td>
+                </tr>
+                #end
+                
             </table>
         </div>
         #if( $page.emailHtml.length() > 0 )
