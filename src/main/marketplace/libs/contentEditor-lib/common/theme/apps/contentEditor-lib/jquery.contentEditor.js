@@ -197,6 +197,12 @@
                     contentEditor.getContainerElement(container, '.container-bg').attr('data-expr', this.value);
                 });
                 
+                var availability = form.find(".select-availability");
+                availability.on('change', function () {
+                    var container = keditor.getSettingContainer();
+                    contentEditor.getContainerElement(container, '.container-bg').attr('data-availability', this.value);
+                });
+                
                 
                 form.find('.bgImagesPreview .btn-edit-image').on('click', function (e) {
                     e.preventDefault();
@@ -752,6 +758,7 @@
         var selectGroups = form.find('.select-groups');
         var selectGroupsItems = selectGroups.find('input[type=checkbox]');
         var selectedGroups = containerBg.attr('data-groups') || '';
+        var avaiability = containerBg.attr('data-available') || 'available';
         var isAnonymous = selectedGroups === 'Anonymous';
         selectedGroups = selectedGroups ? selectedGroups.split(',') : [];
         
@@ -778,6 +785,9 @@
         var expPath = containerBg.data("experiment");
         var txtExperiment = form.find('.select-experiment');
         txtExperiment.val(expPath);
+        
+        var availabilitySelect = form.find(".select-availability");
+        availabilitySelect.val(avaiability);
         
         var visRulesExpr = containerBg.data("expr");
         var visRules = form.find(".visible-rules");
