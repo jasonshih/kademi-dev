@@ -13,6 +13,11 @@
     <div class="form-group">
         <label class="col-sm-12">Org Types</label>
         <div class="col-sm-12">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="chk-org-type" value="no-type" /> NO TYPE
+                </label>
+            </div>
             #foreach($orgType in $rootFolder.find("/").orgTypes)
             <div class="checkbox">
                 <label>
