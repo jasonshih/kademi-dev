@@ -23,8 +23,10 @@
                 #set($leads = $page.queryLeads)
                 #foreach( $hit in $leads.hits.hits )
                 <tr>
+                        <a href="/leads/$!hit.fields.get('leadId').value">
+                            $!hit.fields.get('jobTitle').value
+                        </a>
                     <td>
-                        
                         <a href='/custs/$!hit.fields.get("profile.userName").value'>
                         #if( $hit.fields.get("organisation.title").value )
                         #if($!hit.fields.get("profile.firstName").value || $!hit.fields.get("profile.surName").value)
