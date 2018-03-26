@@ -12,7 +12,9 @@ $(function () {
         modalSurvey.find('form button[type=submit]').trigger('click');
     });
     
-    initHtmlEditors(modalQuestion.find('.htmleditor'), getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
+    initHtmlEditors(modalQuestion.find('.htmleditor'), getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow', function (editor) {
+        editor.config.pagePath = window.location.pathname;
+    });
     
     $('.btn-add-survey').on('click', function (e) {
         e.preventDefault();

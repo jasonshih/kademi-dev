@@ -1,3 +1,76 @@
+controllerMappings
+    .adminController()
+    .pathSegmentName('ksurvey')
+    .enabled(true)
+    .defaultView(views.templateView('ksurveyapp/manageSurveys.html'))
+    .addMethod('GET', 'getSurveys')
+    .addMethod('POST', 'saveSurvey', 'saveSurvey')
+    .addMethod('POST', 'deleteSurvey', 'deleteSurvey')
+    .addMethod('POST', 'clearSurveyResult', 'clearSurveyResult')
+    .child(
+        controllerMappings
+            .adminController()
+            .mountRepository("ksurvey-content-repo")
+            .pathSegmentResolver('surveyId', 'findSurvey')
+            .enabled(true)
+            .defaultView(views.templateView('ksurveyapp/surveyDetail.html'))
+            .addMethod('GET', 'getSurvey')
+            .addMethod('POST', 'saveSurvey')
+            .title('generateTitle')
+            .child(
+                controllerMappings
+                    .adminController()
+                    .enabled(true)
+                    .pathSegmentName('survey-data.csv')
+                    .addMethod('GET', 'getSurveyCSV')
+            )
+            .child(
+                controllerMappings
+                    .adminController()
+                    .enabled(true)
+                    .pathSegmentName('result')
+                    .defaultView(views.templateView('ksurveyapp/surveyResult.html'))
+                    .addMethod('GET', 'getSurvey')
+                    .title('generateWebsiteTitle')
+            )
+    )
+    .child(
+        controllerMappings
+            .adminController()
+            .enabled(true)
+            .pathSegmentName('saveGroupAccess')
+            .addMethod('POST', 'saveGroupAccess')
+    )
+    .child(
+        controllerMappings
+            .adminController()
+            .enabled(true)
+            .pathSegmentName('clearResult')
+            .addMethod('POST', 'clearResult')
+    )
+    .child(
+        controllerMappings
+            .adminController()
+            .pathSegmentName('answer')
+            .enabled(true)
+            .addMethod('GET', 'deleteAnswer', 'deleteAnswer')
+            .addMethod('GET', 'getPlainAnswers', 'getPlainAnswers')
+            .addMethod('POST', 'saveAnswer', 'saveAnswer')
+            .addMethod('POST', 'saveAnswerRequiredQuestions', 'saveAnswerRequiredQuestions')
+    )
+    .child(
+        controllerMappings
+            .adminController()
+            .pathSegmentName('question')
+            .enabled(true)
+            .addMethod('GET', 'getQuestion', 'getQuestion')
+            .addMethod('GET', 'deleteQuestion', 'deleteQuestion')
+            .addMethod('GET', 'reorderQuestions', 'reorderQuestions')
+            .addMethod('GET', 'reorderAnswers', 'reorderAnswers')
+            .addMethod('POST', 'saveQuestion')
+    )
+    .build();
+
 // admin controllers
 controllerMappings
     .adminController()
@@ -6,101 +79,7 @@ controllerMappings
     .addMethod('GET', 'getSurveysJson')
     .build();
 
-controllerMappings
-    .adminController()
-    .path('/ksurvey/')
-    .enabled(true)
-    .defaultView(views.templateView('ksurveyapp/manageSurveys.html'))
-    .addMethod('GET', 'getSurveys')
-    .addMethod('POST', 'saveSurvey', 'saveSurvey')
-    .addMethod('POST', 'deleteSurvey', 'deleteSurvey')
-    .addMethod('POST', 'clearSurveyResult', 'clearSurveyResult')
-    .build();
 
-controllerMappings
-    .adminController()
-    .path('/ksurvey')
-    .enabled(true)
-    .addMethod("GET", "checkRedirect")
-    .build();
-
-controllerMappings
-    .adminController()
-    .path('/ksurvey/(?<surveyId>[^/]*)/')
-    .enabled(true)
-    .addPathResolver('surveyId', 'findSurvey')
-    .defaultView(views.templateView('ksurveyapp/surveyDetail.html'))
-    .addMethod('GET', 'getSurvey')
-    .addMethod('POST', 'saveSurvey')
-    .title('generateTitle')
-    .build();
-
-controllerMappings
-    .adminController()
-    .path('/ksurvey/(?<surveyId>[^/]*)/survey-data.csv')
-    .enabled(true)
-    .addPathResolver('surveyId', 'findSurvey')
-    .addMethod('GET', 'getSurveyCSV')
-    .build();
-
-controllerMappings
-    .adminController()
-    .path('/ksurvey/(?<surveyId>[^/]*)')
-    .enabled(true)
-    .addMethod("GET", "checkRedirect")
-    .build();
-
-controllerMappings
-    .adminController()
-    .path('/ksurvey/saveGroupAccess/')
-    .enabled(true)
-    .addMethod('POST', 'saveGroupAccess')
-    .build();
-
-controllerMappings
-    .adminController()
-    .path('/ksurvey/answer/')
-    .enabled(true)
-    .addMethod('GET', 'deleteAnswer', 'deleteAnswer')
-    .addMethod('GET', 'getPlainAnswers', 'getPlainAnswers')
-    .addMethod('POST', 'saveAnswer', 'saveAnswer')
-    .addMethod('POST', 'saveAnswerRequiredQuestions', 'saveAnswerRequiredQuestions')
-    .build();
-
-controllerMappings
-    .adminController()
-    .path('/ksurvey/clearResult/')
-    .enabled(true)
-    .addMethod('POST', 'clearResult')
-    .build();
-
-controllerMappings
-    .adminController()
-    .path('/ksurvey/question/')
-    .enabled(true)
-    .addMethod('GET', 'getQuestion', 'getQuestion')
-    .addMethod('GET', 'deleteQuestion', 'deleteQuestion')
-    .addMethod('GET', 'reorderQuestions', 'reorderQuestions')
-    .addMethod('GET', 'reorderAnswers', 'reorderAnswers')
-    .addMethod('POST', 'saveQuestion')
-    .build();
-
-controllerMappings
-    .adminController()
-    .path('/ksurvey/migrate/')
-    .enabled(true)
-    .addMethod('POST', 'migrateDB')
-    .build();
-
-controllerMappings
-    .adminController()
-    .path('/ksurvey/(?<surveyId>[^/]*)/result/')
-    .enabled(true)
-    .addPathResolver('surveyId', 'findSurvey')
-    .defaultView(views.templateView('ksurveyapp/surveyResult.html'))
-    .addMethod('GET', 'getSurvey')
-    .title('generateWebsiteTitle')
-    .build();
 
 // website controllers
 controllerMappings
