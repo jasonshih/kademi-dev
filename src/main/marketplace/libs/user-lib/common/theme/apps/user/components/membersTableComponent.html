@@ -7,7 +7,7 @@
 #set ($rootOrg = $rootFolder.find("/").orgData)
 
 #set ($fields = ["lastVisit", "firstName", "surName", "email", "phone", "groupNames", "orgName", "parentOrg", "orgAddress", "groupName", "createdDate", "pointsBalance", "pointsDebit"])
-#set ($fieldsNames = {"lastVisit": "Last active", "firstName": "First name", "surName": "Last name", "email": "Email", "phone": "Phone", "groupNames": "Primary groups", "orgName": "Organisation name", "orgAddress": "Organisation address", "groupName": "Group", "pointsBalance": "Points Balance", "pointsDebit": "Spent points", "createdDate": "Date registered", "parentOrg": "Parent Org"})
+#set ($fieldsNames = {"lastVisit": "Last active", "firstName": "First name", "surName": "Last name", "email": "Email", "phone": "Phone", "groupNames": "Primary groups", "orgName": "Organisation name", "orgAddress": "Organisation address", "groupName": "Group", "pointsBalance": "Net Points", "pointsDebit": "Spent points", "createdDate": "Date registered", "parentOrg": "Parent Org"})
 
 #set ($rewardStore = $applications.rewardStore)
 #set( $reward = $rewardStore.findPointsBucket($pointsBucket))
@@ -16,7 +16,7 @@
 
 <div class="panel panel-default" style="height: $!{height}px; min-height: 0; overflow-y: auto" data-items-per-page="$!itemsPerPage">
     <div class="panel-heading">
-        <i class="fa fa-table"></i> $title 
+        <i class="fa fa-table"></i> $title
     </div>
     <div class="panel-body">
         <div class="table-responsive">
@@ -31,7 +31,7 @@
 #macro(renderOrg)
     #set ($respPointsEarned = $queryManager.runQuery("orgsEarnedPoint"))
     #set ($pointsEarnedBucket = $respPointsEarned.aggregations.get("byOrgIds").buckets)
-    
+
     #set ($respPointsDebit = $queryManager.runQuery("orgsSpentPoint"))
     #set ($pointsDebitBucket = $respPointsDebit.aggregations.get("byOrgIds").buckets)
 
@@ -40,7 +40,7 @@
     #foreach($b in $pointsDebitBucket)
         #set($aux = $idList.add($b.key))
     #end
-    
+
     #set( $resp = "")
     #if($idList.size() > 0)
         #set($ids = $formatter.toCsv($idList))
@@ -52,7 +52,7 @@
         #end
         #set ($columns = $columns.split(","))
     #end
-    
+
     #if( $resp == "" || $resp.hits.totalHits == 0 )
         No current results
     #else
@@ -74,7 +74,7 @@
                 #end
                 #set ($pb = 0)
                 #set ($earned = 0)
-                #set ($debit = 0)                
+                #set ($debit = 0)
                 #foreach($po in $orgSet)
                     #foreach($db in $pointsDebitBucket)
                         #if ($db.key == $po)

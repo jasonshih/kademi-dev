@@ -1,7 +1,7 @@
 JBNodes['credentialSet'] = {
     icon: 'fa fa-key',
     title: 'Created credentials',
-    type: JB_NODE_TYPE.ACTION,
+    type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/user/jb/credentialSetNode.png',
     ports: {
         nextNodeId: {
