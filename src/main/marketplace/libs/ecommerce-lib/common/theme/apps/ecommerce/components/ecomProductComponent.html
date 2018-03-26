@@ -60,7 +60,7 @@
                 <h3 id="product-price" class="text-center product-price bg-info">#set( $opts = $page.selectedParameterOptions )
                     #set( $price = $page.getPurchaseAmount($opts) )
                     #if( $price )
-                    $formatter.formatCurrency($price.amount, false)
+                    $$formatter.formatCurrency($price.amount, false)
                     #end
                 </h3>
 
