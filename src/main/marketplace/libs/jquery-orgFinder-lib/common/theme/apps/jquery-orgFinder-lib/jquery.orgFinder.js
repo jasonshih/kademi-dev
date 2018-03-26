@@ -315,7 +315,6 @@
             if (orgTypes && $.isArray(orgTypes) && orgTypes.length > 0) {
                 flog('[jquery.orgFinder] Initialize "Types" select box', cbbOrgType, orgTypes);
                 var optionStr = '';
-                optionStr += '<option value="no-type"> NO TYPE</option>';
                 for (var i = 0; i < orgTypes.length; i++) {
                     var filter = orgTypesPreset.filter(function (item) {
                         return item.value == orgTypes[i].value;

@@ -39,6 +39,16 @@
                         });
                     });
 
+                    form.find('.chk-orgtypes-only').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-selected-types-only', this.checked);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            window.initOrgsLocator(component.find('.orgs-locator-component'));
+                        });
+                    });
+
                     form.find('.chk-org-type').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -62,6 +72,7 @@
             
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.chk-search-when-init').prop('checked', dataAttributes['data-search-when-init'] === 'true');
+            form.find('.chk-orgtypes-only').prop('checked', dataAttributes['data-selected-types-only'] === 'true');
             var arr = (dataAttributes['data-org-types'] || '').split(',');
             form.find('.chk-org-type').each(function () {
                 if (arr.indexOf(this.value) != -1){

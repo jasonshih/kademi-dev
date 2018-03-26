@@ -8,11 +8,24 @@
 <script type="text/javascript">
     window['${orgsLocatorId}-orgTypes'] = [];
     window['${orgsLocatorId}-orgTypes-preset'] = [];
-    #foreach($orgType in $rootFolder.find("/").orgTypes)
-        window['${orgsLocatorId}-orgTypes'].push({
-            title: "$orgType.displayName",
-            value: '$orgType.name'
-        });
+    #if ($selectedTypesOnly && $selectedTypesOnly == "true")
+        #if ($orgTypesSettings.size() > 0)
+            #foreach($orgType in $rootFolder.find("/").orgTypes)
+                #if ($orgTypesSettings.contains($orgType.name))
+                    window['${orgsLocatorId}-orgTypes'].push({
+                        title: "$orgType.displayName",
+                        value: '$orgType.name'
+                    });
+                #end
+            #end
+        #end
+    #else
+        #foreach($orgType in $rootFolder.find("/").orgTypes)
+            window['${orgsLocatorId}-orgTypes'].push({
+                title: "$orgType.displayName",
+                value: '$orgType.name'
+            });
+        #end
     #end
     #foreach($orgType in $rootFolder.find("/").orgTypes)
         #if ($orgTypesSettings.size() > 0)
