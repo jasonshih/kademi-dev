@@ -102,9 +102,11 @@
         }
     }
 
-    $(document).ready(function(){
+    $(function(){
         if($('.register-form-component').length > 0) {
-            initRegister("/dashboard");
+            $('.register-form-component').each(function () {
+                initRegister($(this).attr('data-redirect-url'));
+            });
         }
     });
 })(jQuery);

@@ -118,6 +118,14 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
+                    form.find('.redirectUrl').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-redirect-url', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
                 }
             });
         },
@@ -145,6 +153,7 @@
             form.find('[name=group]').val(dataAttributes['data-group']);
             form.find('[name=extra-group]').val(dataAttributes['data-extra-group']);
             form.find('[name=labelAlign]').val(dataAttributes['data-label-align']);
+            form.find('.redirectUrl').val(dataAttributes['data-redirect-url'] || '/dashboard');
         }
     };
 
