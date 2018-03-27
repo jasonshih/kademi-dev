@@ -21,7 +21,7 @@
 
             var btn = $(this);
             var href = btn.attr('href');
-
+            href = window.location.pathname + href;
             getEcomOrderForm(href, function (orderForm) {
                 if (!orderForm) {
                     doAddToCart(href);
