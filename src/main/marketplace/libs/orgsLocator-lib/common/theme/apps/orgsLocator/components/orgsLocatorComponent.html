@@ -39,10 +39,10 @@
     #end
 
     window['${orgsLocatorId}-allowedCountries'] = [];
-    #foreach($cc in $formatter.countryCodes.list)
-        window['${orgsLocatorId}-allowedCountries'].push({
-            value: '$cc.alpha2Code',
-            title: "$cc.englishShortName"
-        });
-    #end
+    ##foreach($cc in $formatter.countryCodes.list)
+        ##window['${orgsLocatorId}-allowedCountries'].push({
+        ##    value: '$cc.alpha2Code',
+        ##    title: "$cc.englishShortName"
+        ##});
+    ##end
 </script>
