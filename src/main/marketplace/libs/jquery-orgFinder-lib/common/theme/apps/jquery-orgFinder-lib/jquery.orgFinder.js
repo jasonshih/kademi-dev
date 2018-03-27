@@ -58,9 +58,9 @@
         '    <div class="input-group">' +
         '        <input type="text" class="form-control org-finder-query" placeholder="Enter your address" id="q" value="" autocomplete="off" />' +
         '        <span class="input-group-btn">' +
+        '            <button class="btn btn-default btn-clear-query" type="button">&nbsp;<i class="fa fa-remove"></i>&nbsp;</button>' +
         '            <select data-live-search="true" class="selectpicker hidden-xs org-finder-allowedCountries"></select>' +
         '            <select class="selectpicker clearfix org-finder-orgType"></select>' +
-        '            <button class="btn btn-default btn-clear-query" type="button">&nbsp;<i class="fa fa-remove"></i>&nbsp;</button>' +
         '        </span>' +
         '    </div>' +
         '</div>' +
@@ -444,6 +444,14 @@
 
                 if (typeof data.orgTypes === 'function') {
                     data.orgTypes = '';
+                }
+                
+                if (data.orgTypes === null || data.orgTypes === '') {
+                    data.orgTypes = [];
+                    
+                    self.cbbOrgType.find("option").each(function(key, value) {
+                        data.orgTypes.push($(this).val());
+                    });
                 }
             }
 
