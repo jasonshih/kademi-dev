@@ -6,7 +6,7 @@
         },
         {
             "appId": "jquery-orgFinder-lib",
-            "branch": "1.0.9"
+            "branch": "1.1.0"
         }
     ],
     "dependencies": [

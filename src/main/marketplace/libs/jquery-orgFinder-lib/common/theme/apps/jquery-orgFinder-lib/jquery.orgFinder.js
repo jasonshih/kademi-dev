@@ -23,7 +23,7 @@
  * @option {Function} beforeSearch Callback will be called before searching a keyword. This callback must be return data object which will be sent to server. Arguments: 'query', 'data'
  * @option {Function} onSearched Callback will be called after searching a keyword. Arguments: 'query', 'resp'
  * @option {Function} onPlaceChanged Callback will be called after gmap place_changed. Arguments: {lat, lng, query}
- * @option {Function} renderItemContent Method for rendering content of an item in organization list. If you don't want to show this organization, just return null or empty. Arguments: 'orgData'
+ * @option {Function} renderItemContent Method for rendering content of an item in organization list. If you don't want to show this organization, just return null or empty. Arguments: 'orgData', 'orgTypesPreset'
  * @option {Function} renderMarkerContent Method for rendering content for InfoWindow of a marker on Google Map. If you don't want to show this organization, just return null or empty. Arguments: 'orgData'
  * @option {String} emptyItemText Text will be showed when there is no result in organization list
  */
@@ -88,14 +88,22 @@
         },
         onSearched: function (query, resp) {
         },
-        renderItemContent: function (orgData) {
+        renderItemContent: function (orgData, orgTypesPreset) {
             var itemContent = '';
             itemContent += '<h4 class="list-group-item-heading">' + orgData.title + '</h4>';
-            
             if (orgData.orgTypes && orgData.orgTypes.length > 0) {
                 var orgTypesHtml = '';
                 for (var i = 0; i < orgData.orgTypes.length; i++) {
-                    orgTypesHtml += '<span class="label label-info">' + orgData.orgTypes[i].dispayName + '</span> ';
+                    if (orgTypesPreset && orgTypesPreset.length){
+                        var filtered = orgTypesPreset.filter(function (item) {
+                            return item.value == orgData.orgTypes[i].name;
+                        })
+                        if (filtered.length){
+                            orgTypesHtml += '<span class="label label-info">' + orgData.orgTypes[i].dispayName + '</span> ';
+                        }
+                    } else {
+                        orgTypesHtml += '<span class="label label-info">' + orgData.orgTypes[i].dispayName + '</span> ';
+                    }
                 }
                 
                 itemContent += '<p>' + orgTypesHtml + '</p>';
@@ -559,7 +567,7 @@
                 $.error('[jquery.orgFinder] renderMarkerContent is not function. Please correct it!');
             }
             
-            var itemContent = options.renderItemContent(markerData) || '';
+            var itemContent = options.renderItemContent(markerData, options.orgTypesPreset) || '';
             var markerContent = options.renderMarkerContent(markerData) || '';
             
             if (itemContent.length === 0 || markerContent.length === 0) {
