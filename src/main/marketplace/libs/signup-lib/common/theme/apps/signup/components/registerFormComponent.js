@@ -20,66 +20,66 @@
                 success: function (resp) {
                     form.html(resp);
 
-                    form.find('[name=displayLabels]').on('click', function(e){
+                    form.find('.displayLabels').on('click', function(e){
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-display-labels', this.value === 'true');
+                        component.attr('data-display-labels', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    form.find('[name=displayName]').on('click', function(e){
+                    form.find('.displayName').on('click', function(e){
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-display-name', this.value === 'true');
+                        component.attr('data-display-name', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    form.find('[name=displayNickname]').on('click', function(e){
+                    form.find('.displayNickname').on('click', function(e){
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-display-nickname', this.value === 'true');
+                        component.attr('data-display-nickname', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    form.find('[name=displayPhone]').on('click', function(e){
+                    form.find('.displayPhone').on('click', function(e){
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-display-phone', this.value === 'true');
+                        component.attr('data-display-phone', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    form.find('[name=displayPwd]').on('click', function(e){
+                    form.find('.displayPwd').on('click', function(e){
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-display-pwd', this.value === 'true');
+                        component.attr('data-display-pwd', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    form.find('[name=displayCancel]').on('click', function(e){
+                    form.find('.displayCancel').on('click', function(e){
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-display-cancel', this.value === 'true');
+                        component.attr('data-display-cancel', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    form.find('[name=showOptins]').on('click', function(e){
+                    form.find('.showOptins').on('click', function(e){
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-show-optins', this.value === 'true');
+                        component.attr('data-show-optins', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    form.find('[name=showOrgs]').on('click', function(e){
+                    form.find('.showOrgs').on('click', function(e){
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-show-orgs', this.value === 'true');
+                        component.attr('data-show-orgs', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    form.find('[name=showXtraFields]').on('click', function(e){
+                    form.find('.showXtraFields').on('click', function(e){
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-show-xtra-fields', this.value === 'true');
+                        component.attr('data-show-xtra-fields', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
@@ -134,20 +134,16 @@
             flog('showSettingForm "registerForm" component', form, component, keditor);
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            var showDisplayLabels = dataAttributes['data-display-labels'] !== undefined ? dataAttributes['data-display-labels'] : "true";
-            var showDisplayName = dataAttributes['data-display-name'] !== undefined ? dataAttributes['data-display-name'] : "false";
-            var showDisplayNickname = dataAttributes['data-display-nickname'] !== undefined ? dataAttributes['data-display-nickname'] : "false";
-            var showDisplayPhone = dataAttributes['data-display-phone'] !== undefined ? dataAttributes['data-display-phone'] : "false";
-
-            form.find('[name=displayLabels][value='+showDisplayLabels+']').prop('checked', true);
-            form.find('[name=displayName][value='+ showDisplayName +']').prop('checked', true);
-            form.find('[name=displayNickname][value='+showDisplayNickname+']').prop('checked', true);
-            form.find('[name=displayPhone][value='+showDisplayPhone+']').prop('checked', true);
-            form.find('[name=displayPwd][value='+dataAttributes['data-display-pwd']+']').prop('checked', true);
-            form.find('[name=displayCancel][value='+dataAttributes['data-display-cancel']+']').prop('checked', true);
-            form.find('[name=showOptins][value='+dataAttributes['data-show-optins']+']').prop('checked', true);
-            form.find('[name=showOrgs][value='+dataAttributes['data-show-orgs']+']').prop('checked', true);
-            form.find('[name=showXtraFields][value='+dataAttributes['data-show-xtra-fields']+']').prop('checked', true);
+            debugger;
+            form.find('.displayLabels').prop('checked', dataAttributes['data-display-labels'] !== 'false');
+            form.find('.displayName').prop('checked', dataAttributes['data-display-name'] == 'true');
+            form.find('.displayNickname').prop('checked', dataAttributes['data-display-nickname'] == 'true');
+            form.find('.displayPhone').prop('checked', dataAttributes['data-display-phone'] == 'true');
+            form.find('.displayPwd').prop('checked', dataAttributes['data-display-pwd'] == 'true');
+            form.find('.displayCancel').prop('checked', dataAttributes['data-display-cancel'] !== 'false');
+            form.find('.showOptins').prop('checked', dataAttributes['data-show-optins'] === 'true');
+            form.find('.showOrgs').prop('checked', dataAttributes['data-show-orgs'] === 'true');
+            form.find('.showXtraFields').prop('checked', dataAttributes['data-show-xtra-fields'] === 'true');
             form.find('[name=successTitle]').val(dataAttributes['data-success-title']);
             form.find('[name=successBody]').val(dataAttributes['data-success-body']);
             form.find('[name=group]').val(dataAttributes['data-group']);
