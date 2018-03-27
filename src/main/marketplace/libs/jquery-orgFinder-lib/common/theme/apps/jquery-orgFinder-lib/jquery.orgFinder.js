@@ -453,6 +453,14 @@
                 if (typeof data.orgTypes === 'function') {
                     data.orgTypes = '';
                 }
+                
+                if (data.orgTypes === null || data.orgTypes === '') {
+                    data.orgTypes = [];
+                    
+                    self.cbbOrgType.find("option").each(function(key, value) {
+                        data.orgTypes.push($(this).val());
+                    });
+                }
             }
 
             if (typeof options.beforeSearch === 'function') {
