@@ -51,6 +51,20 @@
                     <input type="text" name="reason" value="$!page.node.reason" class="form-control"/>
                 </div>
             </div>
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label>Points tag</label>
+                    <select name="tagName" id="tagName" class="form-control">
+                        $formatter.option("", "[Not selected]", $page.node.tagName)
+                        #foreach($pointsTag in $applications.rewardStore.pointsTags)
+                        $formatter.option($pointsTag.name, $pointsTag.title, $page.node.tagName)
+                        #end
+                    </select>
+
+                </div>
+            </div>
+
         </form>
 
     </body>
