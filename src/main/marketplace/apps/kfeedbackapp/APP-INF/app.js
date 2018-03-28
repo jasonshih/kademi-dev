@@ -1,52 +1,52 @@
 controllerMappings
-    .adminController()
-    .path("/kfeedback/")
-    .enabled(true)
-    .defaultView(views.templateView("kfeedback/index.html"))
-    .build();
+        .adminController()
+        .path("/kfeedback/")
+        .enabled(true)
+        .defaultView(views.templateView("kfeedback/index.html"))
+        .build();
 
 controllerMappings
-    .adminController()
-    .path("/kfeedback/uploadFiles")
-    .enabled(true)
-    .addMethod("POST", "uploadFile")
-    .build();
+        .adminController()
+        .path("/kfeedback/uploadFiles")
+        .enabled(true)
+        .addMethod("POST", "uploadFile")
+        .build();
 
 controllerMappings
-    .adminController()
-    .path("/kfeedback/feedbacks/")
-    .enabled(true)
-    .addMethod("GET", "getFeedbackBySurvey")
-    .build();
+        .adminController()
+        .path("/kfeedback/feedbacks/")
+        .enabled(true)
+        .addMethod("GET", "getFeedbackBySurvey")
+        .build();
 
 controllerMappings
-    .adminController()
-    .path("/kfeedback/surveys/")
-    .enabled(true)
-    .addMethod("GET", "getAllSurveys")
-    .addMethod("POST", "createSurvey")
-    .build();
+        .adminController()
+        .path("/kfeedback/surveys/")
+        .enabled(true)
+        .addMethod("GET", "getAllSurveys")
+        .addMethod("POST", "createSurvey")
+        .build();
 
 /**
  * front end mapping
  */
 controllerMappings
-    .websiteController()
-    .path("/send-feedback/")
-    .enabled(true)
-    .isPublic(true)
-    .defaultView(views.templateView("kfeedback/index.html"))
-    .build();
+        .websiteController()
+        .path("/send-feedback/")
+        .enabled(true)
+        .isPublic(true)
+        .defaultView(views.templateView("kfeedback/index.html"))
+        .build();
 
 controllerMappings
-    .websiteController()
-    .path("/send-feedback-api/")
-    .enabled(true)
-    .isPublic(true)
-    .addMethod("GET", "getSurvey")
-    .addMethod("POST", "createFeedback")
-    .postPriviledge("READ_CONTENT")
-    .build();
+        .websiteController()
+        .path("/send-feedback-api/")
+        .enabled(true)
+        .isPublic(true)
+        .addMethod("GET", "getSurvey")
+        .addMethod("POST", "createFeedback")
+        .postPriviledge("READ_CONTENT")
+        .build();
 
 controllerMappings.addGoalNodeType("kfeedbackSubmittedGoal", "kfeedback/jb/kfeedbackSubmittedGoalNode.js", null);
 
@@ -55,6 +55,56 @@ controllerMappings.addComponent("kfeedback", "kfeedbackForm", "html", "Shows kfe
 
 controllerMappings.addTextJourneyField("kfeedback-result", "KFeedback result", "getLastFeedbackResult"); // see function below
 
+
+//TODO: finish implementation and uncomment 
+//controllerMappings.addEngagementScoringFactorType("kFeedbackEngagment", "K Feedback Engagment", "appendQuery", "indexFeedBack", "appendMappings", "getProperties");
+
+function appendQuery(searchRequestBuilder, boosters, boost, factorProperties) {
+    log.info('kfeedback:: appendQuery searchRequestBuilder={} boosters={} boost={} factorProperties={}', [searchRequestBuilder, boosters, boost, factorProperties]);
+
+    boosters.should();
+    return null;
+}
+
+function indexFeedBack(funnel, lead, builder) {
+    log.info('kfeedback:: indexFeedBack funnel={} lead={} builder={}', [funnel, lead, builder]);
+    if (lead.getProfile() == null) {
+        return;
+    }
+    
+    //TODO: Implement using real data!!!!
+    var data =
+            {   
+                website: "website",
+                survey_id: "survey_id",
+                option_slug: "option_slug",
+                createdDate: new Date()
+            };
+
+    builder.addData("feedback", JSON.stringify(data));
+}
+
+function appendMappings(builder) {
+    log.info('kfeedback:: appendMappings builder={}', [builder]);
+    builder.startObjectMapping("feedback")
+            .textField("website")
+            .textField("survey_id")
+            .textField("option_slug")
+            .dateField("createdDate")
+            .endObjectMapping();
+}
+
+function engagementScoringProperty(name, text) {
+    return {name: name, text: text};
+}
+
+function getProperties() {
+    log.info('kfeedback:: getProperties');
+    var properties = [];
+    properties.push(engagementScoringProperty("website", "Website"));
+    properties.push(engagementScoringProperty("surveyId", "Survey Id"));
+    return properties;
+}
 
 function getLastFeedbackResult(lead, exitingNode, funnel, vars) {
     log.info('getLastFeedbackResult lead={} node={} funnel={} vars={}', [lead, exitingNode, funnel, vars]);
@@ -84,7 +134,7 @@ function getLastFeedbackResult(lead, exitingNode, funnel, vars) {
     };
 
     if (vars != null && vars['surveyId'] != null) {
-        queryJson['query']['bool']['filter'] =  [
+        queryJson['query']['bool']['filter'] = [
             {
                 "term": {
                     "survey_id": vars['surveyId']
