@@ -34,14 +34,14 @@
  */
 
 (function ($) {
-    flog('[jquery.forms] DEPRECATED options of 1.1.7 which will be removed 1.2.0:');
-    flog('********************************************');
-    flog('- "doPostForm" is DEPRECATED and removed. Use "allowPostForm" instead');
-    flog('- "error" is DEPRECATED. Use "onInvalid" instead');
-    flog('- "callback" is DEPRECATED. Use "onSuccess" instead');
-    flog('- "errorHandler" is DEPRECATED. Use "onError" instead');
-    flog('- "valiationMessageSelector" is DEPRECATED. Use "validationMessageSelector" instead');
-    flog('********************************************');
+    // flog('[jquery.forms] DEPRECATED options of 1.1.7 which will be removed 1.2.0:');
+    // flog('********************************************');
+    // flog('- "doPostForm" is DEPRECATED and removed. Use "allowPostForm" instead');
+    // flog('- "error" is DEPRECATED. Use "onInvalid" instead');
+    // flog('- "callback" is DEPRECATED. Use "onSuccess" instead');
+    // flog('- "errorHandler" is DEPRECATED. Use "onError" instead');
+    // flog('- "valiationMessageSelector" is DEPRECATED. Use "validationMessageSelector" instead');
+    // flog('********************************************');
     
     $.fn.forms = function (method) {
         if (methods[method]) {
@@ -59,9 +59,9 @@
     $.fn.forms.version = '1.1.7';
 
     // Get libphonenumber.js
-    $.getScriptOnce('/static/libphonenumber/7.2.6/libphonenumber.js', function () {
-        flog('[jquery.forms] libphonenumber.js is loaded');
-    });
+    // $.getScriptOnce('/static/libphonenumber/7.2.6/libphonenumber.js', function () {
+    //     flog('[jquery.forms] libphonenumber.js is loaded');
+    // });
     
     // Default configuration
     $.fn.forms.DEFAULT = {
@@ -235,13 +235,26 @@
         disable: function (callback) {
             return $(this).each(function () {
                 var form = $(this);
-                form.find('input, button, select, textarea').each(function () {
+                form.find('input, select, textarea').each(function () {
                     var target = $(this);
                     if (target.attr('readonly')) {
                         target.attr('data-readonly', 'true');
                     }
                     
                     target.prop('readonly', true);
+                });
+
+                form.find('button[type=submit]').each(function () {
+                    var b = $(this);
+                    var text = b.text().trim();
+                    if (b.find('i.fa').length){
+                        var orignal = b.find('i.fa')[0].className;
+                        b.find('i')[0].className = "fa fa-spinner fa-spin fa-fw";
+                        b.find('i').attr('data-original-classname', orignal);
+                    } else {
+                        b.html('<i class="fa fa-spinner fa-spin fa-fw"></i> ' + text);
+                    }
+                    b.prop('disabled', true);
                 });
                 
                 if (typeof callback === 'function') {
@@ -252,13 +265,26 @@
         enable: function (callback) {
             return $(this).each(function () {
                 var form = $(this);
-                form.find('input, button, select, textarea').each(function () {
+                form.find('input, select, textarea').each(function () {
                     var target = $(this);
                     if (target.attr('data-readonly') !== 'true') {
                         target.prop('readonly', false);
                     }
                 });
-                
+
+                form.find('button[type=submit]').each(function () {
+                    var b = $(this);
+                    var text = b.text().trim();
+                    var i = b.find('i.fa');
+                    if (i.attr('data-original-classname')){
+                        i[0].className = i.attr('data-original-classname');
+                    } else {
+                        i.length && i.remove();
+                        b.text(text);
+                    }
+                    b.removeProp('disabled');
+                });
+
                 if (typeof callback === 'function') {
                     callback.call(this, form);
                 }
