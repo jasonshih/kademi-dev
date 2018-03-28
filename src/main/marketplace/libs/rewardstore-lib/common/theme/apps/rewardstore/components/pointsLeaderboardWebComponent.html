@@ -1,21 +1,23 @@
-#if (!$rowHeight)
-#set ($rowHeight = 25)
-#end
-
-#if (!$numUsers)
-#set ($numUsers = 5)
-#end
-
-#if ($pointsBucket && $pointsBucket != "")
-#set( $isOrgPoints = false )
-#set( $myPointsInfo = $applications.rewardStore.myPointsInfo($pointsBucket, $formatter.toInteger(1000), null) )
-    #if( $myPointsInfo.reward.pointsType == "POINTS_ORG" )
-        #set( $isOrgPoints = true )
-    #end
-#end
-
-
 <table class="table table-striped">
+    #if (!$rowHeight)
+    #set ($rowHeight = 25)
+    #end
+
+    #if (!$numUsers)
+    #set ($numUsers = 5)
+    #else
+    #set ($numUsers = $formatter.toInteger($numUsers))
+    #end
+
+    #if ($pointsBucket && $pointsBucket != "")
+    #set( $isOrgPoints = false )
+    #set( $myPointsInfo = $applications.rewardStore.myPointsInfo($pointsBucket, $formatter.toInteger(1000), null) )
+        #if( $myPointsInfo.reward.pointsType == "POINTS_ORG" )
+            #set( $isOrgPoints = true )
+        #end
+    #end
+
+
     <thead>
         <tr>
             <th>Rank</th>
@@ -55,7 +57,11 @@
             #if( $highlightRow )
             <b>$participantName</b>
             #else
+            #if( $formatter.toBool($hideNames) )
+            $hiddenText
+            #else
             $participantName
+            #end
             #end
         </td>
         <td>
@@ -63,3 +69,4 @@
         </td>
     </tr>
 #end
+
