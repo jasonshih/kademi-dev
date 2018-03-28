@@ -9,9 +9,10 @@
     <input type="hidden" name="remoteProfileDetails" value=""/>
 
 #else
+#set($providers = $applications.oauth.loginProviders)
+#if( $providers.size() > 0 )
 <h2>Or login with:</h2>
 <hr/>
-#set($providers = $applications.oauth.loginProviders)
 #foreach($p in $providers)
 <div class="btn-group" role="group">
     #set( $link = $applications.oauth.getAuthoriseHref($p) )
@@ -70,3 +71,4 @@
 
     });
 </script>
+#end

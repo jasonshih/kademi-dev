@@ -1,21 +1,23 @@
-#if (!$rowHeight)
-#set ($rowHeight = 25)
-#end
-
-#if (!$numUsers)
-#set ($numUsers = 5)
-#end
-
-#if ($pointsBucket && $pointsBucket != "")
-#set( $isOrgPoints = false )
-#set( $myPointsInfo = $applications.rewardStore.myPointsInfo($pointsBucket, $formatter.toInteger(1000), null) )
-    #if( $myPointsInfo.reward.pointsType == "POINTS_ORG" )
-        #set( $isOrgPoints = true )
-    #end
-#end
-
-
 <table class="table table-striped">
+    #if (!$rowHeight)
+    #set ($rowHeight = 25)
+    #end
+
+    #if (!$numUsers)
+    #set ($numUsers = 5)
+    #else
+    #set ($numUsers = $formatter.toInteger($numUsers))
+    #end
+
+    #if ($pointsBucket && $pointsBucket != "")
+    #set( $isOrgPoints = false )
+    #set( $myPointsInfo = $applications.rewardStore.myPointsInfo($pointsBucket, $formatter.toInteger(1000), null) )
+        #if( $myPointsInfo.reward.pointsType == "POINTS_ORG" )
+            #set( $isOrgPoints = true )
+        #end
+    #end
+
+
     <thead>
         <tr>
             <th>Rank</th>
@@ -26,68 +28,45 @@
     <tbody>
     #set ($selectedOrgs = $queryManager.selectedOrgs)
     #if( $myPointsInfo.hasPoints )
-        #set($foundThis = false)
+        #set ($memberships = $userResources.primaryMemberships)
         #foreach($leader in $myPointsInfo.allMemberPoints($pointsTag) )
-            #if ($isOrgPoints)
-                #set ($mbs = $userResources.primaryMemberships.filterByOrg($leader.member.orgId))
-                #if ($mbs.size() > 0)
-                    #set($foundThis = true)
-                    #set($foundThisOrg = $mbs.first().org)
-                #end
-                #if ($selectedOrgs.size() > 0)
-                    #if ($selectedOrgs[0].orgId == $leader.member.orgId)
-                        #set($foundThis = true)
-                        #set($foundThisOrg = $selectedOrgs[0])
-                    #end
-                #end
-            #else
-                #if( $leader.member.userId == $user.id)
-                    #set($foundThis = true)
-                #end
-            #end
-            #renderLeaderRow($foreach.count, $leader.member.formattedName(), $leader.numPoints)
-            #if($foreach.count == $numUsers)
-                #break
-            #end
-        #end
-
-        #if( !$foundThis )
-            #if ($isOrgPoints)
-                #if ($selectedOrgs.size() > 0 && $selectedOrgs[0].orgId != $foundThisOrg.orgId)
-                    #set ($rank = $myPointsInfo.rank($selectedOrgs[0]))
-                    #if($rank)
-                        #renderLeaderRow( $rank.rank, $selectedOrgs[0].formattedName(), $rank.points.numPoints)
-                    #else
-                        #renderLeaderRow( "N/A", $selectedOrgs[0].formattedName(), $applications.rewardstore.calcPointsBalance($selectedOrgs[0], $pointsBucket))
-                    #end
-                #end
-            #else
-                #set( $thisExtProfileBean = $userResource.extProfileBean )
-                #set( $rank = $myPointsInfo.rank($thisExtProfileBean))
-                #if($rank)
-                    #renderLeaderRow( $rank.rank, $thisExtProfileBean.formattedName(), $rank.points.numPoints)
-                #else
-                    #renderLeaderRow( "N/A", $thisExtProfileBean.formattedName(), $!myPointsInfo.myPointsTotal)
-                #end
+            #set( $isThisUser = ($leader.member.userId == $user.id || $memberships.filterByOrg($leader.member.orgId).size() > 0) )
+            #if( $foreach.count <= $numUsers || $isThisUser )
+                #renderLeaderRow($foreach.count, $leader.member.formattedName(), $leader.numPoints, $isThisUser)
             #end
         #end
     #else
     <tr>
-        #renderLeaderRow( "1", "[Please select a points bucket]", 999)
-        #renderLeaderRow( "2", "[Please select a points bucket]", 998)
+        #renderLeaderRow( "1", "[Please select a points bucket]", 999, false)
+        #renderLeaderRow( "2", "[Please select a points bucket]", 998, false)
     </tr>
     #end
     </tbody>
 </table>
 
-#macro (renderLeaderRow $rank $participantName $points)
+#macro (renderLeaderRow $rank $participantName $points $highlightRow)
     <tr>
-        <td>$rank</td>
         <td>
+            #if( $highlightRow )
+            <b>$rank</b>
+            #else
+            $rank
+            #end
+        </td>
+        <td>
+            #if( $highlightRow )
+            <b>$participantName</b>
+            #else
+            #if( $formatter.toBool($hideNames) )
+            $hiddenText
+            #else
             $participantName
+            #end
+            #end
         </td>
         <td>
             $!points pts
         </td>
     </tr>
 #end
+
