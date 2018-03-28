@@ -95,10 +95,13 @@ function initPropertiesModal() {
 function initPageBgModal() {
     flog(params);
     var modal = $('#modal-page-bg');
-    if (!modal.find('.pageBgColor').data('colorpicker')) {
-        $.contentEditor.initColorPicker(modal.find('.pageBgColor'));
-    }
-    
+
+    modal.on('show.bs.modal', function () {
+        if (!modal.find('.pageBgColor').data('colorpicker')) {
+            $.contentEditor.initColorPicker(modal.find('.pageBgColor'));
+        }
+    });
+
     modal.find('.bgColorEnabled').on('click', function () {
         if (this.checked) {
             modal.find('.pageBgColor').prop('readonly', false);
