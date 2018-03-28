@@ -15,11 +15,6 @@
 
         <form name="frmDetails" action="." method="post" class="form-horizontal kpi-form">
             <div class="pull-right page-action">
-                <button class="btn btn-sm btn-danger kpi-rewards" type="button">
-                    <span class="fa fa-dollar"></span>
-                    Allocate rewards
-                </button>
-
                 <button class="btn btn-sm btn-primary" type="submit">Save changes</button>
             </div>
 
@@ -167,6 +162,7 @@
                                 <tr>
                                     <th>Issued to</th>
                                     <th>Points</th>
+                                    <th>Tag</th>
                                     <th>Processed date</th>
                                 </tr>
                             </thead>
@@ -175,6 +171,7 @@
                                 <tr>
                                     <td>$alloc.points.issuedTo.formattedName</td>
                                     <td>$alloc.points.numPoints</td>
+                                    <td>$!alloc.points.pointsTag.name</td>
                                     <td>$alloc.createdDate</td>
                                 </tr>
                                 #end
@@ -268,36 +265,6 @@
                     $('#ignoreMvelExpression').show();
                 }
 
-                function initAllocateRewards() {
-                    $(".kpi-rewards").click(function (e) {
-                        e.preventDefault();
-                        if (confirm("This will allocate rewards based on KPI achievements for results which have not already had rewards processing. Would you like to continue?")) {
-                            submitProcess("processRewards");
-                        }
-                    });
-                }
-
-                function submitProcess(processName) {
-                    flog("submitProcess", processName);
-                    $.ajax({
-                        type: 'POST',
-                        data: {
-                            process: processName
-                        },
-                        dataType: "json",
-                        url: window.location.pathname,
-                        success: function (data) {
-                            if (data.status) {
-                                Msg.success("Submitted for processing");
-                            } else {
-                                Msg.error("Could not start processing: " + data.messages);
-                            }
-                        },
-                        error: function (resp) {
-                            Msg.error("There was a problem submitting the process. Please try again and contact the administrator if you still have problems");
-                        }
-                    });
-                }
 
                 function initTestAllocation() {
                     $("#test-allocation-modal form").forms({
@@ -312,7 +279,6 @@
                 }
 
                 $(function () {
-                    initAllocateRewards();
                     initPointsMvel();
                     initIgnoreMvel();
                     initDetailsForm();
