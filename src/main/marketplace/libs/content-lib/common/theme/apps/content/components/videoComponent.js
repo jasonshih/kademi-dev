@@ -131,6 +131,16 @@
                             self.buildVideoPreview(component);
                         });
                     });
+
+                    form.find('.chk-fullwidth').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-full-width', this.checked);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.buildVideoPreview(component);
+                        });
+                    });
                     
                     form.find('.btn-videoFileInput').mselect({
                         contentType: 'video',
@@ -222,6 +232,7 @@
             }
             
             form.find('.chk-border').prop('checked', isBorderEnabled);
+            form.find('.chk-fullwidth').prop('checked', dataAttributes['data-full-width'] === 'true');
             form.find('.border-style').prop('disabled', !isBorderEnabled).val(dataAttributes['data-video-border-style']);
             form.find('.border-width').prop('disabled', !isBorderEnabled).val(isBorderEnabled ? dataAttributes['data-video-border-width'] : '');
             form.find('.color-picker').colorpicker(isBorderEnabled ? 'enable' : 'disable').colorpicker('setValue', isBorderEnabled ? dataAttributes['data-video-border-color'] : '');
