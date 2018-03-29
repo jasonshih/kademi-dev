@@ -170,4 +170,5 @@ $(function () {
 
     initVideos();
     initAudios();
+    window.buildJWPlayer = buildJWPlayer;
 });
