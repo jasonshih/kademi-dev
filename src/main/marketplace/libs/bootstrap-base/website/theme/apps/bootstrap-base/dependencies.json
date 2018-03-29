@@ -17,6 +17,10 @@
             "branch": "1.4.1"
         },
         {
+            "appId": "jwplayer-lib",
+            "branch": "6.12.0"
+        },
+        {
             "appId": "jquery-forms-lib",
             "branch": "1.0.2"
         },
