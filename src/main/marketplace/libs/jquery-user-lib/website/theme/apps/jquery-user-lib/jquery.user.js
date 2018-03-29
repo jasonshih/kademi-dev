@@ -141,8 +141,8 @@
                         if (userName && password) {
                             doLogin(userName, password, config, form);
                         } else {
-                            showErrorField(userName);
-                            showErrorField(password);
+                            showErrorField(txtUserName);
+                            showErrorField(txtPassword);
                             showErrorMessage(form, config, config.requiredFieldsMessage);
                         }
                     } catch (e) {
