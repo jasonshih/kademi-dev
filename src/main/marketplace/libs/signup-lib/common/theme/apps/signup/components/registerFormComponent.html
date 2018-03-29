@@ -37,7 +37,7 @@
     <div class="form-group">
         #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="email">Email</label> #end
         <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
-            <input class="required form-control" required="true" type="email" name="email" id="email" placeholder="Your email address" />
+            <input class="required form-control" required="true" type="email" name="email" id="email" placeholder="Your email address" value="$!userResource.email" />
         </div>
     </div>
 
@@ -46,7 +46,7 @@
         #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="nickName">Nickname</label> #end
 
         <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
-            <input class="required form-control" type="text" name="nickName" id="nickName" placeholder="Your nickname for others to see" />
+            <input class="required form-control" type="text" name="nickName" id="nickName" placeholder="Your nickname for others to see" value="$!userResource.nickName" />
         </div>
     </div>
     #end
@@ -56,7 +56,7 @@
         #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="firstName">First name</label> #end
 
         <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
-            <input class="required form-control" name="firstName" placeholder="Your first name" />
+            <input class="required form-control" name="firstName" placeholder="Your first name" value="$!userResource.firstName" />
         </div>
     </div>
 
@@ -64,7 +64,7 @@
         #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="surName">Surname</label> #end
 
         <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
-            <input class="required form-control" name="surName" placeholder="Your last name" />
+            <input class="required form-control" name="surName" placeholder="Your last name" value="$!userResource.surName" />
         </div>
     </div>
     #end
@@ -73,7 +73,7 @@
     <div class="form-group">
         #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="phone">Phone</label> #end
         <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
-            <input class="required form-control" type="text" name="phone" id="phone" placeholder="Your phone" />
+            <input class="required form-control" type="text" name="phone" id="phone" placeholder="Your phone" value="$!userResource.phone" />
         </div>
     </div>
     #end
