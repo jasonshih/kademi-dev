@@ -385,7 +385,11 @@
                 searchOptions.team = w.searchOptions.team.split(',');
             }
             if (w.searchOptions.assignedTo) {
-                searchOptions.assignedTo = w.searchOptions.assignedTo.split(',');
+                if (typeof w.searchOptions.assignedTo === 'string' || w.searchOptions.assignedTo instanceof String) {
+                    searchOptions.assignedTo = w.searchOptions.assignedTo.split(',');
+                } else {
+                    searchOptions.assignedTo = w.searchOptions.assignedTo + "";
+                }
             }
             if (w.searchOptions.leadType) {
                 searchOptions.leadType = w.searchOptions.leadType;
