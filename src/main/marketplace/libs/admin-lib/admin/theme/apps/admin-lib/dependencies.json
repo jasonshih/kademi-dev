@@ -2,15 +2,15 @@
     "appDependencies": [
         {
             "appId": "contentEditor-lib",
-            "branch": "1.1.1"
+            "branch": "1.1.5"
         },
         {
             "appId": "edmEditor-lib",
-            "branch": "1.0.7"
+            "branch": "1.0.8"
         },
         {
             "appId": "mselect-lib",
-            "branch": "1.0.5"
+            "branch": "1.0.6"
         },
         {
             "appId": "ckeditor-lib",
@@ -18,7 +18,7 @@
         },
         {
             "appId": "content-lib",
-            "branch": "1.2.9"
+            "branch": "1.3.1"
         },
         {
             "appId": "nvd3-lib",

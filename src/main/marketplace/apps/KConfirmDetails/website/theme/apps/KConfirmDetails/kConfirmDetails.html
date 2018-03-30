@@ -86,6 +86,7 @@
 
                     #if($showExtraFields == true)
                     #set($fields = $page.find("/profile").extraFields)
+
                     #foreach($field in $fields.keySet())
                     <div class="form-group">
                         <label for="surName" title="From group $!field.group.name" class="control-label col-md-3">$!field.text</label>

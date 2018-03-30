@@ -229,12 +229,7 @@
             this.src = img.attr('data-src');
             this.width = img.attr('data-width');
             this.autostart = img.attr('data-autostart') === 'true';
-            var instance = this;
-            $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
-                jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                instance.buildJWAudioPlayerPreview(componentId);
-            });
-            
+            this.buildJWAudioPlayerPreview(componentId);
         },
         
         getContent: function (component, keditor) {

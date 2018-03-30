@@ -126,6 +126,13 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
+                    form.find('[name=inputSize]').on('change', function(e){
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-input-size', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
                 }
             });
         },
@@ -134,7 +141,6 @@
             flog('showSettingForm "registerForm" component', form, component, keditor);
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            debugger;
             form.find('.displayLabels').prop('checked', dataAttributes['data-display-labels'] !== 'false');
             form.find('.displayName').prop('checked', dataAttributes['data-display-name'] == 'true');
             form.find('.displayNickname').prop('checked', dataAttributes['data-display-nickname'] == 'true');
@@ -149,6 +155,7 @@
             form.find('[name=group]').val(dataAttributes['data-group']);
             form.find('[name=extra-group]').val(dataAttributes['data-extra-group']);
             form.find('[name=labelAlign]').val(dataAttributes['data-label-align']);
+            form.find('[name=inputSize]').val(dataAttributes['data-input-size']);
             form.find('.redirectUrl').val(dataAttributes['data-redirect-url'] || '/dashboard');
         }
     };

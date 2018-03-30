@@ -131,6 +131,16 @@
                             self.buildVideoPreview(component);
                         });
                     });
+
+                    form.find('.chk-fullwidth').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-full-width', this.checked);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.buildVideoPreview(component);
+                        });
+                    });
                     
                     form.find('.btn-videoFileInput').mselect({
                         contentType: 'video',
@@ -192,20 +202,14 @@
         },
         
         buildVideoPreview: function (component) {
-            $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
-                $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
-                    jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                    
-                    var img = component.find('.video-jw');
-                    var src = img.attr("data-video-src");
-                    var posterUrl = img.attr("src");
-                    var aspectratio = img.attr("data-aspectratio");
-                    var autostart = img.attr('data-autostart') === 'true';
-                    var repeat = img.attr('data-repeat') === 'true';
-                    var controls = true; // Force showing controls for now
-                    buildJWPlayer(img, 999, src, posterUrl, aspectratio, autostart, repeat, controls);
-                });
-            });
+            var img = component.find('.video-jw');
+            var src = img.attr("data-video-src");
+            var posterUrl = img.attr("src");
+            var aspectratio = img.attr("data-aspectratio");
+            var autostart = img.attr('data-autostart') === 'true';
+            var repeat = img.attr('data-repeat') === 'true';
+            var controls = true; // Force showing controls for now
+            window.buildJWPlayer(img, 999, src, posterUrl, aspectratio, autostart, repeat, controls);
         },
         
         showSettingForm: function (form, component, keditor) {
@@ -222,6 +226,7 @@
             }
             
             form.find('.chk-border').prop('checked', isBorderEnabled);
+            form.find('.chk-fullwidth').prop('checked', dataAttributes['data-full-width'] === 'true');
             form.find('.border-style').prop('disabled', !isBorderEnabled).val(dataAttributes['data-video-border-style']);
             form.find('.border-width').prop('disabled', !isBorderEnabled).val(isBorderEnabled ? dataAttributes['data-video-border-width'] : '');
             form.find('.color-picker').colorpicker(isBorderEnabled ? 'enable' : 'disable').colorpicker('setValue', isBorderEnabled ? dataAttributes['data-video-border-color'] : '');

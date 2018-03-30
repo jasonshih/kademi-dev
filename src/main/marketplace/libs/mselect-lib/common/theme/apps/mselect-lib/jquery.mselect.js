@@ -250,31 +250,21 @@
                     switch (fileType) {
                         case 'video':
                             previewContainer.html('<img class="jp-video" />');
-                            $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
-                                $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
-                                    jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                                    buildJWPlayer(previewContainer.find('img.jp-video'), 100, previewUrl, previewUrl + '/alt-640-360.png');
-                                    
-                                    if (typeof options.onPreviewFile === 'function') {
-                                        options.onPreviewFile.call(container, fileType, selectedUrl, hash);
-                                    }
-                                });
-                            });
+                            window.buildJWPlayer(previewContainer.find('img.jp-video'), 100, previewUrl, previewUrl + '/alt-640-360.png');
+
+                            if (typeof options.onPreviewFile === 'function') {
+                                options.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                            }
                             progressBar.hide();
                             break;
                         
                         case 'audio':
                             previewContainer.html('<div class="jp-audio" style="padding: 15px"><div id="kaudio-player-100" /></div>');
-                            $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
-                                $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
-                                    jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                                    buildJWAudioPlayer(100, previewUrl, false);
-                                    
-                                    if (typeof options.onPreviewFile === 'function') {
-                                        options.onPreviewFile.call(container, fileType, selectedUrl, hash);
-                                    }
-                                });
-                            });
+                            window.buildJWAudioPlayer(100, previewUrl, false);
+
+                            if (typeof options.onPreviewFile === 'function') {
+                                options.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                            }
                             progressBar.hide();
                             break;
                         

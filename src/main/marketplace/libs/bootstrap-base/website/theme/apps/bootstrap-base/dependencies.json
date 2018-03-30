@@ -17,6 +17,10 @@
             "branch": "1.4.1"
         },
         {
+            "appId": "jwplayer-lib",
+            "branch": "6.12.0.1"
+        },
+        {
             "appId": "jquery-forms-lib",
             "branch": "1.0.2"
         },
@@ -30,7 +34,7 @@
         },
         {
             "appId": "contentEditor-lib",
-            "branch": "1.1.1"
+            "branch": "1.1.5"
         },
         {
             "appId": "bootstrap-msg-lib",

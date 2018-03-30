@@ -227,7 +227,7 @@
             form.find('#photo-linkable').prop('checked', dataAttributes['data-photo-linkable'] === 'true');
             form.find('#photo-align').val(dataAttributes['data-photo-align'] || '');
             form.find('#photo-valign').val(dataAttributes['data-photo-valign'] || '');
-            form.find('#photo-responsive').prop('checked', dataAttributes['data-photo-responsive'] === 'true');
+            form.find('#photo-responsive').prop('checked', dataAttributes['data-photo-responsive'] !== 'false');
             form.find('#photo-style').val(dataAttributes['data-photo-style'] || '');
             form.find('#photo-width').val(dataAttributes['data-photo-width'] || '');
             form.find('#photo-height').val(dataAttributes['data-photo-height'] || '');

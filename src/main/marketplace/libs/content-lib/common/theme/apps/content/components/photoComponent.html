@@ -1,3 +1,6 @@
+#if ($formatter.isNull($photoResponsive))
+#set ($photoResponsive = "true")
+#end
 <div class="photo-panel" style="text-align: $!photoAlign;">
     #if ($photoLinkable == "true")
     <a href="$!photoLink" target="$!photoLinkTarget">

@@ -14,3 +14,6 @@
   width: 640px;
   max-width: 100%;
 }
+.video-wrapper.fullwidth {
+  width: 100%;
+}

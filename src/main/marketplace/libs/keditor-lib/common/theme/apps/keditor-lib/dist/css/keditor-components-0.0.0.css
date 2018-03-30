@@ -1287,3 +1287,6 @@ body.opened-keditor-sidebar div.cke_float[id*="cke_keditor-component-content-"] 
   width: 640px;
   max-width: 100%;
 }
+.video-wrapper.fullwidth {
+  width: 100%;
+}
