@@ -59,17 +59,14 @@ function createFeedback(page, params) {
         }));
     }
 
-    var cur = (new Date).getTime();
+    var currentDateTime = (new Date).getTime();
 
     var surveyId = params.survey;
-    var survey = null;
     if (!surveyId) {
         return views.textView(JSON.stringify({
             status: 0,
             msg: 'Please send survey id'
         }));
-    } else {
-        survey = db.child(surveyId);
     }
 
     var curUser = securityManager.currentUser;
@@ -80,14 +77,12 @@ function createFeedback(page, params) {
             option_slug: params.option_slug,
             option_text: params.option_text,
             website: params.website,
-            created: cur,
+            created: currentDateTime,
             profileId: curUser.userId,
             processed: false
         };
 
-        securityManager.runAsUser(survey.jsonObject.profileId, function () {
-            db.createNew(cur, JSON.stringify(feedback), TYPE_FEEDBACK);
-        });
+        db.createNew(currentDateTime, JSON.stringify(feedback), TYPE_FEEDBACK);
 
         var profileBean = curUser.profile;
         eventManager.goalAchieved("kfeedbackSubmittedGoal", profileBean, {feedback: surveyId});
