@@ -171,4 +171,5 @@ $(function () {
     initVideos();
     initAudios();
     window.buildJWPlayer = buildJWPlayer;
+    window.buildJWAudioPlayer = buildJWAudioPlayer;
 });
