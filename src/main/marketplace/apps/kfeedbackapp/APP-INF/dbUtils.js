@@ -49,7 +49,7 @@ function doDBSearch(page, queryJson) {
     if (isNull(searchResult)) {
         log.info('searchResult=null');
     } else {
-        log.info('searchResult={}', searchResult);
+        // log.info('searchResult={}', searchResult);
     }
 
     return searchResult;

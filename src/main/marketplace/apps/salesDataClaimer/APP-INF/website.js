@@ -60,8 +60,9 @@ function getPendingClaims(page) {
 function getTotalAmountOfClaims(page, params) {
     log.info('getPendingClaims > page={}, params={}', page, params);
     var searchResult = totalAmountOfClaims(page, null, null);
-    log.info('getPendingClaims > searchResult={}', searchResult.aggregations.get("total"));
+    //log.info('getPendingClaims > searchResult={}', searchResult.aggregations.get("total"));
     if (searchResult.aggregations === undefined) {
+        log.warn('getPendingClaims no aggregations > searchResult={}');
         return 0;
     } else {
         return searchResult.aggregations.get("total").value;
