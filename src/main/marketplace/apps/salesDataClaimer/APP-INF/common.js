@@ -155,13 +155,14 @@ function deleteClaims(page, params) {
 }
 
 function getSalesDataExtreFields(page) {
+    var extraFields = [];    
     var settings = getAppSettings(page);
-    var selectedDataSeries = settings.get('dataSeries');
+    if( settings != null ) {
+        var selectedDataSeries = settings.get('dataSeries');
 
-    var extraFields = [];
-
-    if (isNotNull(selectedDataSeries)) {
-        extraFields = applications.salesData.getDataSeriesExtraFields(selectedDataSeries);
+        if (isNotNull(selectedDataSeries)) {
+            extraFields = applications.salesData.getDataSeriesExtraFields(selectedDataSeries);
+        }
     }
 
     return extraFields;
