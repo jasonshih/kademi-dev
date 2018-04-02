@@ -62,6 +62,14 @@
                         component.attr('data-items-per-row', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('.color-brand').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-color-brand', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -75,6 +83,7 @@
             form.find('.select-asc').val(dataAttributes['data-asc'] || 'true');
             form.find('.items-per-row').val(dataAttributes['data-items-per-row'] || '3');
             form.find('.number-of-products').val(dataAttributes['data-number-of-products']);
+            form.find('.color-brand').val(dataAttributes['data-color-brand'] || 'primary');
         }
     };
 

@@ -39,6 +39,14 @@
                         component.attr('data-number-of-products', number);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('.color-brand').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-color-brand', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -48,6 +56,7 @@
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-reward').val(dataAttributes['data-reward'] || '');
+            form.find('.color-brand').val(dataAttributes['data-color-brand'] || 'primary');
             form.find('.number-of-products').val(dataAttributes['data-number-of-products']);
         }
     };
