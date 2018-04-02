@@ -172,4 +172,6 @@ $(function () {
     initAudios();
     window.buildJWPlayer = buildJWPlayer;
     window.buildJWAudioPlayer = buildJWAudioPlayer;
+    window.JWPLAYER_LIB_PATH_FLASH = JWPLAYER_LIB_PATH_FLASH;
+    window.JWPLAYER_LIB_PATH_HTML5 = JWPLAYER_LIB_PATH_HTML5;
 });
