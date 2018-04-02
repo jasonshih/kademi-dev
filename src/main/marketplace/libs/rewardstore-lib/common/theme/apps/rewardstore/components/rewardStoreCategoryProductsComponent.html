@@ -11,6 +11,14 @@
 #set ($currentPage = $rootFolder)
 #end
 
+#if ($formatter.isNull($colorBrand))
+    #set ($buttonBrand = "btn-primary")
+    #set ($bgBrand = "bg-primary")
+#else
+    #set ($buttonBrand = "btn-" + $colorBrand)
+    #set ($bgBrand = "bg-" + $colorBrand)
+#end
+
 #if (!$page && (!$reward || $reward == ""))
 #fakeUI()
 #else
@@ -43,11 +51,11 @@
                         <div class="product-content">$!formatter.truncate( $formatter.encodeAsHtmlEntities($p.fields.content.value.trim()), 65)</div>
                     </div>
                     <div class="caption">
-                        <h3 class="text-center product-price bg-info">$formatter.formatCurrency($p.fields.finalPoints.value, false)
+                        <h3 class="text-center product-price $!bgBrand">$formatter.formatCurrency($p.fields.finalPoints.value, false)
                             <small>Points</small>
                         </h3>
 
-                        <a href="/$p.fields.path.value" class="btn btn-info">
+                        <a href="/$p.fields.path.value" class="btn $!buttonBrand">
                             <i class="fa fa-shopping-cart"></i>
                         </a>
                     </div>
@@ -98,10 +106,10 @@
                     <div class="product-content">Lorem ipsum doro si amet</div>
                 </div>
                 <div class="caption">
-                    <h3 class="text-center product-price bg-info">1000
+                    <h3 class="text-center product-price $bgBrand">1000
                         <small>Points</small>
                     </h3>
-                    <a href="javascript:" class="btn btn-info">
+                    <a href="javascript:" class="btn $buttonBrand">
                         <i  class="fa fa-shopping-cart"></i>
                     </a>
                 </div>
@@ -120,10 +128,10 @@
                     <div class="product-content">Lorem ipsum doro si amet</div>
                 </div>
                 <div class="caption">
-                    <h3 class="text-center product-price bg-info">4000
+                    <h3 class="text-center product-price $bgBrand">4000
                         <small>Points</small>
                     </h3>
-                    <a href="javascript:" class="btn btn-info">
+                    <a href="javascript:" class="btn $buttonBrand">
                         <i  class="fa fa-shopping-cart"></i>
                     </a>
                 </div>
@@ -142,10 +150,10 @@
                     <div class="product-content">Apple iPhone X description goes here</div>
                 </div>
                 <div class="caption">
-                    <h3 class="text-center product-price bg-info">3000
+                    <h3 class="text-center product-price $bgBrand">3000
                         <small>Points</small>
                     </h3>
-                    <a href="javascript:" class="btn btn-info">
+                    <a href="javascript:" class="btn $buttonBrand">
                         <i  class="fa fa-shopping-cart"></i>
                     </a>
                 </div>

@@ -9,7 +9,7 @@
             var self = this;
             var componentContent = component.children('.keditor-component-content');
             var dynamicElement = componentContent.find('[data-dynamic-href]');
-            
+
             if (dynamicElement.length === 0) {
                 flog('Old video component. Converting to new video component...');
                 dynamicElement = $('<div data-dynamic-href="_components/video" id="' + keditor.generateId('dynamic-element') + '"></div>');
@@ -209,7 +209,10 @@
             var autostart = img.attr('data-autostart') === 'true';
             var repeat = img.attr('data-repeat') === 'true';
             var controls = true; // Force showing controls for now
-            window.buildJWPlayer(img, 999, src, posterUrl, aspectratio, autostart, repeat, controls);
+            var index = $(document.body).data('video-jw') || 1;
+            window.buildJWPlayer(img, index * 999, src, posterUrl, aspectratio, autostart, repeat, controls);
+            index ++;
+            $(document.body).data('video-jw', index);
         },
         
         showSettingForm: function (form, component, keditor) {

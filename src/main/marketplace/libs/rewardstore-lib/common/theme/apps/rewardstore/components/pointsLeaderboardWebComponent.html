@@ -9,6 +9,10 @@
     #set ($numUsers = $formatter.toInteger($numUsers))
     #end
 
+    #if ($formatter.isNull($showPoints))
+        #set ($showPoints = "true")
+    #end
+
     #if ($pointsBucket && $pointsBucket != "")
     #set( $isOrgPoints = false )
     #set( $myPointsInfo = $applications.rewardStore.myPointsInfo($pointsBucket, $formatter.toInteger(1000), null) )
@@ -22,7 +26,9 @@
         <tr>
             <th>Rank</th>
             <th>Participant</th>
+            #if ($showPoints == "true")
             <th>Points</th>
+            #end
         </tr>
     </thead>
     <tbody>
@@ -64,9 +70,11 @@
             #end
             #end
         </td>
+        #if ($showPoints == "true")
         <td>
             $!points pts
         </td>
+        #end
     </tr>
 #end
 

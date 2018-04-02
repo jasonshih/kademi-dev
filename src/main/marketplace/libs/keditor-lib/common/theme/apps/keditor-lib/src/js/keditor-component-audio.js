@@ -63,18 +63,23 @@
                 basePath: keditor.options.basePath,
                 onSelectFile: function (url) {
                     instance.src = url;
+                    var component = keditor.getSettingComponent();
+                    var img = component.find('object');
+                    var componentId = img.attr('id');
+                    instance.componentId = componentId;
                     instance.refreshAudioPlayerPreview();
                 }
             });
             
-            var img = component.find('img[data-src]');
-            var componentId = img.attr('id');
-            
+
             var autoplayToggle = form.find('#audio-autoplay');
             if (this.autostart) {
                 autoplayToggle.prop('checked', true);
             }
             autoplayToggle.on('click', function (e) {
+                var component = keditor.getSettingComponent();
+                var img = component.find('object');
+                var componentId = img.attr('id');
                 instance.autostart = this.checked;
                 instance.buildJWAudioPlayerPreview(componentId);
             });
@@ -82,6 +87,10 @@
             var audioWidth = form.find('#audio-width');
             audioWidth.val(this.width);
             audioWidth.on('change', function () {
+                var component = keditor.getSettingComponent();
+                var img = component.find('object');
+                var componentId = img.attr('id');
+                instance.componentId = componentId;
                 instance.width = this.value;
                 instance.resizeAudioPlayerPreview();
             });
@@ -97,8 +106,8 @@
                 width: width,
                 height: 30,
                 autostart: autostart,
-                flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
-                html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
+                flashplayer: window.JWPLAYER_LIB_PATH_FLASH,
+                html5player: window.JWPLAYER_LIB_PATH_HTML5,
                 primary: "flash"
             });
             playerInstance.onReady(function () {

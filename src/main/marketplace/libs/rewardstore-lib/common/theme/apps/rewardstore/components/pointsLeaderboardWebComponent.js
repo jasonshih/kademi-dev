@@ -67,7 +67,14 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
+                    form.find('.show-points').on('change', function () {
+                        var number = $(this).prop("checked");
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
 
+                        component.attr('data-show-points', number);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -80,11 +87,11 @@
             form.find('.select-tag').val(dataAttributes['data-points-tag']);
 
             form.find('input.num-users').val(dataAttributes['data-num-users'] || 5);
-            form.find('input.hide-names').prop("checked", dataAttributes['data-hide-names'] );
+            form.find('input.hide-names').prop("checked", dataAttributes['data-hide-names']  == 'true');
             form.find('input.hidden-text').val(dataAttributes['data-hidden-text']);
 
             form.find('input.txt-height').val(dataAttributes['data-row-height'] || 25);
-
+            form.find('input.show-points').prop("checked", dataAttributes['data-show-points'] !== 'false');
         }
     };
 
