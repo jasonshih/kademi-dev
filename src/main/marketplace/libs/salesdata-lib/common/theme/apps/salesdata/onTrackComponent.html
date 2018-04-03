@@ -37,16 +37,19 @@
     #end
 #end
 
-#set( $result = $selectedKpi.getAssessedResult($formatter.addDays($startDate,1)) )
+#set( $result = $selectedKpi.getAssessedResult($formatter.addMinutes($startDate,1)) )
 #set( $percent = 0 )
 
 #set ($isAchieved = false)
 #set ($isAssessed = false)
 #if( $result )
     #set ($isAssessed = true)
-    #set( $percent = $selectedKpi.getAssessedResultPerc($result, $kpiLevel) )
-    ##set( $percent =  ($result.assessedAmount / $result.levelAmount) * 100)
-    
+    #if( $selectedKpi.is("PERC_GROWTH") )
+        #set( $percent = $result.assessedAmount + 100 )
+    #else
+        #set( $percent = $selectedKpi.getAssessedResultPerc($result, $kpiLevel) )
+    #end
+
     ## we have an assessed result, so display results
     #if( $percent >= 100)
         #set ($isAchieved = true)
@@ -56,8 +59,12 @@
 #else
     ## no assessed result, so need to forecast
     #set( $forecastLevel = $selectedKpi.progressLevel)
-    #set( $percent = $selectedKpi.getProgressOfLevelPerc($kpiLevel) )
-    
+    #if( $selectedKpi.is("PERC_GROWTH") )
+        #set( $percent = $selectedKpi.progress + 100 )
+    #else
+        #set( $percent = $selectedKpi.getProgressOfLevelPerc($kpiLevel) )
+    #end
+
     #if ($percent >= 100)
         #set ($isAchieved = true)
     #else

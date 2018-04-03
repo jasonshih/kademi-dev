@@ -8,17 +8,21 @@
             components.each(function () {
                 initCircleSales($(this));
             });
-            
+
             $(document.body).on('pageDateChanged', function () {
                 flog('pageDateChanged for panelKpiTarget');
-                
-                components.find('[data-dynamic-href]').reloadFragment({
-                    whenComplete: function () {
-                        components.each(function () {
-                            initCircleSales($(this));
-                        });
-                    }
-                });
+                var first = components.find('[id^=keditor-dynamic]');
+                if (first){
+                    first.reloadFragment({
+                        whenComplete: function (resp) {
+                            components.each(function () {
+                                var id = $(this).find('[id^=keditor-dynamic]').attr('id');
+                                $('#'+id).html($(resp).find('#'+id).html());
+                                initCircleSales($(this));
+                            });
+                        }
+                    });
+                }
             });
         }
     });

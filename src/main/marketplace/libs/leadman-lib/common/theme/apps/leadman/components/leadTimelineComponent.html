@@ -34,13 +34,23 @@
                                 #end
                                 <br />
 
-                                <div class="btn-task-panel-wrap pull-right">
-                                    <a class="btn btn-danger btn-task-panel-sm btnCancelTask btn-task-panel" title="Cancel task" href="$task.href">
-                                        <span class="fa fa-remove"></span>
-                                    </a>
-                                    <a href="$task.href .taskViewModal" class="btn btn-task-panel-sm btn-success btn-task-panel" data-target="#modalEditTask" data-toggle="modal">
-                                        <span class="fa fa-check"></span>
-                                    </a>
+                                <div class="pull-right">
+                                    <!--<a class="btn btn-danger btn-task-panel-sm btnCancelTask btn-task-panel" title="Cancel task" href="$task.href">-->
+                                        <!--<span class="fa fa-remove"></span>-->
+                                    <!--</a>-->
+                                    <!--<a href="$task.href .taskViewModal" class="btn btn-task-panel-sm btn-success btn-task-panel" data-target="#modalEditTask" data-toggle="modal">-->
+                                        <!--<span class="fa fa-check"></span>-->
+                                    <!--</a>-->
+                                    <div class="btn-group button-group-xs">
+                                        <a class="btn btn-success" href="$task.href .taskViewModal" data-target="#modalEditTask" data-toggle="modal"><span class="fa fa-check"></span></a>
+                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="caret"></span>
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="btnCancelTask" title="Cancel task" href="$task.href">Cancel</a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                                 #if( $task.dueDate )
                                     Due in <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
