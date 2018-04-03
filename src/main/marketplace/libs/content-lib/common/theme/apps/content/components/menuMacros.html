@@ -164,16 +164,16 @@
     <li #if ($isRootMenuItem) class="rootMenuItem" #end>
         <div data-id="$menuItem.id" data-href="$!menuItem.href" data-hidden="$menuItem.hidden" class="menuItem">
             <span class="btn-group btn-group-xs small">
-                <a class="btn btn-success btnAddMenuItem" href="#">
+                <a class="btn btn-success btn-xs btnAddMenuItem" href="#">
                     <span class="fa fa-plus small"></span>
                 </a>
                 #if (!$isRootMenuItem)
-                    <a class="btn btn-info btnSortMenuItem" href="#">
+                    <a class="btn btn-info btn-xs btnSortMenuItem" href="#">
                         <span class="fa fa-sort small"></span>
                     </a>
                 #end
                 #if (!$isRootMenuItem)
-                    <a class="btn btn-primary btnEditMenuItem" href="#">
+                    <a class="btn btn-primary btn-xs btnEditMenuItem" href="#">
                         <span class="fa fa-pencil small"></span>
                     </a>
                 #end

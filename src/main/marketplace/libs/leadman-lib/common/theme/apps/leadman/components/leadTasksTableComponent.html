@@ -6,35 +6,79 @@
         <div class="col-md-12">
             <div style="padding: 10px;">
                 #if($searchResult.hits.hits.size() > 0)
+                #set( $leadsPage = $page.find("/leads") )
                 #foreach($hit in $searchResult.hits.hits)
                 <div class="media">
+                    #set( $lead = false  )
+                    #if( $hit.source.relatedLead.id )
+                    #set( $lead = $leadsPage.child( $formatter.toString($hit.source.relatedLead.id))  )
+                    #end
                     <div class="media-left media-middle">
                         #set($pic = "/theme/apps/user/profile.png")
                         #if($hit.source.assignedToProfile.name)
                         #set($pic = "/users/" + $hit.source.assignedToProfile.name + "/pic")
                         #end
                         #if($hit.source.assignedToProfile.name)
-                        <a href="#" data-name="assignedTo" data-value="$hit.source.assignedToProfile.name" class="filter"  title="View tasks assigned to $hit.source.assignedToProfile.name">
-                            #else
+                            <a href="#" data-name="assignedTo" data-value="$hit.source.assignedToProfile.name" class="filter"  title="View tasks assigned to $hit.source.assignedToProfile.name">
+                        #else
                             <a href="#" data-name="assignedTo" data-value="NONE" class="filter" title="View all unassigned tasks">
-                                #end
-                                <img class="img-rounded media-object" alt="64x64" src="$pic" data-holder-rendered="true" style="width: 64px; height: 64px;">
+                        #end
+                            <img class="img-rounded media-object" alt="64x64" src="$pic" data-holder-rendered="true" style="width: 64px; height: 64px;">
                             </a>
                     </div>
                     <div class="media-body">
+                        #if( $lead )
+                            <h4 class='pull-right'>
+                                <a href="$lead.href">
+                                    #if( $lead.leadTitle )
+                                    $lead.leadTitle
+                                    #end
+                                    #if( $lead.profile )
+                                        /
+                                        $lead.profile.formattedName
+                                    #end
+                                </a>
+                                #if( $lead.leadOrg )
+                                    /
+                                    $lead.leadOrg.formattedName
+                                #end
+
+                            </h4>
+                        #end
+
                         #set($icon = '<i title="Active" class="fa fa-check-square-o text-success"></i>')
                         #if(!$hit.source.cancelled && $hit.source.completedDate)
                         #set($icon = '<i title="Closed" class="fa fa-exclamation-triangle text-warning"></i>')
                         #elseif($hit.source.cancelled)
                         #set($icon = '<i title="Cancelled" class="fa fa-times-circle-o text-danger"></i>')
                         #end
-                        <h4 class="media-heading">$icon <a href="$hit.source.id .taskEditModal" data-target="#modalEditTask" data-toggle="modal">$!formatter.ifNull($hit.source.title, $hit.source.taskName)</a></h4>
+                        <h4 class="media-heading">$icon <a href="$hit.source.id .taskEditModal" data-target="#modalEditTask" data-toggle="modal">
+                            &num;$formatter.toString($hit.source.id).substring(4) $!formatter.ifNull($hit.source.title, $hit.source.taskName)</a>
+                        </h4>
                         <p>
-                            &num;$hit.source.id opened
-                            <span title="$formatter.formatDateTime($formatter.parseDate($hit.source.createdDate))">$formatter.formatAge($formatter.parseDate($hit.source.createdDate))</span>
+                            Opened <span title="$formatter.formatDateTime($formatter.parseDate($hit.source.createdDate))">$formatter.formatAge($formatter.parseDate($hit.source.createdDate))</span>
                             #if($hit.source.dueDate)
-                            &VerticalBar; Due $formatter.formatDate($formatter.parseDate($hit.source.dueDate))
+                                #set( $dueDate = $formatter.parseDate($hit.source.dueDate))
+                                #set( $dueDays = $formatter.durationDays($formatter.now, $dueDate) )
+                                &VerticalBar; Due
+                                #if( $dueDays < 1 )
+                                <span class='label label-danger'>$formatter.formatAge($dueDate)</span>
+                                #elseif( $dueDays < 3 )
+                                <span class='label label-warning'>$formatter.formatAge($dueDate)</span>
+                                #else
+                                $formatter.formatAge($dueDate)
+                                #end
                             #end
+                            #if($hit.source.assignedToProfile.name)
+                                &VerticalBar; Assigned
+                                <a href="#" data-name="assignedTo" data-value="$hit.source.assignedToProfile.name" class="filter" >
+                                    $hit.source.assignedToProfile.name
+                                </a>
+                            #end
+                        </p>
+                        <p>
+
+
                         </p>
                     </div>
                 </div>
