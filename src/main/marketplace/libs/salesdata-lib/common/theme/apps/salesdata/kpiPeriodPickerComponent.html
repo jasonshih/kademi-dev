@@ -8,14 +8,14 @@
             </button>
             <ul class="dropdown-menu #if($pickerAlign == 'right') dropdown-menu-right #end">
                 #foreach($result in $kpiDataPage.assessedResults)
-                    #set ($periodStart = $formatter.formatDate($result.periodStart))
-                    #set ($periodEnd = $formatter.formatDate($result.periodEnd))
+                    #set ($periodStart = $formatter.formatDate($result.periodStart, $page.organisation.timezone))
+                    #set ($periodEnd = $formatter.formatDate($result.periodEnd, $page.organisation.timezone))
                     #set ($text = $periodStart + " - " + $periodEnd)
                     <li class="$!active"><a href="#" data-start="$periodStart" data-end="$periodEnd">$!text</a></li>
                 #end
                 <li class="$!defaultActive">
-                    #set ($currentStart = $formatter.formatDate($kpiDataPage.latestPeriodStartDate))
-                    #set ($currentEnd = $formatter.formatDate($kpiDataPage.latestPeriodEndDate))
+                    #set ($currentStart = $formatter.formatDate($kpiDataPage.latestPeriodStartDate, $page.organisation.timezone))
+                    #set ($currentEnd = $formatter.formatDate($kpiDataPage.latestPeriodEndDate, $page.organisation.timezone))
                     <a class="current" href="#" data-start="$currentStart" data-end="$currentEnd">$currentStart - $currentEnd</a>
                 </li>
             </ul>
