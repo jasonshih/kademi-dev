@@ -31,7 +31,7 @@
                         <select name="job" id="job" class="form-control">
                             <option value="">[ Select a job ]</option>
                             #foreach($job in $page.allEmailJobs)
-                            <option #if( $request.params.job == $job.id)  selected="selected" #end value="$job.id">$job.name</option>
+                            <option #if( $request.params.job == $job.id)  selected="selected" #end value="$job.id">$!job.title ($job.id)</option>
                             #end
                         </select>
                     </div>
