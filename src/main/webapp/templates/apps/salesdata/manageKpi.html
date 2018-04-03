@@ -624,7 +624,7 @@
                                         <span class="fa fa-trophy"></span>
                                         #end
 
-                                        $formatter.formatDate($period.startDate) - $formatter.formatDate($period.endDate)
+                                        $formatter.formatDate($period.startDate, $page.organisation.timezone) - $formatter.formatDate($period.endDate, $page.organisation.timezone)
                                     </a>
                                     #end
                                 </ul>
