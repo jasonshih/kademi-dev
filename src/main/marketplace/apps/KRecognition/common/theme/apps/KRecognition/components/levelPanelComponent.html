@@ -30,7 +30,12 @@
         #end
     </div>
 #else
-    <p class="alert alert-warning">No topic was selected</p>
+    #if (!$page)
+        <div class="panel-level-achievement">
+            <$levelNameTag>Sample level</$levelNameTag>
+            <p><img src="/theme/apps/KRecognition/components/levelPanel.png" class="img-responsive" alt="Sample level" /></p>
+        </div>
+    #end
 #end
 
 
