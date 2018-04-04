@@ -1227,18 +1227,23 @@ function initNewNoteForm() {
 }
 
 function reloadTasks() {
-    $("#tasksList").reloadFragment({
-        whenComplete: function (doc) {
-            flog("doc", doc);
-            var newLeads = doc.find("#dashLeadsList");
-            flog("newLeads", newLeads);
-            $("#dashLeadsList").html(newLeads.html());
-            flog("Done", $("#dashLeadsList"));
-            $('abbr.timeago').timeago();
-        }
-    });
     if ($('#lead-tasks-page').length) {
-        window.doReloadTasksPage();
+        setTimeout(function () {
+            $('#leadTaskTablePanel').reloadFragment({
+
+            });
+        }, 1000);
+    } else {
+        $("#tasksList").reloadFragment({
+            whenComplete: function (doc) {
+                flog("doc", doc);
+                var newLeads = doc.find("#dashLeadsList");
+                flog("newLeads", newLeads);
+                $("#dashLeadsList").html(newLeads.html());
+                flog("Done", $("#dashLeadsList"));
+                $('abbr.timeago').timeago();
+            }
+        });
     }
 
     reloadTimeline();
@@ -1371,13 +1376,7 @@ function updateField(href, fieldName, fieldValue, form) {
         data: data,
         dataType: 'json',
         success: function (resp) {
-            // var fieldLabel = fieldName;
-            // var label = form.find('[name=' + fieldName + ']').parents('.form-group').find('label');
-            // if (label.length) {
-            //     fieldLabel = label.text().replace(':', '');
-            // }
             Msg.info("Saved");
-            // timeago
             $('abbr.timeago').timeago();
             reloadTasks();
         },

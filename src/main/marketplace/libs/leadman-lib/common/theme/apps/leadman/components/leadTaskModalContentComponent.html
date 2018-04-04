@@ -118,9 +118,7 @@
 <div style="display:none">
     <div class="taskEditModal modal-body">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <div class="row">
-            <div class="col-sm-12"><div class="alert alert-info">Fields are saved automatically as you type</div></div>
-        </div>
+
         <div class="hideOnComplete">
             <input type="text" value="$page.title" name="title" class="form-control immediateUpdate input-lg" data-href="$page.href" />
             <hr />
@@ -188,6 +186,7 @@
 
         #parse('/theme/apps/leadman/leadManMacros.html')
         #if( $page.lead )
+            <hr>
             <div class="hideWhenEditTask">
                 #showLead( $page.lead, true )
             </div>
