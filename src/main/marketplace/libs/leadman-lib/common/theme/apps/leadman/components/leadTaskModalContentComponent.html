@@ -118,6 +118,9 @@
 <div style="display:none">
     <div class="taskEditModal modal-body">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <div class="row">
+            <div class="col-sm-12"><div class="alert alert-info">Fields are saved automatically as you type</div></div>
+        </div>
         <div class="hideOnComplete">
             <input type="text" value="$page.title" name="title" class="form-control immediateUpdate input-lg" data-href="$page.href" />
             <hr />
@@ -125,17 +128,24 @@
             <hr />
             <div class="row">
                 <div class="col-md-6">
-                    <label class="control-label col-md-4" for="datetimepickerFollowup">Task due</label>
-
-                    <div class="input-group">
-                        <input type="text" name="dueDate" class="form-control date-time immediateUpdate" data-href="$page.href" data-original-value="$formatter.formatDateTime($page.dueDate)" value="$formatter.formatDateTime($page.dueDate)">
-                        <span class="input-group-addon">
-                            <span class="fa fa-calendar"></span>
-                        </span>
-
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="control-label">Task due</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <input type="text" name="dueDate" class="form-control date-time immediateUpdate" data-href="$page.href" data-original-value="$formatter.formatDateTime($page.dueDate)" value="$formatter.formatDateTime($page.dueDate)">
+                                <span class="input-group-addon">
+                                    <span class="fa fa-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
                     </div>
+
+
+
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 hideWhenEditTask">
                     <div class="btn-group pull-right" role="group">
                         <button class="btn btn-success btnTaskDone" type="button" aria-expanded="false" data-toggle="#completeTaskDiv" title="Mark as complete">
                             <span class="fa fa-check"></span>
@@ -174,16 +184,17 @@
 
             </div>
 
-
         </div>
 
         #parse('/theme/apps/leadman/leadManMacros.html')
         #if( $page.lead )
-            #showLead( $page.lead, true )
+            <div class="hideWhenEditTask">
+                #showLead( $page.lead, true )
+            </div>
         #end
         
-        <div class="completeTaskDiv" style="display: none;">
-            <input type="text" value="$page.title" name="title" class="form-control input-lg" readonly />
+        <div class="completeTaskDiv hideWhenEditTask" style="display: none;">
+            <!--<input type="text" value="$page.title" name="title" class="form-control input-lg" readonly />-->
             <hr />
             #if( $page.outcomes.size() > 0 )
                 <form method="post" action="$page.href" class="form-horizontal completeTaskForm">

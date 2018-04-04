@@ -1,8 +1,18 @@
 (function ($) {
     $(document).ready(function () {
-        if ($('#modalEditTask').length > 0) {
+        var taskList = $('#tasksList');
+        var modal = $('#modalEditTask');
+        if (taskList.length){
+            taskList.on('click', '.task-item .task-edit', function () {
+                modal.addClass('editingTask');
+            });
+        }
+
+        if (modal.length > 0) {
             flog('Init modalEditTask');
-            
+            $(document.body).on('hide.bs.modal', '#modalEditTask', function () {
+                modal.removeClass('editingTask');
+            });
             $(document.body).on('loaded.bs.modal shown.bs.modal', '#modalEditTask', function () {
                 flog('Modal Loaded');
                 $(".completeTaskDiv").show(300);
@@ -10,6 +20,9 @@
                 
                 var modal = $(this);
                 var notes = modal.find('.lead-notes');
+                if (modal.hasClass('editingTask')){
+                    modal.find('.hideWhenEditTask').addClass('hide');
+                }
                 notes.dotdotdot({
                     height: 200,
                     callback: function (isTruncated, orgContent) {
