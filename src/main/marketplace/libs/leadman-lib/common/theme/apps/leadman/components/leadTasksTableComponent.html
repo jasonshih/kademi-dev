@@ -53,7 +53,7 @@
                         #set($icon = '<i title="Cancelled" class="fa fa-times-circle-o text-danger"></i>')
                         #end
                         <h4 class="media-heading">$icon <a href="$hit.source.id .taskEditModal" data-target="#modalEditTask" data-toggle="modal">
-                            &num;$formatter.toString($hit.source.id).substring(4) $!formatter.ifNull($hit.source.title, $hit.source.taskName)</a>
+                            &num;#if ($formatter.toString($hit.source.id).length >4) $formatter.toString($hit.source.id).substring(4) #end $!formatter.ifNull($hit.source.title, $hit.source.taskName)</a>
                         </h4>
                         <p>
                             Opened <span title="$formatter.formatDateTime($formatter.parseDate($hit.source.createdDate))">$formatter.formatAge($formatter.parseDate($hit.source.createdDate))</span>
