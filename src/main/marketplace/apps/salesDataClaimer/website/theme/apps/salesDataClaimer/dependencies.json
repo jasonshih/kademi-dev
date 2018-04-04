@@ -73,6 +73,18 @@
                 "group": "main",
                 "path": "/theme/apps/salesDataClaimer/claimsList.js"
             }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "www.fuelcdn.com/fuelux/3.13.0/css/fuelux.min.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "www.fuelcdn.com/fuelux/3.13.0/js/fuelux.min.js"
+            }
         }
     ]
 }
