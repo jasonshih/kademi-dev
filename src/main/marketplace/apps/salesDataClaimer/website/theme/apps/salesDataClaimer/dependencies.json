@@ -73,6 +73,12 @@
                 "group": "main",
                 "path": "/theme/apps/salesDataClaimer/claimsList.js"
             }
+        },        
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesDataClaimer/claimsRegisterProduct.js"
+            }
         },
         {
             "css": {
