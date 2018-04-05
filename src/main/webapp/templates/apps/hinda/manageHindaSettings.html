@@ -89,7 +89,7 @@
                         </div>
                         #end
                     </div>
-                </div>  
+                </div>
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="hindaRewardStore">Reward Store</label>
@@ -111,7 +111,7 @@
                         <input type="text" class="form-control" name="hindaPorcentage" value="$!page.porcentage" />
                         <i>For each product imported it'd calculate it's percentage value of the everyday retail compared with the base cost.</i>
                     </div>
-                </div>  
+                </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="hindaCategory">Category</label>
                     <div class="col-sm-9">
@@ -120,17 +120,17 @@
                         </select>
                         <i>For any product exceeding the configured percentage it will add the product to the configured category.</i>
                     </div>
-                </div>  
+                </div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label" for="hindaSendProductOrder">Send Product Order</label>
+                    <label class="col-sm-2 control-label" for="hindaSendProductOrder">Send product order when:</label>
                     <div class="col-sm-9">
                         <select name="hindaSendProductOrder" class="form-control">
                             <option value="true" #if($page.sendProductOrder == "true") selected="selected" #end>Order is placed</option>
                             <option value="false" #if($page.sendProductOrder == "false") selected="selected" #end>Cart status change to: Complete</option>
                         </select>
                     </div>
-                </div>  
+                </div>
 
                 #macro(genCategories $categories)
                 #foreach($cat in $categories)
@@ -162,17 +162,17 @@
                         <td><b>Category</b></td>
                         <td>$!page.getBySettings("CategoryImportProcessor")</td>
                         <td>$!page.getBySettings("CategoryImportProcessorlastrun")</td>
-                    </tr>    
+                    </tr>
                     <tr>
                         <td><b>Product</b></td>
                         <td>$!page.getBySettings("ProductImportProcessor")</td>
                         <td>$!page.getBySettings("ProductImportProcessorlastrun")</td>
-                    </tr>                
+                    </tr>
                     <tr>
                         <td><b>Order Status</b></td>
                         <td>$!page.getBySettings("OrderStatusImportProcessor")</td>
                         <td>$!page.getBySettings("OrderStatusImportProcessorlastrun")</td>
-                    </tr>     
+                    </tr>
                     <tr>
                         <td><b>Send Product Order</b></td>
                         <td>$!page.getBySettings("SendProductOrderProcessor")</td>
