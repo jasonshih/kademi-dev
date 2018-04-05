@@ -35,7 +35,11 @@
         {
             "appId": "reporting-lib",
             "branch": "1.2.8"
-        }
+        },
+        {
+            "appId": "fuelux-lib",
+            "branch": "3.13.0"
+        }        
     ],
     "dependencies": [
         {
@@ -73,17 +77,11 @@
                 "group": "main",
                 "path": "/theme/apps/salesDataClaimer/claimsList.js"
             }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "www.fuelcdn.com/fuelux/3.13.0/css/fuelux.min.css"
-            }
-        },
+        },        
         {
             "js": {
                 "group": "main",
-                "path": "www.fuelcdn.com/fuelux/3.13.0/js/fuelux.min.js"
+                "path": "/theme/apps/salesDataClaimer/claimsRegisterProduct.js"
             }
         }
     ]

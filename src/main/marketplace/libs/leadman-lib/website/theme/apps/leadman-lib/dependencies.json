@@ -39,7 +39,11 @@
         {
             "appId": "paymentApp",
             "branch": ""
-        }
+        },
+        {
+            "appId": "fuelux-lib",
+            "branch": "3.13.0"
+        }          
     ],
 
     "dependencies": [
@@ -47,12 +51,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/DataTables/datatables.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/fuelux/3.13.0/js/fuelux.min.js"
             }
         },
         {
@@ -209,12 +207,6 @@
             "css": {
                 "cssMedia": "all",
                 "path": "/static/DataTables/datatables.min.css"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/fuelux/3.13.0/css/fuelux.min.css"
             }
         },
         {
