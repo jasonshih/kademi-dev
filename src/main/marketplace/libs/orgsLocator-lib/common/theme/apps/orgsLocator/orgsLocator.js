@@ -13,6 +13,8 @@
         var initLng = orgsLocator.attr('data-lng');
         initLng = +initLng || 151.195;
         var initQuery = orgsLocator.attr('data-query');
+        var distance = orgsLocator.attr('data-distance') || 50;
+        var distanceUnit = 'km';
         var options = {
             searchUrl: '/orgsLocator/',
             initLatLng: [initLat, initLng],
@@ -20,6 +22,8 @@
             orgTypes: window[id + '-orgTypes'],
             orgTypesPreset: window[id + '-orgTypes-preset'],
             allowedCountries: window[id + '-allowedCountries'],
+            distance: distance,
+            distanceUnit: distanceUnit,
             onReady: function (formSearch, itemsWrapper, mapDiv) {
                 win.on('resize', function () {
                     var mapWrapper = mapDiv.parent();

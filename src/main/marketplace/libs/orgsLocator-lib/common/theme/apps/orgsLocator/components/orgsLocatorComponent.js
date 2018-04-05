@@ -63,6 +63,17 @@
                             window.initOrgsLocator(component.find('.orgs-locator-component'));
                         });
                     });
+
+                    var distance = form.find('.distance');
+                    distance.on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-distance', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            window.initOrgsLocator(component.find('.orgs-locator-component'));
+                        });
+                    });
                 }
             });
         },
@@ -78,7 +89,8 @@
                 if (arr.indexOf(this.value) != -1){
                     this.checked = true;
                 }
-            })
+            });
+            form.find('.distance').val(dataAttributes['data-distance'] || 50);
         }
     };
     
