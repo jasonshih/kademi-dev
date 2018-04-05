@@ -1,6 +1,8 @@
 #set ($orgsLocatorId = "orgs-location-" + $formatter.randomGuid)
-
-<div class="orgs-locator-component" id="${orgsLocatorId}" data-lat="$!lat" data-lng="$!lng" data-query="$!query"></div>
+#if ($formatter.isNull($distance))
+#set ($distance = "50")
+#end
+<div class="orgs-locator-component" id="${orgsLocatorId}" data-lat="$!lat" data-lng="$!lng" data-query="$!query" data-distance="$!distance"></div>
 #set ($orgTypesSettings = [])
 #if ($orgTypes && $orgTypes != "")
 #set ($orgTypesSettings = $orgTypes.split(","))

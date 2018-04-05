@@ -54,6 +54,8 @@
         orgTypes: null,
         allowedCountries: null,
         maxResults: 1000,
+        distance: 50,
+        distanceUnit: 'km',
         template: '<div class="form-horizontal form-search org-finder-search" style="margin-bottom: 0;">' +
         '    <div class="input-group">' +
         '        <input type="text" class="form-control org-finder-query" placeholder="Enter your address" id="q" value="" autocomplete="off" />' +
@@ -437,7 +439,9 @@
             }
             
             var data = {
-                maxResults: options.maxResults
+                maxResults: options.maxResults,
+                distance: options.distance,
+                distanceUnit: options.distanceUnit
             };
 
             if (lat !== undefined && lng !== undefined && !isNaN(lat) && !isNaN(lng)) {
