@@ -25,7 +25,7 @@
 
             if (data.step === 5) {
                // $(".last-step").html(""); $("#ClaimRegisterProductForm .step-pane:not(.last-step)").clone().css("display", "block").find(":input").prop("disabled", true).end().appendTo(".last-step")
-                $(".last-step").html(""); $("#ClaimRegisterProductForm .step-pane:not(.last-step)").find("select :selected").each(function() { $(this).attr("selected", "selected"); }).end().clone().css("display", "block").find(":input").each(function() { $(this).replaceWith('<span class="summary-field" data-parent-step="' + $(this).parents(".step-pane").data("step") + '">' + ($(this).find(":selected").html() === undefined ? $(this).val() : $(this).find(":selected").html()) + '</span>'); }).end().appendTo(".last-step")
+                $(".last-step").html(""); $("#ClaimRegisterProductForm .step-pane:not(.last-step)").find("select :selected").each(function() { $(this).attr("selected", "selected"); }).end().find("button").each(function(){ $(this).replaceWith("")}).end().clone().css("display", "block").find(":input").each(function() { $(this).replaceWith('<span class="summary-field" data-parent-step="' + $(this).parents(".step-pane").data("step") + '">' + ($(this).find(":selected").html() === undefined ? $(this).val() : $(this).find(":selected").html()) + '</span>'); }).end().appendTo(".last-step")
                 $("body").on("click", ".summary-field", function() {
                     $("li[data-step='" + $(this).data("parent-step") + "']").click();
                 });
