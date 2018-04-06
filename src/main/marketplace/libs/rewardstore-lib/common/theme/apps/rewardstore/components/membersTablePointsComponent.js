@@ -2,7 +2,7 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['membersTable'] = {
+    KEditor.components['membersTablePoints'] = {
         settingEnabled: true,
 
         settingTitle: 'Members Table Settings',

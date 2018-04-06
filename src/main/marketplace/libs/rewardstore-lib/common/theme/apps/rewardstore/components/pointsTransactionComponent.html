@@ -10,8 +10,11 @@
 #set ($to = $formatter.now)
 #end
 
-
-#set ($trans = $applications.rewardStore.transactions($userResource, $pointsBucket, $since, $to))
+#set ($ur = $userResource)
+#if ($page.is("leadProfile"))
+#set ($ur = $page.userResource)
+#end
+#set ($trans = $applications.rewardStore.transactions($ur, $pointsBucket, $since, $to))
 
 
 <table class="table table-striped">

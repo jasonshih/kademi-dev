@@ -7,7 +7,7 @@ controllerMappings.addComponent("rewardstore/components", "pointsEarned", "html"
 controllerMappings.addComponent("rewardstore/components", "pointsTransaction", "html", "Shows all points transactions, or only credits or only debits for the current participant, for a selected points bucket and optionally filtered by a points tag", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "transactions", "html", "Shows all points transactions of the current participant", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "pointsLeaderboardWeb", "html", "Points leaderboard", "Reward Store");
-
+controllerMappings.addComponent("rewardstore/components", "membersTablePoints", "html", "Display a table of members with points balance", "Reward Store");
 
 /* EDM Components */
 controllerMappings.addComponent("rewardstore/components", "singleProductEDM")

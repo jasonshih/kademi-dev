@@ -9,7 +9,7 @@
                 },
                 {
                     "terms": {
-                        "parentOrgs": "$orgIds"
+                        "parentOrgs": "$selectedOrgs"
                     }
                 }
             ]
