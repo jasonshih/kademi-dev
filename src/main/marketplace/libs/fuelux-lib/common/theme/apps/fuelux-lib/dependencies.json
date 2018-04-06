@@ -1,0 +1,19 @@
+{
+    "appDependencies": [
+    ],
+
+    "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/fuelux-lib/fuelux.min.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/fuelux-lib/fuelux.min.js"
+            }
+        }
+    ]
+}

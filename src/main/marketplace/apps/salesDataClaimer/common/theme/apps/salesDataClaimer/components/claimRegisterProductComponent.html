@@ -1,0 +1,602 @@
+<form method="post" id="ClaimRegisterProductForm" action="/salesDataClaimsProducts/" class="form-horizontal fuelux claimRegisterProductForm">
+    <input type="hidden" name="saveProductClaim" />
+    <div class="wizard" id="myWizard">
+        <div class="steps-container">
+            <ul class="steps">
+                <li data-step="1" data-name="contactInformation" class="active">
+                    <span class="badge">1</span>Contact Information
+                    <span class="chevron"></span>
+                </li>
+                <li data-step="2" data-name="proofOfPurchase">
+                    <span class="badge">2</span>Proof of Purchase
+                    <span class="chevron"></span>
+                </li>
+                <li data-step="3" data-name="productDetails">
+                    <span class="badge">3</span>Product details
+                    <span class="chevron"></span>
+                </li>
+                <li data-step="4" data-name="bankInformation">
+                    <span class="badge">4</span>Bank Information
+                    <span class="chevron"></span>
+                </li>
+                <li data-step="5" data-name="complete">
+                    <span class="badge">5</span>Complete
+                    <span class="chevron"></span>
+                </li>
+            </ul>
+        </div>
+        <div class="actions">
+            <button type="button" class="btn btn-default btn-prev">
+                <span class="glyphicon glyphicon-arrow-left"></span>Prev
+            </button>
+            <button type="button" class="btn btn-primary btn-next" data-last="Complete">Next
+                <span class="glyphicon glyphicon-arrow-right"></span>
+            </button>
+        </div>
+        <div class="step-content">
+            <div class="step-pane active sample-pane alert" data-step="1">
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="title" class="col-md-12">Title:</label>
+                            <div class="col-md-12">
+                                <select id="title" name="title" class="form-control required-if-shown">
+                                    <option value="">[No Title selected]</option>
+                                    #set( $titles = ["Mr.", "Mrs."] )
+                                    #foreach($title in $titles)
+                                        $formatter.option( $title, $title, "" )
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-12" for="firstName">First Name:</label>
+                            <div class="col-md-12">
+                                <input class="required-if-shown form-control" type="text" name="firstName" value="$!user.firstName" id="firstName" placeholder="Your first name" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-12" for="surName">Last Name:</label>
+                            <div class="col-md-12">
+                                <input class="required-if-shown form-control" type="text" name="surName" value="$!user.surName"  id="surName" placeholder="Your last name" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-md-12" for="address1">Address 1:</label>
+                            <div class="col-md-12">
+                                <input class="form-control required-if-shown" type="text" name="address1" id="address1" placeholder="Address 1" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-md-12" for="address2">Address 2:</label>
+                            <div class="col-md-12">
+                                <input class=" form-control" type="text" name="address2" id="address2" placeholder="Address 2" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-12" for="suburb">Suburb:</label>
+                            <div class="col-md-12">
+                                <input class="form-control required-if-shown" type="text" name="suburb" id="suburb" placeholder="Suburb" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-12" for="postcode">Post Code:</label>
+                            <div class="col-md-12">
+                                <input class="form-control required-if-shown number" type="number" name="postcode" id="postcode" placeholder="Post Code" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-12" for="state">State:</label>
+                            <div class="col-md-12">
+                                <input class="form-control" type="text" name="state" id="state" placeholder="State" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-12" for="phone">Phone/Mobile:</label>
+                            <div class="col-md-12">
+                                <input class="form-control required-if-shown number" type="number" name="phone" value="$!user.phone"  id="phone" placeholder="Your Phone/Mobile" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-12" for="email">Email Address:</label>
+                            <div class="col-md-12">
+                                <input class="required-if-shown form-control" type="email" name="email" value="$!user.email"  id="email" placeholder="Your email address" />
+                            </div>
+                        </div>
+                    </div>
+                    #set( $titles = {
+                            "Online": ["Online Ads","Facebook","Instagram","Google","LinkedIn"],
+                            "In-Store": ["In Store"],
+                            "Someone Recommended": ["Family","Friends","Dealer","Installer","Showroom Attendant","Other"],
+                            "Outdoor Ads": ["Bus Stop/On Bus","Train Station","Ferry Terminal","Shopping Mall","Roadside Terminal"]
+                        } )
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="promotion" class="col-md-12">How did you find out about this promotion?</label>
+                            <div class="col-md-12">
+                                <select id="promotion" name="promotion" class="form-control required-if-shown ">
+                                    <option value="">[No promotion type selected]</option>
+                                    #foreach($title in $titles.entrySet())
+                                        <optgroup label="$title.key">
+                                            #foreach($item in $title.value)
+                                                $formatter.option( $item, $item, "" )
+                                            #end
+                                        </optgroup>
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="promotion-other" class="col-md-12">Other:</label>
+                            <div class="col-md-12">
+                                <input class="form-control" type="text" name="promotion-other" id="promotion-other" placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="step-pane sample-pane alert" data-step="2">
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <h4><b>Proof of purchase information</b></h4>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="action-type" class="col-md-12">Was your purchase a new installation or an upgrade of an existing air-conditioning unit?</label>
+                            <div class="col-md-12">
+                                <select id="action-type" name="action-type" class="form-control">
+                                    <option value="">[No type selected]</option>
+                                    #set( $types = ["New Installations", "Replacement or upgrade"] )
+                                    #foreach($type in $types)
+                                        $formatter.option( $type, $type, "" )
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="required-if-shown-action-type" class="col-md-12">Please select the following:</label>
+                            <div class="col-md-12">
+                                <select id="required-if-shown-action-type" name="required-if-shown-action-type" class="form-control dynamic-toggle" data-group-class="required-if-shown-actions">
+                                    <option value="">[No action selected]</option>
+                                    <option data-toggle="#supplier-info-section, #client-info-section" value="Supply and Install (Invoice must contain Product/s purchased and installation details)">Supply and Install (Invoice must contain Product/s purchased and installation details)</option>
+                                    <option data-toggle="#installer-info-section, #client-info-section" value="Supply of air-conditioning unit ONLY (Product/s purchased without installation)">Supply of air-conditioning unit ONLY (Product/s purchased without installation)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="required-if-shown-actions" id="client-info-section" style="display: none;">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-12" for="purchase-date">Date of purchase:</label>
+                                <div class="col-md-12">
+                                    <input class="required-if-shown form-control" type="date" name="purchase-date" id="purchase-date" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-12" for="store-name">Store/Company name:</label>
+                                <div class="col-md-12">
+                                    <input class="required-if-shown form-control" type="text" name="store-name" id="store-name" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-12" for="store-suburb">Suburb:</label>
+                                <div class="col-md-12">
+                                    <input class="form-control" type="text" name="store-suburb" id="store-suburb" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="store-state" class="col-md-12">State:</label>
+                                <div class="col-md-12">
+                                    <select id="store-state" name="store-state" class="form-control">
+                                        <option value="">[No state selected]</option>
+                                        #set( $states = ["New South Wales", ""] )
+                                        #foreach($state in $states)
+                                            $formatter.option( $state, $state, "" )
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-md-offset-3" style="text-align:  center;">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <input type="file" id="invoice-image" name="invoice-image" style="display:  inline-block;opacity:  0;position:  absolute;" class="btn btn-primary required-if-shown">
+                                    <button class="btn btn-primary" name="invoice-image-btn" id="invoice-image-btn">UPLOAD PDF OR IMAGE OF THE INVOICE</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-md-offset-5">
+                            <h6>Maximum file size of 5MB</h6>
+                        </div>
+
+                    </div>
+
+                    <div class="required-if-shown-actions" id="supplier-info-section" style="display: none;">
+                        <div class="col-md-12">
+                            <h4>Supplier information</h4>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-12" for="supplier-abn">ABN:</label>
+                                <div class="col-md-12">
+                                    <input class="form-control" type="text" name="supplier-abn" id="supplier-abn" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-12" for="supplier-trade-license">Applicable trade license no:</label>
+                                <div class="col-md-12">
+                                    <input class="form-control" type="text" name="supplier-trade-license" id="supplier-trade-license" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-12" for="supplier-name">Contact name (First & Last Name):</label>
+                                <div class="col-md-12">
+                                    <input class="form-control" type="text" name="supplier-name" id="supplier-name" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-12" for="supplier-email">Email address:</label>
+                                <div class="col-md-12">
+                                    <input class="required-if-shown form-control" type="email" name="supplier-email" id="contact-email" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-7 col-md-offset-3">
+                            <h6>*Only upload if the installation was invoiced separately from where you purchased the unit from.</h6>
+                        </div>
+                    </div>
+
+
+                    <div class="required-if-shown-actions" id="installer-info-section" style="display: none;">
+                        <div class="col-md-12">
+                            <h4>Installer information</h4>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-12" for="installation-date">Date of installation:</label>
+                                <div class="col-md-12">
+                                    <input class="form-control" type="date" name="installation-date" id="installation-date" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-12" for="installer-name">Installer Name (company name):</label>
+                                <div class="col-md-12">
+                                    <input class="form-control" type="text" name="installer-name" id="installer-name" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-12" for="installer-contact-name">Contact name (name of the installer):</label>
+                                <div class="col-md-12">
+                                    <input class="form-control" type="text" name="installer-contact-name" id="installer-contact-name" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-12" for="installer-abn">ABN:</label>
+                                <div class="col-md-12">
+                                    <input class="form-control" type="text" name="installer-abn" id="installer-abn" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-12" for="installer-trade-license">Applicable trade license no:</label>
+                                <div class="col-md-12">
+                                    <input class="form-control" type="text" name="installer-trade-license" id="installer-trade-license" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-12" for="installer-email">Email address:</label>
+                                <div class="col-md-12">
+                                    <input class="form-control" type="email" name="installer-email" id="installer-email" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-md-offset-3" style="text-align:  center;">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <input type="file" id="installation-invoice-image-btn" name="installation-invoice-image" style="display:  inline-block;opacity:  0;position:  absolute;" class="btn btn-primary">
+                                    <button class="btn btn-primary" name="installation-invoice-image-btn" id="installation-invoice-image-btn">UPLOAD PDF OR IMAGEOF THE INSTALLATION INVOICE</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-7 col-md-offset-3">
+                            <h6>*Only upload if the installation was invoiced separately from where you purchased the unit from.</h6>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="step-pane sample-pane alert" data-step="3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="col-md-12">
+                            <h4><b>Product information</b></h4>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="claims-number" class="col-md-12">How many products are you claiming?</label>
+                                <div class="col-md-12">
+                                    <select id="claims-number" name="claims-number" class="form-control dynamic-toggle" data-group-class="options">
+                                        <option value="">[Not selected]</option>
+                                        <option data-toggle=".option-1" value="One">One</option>
+                                        <option data-toggle=".option-1, .option-2" value="Two">Two</option>
+                                        <option data-toggle=".option-1, .option-2, .option-3" value="Three">Three</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <p>
+                                A maximum of three <b>(3)</b> eligible products purchased in one <b>(1)</b> trasaction can be claimed towards the cash bounc offer.<br>
+                                Eligible claimants may submit a maximum of <b>one(1)</b> Eligible Claim per household in the Promotions.<br>
+                                Dublicate tax invoices will be rejected.<br>
+                                <b>Note: Business applications will NOT be accepted. Invoices under a business name and/or with ABN will NOT be accepted</b>
+                            </p>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+
+                        <div class="col-md-12 option-1 options" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4>Purchase 1</h4>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="model-number" class="col-md-12">Set Model No:</label>
+                                        <div class="col-md-12">
+                                            <select id="model-number" name="model-number" class="form-control">
+                                                <option value="">Please select from the options</option>
+                                                #set( $numbers = ["Model One", "Model Two", "Model Three"] )
+                                                #foreach($number in $numbers)
+                                                    $formatter.option( $number, $number, "" )
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
+                                        <div class="col-md-12">
+                                            <input class="required-if-shown form-control" type="text" name="indoor-model-number" id="indoor-model-number" placeholder="" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="indoor-serial-number" class="col-md-12">Indoor serial No:</label>
+                                        <div class="col-md-12">
+                                            <input class="required-if-shown form-control" type="text" name="indoor-serial-number" id="indoor-serial-number" placeholder="" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 option-2 options" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4>Purchase 2</h4>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="model-number" class="col-md-12">Set Model No:</label>
+                                        <div class="col-md-12">
+                                            <select id="model-number" name="model-number" class="form-control">
+                                                <option value="">Please select from the options</option>
+                                                #set( $numbers = ["Model One", "Model Two", "Model Three"] )
+                                                #foreach($number in $numbers)
+                                                    $formatter.option( $number, $number, "" )
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
+                                        <div class="col-md-12">
+                                            <input class="required-if-shown form-control" type="text" name="indoor-model-number" id="indoor-model-number" placeholder="" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="indoor-serial-number" class="col-md-12">Indoor serial No:</label>
+                                        <div class="col-md-12">
+                                            <input class="required-if-shown form-control" type="text" name="indoor-serial-number" id="indoor-serial-number" placeholder="" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 option-3 options" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4>Purchase 3</h4>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="model-number" class="col-md-12">Set Model No:</label>
+                                        <div class="col-md-12">
+                                            <select id="model-number" name="model-number" class="form-control">
+                                                <option value="">Please select from the options</option>
+                                                #set( $numbers = ["Model One", "Model Two", "Model Three"] )
+                                                #foreach($number in $numbers)
+                                                    $formatter.option( $number, $number, "" )
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
+                                        <div class="col-md-12">
+                                            <input class="required-if-shown form-control" type="text" name="indoor-model-number" id="indoor-model-number" placeholder="" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="indoor-serial-number" class="col-md-12">Indoor serial No:</label>
+                                        <div class="col-md-12">
+                                            <input class="required-if-shown form-control" type="text" name="indoor-serial-number" id="indoor-serial-number" placeholder="" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="step-pane sample-pane alert" data-step="4">
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <h5><b>** Please note, all cash bonuses will be paid via EFT only</b></h5>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="account-name" class="col-md-12">Account Name:</label>
+                            <div class="col-md-12">
+                                <input class="required-if-shown form-control" type="text" name="account-name" id="account-name" placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="bank-name" class="col-md-12">Bank Name:</label>
+                            <div class="col-md-12">
+                                <input class="required-if-shown form-control" type="text" name="bank-name" id="bank-name" placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="bsb-number" class="col-md-12">BSB Number:</label>
+                            <div class="col-md-12">
+                                <input class="required-if-shown form-control" type="text" name="bsb-number" id="bsb-number" placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="account-no" class="col-md-12">Account No:</label>
+                            <div class="col-md-12">
+                                <input class="required-if-shown form-control" type="text" name="account-no" id="account-no" placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <h6>To avoid delays on your payment please ensure you provide accurate bank account details.</h6>
+                    </div>
+
+                </div>
+            </div>
+            <div class="step-pane sample-pane alert last-step" data-step="5">
+
+            </div>
+        </div>
+    </div>
+
+</form>
