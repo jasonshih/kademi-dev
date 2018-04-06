@@ -1,7 +1,4 @@
-<link type="text/css" href="//www.fuelcdn.com/fuelux/3.13.0/css/fuelux.min.css" rel="stylesheet" />
-<script type="text/javascript" src="//www.fuelcdn.com/fuelux/3.13.0/js/fuelux.min.js">//</script>
-
-<form method="post" id="ClaimRegisterProductForm" action="/salesDataClaimsProducts" class="form-horizontal fuelux">
+<form method="post" id="ClaimRegisterProductForm" action="/salesDataClaimsProducts/" class="form-horizontal fuelux claimRegisterProductForm">
     <div class="wizard" id="myWizard">
         <div class="steps-container">
             <ul class="steps">
@@ -39,7 +36,7 @@
             <div class="step-pane active sample-pane alert" data-step="1">
                 <div class="row">
 
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="title" class="col-md-12">Title:</label>
                             <div class="col-md-12">
@@ -58,16 +55,16 @@
                         <div class="form-group">
                             <label class="col-md-12" for="firstName">First Name:</label>
                             <div class="col-md-12">
-                                <input class="required-if-shown form-control" type="text" name="firstName" id="firstName" placeholder="Your first name" />
+                                <input class="required-if-shown form-control" type="text" name="firstName" value="$!user.firstName" id="firstName" placeholder="Your first name" />
                             </div>
                         </div>
-                    </div> 
-                    
+                    </div>
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="col-md-12" for="surName">Last Name:</label>
                             <div class="col-md-12">
-                                <input class="required-if-shown form-control" type="text" name="surName" id="surName" placeholder="Your last name" />
+                                <input class="required-if-shown form-control" type="text" name="surName" value="$!user.surName"  id="surName" placeholder="Your last name" />
                             </div>
                         </div>
                     </div>
@@ -121,7 +118,7 @@
                         <div class="form-group">
                             <label class="col-md-12" for="phone">Phone/Mobile:</label>
                             <div class="col-md-12">
-                                <input class="form-control required-if-shown number" type="number" name="phone" id="phone" placeholder="Your Phone/Mobile" />
+                                <input class="form-control required-if-shown number" type="number" name="phone" value="$!user.phone"  id="phone" placeholder="Your Phone/Mobile" />
                             </div>
                         </div>
                     </div>
@@ -130,7 +127,7 @@
                         <div class="form-group">
                             <label class="col-md-12" for="email">Email Address:</label>
                             <div class="col-md-12">
-                                <input class="required-if-shown form-control" type="email" name="email" id="email" placeholder="Your email address" />
+                                <input class="required-if-shown form-control" type="email" name="email" value="$!user.email"  id="email" placeholder="Your email address" />
                             </div>
                         </div>
                     </div>
@@ -172,11 +169,11 @@
             </div>
             <div class="step-pane sample-pane alert" data-step="2">
                 <div class="row">
-                    
+
                     <div class="col-md-12">
                         <h4><b>Proof of purchase information</b></h4>
                     </div>
-                    
+
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="action-type" class="col-md-12">Was your purchase a new installation or an upgrade of an existing air-conditioning unit?</label>
@@ -191,7 +188,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="required-if-shown-action-type" class="col-md-12">Please select the following:</label>
@@ -204,7 +201,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="required-if-shown-actions" id="client-info-section" style="display: none;">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -222,7 +219,7 @@
                                     <input class="required-if-shown form-control" type="text" name="store-name" id="store-name" placeholder="" />
                                 </div>
                             </div>
-                        </div>                                        
+                        </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
@@ -231,9 +228,9 @@
                                     <input class="form-control" type="text" name="store-suburb" id="store-suburb" placeholder="" />
                                 </div>
                             </div>
-                        </div>                                        
+                        </div>
 
-                        <div class="col-md-6">                        
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="store-state" class="col-md-12">State:</label>
                                 <div class="col-md-12">
@@ -262,12 +259,12 @@
                         </div>
 
                     </div>
-                    
+
                     <div class="required-if-shown-actions" id="supplier-info-section" style="display: none;">
                         <div class="col-md-12">
                             <h4>Supplier information</h4>
                         </div>
-                        
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-md-12" for="supplier-abn">ABN:</label>
@@ -276,7 +273,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-md-12" for="supplier-trade-license">Applicable trade license no:</label>
@@ -285,7 +282,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-md-12" for="supplier-name">Contact name (First & Last Name):</label>
@@ -294,7 +291,7 @@
                                 </div>
                             </div>
                         </div>
-                                            
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-md-12" for="supplier-email">Email address:</label>
@@ -303,18 +300,18 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-7 col-md-offset-3">
                             <h6>*Only upload if the installation was invoiced separately from where you purchased the unit from.</h6>
                         </div>
                     </div>
-                    
-                    
+
+
                     <div class="required-if-shown-actions" id="installer-info-section" style="display: none;">
                         <div class="col-md-12">
                             <h4>Installer information</h4>
                         </div>
-                        
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-md-12" for="installation-date">Date of installation:</label>
@@ -323,7 +320,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-md-12" for="installer-name">Installer Name (company name):</label>
@@ -332,7 +329,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-md-12" for="installer-contact-name">Contact name (name of the installer):</label>
@@ -341,7 +338,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-md-12" for="installer-abn">ABN:</label>
@@ -350,7 +347,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-md-12" for="installer-trade-license">Applicable trade license no:</label>
@@ -359,8 +356,8 @@
                                 </div>
                             </div>
                         </div>
-                        
-                                            
+
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-md-12" for="installer-email">Email address:</label>
@@ -369,7 +366,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-6 col-md-offset-3" style="text-align:  center;">
                             <div class="form-group">
                                 <div class="col-md-12">
@@ -378,21 +375,21 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-7 col-md-offset-3">
                             <h6>*Only upload if the installation was invoiced separately from where you purchased the unit from.</h6>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
             <div class="step-pane sample-pane alert" data-step="3">
-                <div class="row">                   
+                <div class="row">
                     <div class="col-md-6">
                         <div class="col-md-12">
                             <h4><b>Product information</b></h4>
                         </div>
-                        
+
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="claims-number" class="col-md-12">How many products are you claiming?</label>
@@ -406,7 +403,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-12">
                             <p>
                                 A maximum of three <b>(3)</b> eligible products purchased in one <b>(1)</b> trasaction can be claimed towards the cash bounc offer.<br>
@@ -415,10 +412,10 @@
                                 <b>Note: Business applications will NOT be accepted. Invoices under a business name and/or with ABN will NOT be accepted</b>
                             </p>
                         </div>
-                        
+
                     </div>
                     <div class="col-md-6">
-                        
+
                         <div class="col-md-12 option-1 options" style="display: none;">
                             <div class="row">
                                 <div class="col-md-12">
@@ -459,7 +456,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-12 option-2 options" style="display: none;">
                             <div class="row">
                                 <div class="col-md-12">
@@ -500,7 +497,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-12 option-3 options" style="display: none;">
                             <div class="row">
                                 <div class="col-md-12">
@@ -541,18 +538,18 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
-                                    
+
                 </div>
             </div>
             <div class="step-pane sample-pane alert" data-step="4">
                 <div class="row">
-                    
+
                     <div class="col-md-12">
                         <h5><b>** Please note, all cash bonuses will be paid via EFT only</b></h5>
                     </div>
-                    
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-name" class="col-md-12">Account Name:</label>
@@ -561,7 +558,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="bank-name" class="col-md-12">Bank Name:</label>
@@ -570,7 +567,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="bsb-number" class="col-md-12">BSB Number:</label>
@@ -579,7 +576,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-no" class="col-md-12">Account No:</label>
@@ -588,15 +585,15 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-12">
                         <h6>To avoid delays on your payment please ensure you provide accurate bank account details.</h6>
                     </div>
-                    
+
                 </div>
             </div>
             <div class="step-pane sample-pane alert last-step" data-step="5">
-                
+
             </div>
         </div>
     </div>

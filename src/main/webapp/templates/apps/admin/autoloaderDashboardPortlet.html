@@ -4,20 +4,16 @@
             <div class="ktile-body">
                 <div class="ktile-front ktile-single-value">
                     <div class="ktile-content">
-                        <div class="ktile-single-value-icon">
-                            <i class="fa fa-tasks fa-4x"></i>
-                        </div>
-                        <div class="ktile-single-value-text">
                             <div class="text-center">
                                 #if($_autoloaderState)
                                     <div>Autoloader's running...</div>
                                     <button class="btn btn-sm btn-info btn-check-autoloader"><i class="fa fa-refresh"></i> Check status</button>
                                 #else
-                                    <div>Autoloader</div>
-                                    <button class="btn btn-sm btn-info btn-start-autoloader">Start</button>
+                                    <input type="text" id="autoLoadAppIds" class="form-control" placeholder="AppIds, or blank to load all" />
+                                    <br/>
+                                    <button class="btn btn-sm btn-info btn-start-autoloader">Autoload</button>
                                 #end
                             </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -29,14 +25,16 @@
     $(function () {
         $(document.body).off('click', '.btn-start-autoloader').on('click', '.btn-start-autoloader', function (e) {
             e.preventDefault();
-            
+
             Kalert.confirm('You want to start the Autoloader?', 'Yes', function () {
+                var appIds = $("#autoLoadAppIds").val();
                 $.ajax({
                     url: '/_autoloader',
                     type: 'POST',
                     dataType: 'JSON',
                     data: {
-                        startAutoloader: true
+                        startAutoloader: true,
+                        appIds : appIds
                     },
                     success: function (data, textStatus, jqXHR) {
                         $('#autoloader-tile').reloadFragment();
@@ -47,10 +45,10 @@
                 });
             });
         });
-        
+
         $(document.body).off('click', '.btn-check-autoloader').on('click', '.btn-check-autoloader', function (e) {
             e.preventDefault();
-            
+
             $('#autoloader-tile').reloadFragment();
         });
     });

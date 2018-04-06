@@ -38,6 +38,13 @@ controllerMappings
         .enabled(true)
         .build();
 
+controllerMappings
+        .websiteController()
+        .path('/salesDataClaimsProducts/')
+        .addMethod('POST', 'saveProductClaim')
+        .enabled(true)
+        .build();
+
 function getOwnClaims(page, params) {
     log.info('getOwnClaims > page={}, params={}', page, params);
 
@@ -233,6 +240,75 @@ function updateClaim(page, params, files) {
         }
     } catch (e) {
         log.error('Error when updating claim: ' + e, e);
+        result.status = false;
+        result.messages = ['Error when updating claim: ' + e];
+    }
+
+    return views.jsonObjectView(JSON.stringify(result));
+}
+
+
+function saveProductClaim(page, params, files) {
+    log.info('saveProductClaim > page={}, params={}', page, params);
+
+    var result = {
+        status: true
+    };
+ 
+    try {
+        var db = getDB(page);
+        var contactFormService = services.contactFormService;
+        log.info("contactFormService: {}", contactFormService);
+        transactionManager.runInTransaction(function () {
+            var cr = contactFormService.processContactRequest(page, params, files);
+            var enteredUser = applications.userApp.findUserResource(cr.profile);
+
+            var amount = +params.amount;
+            if (isNaN(amount)) {
+                result.status = false;
+                result.messages = ['Amount must be digits'];
+                return views.jsonObjectView(JSON.stringify(result));
+            }
+
+            var tempDateTime = params.soldDate;
+            var soldDateTmp = formatter.parseDate(tempDateTime);
+            var soldDate = formatter.formatDateISO8601(soldDateTmp, org.timezone);
+            log.info('saveProductClaim > soldDate={}', soldDate);
+            var now = formatter.formatDateISO8601(formatter.now, org.timezone);
+
+            // Save each provided product, possibly validating against existing data
+            // model-number, indoor-model-number, indoor-serial-number
+
+            var obj = {
+                recordId: id,
+                soldBy: params.soldBy,
+                soldById: params.soldById,
+                amount: amount,
+                soldDate: soldDate,
+                enteredDate: now,
+                modifiedDate: now,
+                productSku: params.productSku || '',
+                status: RECORD_STATUS.NEW
+            };
+
+            // Parse extra fields
+            var extraFields = getSalesDataExtreFields(page);
+            for (var i = 0; i < extraFields.length; i++) {
+                var ex = extraFields[i];
+                var fieldName = 'field_' + ex.name;
+
+                obj[fieldName] = params.get(fieldName) || '';
+            }
+
+            securityManager.runAsUser(enteredUser, function () {
+                var id = 'claim-' + generateRandomText(32);
+                db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
+                eventManager.goalAchieved("claimSubmittedGoal", {"claim": id});
+            });
+        });
+
+    } catch (e) {
+        log.error('Error when saving claim: ' + e, e);
         result.status = false;
         result.messages = ['Error when updating claim: ' + e];
     }
