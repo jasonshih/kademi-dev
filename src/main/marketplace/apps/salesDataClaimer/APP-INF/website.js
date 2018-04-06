@@ -35,15 +35,11 @@ controllerMappings
         .websiteController()
         .path('/salesDataClaimsProducts/')
         .addMethod('GET', 'searchProducts')
-        .enabled(true)
-        .build();
-
-controllerMappings
-        .websiteController()
-        .path('/salesDataClaimsProducts/')
         .addMethod('POST', 'saveProductClaim')
         .enabled(true)
         .build();
+
+
 
 function getOwnClaims(page, params) {
     log.info('getOwnClaims > page={}, params={}', page, params);
@@ -254,7 +250,7 @@ function saveProductClaim(page, params, files) {
     var result = {
         status: true
     };
- 
+
     try {
         var db = getDB(page);
         var contactFormService = services.contactFormService;
