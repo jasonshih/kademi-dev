@@ -51,7 +51,9 @@
                                 #end
                             #end
                             <br />
-                            $!task.taskDescription
+                            #set ($app = $applications.get("leadman-lib"))
+                            #set ($processedNotes = $app.call("urlify", $!task.taskDescription))
+                            $!processedNotes
                         </div>
                     </div>
                 </div>

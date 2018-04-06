@@ -1,9 +1,16 @@
 (function ($) {
     $(document).ready(function () {
         var taskList = $('#tasksList');
+        var leadTaskTablePanel = $('#leadTaskTablePanel');
         var modal = $('#modalEditTask');
         if (taskList.length){
             taskList.on('click', '.task-item .task-edit', function () {
+                modal.addClass('editingTask');
+            });
+        }
+
+        if (leadTaskTablePanel.length){
+            leadTaskTablePanel.on('click', '.leadTaskEditBtn', function () {
                 modal.addClass('editingTask');
             });
         }
