@@ -59,6 +59,38 @@ var recordMapping = {
                     "type": "text"
                 }
             }
+        },
+        "claimGroupId": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        }
+    }
+};
+
+var claimGroupMapping = {
+    "properties": {
+        "claimGroupId": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
+        "contactRequest": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
         }
     }
 };

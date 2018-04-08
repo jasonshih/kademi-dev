@@ -256,10 +256,58 @@ function saveProductClaim(page, params, files) {
         var db = getDB(page);
         var contactFormService = services.contactFormService;
         log.info("contactFormService: {}", contactFormService);
+        
         transactionManager.runInTransaction(function () {
+            
+            var salesDataApp = applications.get("salesData");
+            var salesDateSeries = salesDataApp.getSalesDataSeries('sales-claims');                      
+            var supplierProfile = applications.userApp.findUserResource("supplier").thisUser                        
+            
             var cr = contactFormService.processContactRequest(page, params, files);
             var enteredUser = applications.userApp.findUserResource(cr.profile);
-
+            
+            var claimGroupId = 'claimGroup-' + generateRandomText(32);
+            var claimGroupObj = {
+                claimGroupId: claimGroupId,
+                contactRequest: cr.id
+            }
+            
+            securityManager.runAsUser(enteredUser, function () {
+                db.createNew(claimGroupId, JSON.stringify(claimGroupObj), TYPE_CLAIM_GROUP);
+                // eventManager.goalAchieved("claimSubmittedGoal", {"claim": id});
+            });
+            
+             
+            var productsNumber = params['claims-number'];
+            for(var i = 0; i < productsNumber; i++){
+                var productModelNumber = params["prod"+ i +"-model-number"]
+                var productIndoorModelNumber = params["prod"+ i +"-indoor-model-number"]
+                var productIndoorSerialNumber = params["prod"+ i +"-indoor-serial-number"]
+                
+                var salesDataExtraFields = formatter.newMap();
+                salesDataExtraFields.put("indoor-serial-number", productIndoorSerialNumber) 
+                
+                var salesDataRecord = salesDataApp.findDataPoint(salesDateSeries, supplierProfile, null, null, salesDataExtraFields)
+                log.info("@@@@ salesData - {}", salesDataRecord.id)
+                
+                var id = 'claim-' + generateRandomText(32);
+                var claimObj = {
+                    recordId: id,
+                    enteredDate: now,
+                    modifiedDate: now,
+                    status: RECORD_STATUS.NEW,
+                    claimGroupId: claimGroupId
+                };
+    
+                securityManager.runAsUser(enteredUser, function () {
+                    db.createNew(id, JSON.stringify(claimObj), TYPE_RECORD);
+                    eventManager.goalAchieved("claimSubmittedGoal", {"claim": id});
+                });
+            }
+            
+            
+            
+            
             var amount = +params.amount;
             if (isNaN(amount)) {
                 result.status = false;

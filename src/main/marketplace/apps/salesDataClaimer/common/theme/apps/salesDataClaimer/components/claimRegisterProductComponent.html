@@ -397,9 +397,9 @@
                                 <div class="col-md-12">
                                     <select id="claims-number" name="claims-number" class="form-control dynamic-toggle" data-group-class="options">
                                         <option value="">[Not selected]</option>
-                                        <option data-toggle=".option-1" value="One">One</option>
-                                        <option data-toggle=".option-1, .option-2" value="Two">Two</option>
-                                        <option data-toggle=".option-1, .option-2, .option-3" value="Three">Three</option>
+                                        <option data-toggle=".option-1" value="1">One</option>
+                                        <option data-toggle=".option-1, .option-2" value="2">Two</option>
+                                        <option data-toggle=".option-1, .option-2, .option-3" value="3">Three</option>
                                     </select>
                                 </div>
                             </div>
@@ -425,9 +425,9 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="model-number" class="col-md-12">Set Model No:</label>
+                                        <label for="prod1-model-number" class="col-md-12">Set Model No:</label>
                                         <div class="col-md-12">
-                                            <select id="model-number" name="model-number" class="form-control">
+                                            <select id="prod1-model-number" name="prod1-model-number" class="form-control">
                                                 <option value="">Please select from the options</option>
                                                 #set( $numbers = ["Model One", "Model Two", "Model Three"] )
                                                 #foreach($number in $numbers)
@@ -440,18 +440,18 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
+                                        <label for="prod1-indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
                                         <div class="col-md-12">
-                                            <input class="required-if-shown form-control" type="text" name="indoor-model-number" id="indoor-model-number" placeholder="" />
+                                            <input class="required-if-shown form-control" type="text" name="prod1-indoor-model-number" id="prod1-indoor-model-number" placeholder="" />
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="indoor-serial-number" class="col-md-12">Indoor serial No:</label>
+                                        <label for="prod1-indoor-serial-number" class="col-md-12">Indoor serial No:</label>
                                         <div class="col-md-12">
-                                            <input class="required-if-shown form-control" type="text" name="indoor-serial-number" id="indoor-serial-number" placeholder="" />
+                                            <input class="required-if-shown form-control" type="text" name="prod1-indoor-serial-number" id="prod1-indoor-serial-number" placeholder="" />
                                         </div>
                                     </div>
                                 </div>
@@ -466,9 +466,9 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="model-number" class="col-md-12">Set Model No:</label>
+                                        <label for="prod2-model-number" class="col-md-12">Set Model No:</label>
                                         <div class="col-md-12">
-                                            <select id="model-number" name="model-number" class="form-control">
+                                            <select id="prod2-model-number" name="prod2-model-number" class="form-control">
                                                 <option value="">Please select from the options</option>
                                                 #set( $numbers = ["Model One", "Model Two", "Model Three"] )
                                                 #foreach($number in $numbers)
@@ -481,24 +481,27 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
+                                        <label for="prod2-indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
                                         <div class="col-md-12">
-                                            <input class="required-if-shown form-control" type="text" name="indoor-model-number" id="indoor-model-number" placeholder="" />
+                                            <input class="required-if-shown form-control" type="text" name="prod2-indoor-model-number" id="prod2-indoor-model-number" placeholder="" />
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="indoor-serial-number" class="col-md-12">Indoor serial No:</label>
+                                        <label for="prod2-indoor-serial-number" class="col-md-12">Indoor serial No:</label>
                                         <div class="col-md-12">
-                                            <input class="required-if-shown form-control" type="text" name="indoor-serial-number" id="indoor-serial-number" placeholder="" />
+                                            <input class="required-if-shown form-control" type="text" name="prod2-indoor-serial-number" id="prod2-indoor-serial-number" placeholder="" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        
+                        
+                        
                         <div class="col-md-12 option-3 options" style="display: none;">
                             <div class="row">
                                 <div class="col-md-12">
@@ -507,9 +510,9 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="model-number" class="col-md-12">Set Model No:</label>
+                                        <label for="prod3-model-number" class="col-md-12">Set Model No:</label>
                                         <div class="col-md-12">
-                                            <select id="model-number" name="model-number" class="form-control">
+                                            <select id="prod3-model-number" name="prod3-model-number" class="form-control">
                                                 <option value="">Please select from the options</option>
                                                 #set( $numbers = ["Model One", "Model Two", "Model Three"] )
                                                 #foreach($number in $numbers)
@@ -522,18 +525,18 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
+                                        <label for="prod3-indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
                                         <div class="col-md-12">
-                                            <input class="required-if-shown form-control" type="text" name="indoor-model-number" id="indoor-model-number" placeholder="" />
+                                            <input class="required-if-shown form-control" type="text" name="prod3-indoor-model-number" id="prod3-indoor-model-number" placeholder="" />
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="indoor-serial-number" class="col-md-12">Indoor serial No:</label>
+                                        <label for="prod3-indoor-serial-number" class="col-md-12">Indoor serial No:</label>
                                         <div class="col-md-12">
-                                            <input class="required-if-shown form-control" type="text" name="indoor-serial-number" id="indoor-serial-number" placeholder="" />
+                                            <input class="required-if-shown form-control" type="text" name="prod3-indoor-serial-number" id="prod3-indoor-serial-number" placeholder="" />
                                         </div>
                                     </div>
                                 </div>
