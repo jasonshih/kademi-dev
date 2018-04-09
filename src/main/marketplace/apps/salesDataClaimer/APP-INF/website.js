@@ -257,11 +257,33 @@ function saveProductClaim(page, params, files) {
         var contactFormService = services.contactFormService;
         log.info("contactFormService: {}", contactFormService);
         
-        transactionManager.runInTransaction(function () {
+        var salesDataApp = applications.get("salesData");
+        var salesDateSeries = salesDataApp.getSalesDataSeries('sales-claims');
+        var productsNumber = params['claims-number'];
+        var productsSKUs = [];
+        
+        for( var i = 0; i < productsNumber; i++ ){
+            var productModelNumber = params["prod"+ (i+1) +"-model-number"];
+            var productIndoorModelNumber = params["prod"+ (i+1) +"-indoor-model-number"];
+            var productIndoorSerialNumber = params["prod"+ (i+1) +"-indoor-serial-number"];
             
-            var salesDataApp = applications.get("salesData");
-            var salesDateSeries = salesDataApp.getSalesDataSeries('sales-claims');                      
-            var supplierProfile = applications.userApp.findUserResource("supplier").thisUser                        
+            var salesDataExtraFields = formatter.newMap();
+            salesDataExtraFields.put("indoor-serial-number", productIndoorSerialNumber);
+
+            var salesDataRecord = salesDataApp.findDataPoint(salesDateSeries, null, null, salesDataExtraFields);
+            
+            if(salesDataRecord == null){
+                log.error('Sales Data record with serial number: ' + productIndoorSerialNumber +' not found');
+                result.status = false;
+                result.messages = ['Invalid products indoor serial number: ' + productIndoorSerialNumber];
+                return views.jsonObjectView(JSON.stringify(result));
+            }
+            
+            log.info("Claim Products data - input: {} - output: {} , {}", productIndoorSerialNumber, salesDataRecord.id, salesDataRecord.productSku);
+            productsSKUs.push(salesDataRecord.productSku);
+        }
+        
+        transactionManager.runInTransaction(function () {                                            
             
             var cr = contactFormService.processContactRequest(page, params, files);
             var enteredUser = applications.userApp.findUserResource(cr.profile);
@@ -278,64 +300,28 @@ function saveProductClaim(page, params, files) {
             });
             
              
-            var productsNumber = params['claims-number'];
-            for(var i = 0; i < productsNumber; i++){
-                var productModelNumber = params["prod"+ i +"-model-number"]
-                var productIndoorModelNumber = params["prod"+ i +"-indoor-model-number"]
-                var productIndoorSerialNumber = params["prod"+ i +"-indoor-serial-number"]
+            
+            for(var i = 0; i < productsSKUs.length; i++){                 
                 
-                var salesDataExtraFields = formatter.newMap();
-                salesDataExtraFields.put("indoor-serial-number", productIndoorSerialNumber) 
-                
-                var salesDataRecord = salesDataApp.findDataPoint(salesDateSeries, supplierProfile, null, null, salesDataExtraFields)
-                log.info("@@@@ salesData - {}", salesDataRecord.id)
-                
-                var id = 'claim-' + generateRandomText(32);
+                var now = formatter.formatDateISO8601(formatter.now, org.timezone);
+                var claimId = 'claim-' + generateRandomText(32);
                 var claimObj = {
-                    recordId: id,
+                    recordId: claimId,
                     enteredDate: now,
                     modifiedDate: now,
                     status: RECORD_STATUS.NEW,
+                    productSku: productsSKUs[i],
                     claimGroupId: claimGroupId
                 };
     
                 securityManager.runAsUser(enteredUser, function () {
-                    db.createNew(id, JSON.stringify(claimObj), TYPE_RECORD);
-                    eventManager.goalAchieved("claimSubmittedGoal", {"claim": id});
+                    db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
+                    //eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId});
                 });
             }
             
             
             
-            
-            var amount = +params.amount;
-            if (isNaN(amount)) {
-                result.status = false;
-                result.messages = ['Amount must be digits'];
-                return views.jsonObjectView(JSON.stringify(result));
-            }
-
-            var tempDateTime = params.soldDate;
-            var soldDateTmp = formatter.parseDate(tempDateTime);
-            var soldDate = formatter.formatDateISO8601(soldDateTmp, org.timezone);
-            log.info('saveProductClaim > soldDate={}', soldDate);
-            var now = formatter.formatDateISO8601(formatter.now, org.timezone);
-
-            // Save each provided product, possibly validating against existing data
-            // model-number, indoor-model-number, indoor-serial-number
-
-            var id = 'claim-' + generateRandomText(32);
-            var obj = {
-                recordId: id,
-                enteredDate: now,
-                modifiedDate: now,
-                status: RECORD_STATUS.NEW
-            };
-
-            securityManager.runAsUser(enteredUser, function () {
-                db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
-                eventManager.goalAchieved("claimSubmittedGoal", {"claim": id});
-            });
         });
 
     } catch (e) {
