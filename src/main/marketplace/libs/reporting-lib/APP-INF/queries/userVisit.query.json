@@ -32,10 +32,28 @@
                 "field": "website"
             },
             "aggs": {
+                "totalUniqueUsers":{
+                    "cardinality" : {
+                        "field" : "reqUser"
+                    }
+                },
+                "byUsers":{
+                    "terms": {
+                        "field": "reqUser",
+                        "order": {"pageViews": "desc"}
+                    },
+                    "aggs": {
+                        "pageViews": {
+                            "cardinality" : {
+                                "field" : "reqDate"
+                            }
+                        }
+                    }
+                },
                 "userVisits": {
                     "date_histogram" : {
                         "field" : "reqDate",
-                        "interval" : "day",
+                        "interval" : "$aggInterval",
                         "extended_bounds" : {
                             "min" : "$startDate",
                             "max" : "$endDate"
