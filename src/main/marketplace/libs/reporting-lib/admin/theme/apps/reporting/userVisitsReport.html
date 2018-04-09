@@ -15,56 +15,136 @@
         <div class="panel-heading">
             <i class="fa fa-bar-chart"></i> User Visits
         </div>
-        <div class="panel-body" id="userVisitsReportWrap">
-            <div class="text-right">
-                <a href="userVisitReport.csv" class="btn btn-info"><i class="fa fa-download"></i> CSV</a>
+        <div class="panel-body" >
+            <div class="row">
+                <div class="col-sm-3">
+                    <select name="aggInterval" id="" class="form-control">
+                        <option value="day">Daily</option>
+                        <option value="month">Monthly</option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <select name="aggWebsite" id="" class="form-control">
+                        <option value="" selected>All websites</option>
+                        #foreach($w in $rootFolder.websites)
+                        <option value="$w.id">$formatter.ifNull($w.domainName, $w.name)</option>
+                        #end
+                    </select>
+                </div>
+                <div class="col-sm-6 text-right hide">
+                    <a href="userVisitReport.csv" class="btn btn-info"><i class="fa fa-download"></i> CSV</a>
+                </div>
             </div>
-            <br>
-            <code class="hide">$applications.get("reporting-lib").call("getUserReportData", $page)</code>
-            <svg class="userVisitsReport">
 
-            </svg>
+            <hr>
+
+            <div id="userVisitsReportWrap">
+                <h4>Total unique visitors</h4>
+                <div class="well row">
+
+                </div>
+                <code class="hide">$applications.get("reporting-lib").call("getUserReportData", $page, $params)</code>
+                <svg class="userVisitsReport"></svg>
+                <hr>
+                #if ($params.aggWebsite)
+                <table id="tableTopViews" class="table table-hovered table-bordered">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Views</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                #end
+            </div>
         </div>
     </div>
     <script>
         $(function () {
-            function drawChart(userVisitsReportWrap) {
+            function drawChart(userVisitsReportWrap, dateFm) {
+
                 var svg = userVisitsReportWrap.find('.userVisitsReport');
-                var data = svg.siblings('code').text();
-                data = JSON.parse(data);
+                var dataStr = svg.siblings('code').text();
+                try {
+                    var obj = JSON.parse(dataStr);
+                    var data = obj.data;
+                    var uniqueVisitors = obj.uniqueVisitors;
+                    var pv = obj.pv;
+                    var html = '';
+                    for (var key in uniqueVisitors){
+                        html += '<div class="col-sm-4"><h6>Website: '+key + ' -  Visitors: ' + uniqueVisitors[key] + '</h6></div>';
+                    }
+                    userVisitsReportWrap.find('.well').html(html);
 
-                var chart = nv.models.multiBarChart()
-                    .margin({left: 20, right: 20, bottom: 20, top: 20})
-                    .rightAlignYAxis(false)
-                    .showControls(true)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
-                    .showLegend(true)
-                    .stacked(false)
-                    .showYAxis(true)
-                    .clipEdge(true);
-                chart.xAxis.tickFormat(function (d) {
-                    return d3.time.format("%e %b")(new Date(d))
-                });
-                chart.x(function (d) {
-                    return d.x;
-                });
-                chart.y(function (d) {
-                    return d.y;
-                });
-                d3.select(svg.get(0))
-                    .datum(data)
-                    .call(chart);
+                    userVisitsReportWrap.find('tbody').html('');
+                    for (var i = 0; i < pv.length; i++){
+                        userVisitsReportWrap.find('tbody').append('<tr><td>'+pv[i].name+'</td><td>'+pv[i].pv+'</td></tr>')
+                    }
+                    var chart = nv.models.multiBarChart()
+                        .margin({left: 40, right: 20, bottom: 20, top: 40})
+                        .rightAlignYAxis(false)
+                        .showControls(true)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
+                        .showLegend(true)
+                        .stacked(false)
+                        .showYAxis(true)
+                        .clipEdge(true);
+                    chart.xAxis.tickFormat(function (d) {
+                        if (dateFm == 'month'){
+                            return d3.time.format("%b")(new Date(d))
+                        } else {
+                            return d3.time.format("%e %b")(new Date(d))
+                        }
+                    });
+                    chart.yAxis.tickFormat(function (d) {
+                        return d3.format('d')(d)
+                    }).axisLabel("Unique visitors")
+                    chart.x(function (d) {
+                        return d.x;
+                    });
+                    chart.y(function (d) {
+                        return d.y;
+                    });
+                    d3.select(svg.get(0))
+                        .datum(data)
+                        .call(chart);
 
-                nv.utils.windowResize(chart.update);
+                    nv.utils.windowResize(chart.update);
+                } catch (e){
+
+                }
+            }
+
+            function reloadData() {
+                var userVisitsReportWrap = $('#userVisitsReportWrap');
+                var uri = new URI(window.location);
+                var dateFm = userVisitsReportWrap.attr('data-datefm') || 'day';
+                var aggWebsite = userVisitsReportWrap.attr('data-aggWebsite') || '';
+                uri.setSearch('aggInterval', dateFm);
+                uri.setSearch('aggWebsite', aggWebsite);
+                userVisitsReportWrap.html('');
+                userVisitsReportWrap.reloadFragment({
+                    url: uri.toString(),
+                    whenComplete: function (resp) {
+                        drawChart(userVisitsReportWrap, dateFm)
+                    }
+                })
             }
 
             $(document).on('pageDateChanged', function (e, startDate, endDate) {
+                reloadData();
+            });
+
+            $(document).on('change', '[name=aggInterval]', function () {
                 var userVisitsReportWrap = $('#userVisitsReportWrap');
-                userVisitsReportWrap.reloadFragment({
-                    whenComplete: function (resp) {
-                        drawChart(userVisitsReportWrap)
-                    }
-                })
-            })
+                userVisitsReportWrap.attr('data-datefm', this.value);
+                reloadData();
+            });
+            $(document).on('change', '[name=aggWebsite]', function () {
+                var userVisitsReportWrap = $('#userVisitsReportWrap');
+                userVisitsReportWrap.attr('data-aggWebsite', this.value);
+                reloadData();
+            });
         })
     </script>
 </body>
