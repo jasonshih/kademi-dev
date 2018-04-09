@@ -63,6 +63,7 @@
     <script>
         $(function () {
             function drawChart(userVisitsReportWrap, dateFm) {
+
                 var svg = userVisitsReportWrap.find('.userVisitsReport');
                 var dataStr = svg.siblings('code').text();
                 try {
@@ -96,8 +97,8 @@
                         }
                     });
                     chart.yAxis.tickFormat(function (d) {
-                        return d3.format(',f')(d)
-                    });
+                        return d3.format('d')(d)
+                    }).axisLabel("Unique visitors")
                     chart.x(function (d) {
                         return d.x;
                     });
@@ -121,6 +122,7 @@
                 var aggWebsite = userVisitsReportWrap.attr('data-aggWebsite') || '';
                 uri.setSearch('aggInterval', dateFm);
                 uri.setSearch('aggWebsite', aggWebsite);
+                userVisitsReportWrap.html('');
                 userVisitsReportWrap.reloadFragment({
                     url: uri.toString(),
                     whenComplete: function (resp) {
