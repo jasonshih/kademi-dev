@@ -32,6 +32,7 @@
             <!-- Nav tabs -->
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#claims-list" data-toggle="tab"><i class="fa fa-list"></i> Claims List</a></li>
+                <li><a href="#claim-groups" data-toggle="tab"><i class="fa fa-list"></i> Claim Groups</a></li>
                 <li><a href="#claims-setting" data-toggle="tab"><i class="fa fa-cogs"></i> Settings</a></li>
             </ul>
 
@@ -71,7 +72,7 @@
                             </div>
                         </div>
                         <br />
-
+                        
                         <table class="table table-hover table-striped" id="table-claims">
                             <thead>
                                 <tr>
@@ -86,6 +87,7 @@
                                 </tr>
                             </thead>
                             <tbody id="table-claims-body">
+                                
                                 #set ($searchResult = $page.attributes.searchResult)
                                 #if ($searchResult.hits.hits.size() > 0)
                                 #foreach($hit in $searchResult.hits.hits)
@@ -107,6 +109,41 @@
                         </table>
                     </div>
                 </div>
+                
+                <div class="tab-pane" id="claim-groups">
+                    <div class="claim-groups-component">                        
+                        <table class="table table-hover table-striped" id="table-claims">
+                            <thead>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
+                                    <th>phone</th>
+                                    <th>Action Type</th>
+                                    <th>Required Action</th>
+                                    <th>Purchased Date</th>
+                                    <th>Store Name</th>
+                                    <th>Claims Number</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-claims-body">
+                                #set ($searchResult = $page.attributes.searchClaimGroupsResult)
+                                #if ($searchResult.hits.hits.size() > 0)
+                                    #foreach($hit in $searchResult.hits.hits)
+                                        
+                                        #renderClaimGroup($hit)
+                                        
+                                    #end                                    
+                                #else
+                                <tr>
+                                    <td colspan="99">No claim Groups found</td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
                 <div class="tab-pane" id="claims-setting">
                     <form class="form-horizontal form-settings-claim" action="/settingSaleDataClaimer" method="post">
                         #set ($allowAnonymous = $page.attributes.settings.allowAnonymous)
@@ -180,6 +217,24 @@
             </td>
             <td><input type="checkbox" value="$hit.fields.recordId.value" /></td>
         </tr>
+        #end
+        
+        #macro (renderClaimGroup $hit)            
+            #if($formatter.isNotNull($hit.source.contactRequest))
+                #set( $contactPath = "/manageContacts/" + $hit.source.contactRequest )                
+                #set( $contactRequest = $page.find($contactPath) ) <br>
+                <tr>
+                    <td>$contactRequest.contactRequest.firstName</td>
+                    <td>$contactRequest.contactRequest.surName</td>
+                    <td>$contactRequest.contactRequest.email</td>
+                    <td>$contactRequest.contactRequest.phone</td>
+                    <td>$contactRequest.contactRequest.fieldValue('action-type')</td>                    
+                    <td>$contactRequest.contactRequest.fieldValue('required-action-type')</td>
+                    <td>$contactRequest.contactRequest.fieldValue('purchase-date')</td>
+                    <td>$contactRequest.contactRequest.fieldValue('store-name')</td>
+                    <td>$contactRequest.contactRequest.fieldValue('claims-number')</td>
+                </tr>
+            #end         
         #end
 
         <div class="modal fade" id="modal-review-claim">

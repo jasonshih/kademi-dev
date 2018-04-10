@@ -66,6 +66,20 @@ function getSearchClaimsQuery(page, status, user) {
     return queryJson;
 }
 
+function getSearchClaimGroupsQuery(page) {
+    var queryJson = {        
+        'size': 10000,        
+        'query': {
+            'bool': {
+                'must': [
+                    {'type': {'value': TYPE_CLAIM_GROUP}}
+                ]
+            }
+        }
+    };   
+    return queryJson;
+}
+
 function totalAmountOfClaims(page, status, user) {
     var searchResult = null;
 
@@ -97,6 +111,20 @@ function searchClaims(page, status, user) {
         log.error('ERROR in searchClaims: ' + e, e);
     }
     log.info("searchClaims {}", searchResult);
+    return searchResult;
+}
+
+function searchClaimGroups(page) {
+    var searchResult = null;
+
+    try {
+        var queryJson = getSearchClaimGroupsQuery(page);
+        log.info(queryJson)
+        searchResult = doDBSearch(page, queryJson);
+    } catch (e) {
+        log.error('ERROR in searchClaimGroups: ' + e, e);
+    }
+    log.info("searchClaimGroups {}", searchResult);
     return searchResult;
 }
 

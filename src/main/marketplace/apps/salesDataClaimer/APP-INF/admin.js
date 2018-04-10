@@ -51,7 +51,9 @@ function getAllClaims(page, params) {
 
     if (!params.claimId) {
         var results = searchClaims(page, params.status);
+        var claimGroupsResult = searchClaimGroups(page);
         page.attributes.searchResult = results;
+        page.attributes.searchClaimGroupsResult = claimGroupsResult;
         page.attributes.settings = getAppSettings(page);
     }
 }
