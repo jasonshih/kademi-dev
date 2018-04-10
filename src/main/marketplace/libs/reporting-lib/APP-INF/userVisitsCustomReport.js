@@ -1,6 +1,6 @@
 function generateUserVisitReportCsv(page, params, req, resp) {
     log.info("generateReportCsv");
-    var rows = getUserVisitCSV();
+    var rows = getUserVisitCSV(page, params);
     return views.csvView(rows);
 }
 
@@ -13,40 +13,40 @@ function findWebsite(page) {
     return w;
 }
 
-function getUserVisitCSV() {
-    var map = formatter.newMap();
-    map.put("aggInterval", "day");
-    var resp = queryManager.runQuery("userVisit", map);
-    var data = [];
-    var byWebsite = resp.aggregations.get("byWebsite").buckets;
-    for (var i in byWebsite) {
-        var byWebBucket = byWebsite[i];
-        var userVisits = byWebBucket.aggregations.get("userVisits").buckets;
-        if (userVisits.length) {
-            for (var j in userVisits) {
-                var usersCount = userVisits[j].aggregations.get("usersCount").value;
-                if (usersCount > 0) {
-                    var byUsers = userVisits[j].aggregations.get("byUsers").buckets;
-                    for (k in byUsers) {
-                        var user = applications.userApp.findUserResource(byUsers[k].key);
-                        var name;
-                        if (user) {
-                            name = user.formattedName;
-                        } else {
-                            name = byUsers[k].key;
-                        }
+function getUserVisitCSV(page, params) {
+    var obj = getUserReportData(page, params, true);
 
-                        var d = formatter.formatDate(userVisits[j].key);
-                        data.push([name, d]);
-                    }
-                }
-            }
+    var data = obj.data;
+    var pv = obj.pv;
+    var m = obj.uniqueVisitors;
+    var csvData = [];
+    csvData.push(['Unique visitors']);
+    csvData.push(['']);
+    for(var key in m){
+        csvData.push([key, m[key]]);
+    }
+
+    csvData.push(['']);
+    csvData.push(['Date histogram']);
+    csvData.push(['']);
+    for (var i = 0; i < data.length; i++){
+        var series = data[i];
+        csvData.push(["Website: " + series.key]);
+        for (var j = 0; j < series.values.length; j++){
+            csvData.push([formatter.formatDate(formatter.toDate(series.values[j].x)), series.values[j].y]);
         }
     }
-    return data;
+
+    csvData.push(['Date histogram']);
+    csvData.push(['']);
+    for (var i = 0; i < pv.length; i++){
+        csvData.push([pv[i].name, pv[i].value]);
+    }
+
+    return csvData;
 }
 
-function getUserReportData(page, params) {
+function getUserReportData(page, params, notJSON) {
     var map = formatter.newMap();
     map.put("aggInterval", "day");
     var resp = queryManager.runQuery("userVisit", map);
@@ -97,5 +97,9 @@ function getUserReportData(page, params) {
             }
         }
     }
-    return JSON.stringify({data: data, uniqueVisitors: m, pv: pv});
+    if (notJSON){
+        return {data: data, uniqueVisitors: m, pv: pv};
+    } else {
+        return JSON.stringify({data: data, uniqueVisitors: m, pv: pv});
+    }
 }
