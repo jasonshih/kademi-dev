@@ -309,6 +309,7 @@ function saveProductClaim(page, params, files) {
                     recordId: claimId,
                     enteredDate: now,
                     modifiedDate: now,
+                    amount: 1,
                     status: RECORD_STATUS.NEW,
                     productSku: productsSKUs[i],
                     claimGroupId: claimGroupId
