@@ -54,7 +54,7 @@
                                     #end
                                     <td><label class="label $labelType">$audit.changeType</label></td>
                                     <td>$formatter.formatDateTime($audit.actionDate)</td>
-                                    <td>$audit.actionUser.formattedName</td>
+                                    <td>$!audit.actionUser.formattedName</td>
                                     <td>$!page.getClassDisplayName($audit.entityClassName)</td>
                                     <td>$!audit.description</td>
                                     <td class="action">
