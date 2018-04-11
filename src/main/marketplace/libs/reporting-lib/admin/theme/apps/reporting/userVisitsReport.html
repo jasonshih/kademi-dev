@@ -10,10 +10,9 @@
     </style>
 </head>
 <body>
-
     <div class="panel panel-default">
         <div class="panel-heading">
-            <i class="fa fa-bar-chart"></i> User Visits
+            <i class="fa fa-bar-chart"></i> User Active report
         </div>
         <div class="panel-body" >
             <div class="row">
@@ -31,8 +30,8 @@
                         #end
                     </select>
                 </div>
-                <div class="col-sm-6 text-right hide">
-                    <a href="userVisitReport.csv" class="btn btn-info"><i class="fa fa-download"></i> CSV</a>
+                <div class="col-sm-6 text-right">
+                    <a id="btnDownloadCSV" href="userVisitReport.csv" class="btn btn-info"><i class="fa fa-download"></i> CSV</a>
                 </div>
             </div>
 
@@ -122,6 +121,11 @@
                 var aggWebsite = userVisitsReportWrap.attr('data-aggWebsite') || '';
                 uri.setSearch('aggInterval', dateFm);
                 uri.setSearch('aggWebsite', aggWebsite);
+                var href = $('#btnDownloadCSV').attr('href');
+                var uri1 = new URI('reporting/'+href);
+                uri1.setSearch('aggInterval', dateFm);
+                uri1.setSearch('aggWebsite', aggWebsite);
+                $('#btnDownloadCSV').attr('href', uri1.toString());
                 userVisitsReportWrap.html('');
                 userVisitsReportWrap.reloadFragment({
                     url: uri.toString(),
