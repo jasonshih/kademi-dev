@@ -26,8 +26,8 @@
                 <div class="tab-content">
                     <div id="general" class="tab-pane">
                         <div class="form-group">
-                            <div class="col-md-3"></div>
-                            <div class="col-md-8">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10">
                                 <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
@@ -49,18 +49,18 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3" for="title">Title</label>
+                            <label class="control-label col-md-2" for="title">Title</label>
                             <div class="col-md-8">
                                 <input type="text" name="title" id="title" value="$!page.source.title" placeholder="" class="required form-control"  required="true" />
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3" for="reward">
+                            <label class="control-label col-md-2" for="reward">
                                 Reward
                                 <small>Allocate points to this reward</small>
                             </label>
-                            <div class="col-md-8">
+                            <div class="col-md-4">
                                 <select name="reward" id="reward" class="form-control" >
                                     <option value="">[No points]</option>
                                     #foreach($reward in $page.rewards)
@@ -68,14 +68,12 @@
                                     #end
                                 </select>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label class="control-label col-md-3" for="pointsTag">
+                            <label class="control-label col-md-2" for="pointsTag">
                                 Tag
                                 <small>Tag the allocated points</small>
                             </label>
-                            <div class="col-md-8">
+                            <div class="col-md-4">
                                 <select name="pointsTag" id="pointsTag" class="form-control" >
                                     <option value="">[No tag]</option>
                                     #foreach($tag in $page.pointsTag)
@@ -87,11 +85,11 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3" for="allocationType">
+                            <label class="control-label col-md-2" for="allocationType">
                                 Allocation Type
                                 <small>How the points get awarded</small>
                             </label>
-                            <div class="col-md-8">
+                            <div class="col-md-4">
                                 <select name="allocationType" id="allocationType" class="form-control" >
                                     $formatter.option("INDIVIDUAL", "Individual", $page.source.allocationType)
                                     $formatter.option("SUM", "Sum", $page.source.allocationType)
@@ -100,10 +98,10 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3">
+                            <label class="control-label col-md-2">
 
                             </label>
-                            <div class="col-md-8">
+                            <div class="col-md-10">
                                 <button class="btn btn-info btn-test-allocation" data-toggle="modal" data-target="#test-allocation-modal">
                                     <span class="fa fa-cogs"></span>
                                     Test
@@ -113,8 +111,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3" for="mvelExpression">Points expression</label>
-                            <div class="col-md-8">
+                            <label class="control-label col-md-2" for="mvelExpression">Points expression</label>
+                            <div class="col-md-10">
                                 <textarea class="hide" id="mvelExpression" name="mvelExpression"></textarea>
                                 <div id="pointsMvelExpression" class="expressionEditor" style="display:none;">$!formatter.htmlEncode($page.source.mvelExpression)</div>
 
@@ -125,11 +123,11 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3" for="ignoreExpression">
+                            <label class="control-label col-md-2" for="ignoreExpression">
                                 Include expression
                                 <small>Return false to ignore</small>
                             </label>
-                            <div class="col-md-8">
+                            <div class="col-md-10">
                                 <textarea class="hide" id="ignoreExpression" name="ignoreExpression"></textarea>
                                 <div id="ignoreMvelExpression" class="expressionEditor" style="display:none;">$!formatter.htmlEncode($page.source.ignoreExpression)</div>
 
@@ -141,7 +139,7 @@
 
 
                         <div class="form-group">
-                            <label class="control-label col-md-3" for="notes">Notes<small>For internal use.</small></label>
+                            <label class="control-label col-md-2" for="notes">Notes<small>For internal use.</small></label>
                             <div class="col-md-8">
                                 <textarea cols="100" name="notes" id="notes" rows="10" placeholder="" class="form-control">$!page.source.notes</textarea>
                             </div>
