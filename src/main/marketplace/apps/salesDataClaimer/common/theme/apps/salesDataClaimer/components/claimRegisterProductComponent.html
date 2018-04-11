@@ -1,3 +1,32 @@
+#set( $orgs = [] )
+#set ($query = '{  
+                    "stored_fields":[  
+                        "orgTitle",
+                        "orgId"
+                    ],
+                    "query":{  
+                        "bool":{  
+                            "must":{  
+                                "term":{  
+                                    "orgTypes":"installer"
+                                }
+                            }
+                        }
+                    },
+                    "size":10000
+                }')
+
+#set( $queryRes = $applications.search.searchManager.search($query, 10000, 'org'))
+
+#foreach( $org in $queryRes.hits.hits )
+    #set( $orgObj = {
+            "orgTitle": $org.fields.orgTitle.value,
+            "orgId": $org.fields.orgId.value
+            }
+        )
+    #if( $orgs.add($orgObj) ) #end
+#end
+
 <form method="post" id="ClaimRegisterProductForm" action="/salesDataClaimsProducts/" class="form-horizontal fuelux claimRegisterProductForm">
     <input type="hidden" name="saveProductClaim" />
     <div class="wizard" id="myWizard">
@@ -237,7 +266,7 @@
                                 <div class="col-md-12">
                                     <select id="store-state" name="store-state" class="form-control">
                                         <option value="">[No state selected]</option>
-                                        #set( $states = ["New South Wales", ""] )
+                                        #set( $states = ["New South Wales"] )
                                         #foreach($state in $states)
                                             $formatter.option( $state, $state, "" )
                                         #end
@@ -265,7 +294,21 @@
                         <div class="col-md-12">
                             <h4>Supplier information</h4>
                         </div>
-
+                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-12" for="supplier-orgId">Supplier Name:</label>
+                                <div class="col-md-12">
+                                    <select id="supplier-orgId" name="supplier-orgId" class="form-control required-if-shown">
+                                        <option value="">[No supplier selected]</option>                                
+                                        #foreach($org in $orgs)
+                                            $formatter.option( $org.orgId, $org.orgTitle, "" )
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-md-12" for="supplier-abn">ABN:</label>
@@ -321,12 +364,18 @@
                                 </div>
                             </div>
                         </div>
-
+                        
+                        
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-md-12" for="installer-name">Installer Name (company name):</label>
+                                <label class="col-md-12" for="installer-orgId">Installer Name (company name):</label>
                                 <div class="col-md-12">
-                                    <input class="form-control" type="text" name="installer-name" id="installer-name" placeholder="" />
+                                    <select id="installer-orgId" name="installer-orgId" class="form-control required-if-shown">
+                                        <option value="">[No installer selected]</option>                                
+                                        #foreach($org in $orgs)
+                                            $formatter.option( $org.orgId, $org.orgTitle, "" )
+                                        #end
+                                    </select>
                                 </div>
                             </div>
                         </div>

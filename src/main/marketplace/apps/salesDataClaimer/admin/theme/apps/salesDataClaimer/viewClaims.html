@@ -32,7 +32,7 @@
             <!-- Nav tabs -->
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#claims-list" data-toggle="tab"><i class="fa fa-list"></i> Claims List</a></li>
-                <li><a href="#claim-groups" data-toggle="tab"><i class="fa fa-list"></i> Claim Groups</a></li>
+                <li><a href="#claim-groups" data-toggle="tab"><i class="fa fa-list-alt"></i> Claim Groups</a></li>
                 <li><a href="#claims-setting" data-toggle="tab"><i class="fa fa-cogs"></i> Settings</a></li>
             </ul>
 
@@ -124,6 +124,7 @@
                                     <th>Purchased Date</th>
                                     <th>Store Name</th>
                                     <th>Claims Number</th>
+                                    <th>Created Date</th>
                                 </tr>
                             </thead>
                             <tbody id="table-claims-body">
@@ -233,6 +234,7 @@
                     <td>$contactRequest.contactRequest.fieldValue('purchase-date')</td>
                     <td>$contactRequest.contactRequest.fieldValue('store-name')</td>
                     <td>$contactRequest.contactRequest.fieldValue('claims-number')</td>
+                    <td>$contactRequest.contactRequest.createdDate</td>
                 </tr>
             #end         
         #end

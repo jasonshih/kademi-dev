@@ -261,6 +261,28 @@ function saveProductClaim(page, params, files) {
         var salesDateSeries = salesDataApp.getSalesDataSeries('sales-claims');
         var productsNumber = params['claims-number'];
         var productsSKUs = [];
+        var soldBy = "";
+        var soldById = "";
+        
+        if(params['supplier-orgId']){
+            soldBy = params['supplier-orgId'];
+        }else if (params['installer-orgId']){
+            soldBy = params['installer-orgId']
+        }else{
+            log.error('Please select Supplier/Installer name');
+            result.status = false;
+            result.messages = ['Please select Supplier/Installer name'];
+            return views.jsonObjectView(JSON.stringify(result));
+        }
+        
+        if(page.parent.orgData.childOrg(soldBy)){
+            soldById = page.parent.orgData.childOrg(soldBy).id;
+        }else{
+            log.error('Supplier/Installer id: ' + soldBy + 'is invalid');
+            result.status = false;
+            result.messages = ['Supplier/Installer name is invalid'];
+            return views.jsonObjectView(JSON.stringify(result));
+        }
         
         for( var i = 0; i < productsNumber; i++ ){
             var productModelNumber = params["prod"+ (i+1) +"-model-number"];
@@ -312,6 +334,8 @@ function saveProductClaim(page, params, files) {
                     amount: 1,
                     status: RECORD_STATUS.NEW,
                     productSku: productsSKUs[i],
+                    soldBy: soldBy,
+                    soldById: soldById,
                     claimGroupId: claimGroupId
                 };
     
