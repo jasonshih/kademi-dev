@@ -2,6 +2,7 @@ controllerMappings
     .adminController()
     .path("/contentEditor-lib/getAllGroups")
     .enabled(true)
+    .defaultView(views.jsonView("allGroupsRes"))
     .addMethod("GET", "getAllGroups")
     .build();
 
@@ -10,6 +11,7 @@ controllerMappings
     .path("/contentEditor-lib/getAllGroups")
     .enabled(true)
     .isPublic(true)
+    .defaultView(views.jsonView("allGroupsRes"))
     .addMethod("GET", "getAllGroups")
     .build();
 
@@ -23,9 +25,6 @@ function getAllGroups(page, params) {
         var group = allGroups[i];
         data[group.name] = group.title || group.name;
     }
-    
-    return views.jsonObjectView(JSON.stringify({
-        status: true,
-        data: data
-    }));
+
+    page.attributes.allGroupsRes = {data: data, status: true};
 }
