@@ -105,6 +105,12 @@
                 "group": "main",
                 "path": "/theme/apps/rewardstore/debitsActivity.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/rewardstore/pointsTransaction.js"
+            }
         }
     ]
 }
