@@ -831,7 +831,7 @@
                                         <td>$plusOne</td>
                                         <td>
                                             #if( $item.amount )
-                                            $formatter.formatCurrency($item.amount)
+                                            $!formatter.formatCurrency($item.amount)
                                             #else
                                             No value
                                             #end
