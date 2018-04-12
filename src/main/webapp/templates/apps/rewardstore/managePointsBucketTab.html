@@ -103,7 +103,9 @@
                         <span>Total Points:</span>
                     </td>
                     <td colspan="2">
-                        <strong>$!applications.rewardStore.balance($participant, $reward)</strong>
+                        <strong>
+                            $!formatter.formatCurrency( $applications.rewardStore.balance($participant, $reward) )
+                        </strong>
                     </td>
                     <td></td>
                 </tr>
@@ -116,7 +118,7 @@
                             <span>Available Points:</span>
                         </td>
                         <td colspan="2">
-                            <strong>$avail</strong>
+                            <strong>$!formatter.formatCurrency( $avail )</strong>
                         </td>
                         <td></td>
                     </tr>
