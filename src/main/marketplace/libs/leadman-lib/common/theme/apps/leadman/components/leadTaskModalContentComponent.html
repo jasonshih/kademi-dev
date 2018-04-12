@@ -128,7 +128,7 @@
                 <div class="col-md-6">
                     <div class="row">
                         <div class="col-md-4">
-                            <label class="control-label">Task due</label>
+                            <label class="control-label" style="padding-top: 7px;">Task due</label>
                         </div>
                         <div class="col-sm-8">
                             <div class="input-group">
@@ -139,22 +139,16 @@
                             </div>
                         </div>
                     </div>
-
-
-
                 </div>
                 <div class="col-md-6">
+                    <label for="" style="padding-top: 7px;">Assignee</label>
                     <div class="btn-group pull-right" role="group">
-                        <button class="btn btn-success btnTaskDone" type="button" aria-expanded="false" data-toggle="#completeTaskDiv" title="Mark as complete">
-                            <span class="fa fa-check"></span>
-                        </button>
-
                         <div class="btn-group mb-sm dropdown">
                             <button id="assignedBlockTask" class="btn dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" title="Assign this task to someone">
                                 <i class="fa fa-user"></i>
                                 <span>
                                     #if( $page.assignedTo )
-                                        $page.assignedTo.name
+                                        $page.assignedTo.formattedName()
                                     #else
                                         Not assigned
                                     #end
@@ -165,17 +159,17 @@
                                 <li><a href="">Assign to nobody</a></li>
                                 #set($teamMembers = $page.find("/leads").teamMembers)
                                 #if($teamMembers && $teamMembers.size() > 0)
+                                    #if (!$teamMembers.contains($userResource))
                                     <li role="separator" class="divider"></li>
+                                    #end
                                     #foreach($user in $teamMembers)
-                                        <li><a href="$user.name">$!user.firstName $!user.surName</a></li>
+                                        #if ($user.name != $userResource.name)
+                                        <li><a href="$user.name">$!user.formattedName</a></li>
+                                        #end
                                     #end
                                 #end
                             </ul>
                         </div>
-
-                        <a class="btn btn-danger btnTaskDelete" type="button" aria-expanded="false" title="Cancel this task" href="$page.href">
-                            <span class="fa fa-remove"></span>
-                        </a>
                     </div>
 
                 </div>
