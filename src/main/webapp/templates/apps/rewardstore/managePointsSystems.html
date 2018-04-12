@@ -78,9 +78,9 @@
                                             #end
                                         </td>
                                         <td>$formatter.formatUnits($r.totalPoints($queryManager.commonStartDate, $queryManager.commonFinishDate)) points</td>
-                                        <td>$r.countPointsRecs($queryManager.commonStartDate, $queryManager.commonFinishDate)</td>
+                                        <td>$formatter.formatUnits( $r.countPointsRecs($queryManager.commonStartDate, $queryManager.commonFinishDate) )</td>
                                         <td>$formatter.formatUnits($r.totalDebits($queryManager.commonStartDate, $queryManager.commonFinishDate)) points</td>
-                                        <td>$r.countDebitsRecs($queryManager.commonStartDate, $queryManager.commonFinishDate)</td>
+                                        <td>$formatter.formatUnits( $r.countDebitsRecs($queryManager.commonStartDate, $queryManager.commonFinishDate) )</td>
                                         <td>$formatter.formatUnits($r.totalLiability($queryManager.commonStartDate, $queryManager.commonFinishDate)) points</td>
                                         <td class="action">
                                             <div class="btn-group btn-group-sm">
@@ -125,7 +125,7 @@
                 <span class="block-name" title="$group.name">$group.name</span>
             </div>
         #end
-        
+
         <script type="text/javascript" src="/theme/apps/rewardstore/managePointsSystems.js?_=101">//</script>
         <script type="text/javascript">
             $(function () {
