@@ -67,10 +67,6 @@
 
 	#set( $tasks = $leadsPage.myDueTasks )
 	#if( $tasks.size() > 0)
-        <h3 class="no-mgt">
-            My Tasks
-        </h3>
-
         <div class="list-tasks">
 			#foreach($task in $tasks)
                 <ul class="list-group ng-scope">
@@ -89,6 +85,15 @@
                                         No task title
 									#end
 								#end
+
+                                #if( $task.relatedLead )
+                                    /
+                                    #if( $task.relatedLead.title )
+                                        $task.relatedLead.title
+                                    #else
+                                        $task.relatedLead.description
+                                    #end
+                                #end
                             </em>
 							#if( $task.dueDate )
                                 <small class="pull-right">
