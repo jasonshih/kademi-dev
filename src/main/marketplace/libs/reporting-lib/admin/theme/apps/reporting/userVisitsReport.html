@@ -122,7 +122,11 @@
                 uri.setSearch('aggInterval', dateFm);
                 uri.setSearch('aggWebsite', aggWebsite);
                 var href = $('#btnDownloadCSV').attr('href');
-                var uri1 = new URI('reporting/'+href);
+                var uri1Str = href;
+                if (href.indexOf('reporting') == -1){
+                    uri1Str = '/reporting/'+href;
+                }
+                var uri1 = new URI(uri1Str);
                 uri1.setSearch('aggInterval', dateFm);
                 uri1.setSearch('aggWebsite', aggWebsite);
                 $('#btnDownloadCSV').attr('href', uri1.toString());
