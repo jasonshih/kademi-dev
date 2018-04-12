@@ -14,6 +14,7 @@
                 var first = components.find('[id^=keditor-dynamic]');
                 if (first){
                     first.reloadFragment({
+                        url: window.location.href,
                         whenComplete: function (resp) {
                             components.each(function () {
                                 var id = $(this).find('[id^=keditor-dynamic]').attr('id');

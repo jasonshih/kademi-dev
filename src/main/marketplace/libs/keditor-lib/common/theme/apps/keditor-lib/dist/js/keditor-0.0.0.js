@@ -1720,7 +1720,7 @@
 
         containerInner.find('[data-type=container-content]').not(isNested ? '' : '.keditor-sub-container-content').each(function () {
             var containerContent = $(this);
-            containerContent.removeClass('keditor-container-content keditor-sub-container-content ui-droppable ui-sortable').removeAttr('id');
+            containerContent.removeClass('keditor-container-content keditor-sub-container-content ui-droppable ui-sortable keditor-highlighted-dropzone').removeAttr('id');
 
             containerContent.children().each(function () {
                 var child = $(this);
