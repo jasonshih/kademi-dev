@@ -116,8 +116,8 @@
                                 <tr>
                                     <th class="title" rel="asc">Reward</th>
                                     <th>Date</th>
-                                    <th>Firstname/Org</th>
-                                    <th>Surname/Title</th>
+                                    <th>ID  </th>
+                                    <th>Name</th>
                                     <th>Balance</th>
                                 </tr>
                             </thead>
@@ -144,10 +144,7 @@
                                                     <a href="/manageUsers/$r.issuedTo.id">$r.issuedTo.asProfile().name</a>
                                                 </td>
                                                 <td>
-                                                    $!r.issuedTo.asProfile().firstName
-                                                </td>
-                                                <td>
-                                                    $!r.issuedTo.asProfile().surName
+                                                    $!r.issuedTo.asProfile().formattedName
                                                 </td>
                                             #end
                                             <td>$r.balance</td>
