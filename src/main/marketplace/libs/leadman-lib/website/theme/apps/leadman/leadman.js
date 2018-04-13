@@ -1938,7 +1938,8 @@ function initStatsSummaryComponents() {
 }
 
 function initClipboard() {
-    $('#newNoteModal [name=newNote]').inlineattachment({
+
+    $('[name=newNote], [name=note]').inlineattachment({
         uploadUrl: '/assets/',
         uploadMethod: "POST",
         jsonFieldName : "nextHref",
