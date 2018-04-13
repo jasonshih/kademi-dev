@@ -90,8 +90,10 @@
                                     /
                                     #if( $task.relatedLead.title )
                                         $task.relatedLead.title
-                                    #else
+                                    #elseif($task.relatedLead.description)
                                         $task.relatedLead.description
+                                    #else
+                                        No description
                                     #end
                                 #end
                             </em>
