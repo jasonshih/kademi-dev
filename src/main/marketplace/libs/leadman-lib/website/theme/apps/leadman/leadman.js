@@ -73,7 +73,7 @@ function initLeadManEvents() {
                         if (selected < 1){
                             return {
                                 error: 1,
-                                errorFields: ["outcome"],
+                                errorFields: [outcomes.find('[name="outcome"]')],
                                 errorMessages: ["Outcome must be selected"]
                             }
                         }
