@@ -238,8 +238,8 @@
                     #set ($pb = "")
                     #foreach ($p in $row.source.points)
                         #if ($p.get($pointsBucket))
-                        #set ($pb = $p.get($pointsBucket))
-                        #break
+                            #set ($pb = $formatter.toInteger($p.get($pointsBucket)))
+                            #break
                         #end
                     #end
                     <td>$pb</td>
