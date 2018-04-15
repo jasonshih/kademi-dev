@@ -136,7 +136,7 @@
                         <div id="lead-fields-tab" class="tab-pane">
                             #foreach($entry in $leadsPage.funnels.entrySet())
                             #set( $funnel = $entry.value )
-                            #if ($funnel.extraFields && $entry.key == $request.params.leadName) 
+                            #if ($funnel.extraFields && $entry.key == $request.params.leadName)
                             <div class="row">
                                 <div style="padding: 15px">
                                     #foreach($field in $funnel.extraFields)
@@ -197,7 +197,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">Enter a new contact</h4>
             </div>
-            <form method="post" action="/leads/" class="form-horizontal">                
+            <form method="post" action="/leads/" class="form-horizontal">
                 <div class="modal-body">
                     #if( $selectedOrg.title )
                     <input type="hidden" name="orgId" value="$selectedOrg.orgId" />
@@ -250,7 +250,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">Enter a new task</h4>
             </div>
-            <form method="post" action="/tasks/" class="form-horizontal">        
+            <form method="post" action="/tasks/" class="form-horizontal">
                 <input type="hidden" name="createTask" value="true" />
                 <div class="modal-body">
                     <div class="form-group">
@@ -332,13 +332,13 @@
                     <div class="form-message alert alert-danger" style="display: none;"></div>
                     <div class="form-group">
                         <div class="col-md-12">
-                            <select name="action" class="form-control required">
+                            <select name="action" class="form-control">
+                                <option value="note-false">General note</option>
                                 <option value="">[Select what the note is for]</option>
                                 <option value="phone-false">Call to customer</option>
                                 <option value="phone-true">Call from customer</option>
                                 <option value="email-false">Email to customer</option>
                                 <option value="email-true">Email from customer</option>
-                                <option value="note-false">General note</option>
                             </select>
                         </div>
                     </div>
