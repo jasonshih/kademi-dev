@@ -71,7 +71,7 @@
                             #if ($hit.source.points.size() > 0)
                                 #foreach($item in $hit.source.points)
                                     #if ($item[$pointsBucket])
-                                        $item[$pointsBucket]
+                                        $formatter.toInteger( $item[$pointsBucket] )
                                         #break
                                     #end
                                 #end
