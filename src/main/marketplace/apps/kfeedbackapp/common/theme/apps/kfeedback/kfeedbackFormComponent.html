@@ -1,14 +1,18 @@
+#if ($page)
 #if ($userResource)
 <div class="container">
     <p>&nbsp;</p>
     <div class="alert alert-info" id="alert-feedback"><i class="fa fa-info-circle"></i> Submitting your feedback...</div>
 </div>
 
-<script src="/theme/apps/kfeedback/js/main.js?v=20160617"></script>
+<script src="/theme/apps/kfeedback/js/main.js"></script>
+#end
 #else
-<div class="container">
-    <p>&nbsp;</p>
-    <div class="alert alert-danger" id="alert-feedback1"><i class="fa fa-info-circle"></i> Please login to submit feedback</div>
+<p>&nbsp;</p>
+<div class="text-center">
+    <a style="display: inline-block" href="javascript;"><img width="40" class="img-responsive" src="/theme/apps/kfeedback/emoji/happy.png" alt=""></a>
+    <a style="display: inline-block" href="javascript;"><img width="40" class="img-responsive" src="/theme/apps/kfeedback/emoji/neutral.png" alt=""></a>
+    <a style="display: inline-block" href="javascript;"><img width="40" class="img-responsive" src="/theme/apps/kfeedback/emoji/sad.png" alt=""></a>
 </div>
 #end
 
