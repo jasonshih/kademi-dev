@@ -18,6 +18,7 @@
         <name>SalesClaimEditor</name>
         <privNames>
             <string>READ_CONTENT</string>
+            <string>WRITE</string>
         </privNames>
     </role>
 
