@@ -2,9 +2,9 @@
     <i class="fa fa-gift fa-4x"></i>
 </div>
 <div class="col-xs-9 text-right">
-    <div class="huge">$totalPoints</div>
+    <div class="huge">$formatter.toInteger($totalPoints)</div>
     <div>
         reward points<br/>
-        in $rewardCount points bucket#if($rewardCount > 1)s#end
+        in $formatter.toInteger($rewardCount) points bucket#if($rewardCount > 1)s#end
     </div>
 </div>
