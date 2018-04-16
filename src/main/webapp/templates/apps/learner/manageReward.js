@@ -275,6 +275,8 @@ function initContentEditor() {
 }
 
 function initEditReward() {
+    flog("initEditReward");
+    
     initContentEditor();
 
     var entryFormInput = $("#quizHtml");
