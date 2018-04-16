@@ -11,10 +11,8 @@
 #end
 
 #set ($fields = ["lastVisit", "firstName", "surName", "email", "phone", "groupNames", "orgName", "parentOrg", "orgAddress", "groupName", "createdDate", "pointsBalance", "pointsDebit"])
-#set ($fieldsNames = {"lastVisit": "Last active", "firstName": "First name", "surName": "Last name", "email": "Email", "phone": "Phone", "groupNames": "Primary groups", "orgName": "Organisation name", "orgAddress": "Organisation address", "groupName": "Group", "pointsBalance": "Points Balance", "createdDate": "Date registered", "parentOrg": "Parent Org"})
+#set ($fieldsNames = {"lastVisit": "Last active", "firstName": "First name", "surName": "Last name", "email": "Email", "phone": "Phone", "groupNames": "Primary groups", "orgName": "Organisation name", "orgAddress": "Organisation address", "groupName": "Group", "createdDate": "Date registered", "parentOrg": "Parent Org"})
 #set ($columns = $columns.split(","))
-#set ($rewardStore = $applications.rewardStore)
-#set( $reward = $rewardStore.findPointsBucket($pointsBucket))
 
 #set( $individual = $reward.individual)
 
@@ -32,193 +30,8 @@
         </div>
     </div>
 </div>
-#macro(renderOrg)
-    #set ($respOrg = $queryManager.runQuery("memberTableOrgPoints"))
-    #set ($resp = $queryManager.runQuery("membersOrgs"))
-
-    #if( $resp.hits.totalHits == 0 )
-        No current results
-    #else
-    <table class="table table-striped table-condensed">
-        <thead>
-            #foreach( $f in $columns )
-            <th>$!fieldsNames[$f]</th>
-            #end
-            #if ($showCustLink == "true")
-            <th>&nbsp;</th>
-            #end
-        </thead>
-        <tbody>
-            #foreach( $row in $resp.hits.hits )
-            <tr>
-                #foreach( $f in $columns )
-                #if ($f == "pointsBalance")
-                <td>
-                    #set( $orgSet = $formatter.newArrayList())
-                    #foreach($po in $row.source.memberships)
-                        #if (!$orgSet.contains($po.get("org")))
-                            #if ($formatter.isNotNull($group))
-                                #if ($po.groupName == $group)
-                                    #set ($temp = $orgSet.add($po.get("org")))
-                                #end
-                            #else
-                                #set ($temp = $orgSet.add($po.get("org")))
-                            #end
-                        #end
-                    #end
-                    #foreach ($hit in $respOrg.hits.hits)
-                        #if ($orgSet.contains($hit.source.entityId))
-                            #if ($hit.source.points.size() > 0)
-                                #foreach($item in $hit.source.points)
-                                    #if ($item[$pointsBucket])
-                                        $item[$pointsBucket]
-                                        #break
-                                    #end
-                                #end
-                            #end
-                        #end
-                    #end
-                </td>
-                #elseif ($f == "lastVisit")
-                <td>$formatter.formatDate($formatter.toDate($row.source.get($f)))</td>
-                #elseif ($f == "groupNames")
-                <td>
-                    #foreach ($g in $row.source.groupNames)
-                    $g
-                    #if ($foreach.count < $row.source.groupNames.size())
-                    ,
-                    #end
-                    #end
-                </td>
-                #elseif ($f == "groupName")
-                    <td>
-                        <table>
-                            <tbody>
-                            #foreach ($m in $row.source.memberships)
-                                #if ($formatter.isNotNull($group))
-                                    #if ($m.groupName == $group)
-                                        <tr>
-                                            <td>$formatter.ifNull($m.get("groupName"), "-") </td>
-                                        </tr>
-                                    #end
-                                #else
-                                    <tr>
-                                        <td>$formatter.ifNull($m.get("groupName"), "-") </td>
-                                    </tr>
-                                #end
-                            #end
-                            </tbody>
-                        </table>
-                    </td>
-                #elseif ($f == "orgName")
-                <td>
-                    <table>
-                        <tbody>
-                        #foreach ($m in $row.source.memberships)
-                        #if ($formatter.isNotNull($group))
-                            #if ($m.groupName == $group)
-                            <tr>
-                                <td>$formatter.ifNull($m.get("orgTitle"), "-")</td>
-                            </tr>
-                            #end
-                        #else
-                            <tr>
-                                <td>$formatter.ifNull($m.get("orgTitle"), "-")</td>
-                            </tr>
-                        #end
-
-                        #end
-                        </tbody>
-                    </table>
-                </td>
-                #elseif ($f == "parentOrg")
-                <td>
-                    <table>
-                        <tbody>
-                        #foreach ($m in $row.source.memberships)
-
-                        #if ($formatter.isNotNull($group))
-                            #if ($m.groupName == $group)
-                            <tr>
-                                <td>$formatter.ifNull($!rootOrg.childOrg($m.get("org")).parent.title, "-")</td>
-                            </tr>
-                            #end
-                        #else
-                            <tr>
-                                <td>$formatter.ifNull($!rootOrg.childOrg($m.get("org")).parent.title, "-")</td>
-                            </tr>
-                        #end
-
-
-                        #end
-                        </tbody>
-                    </table>
-                </td>
-                #elseif ($f == "orgAddress")
-                <td>
-                    <table>
-                        <tbody>
-                        #foreach ($m in $row.source.memberships)
-
-                        #if ($formatter.isNotNull($group))
-                            #if ($m.groupName == $group)
-                            <tr>
-                                <td>$formatter.ifNull($m.get("orgAddress"), "-")</td>
-                            </tr>
-                            #end
-                        #else
-                            <tr>
-                                <td>$formatter.ifNull($m.get("orgAddress"), "-")</td>
-                            </tr>
-                        #end
-
-                        #end
-                        </tbody>
-                    </table>
-                </td>
-                #elseif($f == "createdDate")
-                <td>
-                    <table>
-                        <tbody>
-                        #foreach ($m in $row.source.memberships)
-
-                        #if ($formatter.isNotNull($group))
-                            #if ($m.groupName == $group)
-                            <tr>
-                                <td>$formatter.formatDate($formatter.toDate($m.get("createdDate")))</td>
-                            </tr>
-                            #end
-                        #else
-                            <tr>
-                                <td>$formatter.formatDate($formatter.toDate($m.get("createdDate")))</td>
-                            </tr>
-                        #end
-
-                        #end
-                        </tbody>
-                    </table>
-                </td>
-                #else
-                <td>$!row.source.get($f)</td>
-                #end
-
-                #end
-                #if ($showCustLink == "true")
-                <td><a class="btn btn-primary btn-xs" href="/custs/$!row.source.get('userName')"><i class="fa fa-info-circle"></i> View</a></td>
-                #end
-            </tr>
-            #end
-
-        </tbody>
-    </table>
-    #end
-
-#end
 
 #macro(renderIndividual)
-    #set ($respPointsDebit = $queryManager.runQuery("membersSpentPoint"))
-    #set ($pointsDebitBucket = $respPointsDebit.aggregations.get("byProfileIds").buckets)
-
     #set ($resp = $queryManager.runQuery("membersTableAll"))
 
     #if( $resp.hits.totalHits == 0 )
@@ -234,16 +47,7 @@
             #foreach( $row in $resp.hits.hits )
             <tr>
                 #foreach( $f in $columns )
-                #if ($f == "pointsBalance")
-                    #set ($pb = "")
-                    #foreach ($p in $row.source.points)
-                        #if ($p.get($pointsBucket))
-                        #set ($pb = $p.get($pointsBucket))
-                        #break
-                        #end
-                    #end
-                    <td>$pb</td>
-                #elseif ($f == "lastVisit")
+                #if ($f == "lastVisit")
                 <td>$formatter.formatDate($formatter.toDate($row.source.get($f)))</td>
                 #elseif ($f == "groupNames")
                 <td>
