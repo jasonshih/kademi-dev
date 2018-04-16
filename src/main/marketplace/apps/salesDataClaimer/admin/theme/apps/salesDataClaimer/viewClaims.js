@@ -194,6 +194,29 @@
             reloadClaimsList();
         });
         
+        $('.claim-group').on('change', function (e) {
+            uri.removeSearch('claimGroup');
+            
+            if (this.value) {
+                uri.addSearch('claimGroup', this.value);
+            }
+            
+            window.history.pushState('', document.title, uri.toString());
+            reloadClaimsList();
+        });
+        
+        $('.claims-group-claim-group').on('change', function (e) {
+            uri.removeSearch('claimGroup');
+            
+            if (this.value) {
+                uri.addSearch('claimGroup', this.value);
+            }
+            
+            window.history.pushState('', document.title, uri.toString());
+            
+            reloadClaimsGroupList();
+        });
+        
         table.on('click', '.btn-view-claim, .btn-review-claim', function (e) {
             e.preventDefault();
             
@@ -288,6 +311,19 @@
                 }
             } else {
                 alert('Please select claims which you want to delete');
+            }
+        });
+    }
+    
+    function reloadClaimsGroupList(callback) {
+        $('#table-claims-group-body').reloadFragment({
+            url: window.location.pathname + window.location.search,
+            whenComplete: function () {
+                $('.timeago').timeago();
+                
+                if (typeof callback === 'function') {
+                    callback();
+                }
             }
         });
     }

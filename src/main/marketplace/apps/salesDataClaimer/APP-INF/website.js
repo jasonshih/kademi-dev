@@ -258,7 +258,7 @@ function saveProductClaim(page, params, files) {
         log.info("contactFormService: {}", contactFormService);
         
         var salesDataApp = applications.get("salesData");
-        var salesDateSeries = salesDataApp.getSalesDataSeries('sales-claims');
+        var salesDateSeries = salesDataApp.getSalesDataSeries('allowed-ac-models');
         var productsNumber = params['claims-number'];
         var productsSKUs = [];
         var soldBy = "";
@@ -290,7 +290,7 @@ function saveProductClaim(page, params, files) {
             var productIndoorSerialNumber = params["prod"+ (i+1) +"-indoor-serial-number"];
             
             var salesDataExtraFields = formatter.newMap();
-            salesDataExtraFields.put("indoor-serial-number", productIndoorSerialNumber);
+            salesDataExtraFields.put("serial-no", productIndoorSerialNumber);
 
             var salesDataRecord = salesDataApp.findDataPoint(salesDateSeries, null, null, salesDataExtraFields);
             
@@ -309,31 +309,47 @@ function saveProductClaim(page, params, files) {
             
             var cr = contactFormService.processContactRequest(page, params, files);
             var enteredUser = applications.userApp.findUserResource(cr.profile);
+            var now = formatter.formatDateISO8601(formatter.now, org.timezone);
             
-            var claimGroupId = 'claimGroup-' + generateRandomText(32);
+            var claimGroupId = getLastClaimGroupId(page);
+            
+            if (claimGroupId != null) {
+                var number = formatter.toString(formatter.toInteger(claimGroupId.substring(5)) + 1).replace(".0", "");
+                
+                claimGroupId = 'MHI-W' + formatter.padWith('0', number, 5);
+            } else {
+                claimGroupId = 'MHI-W00001';
+            }
+            
             var claimGroupObj = {
                 claimGroupId: claimGroupId,
+                enteredDate: now,
                 contactRequest: cr.id
             }
             
             securityManager.runAsUser(enteredUser, function () {
                 db.createNew(claimGroupId, JSON.stringify(claimGroupObj), TYPE_CLAIM_GROUP);
-                // eventManager.goalAchieved("claimSubmittedGoal", {"claim": id});
             });
             
-             
+            var tempDateTime = params['purchase-date'];
+            var tempDate = tempDateTime.substring(0, tempDateTime.indexOf(' ')).split('/');
+            var tempTime = tempDateTime.substring(tempDateTime.indexOf(' ') + 1, tempDateTime.length).split(':');
+            var soldDateTmp = formatter.parseDate(tempDateTime);
+            var soldDate = formatter.formatDateISO8601(soldDateTmp, org.timezone);
             
-            for(var i = 0; i < productsSKUs.length; i++){                 
-                
-                var now = formatter.formatDateISO8601(formatter.now, org.timezone);
+            log.info('createClaim > soldDate={}', soldDate);
+            
+            for(var i = 0; i < productsSKUs.length; i++) { 
                 var claimId = 'claim-' + generateRandomText(32);
                 var claimObj = {
                     recordId: claimId,
                     enteredDate: now,
                     modifiedDate: now,
+                    receipt: cr.attachments.length > 0 ? ('/_hashes/files/' + cr.attachments[0].attachmentHash) : null,
                     amount: 1,
                     status: RECORD_STATUS.NEW,
                     productSku: productsSKUs[i],
+                    soldDate: soldDate,
                     soldBy: soldBy,
                     soldById: soldById,
                     claimGroupId: claimGroupId
@@ -341,7 +357,7 @@ function saveProductClaim(page, params, files) {
     
                 securityManager.runAsUser(enteredUser, function () {
                     db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
-                    //eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId});
+                    eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId});
                 });
             }
             

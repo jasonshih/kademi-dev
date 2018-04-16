@@ -12,6 +12,12 @@
     window['${orgsLocatorId}-orgTypes-preset'] = [];
     #if ($selectedTypesOnly && $selectedTypesOnly == "true")
         #if ($orgTypesSettings.size() > 0)
+            #if ($orgTypesSettings.contains("no-type"))
+                window['${orgsLocatorId}-orgTypes'].push({
+                    title: "NO TYPE",
+                    value: 'no-type'
+                });
+            #end
             #foreach($orgType in $rootFolder.find("/").orgTypes)
                 #if ($orgTypesSettings.contains($orgType.name))
                     window['${orgsLocatorId}-orgTypes'].push({
@@ -22,6 +28,10 @@
             #end
         #end
     #else
+        window['${orgsLocatorId}-orgTypes'].push({
+            title: "NO TYPE",
+            value: 'no-type'
+        });
         #foreach($orgType in $rootFolder.find("/").orgTypes)
             window['${orgsLocatorId}-orgTypes'].push({
                 title: "$orgType.displayName",
@@ -31,6 +41,12 @@
     #end
     #foreach($orgType in $rootFolder.find("/").orgTypes)
         #if ($orgTypesSettings.size() > 0)
+            #if ($orgTypesSettings.contains("no-type"))
+                window['${orgsLocatorId}-orgTypes-preset'].push({
+                    title: "NO TYPE",
+                    value: 'no-type'
+                });
+            #end
             #if ($orgTypesSettings.contains($orgType.name))
                 window['${orgsLocatorId}-orgTypes-preset'].push({
                     title: "$orgType.displayName",

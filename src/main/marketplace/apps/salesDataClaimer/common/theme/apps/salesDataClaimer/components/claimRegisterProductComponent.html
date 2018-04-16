@@ -27,7 +27,8 @@
     #if( $orgs.add($orgObj) ) #end
 #end
 
-<form method="post" id="ClaimRegisterProductForm" action="/salesDataClaimsProducts/" class="form-horizontal fuelux claimRegisterProductForm">
+<form method="post" id="ClaimRegisterProductForm" action="/salesDataClaimsProducts/" class="form-horizontal fuelux claimRegisterProductForm" enctype="multipart/form-data">
+    <section class="form-message"></section>
     <input type="hidden" name="saveProductClaim" />
     <div class="wizard" id="myWizard">
         <div class="steps-container">
@@ -478,9 +479,8 @@
                                         <div class="col-md-12">
                                             <select id="prod1-model-number" name="prod1-model-number" class="form-control">
                                                 <option value="">Please select from the options</option>
-                                                #set( $numbers = ["Model One", "Model Two", "Model Three"] )
-                                                #foreach($number in $numbers)
-                                                    $formatter.option( $number, $number, "" )
+                                                #foreach($product in $applications.productsApp.products)
+                                                    $formatter.option( $product.name, $product.title, "" )
                                                 #end
                                             </select>
                                         </div>

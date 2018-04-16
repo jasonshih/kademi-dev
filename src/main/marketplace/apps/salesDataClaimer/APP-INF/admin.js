@@ -50,8 +50,8 @@ function getAllClaims(page, params) {
     log.info('getAllClaims > page={}, params={}', page, params);
 
     if (!params.claimId) {
-        var results = searchClaims(page, params.status);
-        var claimGroupsResult = searchClaimGroups(page);
+        var results = searchClaims(page, params.status, undefined, params.claimGroup);
+        var claimGroupsResult = searchClaimGroups(page, params.claimGroup);
         page.attributes.searchResult = results;
         page.attributes.searchClaimGroupsResult = claimGroupsResult;
         page.attributes.settings = getAppSettings(page);

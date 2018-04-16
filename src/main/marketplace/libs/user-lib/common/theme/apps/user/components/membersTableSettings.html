@@ -14,21 +14,6 @@
         </div>
     </div>
 
-    #set ($rewardStore = $applications.rewardStore)
-    #if ($rewardStore)
-    <div class="form-group">
-        <label class="col-sm-12">Points bucket</label>
-        <div class="col-sm-12">
-            <select name="pointsBucket" id="" class="points-bucket form-control">
-                <option value="" selected>No bucket</option>
-                #foreach($r in $rewardStore.pointsBuckets)
-                    <option value="$r.name">$r.title</option>
-                #end
-            </select>
-        </div>
-    </div>
-    #end
-
     <div class="form-group">
         <label class="col-sm-12">Shows link to customer page</label>
         <div class="col-sm-12">
@@ -88,10 +73,6 @@
                 <label>
                     <input type="checkbox" class="table-columns" value="createdDate"/>Date registered </label>
             </div>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" class="table-columns" value="pointsBalance"/>Points Balance</label>
-            </div>
         </div>
     </div>
 
@@ -107,23 +88,4 @@
             </select>
         </div>
     </div>
-
-    <!--<div class="checkbox">-->
-        <!--<label>-->
-            <!--<input type="checkbox" class="show-headers" value="true"/> Headers-->
-        <!--</label>-->
-    <!--</div>-->
-
-    <!--<div class="form-group">-->
-        <!--<label class="col-sm-12">Item per page</label>-->
-        <!--<div class="col-sm-12">-->
-            <!--<select class="form-control select-items-per-page">-->
-                <!--<option value="5">5</option>-->
-                <!--<option value="10">10</option>-->
-                <!--<option value="25">25</option>-->
-                <!--<option value="50">50</option>-->
-                <!--<option value="100" selected="selected">100</option>-->
-            <!--</select>-->
-        <!--</div>-->
-    <!--</div>-->
 </form>
