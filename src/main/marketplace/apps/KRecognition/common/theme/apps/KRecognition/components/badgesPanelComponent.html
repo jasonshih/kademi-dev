@@ -53,12 +53,22 @@
         </div>
 #else
     #if (!$page)
-        <div class="$badgeClass kbadge" style="$!style">
-            <img src="/static/images/photo_holder_squared.png" class="img-responsive kbadge-photo" alt="Sample badge" />
-            #if ($showBadgeTitle == true)
-            <div class="kbadge-title">Sample badge</div>
-            #end
+        <div class="clearfix">
+            <div class="$badgeClass kbadge" style="$!style">
+                <img src="/theme/apps/KRecognition/components/badge2-field.png" class="img-responsive kbadge-photo" alt="Sample badge" />
+                #if ($showBadgeTitle == true)
+                <div class="kbadge-title">Sample badge</div>
+                #end
+            </div>
+
+            <div class="$badgeClass kbadge" style="$!style">
+                <img src="/theme/apps/KRecognition/components/badge2-tablet.png" class="img-responsive kbadge-photo" alt="Sample badge" />
+                #if ($showBadgeTitle == true)
+                <div class="kbadge-title">Sample badge 2</div>
+                #end
+            </div>
         </div>
+
     #end
 #end
 
