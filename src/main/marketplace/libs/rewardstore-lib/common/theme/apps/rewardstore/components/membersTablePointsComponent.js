@@ -11,7 +11,7 @@
             flog('initSettingForm "membersTable" component');
 
             return $.ajax({
-                url: '_components/membersTable?settings',
+                url: '_components/membersTablePoints?settings',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
