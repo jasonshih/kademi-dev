@@ -66,6 +66,21 @@ function initLeadManEvents() {
         flog("complete task form", form);
         if (form.length > 0) {
             form.forms({
+                validate: function (form, config) {
+                    var outcomes = form.find('#lead-task-outcomes');
+                    if (outcomes.length){
+                        var selected = outcomes.find('.outcome:checked').length;
+                        if (selected < 1){
+                            return {
+                                error: 1,
+                                errorFields: [outcomes.find('[name="outcome"]')],
+                                errorMessages: ["Outcome must be selected"]
+                            }
+                        }
+                    }
+
+                    return true;
+                },
                 onSuccess: function (resp) {
                     flog("onSuccess", resp, modal);
                     form.closest(".modal").modal("hide");
@@ -1923,7 +1938,8 @@ function initStatsSummaryComponents() {
 }
 
 function initClipboard() {
-    $('#newNoteModal [name=newNote]').inlineattachment({
+
+    $('[name=newNote], [name=note]').inlineattachment({
         uploadUrl: '/assets/',
         uploadMethod: "POST",
         jsonFieldName : "nextHref",
