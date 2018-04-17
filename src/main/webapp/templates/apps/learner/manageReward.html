@@ -422,13 +422,13 @@
 
                     </div>
 
-                    <div class="tab-pane" id="restrictions">
-                        <h3>Points rewards</h3>
+                    <div class="tab-pane" id="points">
+
 
                         <p class="lead">Configure points allocation sources and rules to be connected to this promotion</p>
 
                         <h3>Points sources</h3>
-                        <table>
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>Title</th>
@@ -438,13 +438,30 @@
                             <tbody>
                                 #foreach($psource in $page.pointsSources )
                                 <tr>
-                                    <td>$psource.title</td>
-                                    <td><a href="/sales/$psource.series.name/sources/source-$psource.name/">$psource.series.title</a></td>
+                                    <td><a href="/sales/$psource.dataSeries.name/sources/source-$psource.name/">$psource.title</a></td>
+                                    <td>$psource.dataSeries.title</td>
                                 </tr>
                                 #end
                             </tbody>
                         </table>
+
                         <h3>Points rules</h3>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Points bucket</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach($prule in $page.pointsRules )
+                                <tr>
+                                    <td><a href="/points-rules/$prule.name">$prule.title</a></td>
+                                    <td>$prule.rewardDest.title</td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
                     </div>
 
                     <div class="tab-pane" id="restrictions">
