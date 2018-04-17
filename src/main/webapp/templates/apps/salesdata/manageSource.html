@@ -97,6 +97,26 @@
                             </div>
                         </div>
 
+                        <hr/>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="promotion">
+                                Promotion
+                                <small>If this is part of a promotion select the promotion here</small>
+                            </label>
+                            <div class="col-md-4">
+                                <select name="promotion" id="promotion" class="form-control" >
+                                    <option value="">[No promotion]</option>
+                                    #foreach($reward in $page.promotions)
+                                    $formatter.option($reward.name, $reward.name, $page.source.promotion.name)
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <hr/>
+
                         <div class="form-group">
                             <label class="control-label col-md-2">
 

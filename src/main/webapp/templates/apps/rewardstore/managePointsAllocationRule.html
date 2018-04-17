@@ -58,6 +58,26 @@
                                 <input type="text" name="endDate" id="endDate" value="$!formatter.formatDateTime($page.rule.endDate, $rootFolder.organisation.timezone)" placeholder="End Date" data-date-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker" />
                             </div>
                         </div>
+
+                        <hr/>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="promotion">
+                                Promotion
+                                <small>If this is part of a promotion select the promotion here</small>
+                            </label>
+                            <div class="col-md-5">
+                                <select name="promotion" id="promotion" class="form-control" >
+                                    <option value="">[No promotion]</option>
+                                    #foreach($reward in $page.promotions)
+                                    $formatter.option($reward.name, $reward.name, $page.rule.promotion.name)
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr/>
+
                         <div class="form-group">
                             <label class="control-label col-md-3" for="issueTo">When awarded To<small>Will apply to everyone if blank.</small></label>
                             <div class="col-md-8">
