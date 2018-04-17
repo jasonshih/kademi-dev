@@ -54,6 +54,7 @@
                         <li class=""><a href="#groups" data-toggle="tab">Groups</a></li>
                         <li class=""><a href="#entryForm" data-toggle="tab">Competition</a></li>
                         <li class=""><a href="#checkout" data-toggle="tab">Checkout</a></li>
+                        <li class=""><a href="#points" data-toggle="tab">Points</a></li>
                         <li class=""><a href="#restrictions" data-toggle="tab">Restrictions</a></li>
                         <li class=""><a href="#entries" data-toggle="tab">Entries</a></li>
                     </ul>
@@ -419,6 +420,31 @@
                             </div>
                         </div>
 
+                    </div>
+
+                    <div class="tab-pane" id="restrictions">
+                        <h3>Points rewards</h3>
+
+                        <p class="lead">Configure points allocation sources and rules to be connected to this promotion</p>
+
+                        <h3>Points sources</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Series</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach($psource in $page.pointsSources )
+                                <tr>
+                                    <td>$psource.title</td>
+                                    <td><a href="/sales/$psource.series.name/sources/source-$psource.name/">$psource.series.title</a></td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                        <h3>Points rules</h3>
                     </div>
 
                     <div class="tab-pane" id="restrictions">
