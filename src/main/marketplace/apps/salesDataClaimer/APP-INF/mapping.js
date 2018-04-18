@@ -82,7 +82,11 @@ var claimGroupMapping = {
                     "type": "text"
                 }
             }
-        },        
+        },
+        "enteredDate": {
+          "type": "date",
+          "store": true
+        },    
         "contactRequest": {
             "type": "long",
             "store": true

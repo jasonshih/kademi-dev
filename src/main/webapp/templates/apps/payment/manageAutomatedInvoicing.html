@@ -1,0 +1,48 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>$view.title</title>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/bs/dt-1.10.9,r-1.0.7/datatables.min.css"/>
+        <script type="text/javascript" src="https://cdn.datatables.net/r/bs/dt-1.10.9,r-1.0.7/datatables.min.js">//</script>
+    </head>
+    <body>
+
+        <h2>Automatic invoicing</h2>
+
+        <form class="form-horizontal" method="POST" action="$page.href" id="processInvoicesForm">
+            <input type="hidden" name="processInvoices" value="processInvoices" />
+            <button class="btn btn-success">Run automatic invoices now</button>
+        </form>
+
+        <hr/>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Invoice title</th>
+                </tr>
+            </thead>
+            <tbody>
+                #foreach($invoice in $page.nextInvoices)
+                <tr>
+                    <td>$invoice.invoiceList.title</td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+
+
+        <script type="text/javascript">
+            $(function () {
+                $("#processInvoicesForm").forms({
+                    onSuccess: function (resp) {
+                        if( resp.status ) {
+                            Msg.info("Done");
+                        } else {
+                            Msg.info("Something didnt work");
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

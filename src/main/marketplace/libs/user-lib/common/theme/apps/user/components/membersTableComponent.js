@@ -92,16 +92,6 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    form.find('.points-bucket').on('change', function () {
-                        var selectedQuery = this.value;
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-
-                        component.attr('data-points-bucket', selectedQuery);
-                        component.attr('data-points-bucket-title', $(this).find(':selected').text());
-                        keditor.initDynamicContent(dynamicElement);
-                    });
-
                     form.find('[name=group]').on('change', function(e){
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -119,7 +109,6 @@
             form.find('.select-items-per-page').val(dataAttributes['data-items-per-page']);
             form.find('.query-height').val(dataAttributes['data-height']);
             form.find('.txt-title').val(dataAttributes['data-title']);
-            form.find('.points-bucket').val(dataAttributes['data-points-bucket']);
             form.find('.show-headers').prop("checked", toBool(dataAttributes['data-headers']));
             form.find('.show-paginator').prop("checked", toBool(dataAttributes['data-showpaginator']));
             form.find('.showCustLink').prop("checked", toBool(dataAttributes['data-show-cust-link']));

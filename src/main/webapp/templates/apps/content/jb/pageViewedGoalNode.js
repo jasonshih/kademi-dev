@@ -11,7 +11,7 @@ JBNodes['pageViewedGoal'] = {
         },
         nextNodeId: {
             label: 'then',
-            title: 'When completed',
+            title: 'When viewed',
             maxConnections: 1
         },
         pastTimeNode: {

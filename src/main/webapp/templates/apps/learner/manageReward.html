@@ -54,6 +54,7 @@
                         <li class=""><a href="#groups" data-toggle="tab">Groups</a></li>
                         <li class=""><a href="#entryForm" data-toggle="tab">Competition</a></li>
                         <li class=""><a href="#checkout" data-toggle="tab">Checkout</a></li>
+                        <li class=""><a href="#points" data-toggle="tab">Points</a></li>
                         <li class=""><a href="#restrictions" data-toggle="tab">Restrictions</a></li>
                         <li class=""><a href="#entries" data-toggle="tab">Entries</a></li>
                     </ul>
@@ -419,6 +420,48 @@
                             </div>
                         </div>
 
+                    </div>
+
+                    <div class="tab-pane" id="points">
+
+
+                        <p class="lead">Configure points allocation sources and rules to be connected to this promotion</p>
+
+                        <h3>Points sources</h3>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Series</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach($psource in $page.pointsSources )
+                                <tr>
+                                    <td><a href="/sales/$psource.dataSeries.name/sources/source-$psource.name/">$psource.title</a></td>
+                                    <td>$psource.dataSeries.title</td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+
+                        <h3>Points rules</h3>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Points bucket</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach($prule in $page.pointsRules )
+                                <tr>
+                                    <td><a href="/points-rules/$prule.name">$prule.title</a></td>
+                                    <td>$prule.rewardDest.title</td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
                     </div>
 
                     <div class="tab-pane" id="restrictions">

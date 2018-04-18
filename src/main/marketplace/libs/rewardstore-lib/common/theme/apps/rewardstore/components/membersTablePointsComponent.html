@@ -71,7 +71,7 @@
                             #if ($hit.source.points.size() > 0)
                                 #foreach($item in $hit.source.points)
                                     #if ($item[$pointsBucket])
-                                        $item[$pointsBucket]
+                                        $formatter.toInteger( $item[$pointsBucket] )
                                         #break
                                     #end
                                 #end
@@ -238,8 +238,8 @@
                     #set ($pb = "")
                     #foreach ($p in $row.source.points)
                         #if ($p.get($pointsBucket))
-                        #set ($pb = $p.get($pointsBucket))
-                        #break
+                            #set ($pb = $formatter.toInteger($p.get($pointsBucket)))
+                            #break
                         #end
                     #end
                     <td>$pb</td>

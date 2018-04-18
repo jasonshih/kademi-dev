@@ -23,7 +23,38 @@ function uploadFile(page, params, files) {
     return result;
 }
 
-function getSearchClaimsQuery(page, status, user) {
+function getLastClaimGroupId(page) {
+    var queryJson = {
+        "stored_fields": [
+            "claimGroupId"
+        ],
+        "size": 1,
+        "sort": [
+            {
+                "enteredDate": "desc"
+            }
+        ],
+        "query": {
+            "bool": {
+                "must": [
+                    {"type": {"value": TYPE_CLAIM_GROUP}}
+                ]
+            }
+        }
+    };
+    
+    searchResult = doDBSearch(page, queryJson);
+    
+    log.info("getLastClaimGroupId {}", searchResult);
+    
+    if (searchResult.hits.hits.length > 0) {
+        return searchResult.hits.hits[0].fields.claimGroupId.value;
+    } else {
+        return null;
+    }
+}
+
+function getSearchClaimsQuery(page, status, user, claimForm) {
     var queryJson = {
         'stored_fields': [
             'receipt',
@@ -35,7 +66,8 @@ function getSearchClaimsQuery(page, status, user) {
             'modifiedDate',
             'amount',
             'status',
-            'productSku'
+            'productSku',
+            'claimGroupId'
         ],
         'size': 10000,
         'sort': [
@@ -63,10 +95,17 @@ function getSearchClaimsQuery(page, status, user) {
             'term': {'status': +status}
         });
     }
+
+    if (isNotBlank(claimForm)) {
+        queryJson.query.bool.must.push({
+            'term': {'claimGroupId': claimForm}
+        });
+    }
+    
     return queryJson;
 }
 
-function getSearchClaimGroupsQuery(page) {
+function getSearchClaimGroupsQuery(page, claimForm) {
     var queryJson = {        
         'size': 10000,        
         'query': {
@@ -76,7 +115,14 @@ function getSearchClaimGroupsQuery(page) {
                 ]
             }
         }
-    };   
+    };
+
+    if (isNotBlank(claimForm)) {
+        queryJson.query.bool.must.push({
+            'term': {'claimGroupId': claimForm}
+        });
+    }
+    
     return queryJson;
 }
 
@@ -101,11 +147,11 @@ function totalAmountOfClaims(page, status, user) {
     return searchResult;
 }
 
-function searchClaims(page, status, user) {
+function searchClaims(page, status, user, claimForm) {
     var searchResult = null;
 
     try {
-        var queryJson = getSearchClaimsQuery(page, status, user);
+        var queryJson = getSearchClaimsQuery(page, status, user, claimForm);
         searchResult = doDBSearch(page, queryJson);
     } catch (e) {
         log.error('ERROR in searchClaims: ' + e, e);
@@ -114,11 +160,11 @@ function searchClaims(page, status, user) {
     return searchResult;
 }
 
-function searchClaimGroups(page) {
+function searchClaimGroups(page, claimGroup) {
     var searchResult = null;
 
     try {
-        var queryJson = getSearchClaimGroupsQuery(page);
+        var queryJson = getSearchClaimGroupsQuery(page, claimGroup);
         log.info(queryJson)
         searchResult = doDBSearch(page, queryJson);
     } catch (e) {

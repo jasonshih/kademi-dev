@@ -67,6 +67,7 @@ pre {
                             <p class="label label-danger">
                                 <span class="glyphicon glyphicon-remove"></span>
                                 $page.statusText
+                                , next attempt $page.emailItem.nextAttempt
                             </p>
                         #else
                             <span class="glyphicon glyphicon-time"></span> Preparing..
@@ -140,7 +141,7 @@ pre {
                     </td>
                 </tr>
                 #end
-                
+
             </table>
         </div>
         #if( $page.emailHtml.length() > 0 )
