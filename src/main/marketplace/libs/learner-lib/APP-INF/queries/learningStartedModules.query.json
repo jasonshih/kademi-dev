@@ -1,0 +1,28 @@
+{
+    "stored_fields": [
+    ],
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "type": {
+                        "value": "moduleStatus"
+                    }
+                },
+                {
+                    "term": {
+                        "profile": "$userId"
+                    }
+                }
+            ]
+        }
+    },
+    "aggregations": {                 
+        "started_courses":{  
+            "value_count" : { 
+                "field" : "complete" 
+            } 
+        }                
+    },
+    "size": 0
+}

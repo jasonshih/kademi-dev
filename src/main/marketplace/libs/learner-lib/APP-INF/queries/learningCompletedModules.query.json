@@ -1,0 +1,33 @@
+{
+    "stored_fields": [
+    ],
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "type": {
+                        "value": "moduleStatus"
+                    }
+                },
+                {
+                    "term": {
+                        "profile": "$userId"
+                    }
+                },                        
+                {
+                    "term": {
+                        "complete": "true"
+                    }
+                }
+            ]
+        }
+    },
+    "aggregations": {                 
+        "completed_courses":{  
+            "value_count" : { 
+                "field" : "complete" 
+            } 
+        }                
+    },
+    "size": 0
+}
