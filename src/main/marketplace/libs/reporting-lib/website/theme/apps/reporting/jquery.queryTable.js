@@ -30,14 +30,19 @@
                 var queryName = panel.attr('data-queryname');
                 var from = panel.attr('data-from');
                 var size = panel.attr('data-items-per-page');
+                var profile = panel.attr('data-profile');
                 if (!from) {
                     from = 0;
                 }
                 if (!size) {
                     size = 100;
                 }
+                if(!profile){
+                    profile = "";
+                }
+                
                 $.ajax({
-                    url: '/queries/' + queryName + '/?run&from=' + from + '&size=' + size,
+                    url: '/queries/' + queryName + '/?run&from=' + from + '&size=' + size +'&profileId=' + profile,
                     dataType: 'json',
                     success: function (resp) {
                         flog("queryTable: response ", queryName, resp.hits);
@@ -65,14 +70,19 @@
                 var queryName = panel.attr('data-queryname');
                 var from = panel.attr('data-from');
                 var size = panel.attr('data-items-per-page');
+                var profile = panel.attr('data-profile');
                 if (!from) {
                     from = 0;
                 }
                 if (!size) {
                     size = 100;
                 }
+                if(!profile){
+                    profile = "";
+                }
+                
                 $.ajax({
-                    url: '/queries/' + queryName + '/?as=json&from=' + from + '&size=' + size,
+                    url: '/queries/' + queryName + '/?as=json&from=' + from + '&size=' + size + '&profileId=' + profile,
                     dataType: 'json',
                     success: function (resp) {
                         var tbody = '';

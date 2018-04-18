@@ -5,6 +5,8 @@ controllerMappings
     .addQuery("/APP-INF/queries/userVisit.query.json", ["log"],	["Administrator"]);
 controllerMappings
     .addQuery("/APP-INF/queries/userVisits.query.json", ["uservisit"],	["Administrator"]);
+controllerMappings
+    .addQuery("/APP-INF/queries/userDetailedVisits.query.json", ["log"],[]);    
 
 controllerMappings.addTableDef("tableUserVisit", "User Visits Table", "loadUserVisits")
     .addHeader("Full name")
@@ -28,5 +30,26 @@ function loadUserVisits(start, maxRows, rowsResult, rootFolder) {
         } else {
             rowsResult.addCell('');
         }
+    }
+}
+
+controllerMappings.addTableDef("tableUserDetailedVisits", "User Detailed Visits Table", "loadUserDetailedVisits")
+    .addHeader("Visit date")
+    .addHeader("Visited page");
+    
+function loadUserDetailedVisits(start, maxRows, rowsResult, rootFolder) {
+    var paramsMap = formatter.newMap();
+    var profileId = http.request.params.profileId;
+    paramsMap.put("prorileId", profileId)
+    var resp = queryManager.runQuery("userDetailedVisits", paramsMap);
+    for (var index in resp.hits.hits) {    
+        rowsResult.addRow();
+        
+        var userVisit = resp.hits.hits[index];
+        
+        rowsResult.addCell(formatter.formatDateTime(formatter.toDate(userVisit.fields.reqDate.value)));
+        rowsResult.addCell(userVisit.fields.reqUrl.value);
+        
+        rowsResult.flush();        
     }
 }
