@@ -80,7 +80,7 @@
                                 <th>Profile</th>
                                 <td>
                                     <a href="/manageUsers/$page.profile.id">$page.profile.formattedName</a>
-                                    <a href="/manageUsers/$page.profile.id#webactivity-tab" class="btn btn-info pull-right">Browing history</a>
+                                    <a href="/manageUsers/$page.profile.id#webactivity-tab" class="btn btn-info pull-right">Browsing history</a>
                                 </td>
                             </tr>
                             <tr>
@@ -145,7 +145,7 @@
                         },
                         success: function (data) {
                             flog("success", data);
-                            window.location += ('/..'); 
+                            window.location += ('/..');
                         },
                         error: function (resp) {
                             Msg.error("There was an error: " + resp);
