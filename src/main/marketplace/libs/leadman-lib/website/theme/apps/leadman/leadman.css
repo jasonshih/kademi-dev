@@ -32,7 +32,7 @@ table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:af
 .deleteTask{
     position: absolute;
     right: 10px;
-    bottom: 10px;
+    top: 10px;
     font-size: 16px;
 }
 @media (max-width: 767px) {
