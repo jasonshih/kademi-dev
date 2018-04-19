@@ -39,7 +39,7 @@ controllerMappings.addTableDef("tableUserDetailedVisits", "User Detailed Visits 
     
 function loadUserDetailedVisits(start, maxRows, rowsResult, rootFolder) {
     var paramsMap = formatter.newMap();
-    var profileId = http.request.params.profileId;
+    var profileId = http.request.params.profileId;    
     paramsMap.put("prorileId", profileId)
     var resp = queryManager.runQuery("userDetailedVisits", paramsMap);
     for (var index in resp.hits.hits) {    
