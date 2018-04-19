@@ -265,11 +265,13 @@
         },
         {
             "less": {
+                "lessMedia": "all",
                 "path": "/theme/apps/leadman/leadman-typeahead.less"
             }
         },
         {
             "less": {
+                "lessMedia": "all",
                 "path": "/theme/apps/leadman/leadsDash.less"
             }
         },
