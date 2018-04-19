@@ -13,6 +13,12 @@ controllerMappings.addComponent("leadman/components", "countNewProposals", "html
 
 controllerMappings.addComponent("leadman/components", "leadsImporterWizard", "html", "Import wizard for leads", "Leadman App component");
 
+/* Templates */
+controllerMappings.addTemplate('theme/apps/leadman/', 
+                               'viewProfile', 
+                               'View Customer Profile', 
+                               true);
+                               
 // ============================================================================
 // Portlet
 // ============================================================================
