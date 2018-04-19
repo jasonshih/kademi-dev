@@ -35,8 +35,8 @@
     // KEditor instances
     KEditor.instances = {};
 
-    // Turn on/off debug mode
-    KEditor.debug = true;
+    // Turn on/off debug mode. Default to be false
+    KEditor.debug = false;
 
     // Version of KEditor
     KEditor.version = '@{version}';

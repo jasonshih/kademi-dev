@@ -233,10 +233,13 @@
                     }
                 });
                 
-                initMSelectImage(form.find('#btnAddImagesBGs'), keditor, function (url, relativeUrl, fileType, hash) {
+                initMSelectImage(form.find('#btnAddImagesBGs'), keditor, function (url, relativeUrl, fileType, hash, isAsset) {
                     var container = keditor.getSettingContainer();
                     var containerBg = contentEditor.getContainerElement(container, '.container-bg');
                     var imageUrl = '/_hashes/files/' + hash;
+                    if (isAsset){
+                        imageUrl = url;
+                    }
                     var currentMselect = form.find('.currentMselect').val();
                     var target = contentEditor.getContainerBgElement(container, form);
                     

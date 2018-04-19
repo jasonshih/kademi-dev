@@ -433,8 +433,9 @@
                     var carouselAddImage = form.find('.carouselAddImage');
                     var carouselItemsWrap = form.find('.carouselItemsWrap');
                     
-                    initMSelectImage(carouselAddImage, keditor, function (url, relUrl, type, hash) {
+                    initMSelectImage(carouselAddImage, keditor, function (url, relUrl, type, hash, isAsset) {
                         flog('Keditor carousel selected a file', url, hash);
+
                         self.addItemToList(form, {
                             src: url,
                             hash: hash,
@@ -1649,9 +1650,12 @@
                         img.attr('width', this.value);
                     });
                     
-                    initMSelectImage(form.find('.photo-edit'), keditor, function (url, relativeUrl, fileType, hash) {
+                    initMSelectImage(form.find('.photo-edit'), keditor, function (url, relativeUrl, fileType, hash, isAsset) {
                         var img = keditor.getSettingComponent().find('img.media-object');
-                        
+                        var imgUrl = '/_hashes/files/' + hash;
+                        if (isAsset){
+                            imgUrl = url;
+                        }
                         img.attr('src', '/_hashes/files/' + hash);
                     });
                     
@@ -1809,9 +1813,12 @@
                     // =================================================================================
                     // Backgrounds
                     // =================================================================================
-                    initMSelectImage(form.find('.background-image-edit'), keditor, function (url, relUrl, type, hash) {
+                    initMSelectImage(form.find('.background-image-edit'), keditor, function (url, relUrl, type, hash, isAsset) {
                         var target = keditor.getSettingComponent().find('.keditor-component-text-content');
                         var imageUrl = 'http://' + window.location.host + '/_hashes/files/' + hash;
+                        if (isAsset){
+                            imageUrl = url;
+                        }
                         target.css('background-image', 'url("' + imageUrl + '")');
                         form.find('.background-image-previewer').attr('src', imageUrl);
                     });
@@ -2098,10 +2105,13 @@
                 success: function (resp) {
                     form.html(resp);
                     
-                    initMSelectImage(form.find('.photo-edit'), keditor, function (url, relativeUrl, fileType, hash) {
+                    initMSelectImage(form.find('.photo-edit'), keditor, function (url, relativeUrl, fileType, hash, isAsset) {
                         var img = keditor.getSettingComponent().find('.thumbnail img');
-                        
-                        img.attr('src', '/_hashes/files/' + hash);
+                        var imgUrl = '/_hashes/files/' + hash;
+                        if (isAsset){
+                            imgUrl = url;
+                        }
+                        img.attr('src', imgUrl);
                     });
                 }
             });

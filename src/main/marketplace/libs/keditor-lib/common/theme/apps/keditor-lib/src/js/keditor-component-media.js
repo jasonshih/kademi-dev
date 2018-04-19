@@ -135,9 +135,12 @@
                         img.attr('width', this.value);
                     });
                     
-                    initMSelectImage(form.find('.photo-edit'), keditor, function (url, relativeUrl, fileType, hash) {
+                    initMSelectImage(form.find('.photo-edit'), keditor, function (url, relativeUrl, fileType, hash, isAsset) {
                         var img = keditor.getSettingComponent().find('img.media-object');
-                        
+                        var imgUrl = '/_hashes/files/' + hash;
+                        if (isAsset){
+                            imgUrl = url;
+                        }
                         img.attr('src', '/_hashes/files/' + hash);
                     });
                     

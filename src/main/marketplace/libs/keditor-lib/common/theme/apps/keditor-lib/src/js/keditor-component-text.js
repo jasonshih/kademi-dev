@@ -96,9 +96,12 @@
                     // =================================================================================
                     // Backgrounds
                     // =================================================================================
-                    initMSelectImage(form.find('.background-image-edit'), keditor, function (url, relUrl, type, hash) {
+                    initMSelectImage(form.find('.background-image-edit'), keditor, function (url, relUrl, type, hash, isAsset) {
                         var target = keditor.getSettingComponent().find('.keditor-component-text-content');
                         var imageUrl = 'http://' + window.location.host + '/_hashes/files/' + hash;
+                        if (isAsset){
+                            imageUrl = url;
+                        }
                         target.css('background-image', 'url("' + imageUrl + '")');
                         form.find('.background-image-previewer').attr('src', imageUrl);
                     });

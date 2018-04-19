@@ -94,8 +94,9 @@
                     var carouselAddImage = form.find('.carouselAddImage');
                     var carouselItemsWrap = form.find('.carouselItemsWrap');
                     
-                    initMSelectImage(carouselAddImage, keditor, function (url, relUrl, type, hash) {
+                    initMSelectImage(carouselAddImage, keditor, function (url, relUrl, type, hash, isAsset) {
                         flog('Keditor carousel selected a file', url, hash);
+
                         self.addItemToList(form, {
                             src: url,
                             hash: hash,
