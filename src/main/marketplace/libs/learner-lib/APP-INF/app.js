@@ -14,7 +14,10 @@ controllerMappings.addTableDef("tableLearnersCompletedCourses", "Learners Comple
     .addHeader("Last Login Date")
     .addHeader("Compeleted Courses");
     
-function loadLearnersCompletedCourses(start, maxRows, rowsResult, rootFolder) {        
+function loadLearnersCompletedCourses(start, maxRows, rowsResult, rootFolder) {  
+    log.info("START -----> {}, {}", start, http.request.params["items-per-page"]);
+    log.info("page -----> {}",  http.request);
+    log.info("HEREEEEEEEE")
     var profileQuery = {
         "stored_fields":[
             "lastVisit",
@@ -53,7 +56,7 @@ function loadLearnersCompletedCourses(start, maxRows, rowsResult, rootFolder) {
     var profileResp = sm.search(JSON.stringify(profileQuery), 'profile');
     
     for (var index in profileResp.hits.hits) {
-        log.info("*** - {} ", index)        
+        log.info("*** - ?? {} ", index)        
         rowsResult.addRow();
         
         var profile = profileResp.hits.hits[index]
@@ -136,13 +139,14 @@ function loadLearnersModulesDetails(start, maxRows, rowsResult, rootFolder) {
     for(var i in modulesResp.records){
         var record = modulesResp.records[i];
         
-        var module = rootFolder.find("/programs/"+record.programCode+"/"+record.courseCode+"/"+record.moduleCode);               
-        var certificates = module.certificateHrefs(user, record);
-        
-        var link = "";
-        if (record.complete && certificates.length > 0){
-            link = "<a href='"+ certificates[0] +"'> view </a>";
-        }        
+        var link = "";        
+        var module = rootFolder.find("/programs/"+record.programCode+"/"+record.courseCode+"/"+record.moduleCode);  
+        if(module){            
+            var certificates = module.certificateHrefs(user, record);                
+            if (record.complete && certificates.length > 0){
+                link = "<a href='"+ certificates[0] +"'> view </a>";
+            }        
+        }
         
         rowsResult.addRow();
         
