@@ -172,8 +172,9 @@ function saveChangedRow(row) {
         'quantity': row.find('[name=quantity]').val(),
         'unitPrice': row.find('[name=unitPrice]').val(),
         'discountRate': row.find('[name=discountRate]').val(),
-        'taxRate': row.find('[name=taxRate] :selected').val(),
+        'taxRate': row.find('[name=taxRate]').val(),
     };
+    flog("saveChangedRow", data);
 
     if (row.data('item-id') === 'NEW') {
         data['addLineItem'] = currentQuoteId;
