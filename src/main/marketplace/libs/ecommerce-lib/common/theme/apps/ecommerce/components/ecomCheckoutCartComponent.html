@@ -44,7 +44,7 @@
                                 <button class="btn btn-default btn-xs btn-increase-quantity" type="button">+</button>
                             </span>
                         </div>
-                        <input type="hidden" class="itemHref" name="item.${foreach.count}" value="$item.href" />
+                        <input type="hidden" class="itemHref" name="item.${foreach.count}" value="$formatter.htmlAttEncode($item.href)" />
                     </div>
                     <div class="col-sm-2 item-price center-content">
                         <div>

@@ -51,7 +51,7 @@
             #end
 
             #if ("$addressStr" != "")
-                <p class='pull-left'>
+                <p class="pull-left lead-detail-inline">
                     <i aria-hidden="true" class="fa fa-map-marker"></i>
                     $addressStr
                 </p>
@@ -59,20 +59,20 @@
         #end
         #if( $lead.profile )
             #if( $lead.profile.email )
-                <p class='pull-left'>
+                <p class="pull-left lead-detail-inline">
                     <i aria-hidden="true" class="fa fa-envelope"></i>
                     $lead.profile.email
                 </p>
             #end
             #if( $lead.profile.phone )
-                <p class='pull-left'>
+                <p class="pull-left lead-detail-inline">
                     <i aria-hidden="true" class="fa fa-mobile"></i>
                     $lead.profile.phone
                 </p>
             #end
         #end
         #if( $lead.createDate )
-            <p class='pull-left' style='padding-left: 10px'>
+            <p class="pull-left lead-detail-inline">
                 <i aria-hidden="true" class="fa fa-clock-o"></i>
                 <abbr title="$formatter.formatDateISO8601($lead.createDate)" data-iso="$formatter.formatDateISO8601($lead.createDate)" class="timeago">Created $lead.createDate</abbr> for Journey $lead.funnel.title
             </p>

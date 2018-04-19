@@ -87,10 +87,13 @@
                 success: function (resp) {
                     form.html(resp);
                     
-                    initMSelectImage(form.find('.photo-edit'), keditor, function (url, relativeUrl, fileType, hash) {
+                    initMSelectImage(form.find('.photo-edit'), keditor, function (url, relativeUrl, fileType, hash, isAsset) {
                         var img = keditor.getSettingComponent().find('.thumbnail img');
-                        
-                        img.attr('src', '/_hashes/files/' + hash);
+                        var imgUrl = '/_hashes/files/' + hash;
+                        if (isAsset){
+                            imgUrl = url;
+                        }
+                        img.attr('src', imgUrl);
                     });
                 }
             });

@@ -40,7 +40,7 @@ function getUserVisitCSV(page, params) {
     csvData.push(['Most page views']);
     csvData.push(['']);
     for (var i = 0; i < pv.length; i++){
-        csvData.push([pv[i].name, pv[i].value]);
+        csvData.push([pv[i].name, pv[i].pv]);
     }
 
     return csvData;
