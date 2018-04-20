@@ -25,23 +25,29 @@ function initAddWebsite() {
 
 function initRename() {
     flog('initRename');
+    var modal = $("#renameWebsiteModal");
+    var form = modal.find("form");
 
     $('body').on('click', '.btn-rename-website', function (e) {
         e.preventDefault();
         var btn = $(this);
         var href = btn.attr('href');
-        var newName = prompt("Please enter a new name for " + href);
-        if (newName) {
-            if (newName.length > 0 && newName != href) {
-                doRename(window.location.pathname + href, newName, function () {
+        form.find('#newWebName').val(href).trigger('focus');
+        modal.modal('show');
+        form.forms({
+            allowPostForm: false,
+            onValid: function (form, config) {
+                doRename(window.location.pathname + href, form.find('#newWebName').val(), function () {
                     $('#website-wrapper').reloadFragment({
                         whenComplete: function () {
+                            modal.modal('hide');
                             initSwitch();
                         }
                     });
                 });
             }
-        }
+        });
+
     });
 }
 
