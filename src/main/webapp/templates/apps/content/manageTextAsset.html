@@ -9,7 +9,7 @@
 
         <div id="main-asset">
             <form action="$page.href" method="POST" class="form-asset-main form form-horizontal">
-
+                <input type="hidden" name="langCode" value="$!request.params.lang" />
                 <button type="submit" class="btn btn-success pull-right">
                     <span class="fa fa-save"></span>
                     Save
@@ -29,6 +29,7 @@
 
                 #set( $format = $page.asset.format )
                 #set( $format = $request.params.format )
+                #set( $lang = $request.params.lang )
 
                 <input type="hidden" name="format" value="$format" />
 
@@ -41,9 +42,9 @@
                 <div class="tab-content" style="padding: 0">
                     <div role="tabpanel" class="tab-pane active" id="home">
                         #if( $format == "text/html" )
-                        <textarea name="text" class="form-control contenteditor" style="height: 800px">$!page.text</textarea>
+                        <textarea name="text" class="form-control contenteditor" style="height: 800px">$!page.text($lang)</textarea>
                         #else
-                        <textarea name="text" class="form-control" style="height: 400px">$!page.text</textarea>
+                        <textarea name="text" class="form-control" style="height: 400px">$!page.text($lang)</textarea>
                         #end
                     </div>
                     <div role="tabpanel" class="tab-pane" id="profile">
