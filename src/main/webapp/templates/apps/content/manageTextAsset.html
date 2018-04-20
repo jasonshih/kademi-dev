@@ -6,24 +6,27 @@
     <body class="manageEmail">
         #parse("/theme/apps/content/assetsCommon.html")
 
-        #assetHeader()
 
         <div id="main-asset">
             <form action="$page.href" method="POST" class="form-asset-main form form-horizontal">
 
-                <button type="submit" class="btn btn-success">Save</button>
+                <button type="submit" class="btn btn-success pull-right">
+                    <span class="fa fa-save"></span>
+                    Save
+                </button>
 
                 <div class="row">
                     <div class="col-sm-7">
                         <div class="form-group">
-                            <label class="control-label col-md-3" for="name">Name</label>
-
                             <div class="col-md-8">
                                 <input type="text" name="name" id="name" value="$!page.asset.name" placeholder="" class="required form-control" required="true" />
                             </div>
                         </div>
                     </div>
                 </div>
+
+                #assetTypes()
+
                 #set( $format = $page.asset.format )
                 #set( $format = $request.params.format )
 
@@ -31,7 +34,7 @@
 
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
-                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
+                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Details</a></li>
                 </ul>
 
                 <!-- Tab panes -->

@@ -6,6 +6,10 @@
         #macro (assetHeader)
         <h2>$page.title</h2>
 
+            #assetTypes()
+        #end
+
+        #macro (assetTypes)
         #if( $page.asset )
         <div class="memberships-wrapper" id="membershipsContainer">
             <div class="dropdown pull-left" style="margin-right: 15px">
@@ -34,7 +38,6 @@
             </div>
             <div style="clear: both"></div>
         </div>
-        <br /><br />
         #end
         #end
 
@@ -130,7 +133,7 @@
                 min-height: 800px;
             }
         </style>
-        <div id="modal-edit-type" class="modal fade modal-full" aria-hidden="true" tabindex="-1">
+        <div id="modal-edit-type" class="modal fade" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
