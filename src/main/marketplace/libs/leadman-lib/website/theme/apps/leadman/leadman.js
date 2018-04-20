@@ -563,7 +563,7 @@ function initNewLeadForm() {
         $('#lead-fields-tab').reloadFragment({
             url: window.location.pathname + '?leadName=' + s.val(),
             whenComplete: function () {
-
+                $('#lead-fields-tab').find('[required]').addClass('required').removeAttr('required');
             }
         });
     });
@@ -581,15 +581,16 @@ function initNewLeadForm() {
                 errorMessages: []
             };
             var taskDescription = form.find('textarea[name=taskDescription]').val();
-            if (taskDescription !== undefined && taskDescription !== "") {
+            if (!taskDescription) {
                 var title = form.find("#newLeadTaskTitle").val();
-                if (title === undefined || title === "") {
-                    ret.error = 1;
+                if (!title) {
+                    ret.error ++;
                     ret.errorFields.push(form.find("#newLeadTaskTitle"));
                     ret.errorMessages.push("Please complete the task title.");
                 }
             }
-            flog("ret , ", ret);
+
+            flog("ret ok ", ret);
             return ret;
         },
         beforePostForm: function (form, config, data) {
