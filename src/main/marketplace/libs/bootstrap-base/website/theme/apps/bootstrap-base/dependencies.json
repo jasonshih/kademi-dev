@@ -30,7 +30,7 @@
         },
         {
             "appId": "ckeditor-lib",
-            "branch": "4.5.6.4"
+            "branch": "4.5.6.6"
         },
         {
             "appId": "contentEditor-lib",

@@ -131,11 +131,15 @@ function initPageBgModal() {
             }
         }
     }
-    
+
     modal.find('#pageBgImagePicker').mselect({
-        contentTypes: ['image'],
-        onSelectFile: function (url, relUrl, fileType, hash) {
+        contentType: 'image',
+        onSelectFile: function (url, relUrl, fileType, hash, isAsset) {
+
             var hashUrl = '/_hashes/files/' + hash;
+            if (isAsset){
+                hashUrl = url;
+            }
             modal.find('.pageBgImagePreview img').attr('src', hashUrl);
             modal.find('.pageBgImage').val(hashUrl)
         }
