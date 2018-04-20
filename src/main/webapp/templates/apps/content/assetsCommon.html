@@ -11,9 +11,15 @@
 
         #macro (assetTypes)
         #if( $page.asset )
-        <div class="dropdown pull-left" style="margin-right: 15px">
-            <a data-toggle="dropdown" class="dropdown-toggle fa-2x" href="#" style="text-decoration: none;">
-                <i class="fa fa-language"></i> $!request.params.lang
+        <div class="dropdown pull-right btn btn-default" style="margin-right: 15px">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="#" style="text-decoration: none;">
+                <i class="fa fa-language"></i>
+                #if( $!request.params.lang.length() > 0 )
+                $request.params.lang
+                #else
+                Default
+                #end
+                <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
                 <li class="addGroup">
