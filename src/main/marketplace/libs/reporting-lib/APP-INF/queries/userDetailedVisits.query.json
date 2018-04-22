@@ -31,6 +31,9 @@
                 }
             ]
         }
-    },
+    },    
+    "sort" : [
+      {"reqDate" : {"order" : "desc"}}
+   ],
     "size": 10000
 }

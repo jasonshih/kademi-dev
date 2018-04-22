@@ -15,9 +15,7 @@ controllerMappings.addTableDef("tableLearnersCompletedCourses", "Learners Comple
     .addHeader("Compeleted Courses");
     
 function loadLearnersCompletedCourses(start, maxRows, rowsResult, rootFolder) {  
-    log.info("START -----> {}, {}", start, http.request.params["items-per-page"]);
-    log.info("page -----> {}",  http.request);
-    log.info("HEREEEEEEEE")
+    
     var profileQuery = {
         "stored_fields":[
             "lastVisit",
@@ -55,22 +53,74 @@ function loadLearnersCompletedCourses(start, maxRows, rowsResult, rootFolder) {
     var sm = applications.search.searchManager;
     var profileResp = sm.search(JSON.stringify(profileQuery), 'profile');
     
-    for (var index in profileResp.hits.hits) {
-        log.info("*** - ?? {} ", index)        
+    for (var index in profileResp.hits.hits) {         
         rowsResult.addRow();
         
-        var profile = profileResp.hits.hits[index]
-        
+        var profile = profileResp.hits.hits[index];        
         var user = applications.userApp.findUserResourceById(profile.fields.userId.value);
         if (user) {
-            var link = "<a href='/custs/" + user.name + "'>" + user.thisUser.formattedName + "</a>";
+            var link = "";
+            if(http.request.params.as == 'csv'){
+                link = user.thisUser.formattedName ;
+            }else{
+                link = "<a href='/custs/" + user.name + "'>" + user.thisUser.formattedName + "</a>";
+            }
+            
             rowsResult.addCell(link);
-            rowsResult.addCell(user.createDate ? formatter.formatDate(user.createDate) : "-"); 
-            rowsResult.addCell(user.lastVisit ? formatter.formatDate(user.lastVisit) : "-");                   
+            rowsResult.addCell(user.createDate ? formatter.formatDate(user.createDate) : "-");                   
         } else {
             rowsResult.addCell("-");
             rowsResult.addCell("-");
+        }
+        
+        var lastVisitQuery = {
+                "stored_fields": [ "reqDate", "reqUrl", "reqUser"],
+                 "query": {
+                     "bool": {
+                         "must": [                             
+                             {
+                                 "term": {
+                                     "resultCode": 200
+                                 }
+                             },
+                             {
+                                 "prefix": {
+                                     "contentType": "text/html"
+                                 }
+                             },
+                             {
+                                 "exists" : { "field" : "website" }
+                             },
+                             {
+                                 "term":{
+                                     "reqUser": user.thisProfile.name 
+                                 }
+                             }
+                         ]
+                     }
+                 },    
+                 "sort" : [
+                   {"reqDate" : {"order" : "desc"}}
+                ],
+                 "size": 1
+            };
+        
+        var lastVisitResp = sm.search(JSON.stringify(lastVisitQuery), 'log');
+        
+        if(lastVisitResp.hits.hits.length > 0){            
+            rowsResult.addCell( formatter.formatDate(formatter.toDate(lastVisitResp.hits.hits[0].fields.reqDate.value))); 
+        }else{
             rowsResult.addCell("-");
+        }
+        
+        
+        var userModules = applications.learning.findAvailableModulesForProfile(user.profile);                
+        
+        var availableModulesIds = [];
+        for(var i in userModules){
+            if(userModules[i].findModuleStatus(user.thisProfile)){
+                availableModulesIds.push( userModules[i].findModuleStatus(user.thisProfile).moduleCode ); 
+            }
         }
         
         var learingQuery = {
@@ -91,6 +141,11 @@ function loadLearnersCompletedCourses(start, maxRows, rowsResult, rootFolder) {
                             "term": {
                                 "complete": "true"
                             }
+                        },
+                        {
+                            "terms": {
+                                "moduleCode": availableModulesIds
+                            }
                         }
                     ]
                 }
@@ -104,14 +159,12 @@ function loadLearnersCompletedCourses(start, maxRows, rowsResult, rootFolder) {
             },
             "size": 1000,
             "from": 0
-        }
-        
-        
+        };
+                
         var learningResp = sm.search(JSON.stringify(learingQuery), 'profile');
         var completedModules = learningResp.aggregations.get("completed_courses").value;
-        var userModules = applications.learning.findAvailableModulesForProfile(user.profile);                
-        
-        var completedModulesPercent = formatter.toPercent(completedModules, userModules.length, true, false, 0)
+       
+        var completedModulesPercent = formatter.toPercent(completedModules, userModules.length, true, false, 0);
                 
         rowsResult.addCell(completedModulesPercent);
         rowsResult.flush();
@@ -124,7 +177,7 @@ controllerMappings.addTableDef("tableLearnersModulesDetails", "Learners Modules 
     .addHeader("Program")
     .addHeader("Course")
     .addHeader("Module")
-    .addHeader("Certificate")
+    //.addHeader("Certificate")
     .addHeader("Renwale")
     .addHeader("Expire")
     .addHeader("Date completed");
@@ -139,21 +192,25 @@ function loadLearnersModulesDetails(start, maxRows, rowsResult, rootFolder) {
     for(var i in modulesResp.records){
         var record = modulesResp.records[i];
         
-        var link = "";        
-        var module = rootFolder.find("/programs/"+record.programCode+"/"+record.courseCode+"/"+record.moduleCode);  
-        if(module){            
-            var certificates = module.certificateHrefs(user, record);                
-            if (record.complete && certificates.length > 0){
-                link = "<a href='"+ certificates[0] +"'> view </a>";
-            }        
-        }
+//        var link = "";        
+//        var module = rootFolder.find("/programs/"+record.programCode+"/"+record.courseCode+"/"+record.moduleCode);  
+//        if(module){            
+//            var certificates = module.certificateHrefs(user, record);                
+//            if (record.complete && certificates.length > 0){                
+//                if(http.request.params.as == 'csv'){
+//                    link = "Certificate earned" ;
+//                }else{
+//                    link = "<a href='"+ certificates[0] +"'> view </a>";
+//                }                
+//            }        
+//        }
         
         rowsResult.addRow();
         
         rowsResult.addCell(record.programCode);
         rowsResult.addCell(record.courseCode);
         rowsResult.addCell(record.moduleCode);
-        rowsResult.addCell(link);
+        // rowsResult.addCell(link);
         rowsResult.addCell(formatter.formatDate(record.renewalDate));
         rowsResult.addCell(formatter.formatDate(record.expiryDate));
         if(record.complete){
