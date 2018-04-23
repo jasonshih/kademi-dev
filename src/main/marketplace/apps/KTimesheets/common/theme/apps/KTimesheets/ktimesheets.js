@@ -1,6 +1,20 @@
 $(function() {
     $(".timesheet-table").each(function(i, n){
         var table = $(n);
+
+        table.on("change", ".timesheet-item", function(e) {
+            try {
+                flog("item changed");
+                var node = $(e.target);
+                flog("item changed2");
+                var tr = node.closest("tr");
+                flog("item changed3");
+                tr.find("input").prop("disabled", false);
+            } catch(e) {
+                flog("Error: ", e);
+            }
+        });
+
         table.on("change", ".timesheet-hours", function(e) {
             var node = $(e.target);
 

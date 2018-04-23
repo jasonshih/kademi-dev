@@ -1,33 +1,34 @@
-<h1>Hello world</h1>
 
 #set( $timesheet = $services.timesheetManager.timesheet )
 
 
 <table class="table table-striped timesheet-table">
-    #set( $days = $formatter.getDaysBetween($services.queryManager.commonStartDate, $formatter.addDays($services.queryManager.commonFinishDate,1)) )
     <thead>
         <tr>
             <th>Item</th>
 
-            #foreach( $day in $days )
+            #foreach( $day in $timesheet.days )
             <th>$formatter.formatDate($day)</th>
             #end
         </tr>
     </thead>
+
     <tbody>
         #foreach( $item in $timesheet.workItems )
         <tr>
             <td>
                 #if( $item.class.simpleName == "Task" )
                 <a href="/tasks/$item.id">$item.title</a>
+                <input type="hidden" class="form-control timesheet-item" name="item" value="$item.id" />
                 #elseif( $item.class.simpleName == "Lead" )
                 <a href="/leads/$item.id">$item.title</a>
+                <input type="hidden" class="form-control timesheet-item" name="item" value="$item.id" />
                 #else
                 $item
-                #end
                 <input type="hidden" class="form-control timesheet-item" name="item" value="$item" />
+                #end
             </td>
-            #foreach( $day in $days )
+            #foreach( $day in $timesheet.days )
             <td>
                 <input type="numeric" class="form-control timesheet-hours" name="hours" step="0.1" value="$!timesheet.getHours($day, $item)" data-day="$formatter.formatDate($day)"/>
             </td>
@@ -36,17 +37,22 @@
         #end
 
 
+        #foreach( $cnt in [1, 2, 3, 4, 5])
         <tr>
             <td>
                 <input type="text" class="form-control timesheet-item" name="item" />
             </td>
-            #foreach( $day in $days )
+            #foreach( $day in $timesheet.days )
             <td>
-                <input type="numeric" class="form-control timesheet-hours" name="hours" step="0.1" data-day="$formatter.formatDate($day)" />
+                <input type="numeric" class="form-control timesheet-hours" disabled name="hours" step="0.1" data-day="$formatter.formatDate($day)" />
             </td>
             #end
         </tr>
+        #end
     </tbody>
+    <tfoot>
+
+    </tfoot>
 </table>
 
 <table class="table">
