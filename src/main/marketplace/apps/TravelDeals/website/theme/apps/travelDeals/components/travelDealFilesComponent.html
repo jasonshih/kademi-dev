@@ -1,0 +1,45 @@
+#set($deal = $page.attributes.dealName)
+#set( $app = $applications.get("travelDeals") )
+
+#set ($filesTitle = "Files")
+#if ($traveldealsFilesTitle)
+    #set ($filesTitle = $traveldealsFilesTitle)
+#end
+
+#set($sortOrder = "asc-name")
+#if ($traveldealsFilesOrder)
+    #set($sortOrder = $traveldealsFilesOrder)
+#end
+
+#set($tt = $sortOrder.split("-"))
+
+#set($files = $deal.files)
+
+## Create some test data for the component page
+#if (!$page)
+    #set($files = $formatter.newArrayList())
+    #foreach($i in [1..5])
+        #set ($f = $formatter.newMapBuilder().field('hash', '').field('name', "file_${i}.png"))
+        #if($files.add($f))#end
+    #end
+#end
+
+#if($files && $files.size() > 0)
+#set ($files = $formatter.sortByProperty($files, $tt[1]))
+#if($tt[0] == "desc")
+    #set ($files = $formatter.sortReverse($files))
+#end
+<div>
+    <h3>$filesTitle</h3>
+
+    <ul class="list-unstyled">
+        #foreach($f in $files)
+        <li>
+            <i class="fa $app.call('generateFileIcon', $f.name)"></i>
+            &nbsp;
+            <a href="/_hashes/files/${f.hash}.${formatter.fileExt($f.name)}" target="_blank" download="$f.name">$formatter.truncate($formatter.stripExt($f.name), 20)</a>
+        </li>
+        #end
+    </ul>
+</div>
+#end

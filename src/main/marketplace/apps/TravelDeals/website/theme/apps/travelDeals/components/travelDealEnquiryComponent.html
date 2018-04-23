@@ -1,0 +1,96 @@
+<div class="travelDeals-enquiryComponent">
+    #set($now = $formatter.now.time)
+    <button type="button" data-toggle="modal" data-target="#travelDeals-enquireModal-$now" class="btn btn-info">Enquire now</button>
+
+    <!-- Modal -->
+    <div class="modal fade travelDeals-enquireModal" id="travelDeals-enquireModal-$now" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Enquire</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="enquireFirstName">First Name <span class="text-info">&ast;</span></label>
+                                    <input type="text" name="firstName" class="form-control" id="enquireFirstName" placeholder="First Name" required/>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="enquireSurname">Surname <span class="text-info">&ast;</span></label>
+                                    <input type="text" name="surName" class="form-control" id="enquireSurname" placeholder="Surname" required/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="enquireMobile">Mobile number <span class="text-info">&ast;</span></label>
+                                    <input type="tel" name="mobile" class="form-control" id="enquireMobile" placeholder="Mobile" required/>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="enquireLandline">Landline</label>
+                                    <input type="tel" name="landline" class="form-control" id="enquireLandline" placeholder="Landline"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="enquireEmail">Email address <span class="text-info">&ast;</span></label>
+                                    <input type="email" name="email" class="form-control" id="enquireEmail" placeholder="Email" required/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="enquireDeparture">Departure date <span class="text-info">&ast;</span></label>
+                                    <input type="text" name="departureDate" class="travelDeals-datePicker form-control" id="enquireDeparture" placeholder="Departure date" required/>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="enquireReturn">Return date <span class="text-info">&ast;</span></label>
+                                    <input type="text" name="returnDate" class="travelDeals-datePicker form-control" id="enquireReturn" placeholder="Return date" required/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="enquireAdults">Adults</label>
+                                    <input type="number" name="adults" min="0" class="form-control" id="enquireAdults" placeholder="Adults"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="enquireChildren">Children</label>
+                                    <input type="number" name="children" min="0" class="form-control" id="enquireChildren" placeholder="Children"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="enquireMessage">Message</label>
+                                    <textarea name="message" class="form-control" id="enquireMessage" placeholder="Message" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-info">Enquire</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

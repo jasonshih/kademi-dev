@@ -1,0 +1,184 @@
+#set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
+#set ($linkStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${linkColor}; text-decoration: none;")
+
+#if(!$traveldealsSelectLayout)
+#set($traveldealsSelectLayout = "list")
+#end
+
+#if(!$traveldealsNumberOfDeals)
+#set($traveldealsNumberOfDeals = 3)
+#end
+
+#if(!$traveldealsItemsPerRow)
+#set($traveldealsItemsPerRow = 3)
+#end
+
+#set ($width = $formatter.toInteger($width))
+#set ($itemsPerRow = $formatter.toInteger($traveldealsItemsPerRow))
+
+#set($deals = $applications.travelDeals.call('latestDeals', $rootFolder, $traveldealsNumberOfDeals))
+
+#if( $deals.size() > 0 )
+
+#if ($traveldealsSelectLayout == "grid")
+#set ($tableWidth = $width / $itemsPerRow)
+#set ($maxImageSize = 116)
+#if($traveldealsItemsPerRow == 2)
+#set ($maxImageSize = 150)
+#elseif($traveldealsItemsPerRow == 1)
+#set ($maxImageSize = 220)
+#end
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tbody>
+        <tr>
+            <td>
+                <!--[if (gte mso 9)|(IE)]>
+                <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                <![endif]-->
+                #foreach($deal in $deals )
+                #set ($dealUrl = "http://${rootFolder.domainName}${formatter.portString}/ourDeals/$deal.name")
+                #set ($dealTitle = $formatter.firstNotNull($deal.title, $deal.name))
+                #set ($newLine = false)
+                #if ($foreach.index % $itemsPerRow == 0)
+                #set ($newLine = true)
+                #end
+
+                #set ($endLine = false)
+                #if ($foreach.count % $itemsPerRow == 0)
+                #set ($endLine = true)
+                #end
+
+                #if ($newLine)
+                #if ($foreach.index != 0)
+                <div style="clear: both"></div>
+                #end
+                <!--[if (gte mso 9)|(IE)]>
+                <tr>
+                    <td width="$tableWidth">
+                <![endif]-->
+                #else
+                <!--[if (gte mso 9)|(IE)]>
+                </td>
+                <td width="$tableWidth">
+                <![endif]-->
+                #end
+                <table data-index="$foreach.index" data-count="$foreach.count" data-new="$newLine" data-end="$endLine" cellpadding="0" cellspacing="0" border="0" width="$tableWidth" align="left" class="col">
+                    <tbody>
+                        <tr>
+                            <td style="padding-left: 4px; padding-right: 4px; padding-bottom: 8px;">
+                                <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                    <tr>
+                                        <td align="center">
+                                            #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
+                                            #if( $deal.previewImage.hash )
+                                            #set($bg = "http://${rootFolder.domainName}${formatter.portString}/_hashes/files/${deal.previewImage.hash}/alt-600-400.png")
+                                            #end
+                                            <a title="$dealTitle" href="${prodUrl}">
+                                                <img src="$bg" width="" height="$maxImageSize" alt="$dealTitle" style="display: block; border: 0;" />
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="50" valign="middle" style="padding-left: 15px; padding-right: 15px; $baseStyles">
+                                            <a href="${prodUrl}" style="$linkStyles" title="$dealTitle">$formatter.truncate($dealTitle, 50)</a><br />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="middle" style="padding-left: 15px; padding-right: 15px; $baseStyles">
+                                            #set ($brief = $formatter.toPlain( $!deal.brief ))
+                                            $!formatter.truncate( $brief, 100)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="middle" style="padding-left: 15px; padding-right: 15px; $baseStyles">
+                                            <a title="$deal.title" href="${prodUrl}" style="$linkStyles">Read more</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                #if ($endLine)
+                <!--[if (gte mso 9)|(IE)]>
+                </td>
+                </tr>
+                <![endif]-->
+                #end
+                #end
+
+                <!--[if (gte mso 9)|(IE)]>
+                </table>
+                <![endif]-->
+            </td>
+        </tr>
+    </tbody>
+</table>
+#else
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tbody>
+        #set ($leftWidth = $width / 3)
+        #set ($rightWidth = $width - $leftWidth)
+
+        #foreach($deal in $deals )
+        #set ($dealUrl = "http://${rootFolder.domainName}${formatter.portString}/ourDeals/$deal.name")
+        #set ($dealTitle = $formatter.firstNotNull($deal.title, $deal.name))
+        <tr>
+            <td valign="top" style="padding-bottom: 15px;">
+                <!--[if (gte mso 9)|(IE)]>
+                <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                    <tr>
+                        <td width="$leftWidth">
+                <![endif]-->
+                <table cellpadding="0" cellspacing="0" border="0" width="$leftWidth" align="left" class="col">
+                    <tr>
+                        <td class="wrapper" style="padding-right: 15px">
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td>
+                                        #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
+                                        #if( $deal.previewImage.hash )
+                                        #set($bg = "http://${rootFolder.domainName}${formatter.portString}/_hashes/files/${deal.previewImage.hash}/alt-600-400.png")
+                                        #end
+                                        <a title="$dealTitle" href="${prodUrl}">
+                                            <img src="$bg" width="100%" height="auto" alt="$p.fields.title.value" style="display: block; border: 0;" />
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <!--[if (gte mso 9)|(IE)]>
+                </td>
+                <td width="$rightWidth">
+                <![endif]-->
+                <table cellpadding="0" cellspacing="0" border="0" width="$rightWidth" align="right" class="col">
+                    <tr>
+                        <td class="wrapper" style="$baseStyles">
+                            <h4 style="font-size: ${fontSizeH4}px; line-height: ${lineHeightH4}px;margin-top:0;margin-bottom: 0;">
+                                <a href="${prodUrl}" style="$linkStyles">$dealTitle</a>
+                            </h4>
+                            <p>
+                                #set ($brief = $formatter.toPlain( $!deal.brief ))
+                                $!formatter.truncate( $brief, 100)
+                            </p>
+                            <p><a href="${prodUrl}" style="$linkStyles">Read more</a></p>
+                        </td>
+                    </tr>
+                </table>
+                <!--[if (gte mso 9)|(IE)]>
+                </td>
+                </tr>
+                </table>
+                <![endif]-->
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+#end
+#else
+<p>Sorry, we couldnt find any deals for you</p>
+#end

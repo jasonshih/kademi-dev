@@ -1,0 +1,123 @@
+.clearfix {
+    *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+    display: table;
+    content: "";
+    line-height: 0;
+}
+.clearfix:after {
+    clear: both;
+}
+.hide-text {
+    font: 0/0 a;
+    color: transparent;
+    text-shadow: none;
+    background-color: transparent;
+    border: 0;
+}
+.input-block-level {
+    display: block;
+    width: 100%;
+    min-height: 30px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.btn-file {
+    overflow: hidden;
+    position: relative;
+    vertical-align: middle;
+}
+.btn-file > input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    transform: translate(-300px, 0) scale(4);
+    font-size: 23px;
+    direction: ltr;
+    cursor: pointer;
+}
+.imageupload {
+    margin-bottom: 9px;
+}
+.imageupload .uneditable-input {
+    display: inline-block;
+    margin-bottom: 0px;
+    vertical-align: middle;
+    cursor: text;
+}
+.imageupload .thumbnail {
+    overflow: hidden;
+    display: inline-block;
+    margin-bottom: 5px;
+    vertical-align: middle;
+    text-align: center;
+}
+.imageupload .thumbnail > img {
+    display: inline-block;
+    vertical-align: middle;
+    max-height: 100%;
+}
+.imageupload .btn {
+    vertical-align: middle;
+}
+.imageupload-exists .imageupload-new,
+.imageupload-new .imageupload-exists {
+    display: none;
+}
+.imageupload-inline .imageupload-controls {
+    display: inline;
+}
+.imageupload-new .input-append .btn-file {
+    -webkit-border-radius: 0 3px 3px 0;
+    -moz-border-radius: 0 3px 3px 0;
+    border-radius: 0 3px 3px 0;
+}
+.thumbnail-borderless .thumbnail {
+    border: none;
+    padding: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+.imageupload-new.thumbnail-borderless .thumbnail {
+    border: 1px solid #ddd;
+}
+.control-group.warning .imageupload .uneditable-input {
+    color: #a47e3c;
+    border-color: #a47e3c;
+}
+.control-group.warning .imageupload .imageupload-preview {
+    color: #a47e3c;
+}
+.control-group.warning .imageupload .thumbnail {
+    border-color: #a47e3c;
+}
+.control-group.error .imageupload .uneditable-input {
+    color: #b94a48;
+    border-color: #b94a48;
+}
+.control-group.error .imageupload .imageupload-preview {
+    color: #b94a48;
+}
+.control-group.error .imageupload .thumbnail {
+    border-color: #b94a48;
+}
+.control-group.success .imageupload .uneditable-input {
+    color: #468847;
+    border-color: #468847;
+}
+.control-group.success .imageupload .imageupload-preview {
+    color: #468847;
+}
+.control-group.success .imageupload .thumbnail {
+    border-color: #468847;
+}

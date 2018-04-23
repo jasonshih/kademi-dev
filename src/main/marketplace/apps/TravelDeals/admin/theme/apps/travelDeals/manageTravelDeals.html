@@ -1,0 +1,296 @@
+<html>
+    <head>
+        <title>Travel Deals</title>
+        <link href="/theme/apps/travelDeals/manageTravelDeals.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+        #set($app = $applications.travelDeals)
+        #set($dealType = $request.params.dealType)
+        #if(!$dealType)
+        #set($dealType = "draft")
+        #end
+        <div class="row">
+            <div class="col-md-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="clip-stack"></i>
+                        Deals
+                    </div>
+                    <div class="panel-body">
+                        <div style="padding-bottom: 15px">
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-sm btn-success add-deal" data-toggle="modal" data-target="#modal-add-deal" title="Add a new deal">
+                                    <i class="fa fa-plus"></i><span class="hidden-xs hidden-sm">&nbsp;Add new deal</span>
+                                </button>
+                                <button class="btn btn-sm btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-left" role="menu">
+                                    <li role="presentation">
+                                        <a role="menuitem" href="#" tabindex="-1" class="reindex" title="Re-index"><i class="fa fa-refresh"></i> Re-index</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="travelDeals-filterBody" class="btn-group btn-group-sm" data-toggle="buttons">
+                                <label class="btn-traveldeals-type-sel btn btn-info #if($dealType == "draft")active#end">
+                                       <input type="radio" name="travelDeals_dealType" id="travelDeals_draft" autocomplete="off" #if($dealType == "draft")checked="checked"#end/>
+                                    <span id="travelDeals_draftTotal">$page.attributes.typeResults.draftCount</span>&nbsp;
+                                    <span class="hidden-xs hidden-sm">Draft</span>
+                                    <span class="hidden-md hidden-lg"><i class="fa fa-pencil"></i></span>
+                                </label>
+                                <label class="btn-traveldeals-type-sel btn btn-success #if($dealType == "active")active#end">
+                                       <input type="radio" name="travelDeals_dealType" id="travelDeals_active" autocomplete="off" #if($dealType == "active")checked="checked"#end/>
+                                    <span id="travelDeals_activeTotal">$page.attributes.typeResults.activeCount</span>&nbsp;
+                                    <span class="hidden-xs hidden-sm">Active</span>
+                                    <span class="hidden-md hidden-lg"><i class="fa fa-check"></i></span>
+                                </label>
+                                <label class="btn-traveldeals-type-sel btn btn-danger #if($dealType == "expired")active#end">
+                                       <input type="radio" name="travelDeals_dealType" id="travelDeals_expired" autocomplete="off" #if($dealType == "expired")checked="checked"#end/>
+                                    <span id="travelDeals_expiredTotal">$page.attributes.typeResults.expiredCount</span>&nbsp;
+                                    <span class="hidden-xs hidden-sm">Expired</span>
+                                    <span class="hidden-md hidden-lg"><i class="fa fa-times"></i></span>
+                                </label>
+                            </div>
+
+                            <div class="btn-group btn-group-sm pull-right">
+                                <button type="button" class="btn btn-danger del-deal" title="Delete Deals">
+                                    <i class="fa fa-times"></i><span class="hidden-xs hidden-sm">&nbsp;Delete Deals</span>
+                                </button>
+                                <button type="button" class="btn btn-success duplicate-deal" title="Duplicate Deal">
+                                    <i class="fa fa-files-o"></i><span class="hidden-xs hidden-sm">&nbsp;Duplicate Deal</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table">
+                        <colgroup>
+                            <col/>
+                            <col/>
+                            <col/>
+                            <col/>
+                            <col/>
+                            <col/>
+                            <col/>
+                            <col/>
+                            <col width="15px"/>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Start Date</th>
+                                <th>Book-By Date</th>
+                                <th>Enquiries</th>
+                                <th>Views</th>
+                                <th>Cost</th>
+                                <th>
+                                    <input type="checkbox" name="selectDeal" id="selectDeals" class="selectAll" autocomplete="off"/>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="dealsBody">
+                            #foreach($deal in $page.attributes.deals.hits.hits)
+                            <tr data-name="$deal.fields.name.value">
+                                $app.call('generateDealStatus', $deal)
+                                <td><a href="$deal.fields.name.value">$!deal.fields.title.value</a></td>
+                                <td>$!app.call('getCategoryTitle', $page, $deal.fields.category.value)</td>
+                                <td>$!deal.fields.startDate.value</td>
+                                <td>$!deal.fields.bookByDate.value</td>
+                                <td>$formatter.ifNull($page.attributes.enquiryCount.get($deal.fields.name.value), 0)</td>
+                                <td>$formatter.ifNull($page.attributes.viewCount.get($deal.fields.name.value), 0)</td>
+                                <td>
+                                    #if($deal.fields.cost.value)
+                                    $$deal.fields.cost.value
+                                    #end
+                                </td>
+                                <td>
+                                    <input name="selectDeal" type="checkbox" autocomplete="off"/>
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="clip-stack"></i>
+                        Categories
+                    </div>
+                    <div class="panel-body">
+                        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addCategoryModal">
+                            <i class="fa fa-plus"></i> Add a new category
+                        </button>
+                        <div class="table-responsive" id="categories-container">
+                            <table class="table table-striped table-hover">
+                                <colgroup>
+                                    <col />
+                                    <col style="width: 32px;" />
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th class="title" rel="asc">Title</th>
+                                        <th class="action"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="travelDeals-categories-body">
+                                    #foreach($category in $page.attributes.categories)
+                                    <tr>
+                                        <td>$category.jsonObject.title</td>
+                                        <td class="action">
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="$category.get('name')" data-title="$category.jsonObject.title" class="cat-delete btn btn-sm btn-danger btn-sm">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-tags"></i>
+                        Tags
+                    </div>
+                    <div class="panel-body">
+                        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-travelDeals-addTag">
+                            <i class="fa fa-plus"></i> Add a new tag
+                        </button>
+                        <div class="table-responsive" id="travelDeals-tags-container">
+                            <table class="table table-striped table-hover">
+                                <colgroup>
+                                    <col />
+                                    <col style="width: 32px;" />
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th class="title" rel="asc">Title</th>
+                                        <th class="action"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="travelDeals-tags-body">
+                                    #foreach($tag in $page.attributes.tags)
+                                    <tr>
+                                        <td>$tag.jsonObject.title</td>
+                                        <td class="action">
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="$tag.get('name')" data-title="$tag.jsonObject.title" class="btn-travelDeals-tag-del btn btn-sm btn-danger btn-sm">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Start Modal -->
+        <div id="modal-add-deal" class="modal modal-md fade" aria-hidden="true">
+            <form action="." method="POST" class="form-horizontal">
+                <input class="action" type="hidden" name="createNew" value="createNew"/>
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                    <h4 class="modal-title">Add a new deal</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="title">Title</label>
+                        <div class="col-md-8">
+                            <input class="form-control required" type="text" id="title" name="title" placeholder="e.g. 5 Nights in Fiji" minlength="1" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="website">Website</label>
+                        <div class="col-md-8">
+                            <select class="form-control required" name="website">
+                                #if($rootFolder.mainWebsites.size() > 0)
+                                #foreach($w in $rootFolder.mainWebsites)
+                                $formatter.option($w.name, $formatter.firstNotNull($w.title, $w.name), null)
+                                #end
+                                #else
+                                <option value="">Please create a website</option>
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button type="button" class="btn btn-sm btn-primary btn-create" data-type="form-submit">Create</button>
+                </div>
+            </form>
+        </div>
+        <!-- End Modal -->
+
+        <!-- Start Modal -->
+        <div id="addCategoryModal" class="modal fade">
+            <form action="." method="POST" class="">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Add new category</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="newCategoryName">Category title</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="newCategoryName" id="newCategoryName" placeholder="Promotion, News, etc" class="form-control required" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Create Category</button>
+                </div>
+            </form>
+        </div>
+        <!-- End Modal -->
+
+        <!-- Start Modal -->
+        <div id="modal-travelDeals-addTag" class="modal fade">
+            <form action="." method="POST" class="">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Adda a new tag</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="newTagName">Tag title</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="newTagName" id="newTagName" placeholder="Promotion, News, etc" class="form-control required" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Create Tag</button>
+                </div>
+            </form>
+        </div>
+        <!-- End Modal -->
+
+        <script src="/theme/apps/travelDeals/manageTravelDeals.js?_=1.0.8" type="text/javascript">//</script>
+    </body>
+</html>

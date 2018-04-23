@@ -1,0 +1,97 @@
+<style type="text/css">
+    .h-100 {
+        height: 100%!important;
+    }
+
+    .card {
+        position: relative;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid rgba(0,0,0,.125);
+        border-radius: .25rem;
+    }
+    .card-img-top {
+        width: 100%;
+        border-top-left-radius: calc(.25rem - 1px);
+        border-top-right-radius: calc(.25rem - 1px);
+    }
+    img {
+        vertical-align: middle;
+        border-style: none;
+    }
+</style>
+
+<div id="travelDeals-list">
+    #if($page)
+    #set( $app = $applications.get("travelDeals") )
+    #set( $results = $app.call('getTravelDeals', $page) )
+
+    #set( $app = $applications.get("travelDeals") )
+    #set( $rootPath = $app.getSetting('rootPath') )
+    #if(!$rootPath)
+    #set( $rootPath = 'ourDeals' )
+    #end
+
+    #if( $results.deals.size() == 0 )
+    <p class="alert alert-info">No travel deals were found</p>
+    #else
+    <div class="row">
+        #foreach($deal in $results.deals )
+
+        #set($bg = "/theme/apps/travelDeals/noimg-360-232.png")
+        #if( $deal.source.previewImage.hash )
+        #set($bg = "/_hashes/files/$deal.source.previewImage.hash")
+        #end
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+                <a href="/${rootPath}/$deal.source.name/"><img class="card-img-top" src="$bg" alt=""></a>
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <a href="/${rootPath}/$deal.source.name">$!deal.source.title</a>
+                    </h4>
+                    <h5>
+                        #if($deal.source.cost)
+                        <strong>$$deal.source.cost</strong>
+                        #if($deal.source.daysIncluded)
+                        <small>/$deal.source.daysIncluded days</small>
+                        #end
+                        #end
+                    </h5>
+                    <p class="card-text">$!formatter.truncate( $formatter.textFromHtml($deal.source.brief).trim(), 65)</p>
+                </div>
+            </div>
+        </div>
+        #end
+    </div>
+    #end
+    #else
+    <div class="row">
+        #foreach($i in [1..6])
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+                <a href="#"><img class="card-img-top" src="/theme/apps/travelDeals/noimg-360-232.png" alt=""></a>
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <a href="#">Example Deal $i</a>
+                    </h4>
+                    <h5>
+                        #set($cost = $i * 11)
+                        #set($days = $i * 2)
+                        <strong>$${cost}</strong>
+                        <small>/${days} days</small>
+                    </h5>
+                    <p class="card-text">This is an example deal #${i}</p>
+                </div>
+            </div>
+        </div>
+        #end
+    </div>
+    #end
+</div>

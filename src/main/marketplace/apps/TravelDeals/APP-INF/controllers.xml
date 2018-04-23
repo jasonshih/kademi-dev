@@ -1,0 +1,38 @@
+<controllers onAppEnabled="_onAppEnabled">
+    <!-- Common Files -->
+    <source>/APP-INF/common/formatterUtils.js</source>
+    <source>/APP-INF/common/config.js</source>
+    <source>/APP-INF/common/common.js</source>
+    <source>/APP-INF/common/API.js</source>
+    <source>/APP-INF/common/fileTypes.js</source>
+    <source>/APP-INF/common/utils.js</source>
+
+    <!-- Admin Endpoints -->
+    <source>/APP-INF/admin/manageTravelDeals.js</source>
+    <source>/APP-INF/admin/manageTravelDeal.js</source>
+    <source>/APP-INF/admin/mappings.js</source>
+
+    <!-- Website Endpoints -->
+    <source>/APP-INF/website/common.js</source>
+    <source>/APP-INF/website/mappings.js</source>
+    <source>/APP-INF/website/categoryFilters.js</source>
+
+    <!-- Automation Triggers -->
+    <source>/APP-INF/automationTrigger.js</source>
+
+    <!-- Journey -->
+    <source>/APP-INF/journey/goalNodes.js</source>
+    
+    <!-- EDM Components -->
+    <source>/APP-INF/edm/components.js</source>
+
+    <!-- Admin Menus --> 
+    <menu parentId="menuRoot" id="menuECommerce" text="Products &amp; Stores" css="fa fa-shopping-cart" ordering="45"/> 
+    <menu parentId="menuECommerce" id="menuManageTravelDeals" text="Travel Deals" path="/travelDeals/" ordering="45"/>
+    
+    <!-- Settings -->
+    <settings enabled="true" path="/theme/apps/travelDeals/settings.html">
+        <function>_saveSettings</function>
+    </settings>
+</controllers>
+

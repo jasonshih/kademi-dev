@@ -1,0 +1,41 @@
+#set( $app = $applications.get("travelDeals") )
+
+#set( $categoryPath = $app.getSetting('categoryPath') )
+#if(!$categoryPath)
+    #set( $categoryPath = 'ourDealsByCategory' )
+#end
+
+#if ($page)
+    #set( $categories = $app.call("getCategories", $page) )
+#else
+    ## Generate some sample data
+    #set( $categories = $formatter.newArrayList() )
+    #foreach($i in [1..5])
+        #set ($f = $formatter.newMapBuilder().field('name', 'cat-${i}').field('title', "Cat ${i}").field('count', $i))
+        #if($categories.add($f))#end
+    #end
+#end
+
+#set( $title = $formatter.cleanString($traveldealsCatTitle) )
+
+#if ($title.length() < 1)
+    #set( $title = "Categories" )
+#end
+
+#set( $showCount = $formatter.toBool($traveldealsCatShowCount, true) )
+#set( $showCountStyle = $formatter.cleanString($traveldealsCatCountStyle) )
+#if($showCountStyle.length() < 1)
+    #set( $showCountStyle = "default" )
+#end
+
+#if($categories.size() > 0)
+<h3>$title</h3>
+<div class="list-group">
+    #foreach($cat in $categories)
+    <a href="/${categoryPath}/$cat.name/" class="list-group-item">
+        <i class="fa fa-caret-right fa-fw" aria-hidden="true"></i> $formatter.firstNotNull($cat.title, $cat.name)
+        #if($showCount)<span style="border-radius: 20%" class="pull-right label-${showCountStyle} small label">$cat.count</span>#end
+    </a>
+    #end
+</div>
+#end

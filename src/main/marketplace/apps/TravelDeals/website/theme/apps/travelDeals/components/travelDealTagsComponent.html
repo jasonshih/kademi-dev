@@ -1,0 +1,31 @@
+#set( $app = $applications.get("travelDeals") )
+
+#set( $rootPath = $app.getSetting('rootPath') )
+#if(!$rootPath)
+    #set( $rootPath = 'ourDeals' )
+#end
+
+#set( $relatedOnly = $formatter.toBool($traveldealsTagsOnlyRelated, true) )
+
+#if($page)
+    #if($relatedOnly)
+        <div class="traveldeals-tags">
+            #foreach($tag in $page.attributes.dealName.tags)
+            <a href="/${rootPath}/?tags=$tag">$formatter.firstNotNull($app.call('getTagTitle', $page, $tag), $tag)</a>
+            #end
+        </div> 
+    #else
+        <div class="traveldeals-tags">
+            #foreach($tag in $app.call('getAllTags', $page))
+            <a href="/${rootPath}/?tags=$tag.jsonObject.name">$formatter.firstNotNull($tag.jsonObject.title, $tag.jsonObject.name)</a>
+            #end
+        </div> 
+    #end
+#else
+    ## Generate some sample data
+    <div class="traveldeals-tags">
+        #foreach($i in [1..10])
+        <a href="#">Tag $i</a>
+        #end
+    </div> 
+#end

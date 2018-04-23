@@ -1,0 +1,8 @@
+#set($img = "/theme/apps/travelDeals/noimg-650-216.png")
+#if($page.attributes.dealName.bannerImage && $page.attributes.dealName.bannerImage.hash)
+#set($img = "/_hashes/files/$page.attributes.dealName.bannerImage.hash")
+#end
+
+<div class="photo-panel" style="text-align: center;">
+    <img src="$img" width="100%" height="" style="display: inline-block;" class="img-response">
+</div>

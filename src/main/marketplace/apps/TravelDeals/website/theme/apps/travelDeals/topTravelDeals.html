@@ -1,0 +1,25 @@
+#if($topDeals.hits.hits && $topDeals.hits.hits.size() > 0)
+<div class="fullwidth-block offers-section">
+    <div class="container">
+        <h2 class="section-title">Our latest deals</h2>
+        <div class="row">
+            #foreach($hit in $topDeals.hits.hits)
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <article class="offer wow bounceIn">
+                    <figure class="featured-image">
+                        <a href="/ourDeals/$hit.fields.name.value/">
+                            <img src="/ourDeals/$hit.fields.name.value/previewImage" alt="$hit.fields.title.value">
+                        </a>
+                    </figure>
+                    <h2 class="entry-title">
+                        <a href="/ourDeals/$hit.fields.name.value/">$!hit.fields.title.value</a>
+                    </h2>
+                    <p>$!formatter.textFromHtml($hit.fields.brief.value)</p>
+                    <a href="/ourDeals/$hit.fields.name.value/" class="button"><strong>See details</strong></a>
+                </article>
+            </div>
+            #end
+        </div>
+    </div>
+</div>
+#end

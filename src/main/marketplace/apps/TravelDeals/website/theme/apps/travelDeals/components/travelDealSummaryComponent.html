@@ -1,0 +1,39 @@
+#if($page)
+    #set($deal = $page.attributes.dealName)
+#else
+    #set($deal = $formatter.newMapBuilder().field('category', 'cat-1').field('cost', '2853').field('daysIncluded', '7').field('bookByDate', $formatter.addDays($formatter.now, 7)).field('validBetweenStart', $formatter.now).field('validBetweenEnd', $formatter.addDays($formatter.now, 30)).field('blackoutConditions', "Please note: Travel over the peak season of December & January NOT VALID on this special."))
+#end
+
+#set( $app = $applications.get("travelDeals") )
+
+#set ($title = $traveldealsSummaryTitle)
+#if(!$title || $title.length() < 1)
+    #set ($title = "Details")
+#end
+
+<div>
+    <h3>$title</h3>
+    <ul>
+        #if($deal.category)
+        <li><strong>Category:</strong> #if($page)$app.call("getCategoryTitle", $page, $deal.category)#else Cat 1#end</li>
+        #end
+        #if($deal.cost)
+        <li><strong>Price from:</strong> $$deal.cost / Person</li>
+        #end
+        #if($deal.daysIncluded)
+        <li><strong>Days included:</strong> $deal.daysIncluded</li>
+        #end
+        #if($deal.bookByDate)
+        <li><strong>Book By:</strong> $formatter.formatJodaDate($deal.bookByDate, "MMMM d, YYYY")</li>
+        #end
+        #if($deal.validBetweenStart)
+        <li><strong>Travel from:</strong> $formatter.formatJodaDate($deal.validBetweenStart, "MMMM d, YYYY")</li>
+        #end
+        #if($deal.validBetweenEnd)
+        <li><strong>Travel to:</strong> $formatter.formatJodaDate($deal.validBetweenEnd, "MMMM d, YYYY")</li>
+        #end
+        #if($deal.blackoutConditions)
+        <li><strong>Blackout Conditions:</strong> $deal.blackoutConditions</li>
+        #end
+    </ul>
+</div>
