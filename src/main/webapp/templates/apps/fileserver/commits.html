@@ -7,7 +7,7 @@
         <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
         <script type="text/javascript" src="commits.js">//</script>
         <script type="text/javascript" src="/static/paginator/1.0.0/jquery.paginator-1.0.0.js">//</script>
-        
+
         <link href="commits.css" rel="stylesheet" type="text/css" />
     </head>
     <body class="manage-repo-history">
@@ -72,7 +72,7 @@
                     <table id="commit-wrapper" class="table table-striped table-hover pagination-container" style="table-layout: fixed">
                         <colgroup>
                             <col />
-                            <col style="width: 300px;" />
+                            <col style="width: 320px;" />
                             <col />
                             <col />
                             <col style="width: 70px" />
@@ -115,7 +115,7 @@
                 <h4 class="modal-title">Set Remote Hash</h4>
             </div>
             <form action="./" method="POST" class="form-horizontal">
-                <div class="modal-body">                    
+                <div class="modal-body">
                     <div class="form-message alert alert-danger" style="display: none;"></div>
                     <p>Use this to transfer repository content from a remote server instance.</p>
                     <div class="form-group">
@@ -168,13 +168,13 @@
                         }
                     });
                 })
-                
+
                 $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
                     flog("relod results", window.location);
 
                     doHistorySearch();
                 });
-                
+
                 $('#data-query').on('keypress', function (e) {
                     var code = e.keyCode || e.which;
                     if (code == 13) {
