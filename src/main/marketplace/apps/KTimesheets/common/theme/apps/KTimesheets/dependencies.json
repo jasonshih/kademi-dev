@@ -1,0 +1,20 @@
+{
+    "appDependencies": [
+        {
+            "appId": "search",
+            "branch": ""
+        },
+        {
+            "appId": "search-lib",
+            "branch": "1.1.4"
+        }
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/KTimesheets/ktimesheets.js"
+            }
+        }
+    ]
+}
