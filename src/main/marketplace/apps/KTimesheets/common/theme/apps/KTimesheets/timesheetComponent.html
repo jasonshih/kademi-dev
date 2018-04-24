@@ -2,13 +2,20 @@
 #set( $timesheet = $services.timesheetManager.timesheet )
 
 
-<table class="table table-striped timesheet-table">
+<table class="table table-striped timesheet-table" id="the-timesheet">
     <thead>
         <tr>
             <th>Item</th>
 
             #foreach( $day in $timesheet.days )
             <th>$formatter.formatDate($day)</th>
+            #end
+        </tr>
+        <tr>
+            <th></th>
+
+            #foreach( $day in $timesheet.days )
+            <th>$formatter.getDayOfWeekName($day)</th>
             #end
         </tr>
     </thead>
@@ -58,6 +65,7 @@
 <table class="table">
 #foreach( $entry in $timesheet.entries )
 <tr>
+    <td>$entry.id</td>
     <td>
         $!entry.task / $!entry.lead / $!entry.label
     </td>
