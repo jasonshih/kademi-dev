@@ -1,6 +1,8 @@
 
 #set( $timesheet = $services.timesheetManager.timesheet )
 
+$applications.KTimesheets.appSettings
+
 
 <table class="table table-striped timesheet-table" id="the-timesheet">
     <thead>
@@ -25,10 +27,10 @@
         <tr>
             <td>
                 #if( $item.class.simpleName == "Task" )
-                <a href="/tasks/$item.id">$item.title</a>
+                <a href="/tasks/$item.id">$item.formattedName</a>
                 <input type="hidden" class="form-control timesheet-item" name="item" value="$item.id" />
                 #elseif( $item.class.simpleName == "Lead" )
-                <a href="/leads/$item.id">$item.title</a>
+                <a href="/leads/$item.id">$item.formattedName</a>
                 <input type="hidden" class="form-control timesheet-item" name="item" value="$item.id" />
                 #else
                 $item

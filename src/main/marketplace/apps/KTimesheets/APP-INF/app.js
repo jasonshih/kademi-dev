@@ -1,3 +1,4 @@
+var APP_NAME = 'KTimesheets';
 
 controllerMappings
         .websiteController()
@@ -21,4 +22,39 @@ function saveTime(page, params) {
     });
 
     return views.jsonView(true, "Saved");
+}
+
+
+// ============================================================================
+// Settings
+// ============================================================================
+function saveSettings(page, params) {
+    log.info('saveSettings > page={}, params={}', page, params);
+
+    var standardItems = params.standardItems || '';
+
+    page.setAppSetting(APP_NAME, 'standardItems', standardItems);
+
+    return views.jsonResult(true);
+}
+
+
+function getAppSettings(page) {
+    log.info('getAppSettings > page={}', page);
+
+    var websiteFolder = page.closest('websiteVersion');
+    var org = page.organisation;
+    var branch = null;
+
+    if (websiteFolder !== null && typeof websiteFolder !== 'undefined') {
+        branch = websiteFolder.branch;
+    }
+
+    var app = applications.get(APP_NAME);
+    if (app !== null) {
+        var settings = app.getAppSettings(org, branch);
+        return settings;
+    }
+
+    return null;
 }

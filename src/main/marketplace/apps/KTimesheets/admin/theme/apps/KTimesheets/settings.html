@@ -1,0 +1,8 @@
+#set ($standardItems = $!page.getAppSetting($app.instanceId, 'standardItems'))
+<div class="form-group">
+    <label class="col-sm-4 control-label" for="ktimesheets-std-items">Standard items</label>
+    <div class="col-sm-7">
+        <input type="text" id="ktimesheets-std-items" class="form-control" name="standardItems" value="$!standardItems" />
+        <i>Comma seperated list of items to display in all timesheets</i>
+    </div>
+</div>
