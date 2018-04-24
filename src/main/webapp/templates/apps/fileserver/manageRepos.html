@@ -136,7 +136,10 @@
                             <div class="form-group">
                                 <label for="newName" class="col-md-3 control-label">Repository name</label>
                                 <div class="col-md-8">
-                                    <input type="text" class="required simpleChars form-control" placeholder="Enter a simple name, eg MyFiles" id="newName" name="newName" />
+                                    <input type="text" class="required regex form-control" placeholder="Enter a simple name, eg MyFiles" id="newName" name="newName" data-regex="^[a-zA-Z0-9-]+$" data-message="Repo name is invalid"  />
+                                    <span class="help-block">
+                                        <small>Simple characters only, no punctuation, dots, etc, not a domain name</small>
+                                    </span>
                                 </div>
                             </div>
                         </div>
