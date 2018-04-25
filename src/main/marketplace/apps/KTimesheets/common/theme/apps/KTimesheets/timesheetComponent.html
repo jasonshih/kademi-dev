@@ -1,78 +1,122 @@
 
 #set( $timesheet = $services.timesheetManager.timesheet )
 
-$applications.KTimesheets.appSettings
+<div class="timesheet">
+    <table class="table table-striped timesheet-table" id="the-timesheet">
+        <thead>
+            <tr>
+                <th>Item</th>
 
-
-<table class="table table-striped timesheet-table" id="the-timesheet">
-    <thead>
-        <tr>
-            <th>Item</th>
-
-            #foreach( $day in $timesheet.days )
-            <th>$formatter.formatDate($day)</th>
-            #end
-        </tr>
-        <tr>
-            <th></th>
-
-            #foreach( $day in $timesheet.days )
-            <th>$formatter.getDayOfWeekName($day)</th>
-            #end
-        </tr>
-    </thead>
-
-    <tbody>
-        #foreach( $item in $timesheet.workItems )
-        <tr>
-            <td>
-                #if( $item.class.simpleName == "Task" )
-                <a href="/tasks/$item.id">$item.formattedName</a>
-                <input type="hidden" class="form-control timesheet-item" name="item" value="$item.id" />
-                #elseif( $item.class.simpleName == "Lead" )
-                <a href="/leads/$item.id">$item.formattedName</a>
-                <input type="hidden" class="form-control timesheet-item" name="item" value="$item.id" />
-                #else
-                $item
-                <input type="hidden" class="form-control timesheet-item" name="item" value="$item" />
+                #foreach( $day in $timesheet.days )
+                <th>$formatter.formatDate($day)</th>
                 #end
-            </td>
-            #foreach( $day in $timesheet.days )
-            <td>
-                <input type="numeric" class="form-control timesheet-hours" name="hours" step="0.1" value="$!timesheet.getHours($day, $item)" data-day="$formatter.formatDate($day)"/>
-            </td>
+            </tr>
+            <tr>
+                <th></th>
+
+                #foreach( $day in $timesheet.days )
+                <th>$formatter.getDayOfWeekName($day)</th>
+                #end
+            </tr>
+        </thead>
+
+        <tbody>
+            #foreach( $item in $timesheet.workItems )
+            <tr>
+                <td>
+                    #if( $item.class.simpleName == "Task" )
+                    <a href="/tasks/$item.id">$item.formattedName</a>
+                    <input type="hidden" class="form-control timesheet-item" name="item" value="$item.id" />
+                    #elseif( $item.class.simpleName == "Lead" )
+                    <a href="/leads/$item.id">$item.formattedName</a>
+                    <input type="hidden" class="form-control timesheet-item" name="item" value="$item.id" />
+                    #else
+                    $item
+                    <input type="hidden" class="form-control timesheet-item" name="item" value="$item" />
+                    #end
+                </td>
+                #foreach( $day in $timesheet.days )
+                <td>
+                    <input type="numeric" class="form-control timesheet-hours text-right" name="hours" step="0.1" value="$!timesheet.getHours($day, $item)" data-day="$formatter.formatDate($day)"/>
+                </td>
+                #end
+            </tr>
             #end
-        </tr>
-        #end
 
 
-        #foreach( $cnt in [1, 2, 3, 4, 5])
-        <tr>
-            <td>
-                <input type="text" class="form-control timesheet-item" name="item" />
-            </td>
-            #foreach( $day in $timesheet.days )
-            <td>
-                <input type="numeric" class="form-control timesheet-hours" disabled name="hours" step="0.1" data-day="$formatter.formatDate($day)" />
-            </td>
+            #foreach( $cnt in [1, 2, 3])
+            <tr>
+                <td>
+                    <input type="text" class="form-control timesheet-item" name="item" />
+                </td>
+                #foreach( $day in $timesheet.days )
+                <td>
+                    <input type="numeric" class="form-control timesheet-hours  text-right" disabled name="hours" step="0.1" data-day="$formatter.formatDate($day)" />
+                </td>
+                #end
+            </tr>
             #end
-        </tr>
-        #end
-    </tbody>
-    <tfoot>
+        </tbody>
+        <tfoot>
+            <tr class="totals">
+                <th>
+                    Totals
+                </th>
+                #foreach( $day in $timesheet.days )
+                <th class="text-right">
 
-    </tfoot>
-</table>
+                </th>
+                #end
+            </tr>
+            <tr class="">
+                <th colspan="$timesheet.days.size()" class="text-right">
+                    Grand total
+                </th>
+                <th class="grand-total text-right"></th>
+            </tr>
+        </tfoot>
+    </table>
 
-<table class="table">
-#foreach( $entry in $timesheet.entries )
-<tr>
-    <td>$entry.id</td>
-    <td>
-        $!entry.task / $!entry.lead / $!entry.label
-    </td>
-    <td>$entry.workedDate</td>
-    <td>$entry.hours</td>
-</tr>
-#end
-</table>
+    <div class="well">
+        <form method="post" action="/timesheets/" class="timesheet-submit-form">
+            <div class="timesheet-dates">
+            <p>This will submit all hours in the current date range. These dates
+                will then be not editable</p>
+            <b>Period $formatter.formatDate($timesheet.startDate)
+            - $formatter.formatDate($timesheet.finishDate)
+            </b>
+            <br/>
+            <input type="hidden" name="startDate" value="$timesheet.startDate.time"/>
+            <input type="hidden" name="finishDate" value="$timesheet.finishDate.time"/>
+            </div>
+            <input type="hidden" name="submitTimesheet" value="true"/>
+            <button type="submit" class="btn btn-success">Submit hours</button>
+        </form>
+    </div>
+
+    #set( $batches = $services.timesheetManager.timesheetBatches )
+    <hr/>
+    <h2>Submitted timesheet batches</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Start</th>
+                <th>Finish</th>
+                <th>Hours</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            #foreach($batch in $batches)
+            <tr>
+                <td>$batch.id</td>
+                <td>$formatter.formatDate($batch.startDate)</td>
+                <td>$formatter.formatDate($batch.finishDate)</td>
+                <td>$batch.hours</td>
+                <td>$batch.status</td>
+            </tr>
+            #end
+        </tbody>
+    </table>
+</div>

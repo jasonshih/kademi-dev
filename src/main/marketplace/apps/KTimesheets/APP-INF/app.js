@@ -5,12 +5,28 @@ controllerMappings
         .path('/timesheets/')
         .defaultView(views.templateView('/theme/apps/KTimesheets/viewTimesheet.html'))
         .postPriviledge('READ_CONTENT')
-        .addMethod('POST', 'saveTime')
+        .addMethod('POST', 'saveTime', 'hours')
+        .addMethod('POST', 'submitTimesheet', 'submitTimesheet')
         .enabled(true)
         .build();
 
 controllerMappings.addComponent("KTimesheets", "timesheet", "web", "Shows a table to enter timesheet hours", "KTimesheets component");
 
+
+function submitTimesheet(page, params) {
+    try{
+        transactionManager.runInTransaction(function () {
+            var startDate = formatter.toDate(params.startDate);
+            var finishDate = formatter.toDate(params.finishDate);
+            log.info("submitTimesheet: start={} finish={}",startDate, finishDate);
+            services.timesheetManager.submit(startDate, finishDate);
+        });
+        return views.jsonView(true, "Saved");
+    } catch(ex) {
+        return views.jsonView(false, "Error: " + ex.message);
+    }
+
+}
 
 function saveTime(page, params) {
     transactionManager.runInTransaction(function () {
