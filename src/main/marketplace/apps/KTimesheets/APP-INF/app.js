@@ -29,15 +29,19 @@ function submitTimesheet(page, params) {
 }
 
 function saveTime(page, params) {
-    transactionManager.runInTransaction(function () {
-        var item = params.item;
-        var hours = formatter.toDouble( params.hours );
-        var date = formatter.toDate(params.date);
-        log.info("saveTime: hours={} date={} item={}", hours, item, date);
-        services.timesheetManager.addUpdateHours(item, hours, date);
-    });
+    try {
+        transactionManager.runInTransaction(function () {
+            var item = params.item;
+            var hours = formatter.toDouble( params.hours );
+            var date = formatter.toDate(params.date);
+            log.info("saveTime: hours={} date={} item={}", hours, item, date);
+            services.timesheetManager.addUpdateHours(item, hours, date);
+        });
 
-    return views.jsonView(true, "Saved");
+        return views.jsonView(true, "Saved");
+    } catch(ex) {
+        return views.jsonView(false, "Error: " + ex.message);
+    }
 }
 
 
