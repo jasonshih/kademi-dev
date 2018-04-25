@@ -1,19 +1,44 @@
 $(function () {
+
+    flog("init submit forms", $(".timesheet-submit-form"));
+
+    var forms = $(".timesheet-submit-form");
+    if (forms.length > 0) {
+        $(".timesheet-submit-form").forms({
+            onSuccess: function (resp) {
+                if (resp && resp.status) {
+                    Msg.info("Submitted ok. Reloading page..");
+                    window.location.reload();
+                } else {
+                    Msg.error("Sorry, something didnt work");
+                }
+            }
+        });
+    }
+
     $(".timesheet-table").each(function (i, n) {
         var table = $(n);
 
+        updateTotals(table);
+
         $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
             flog("reloading", table.attr("id"));
-            table.reloadFragment();
+            table.reloadFragment({
+                whenComplete: function (newDom, resp, status, xhr) {
+                    updateTotals(table);
+                    var newSubmitForm = newDom.find(".timesheet-dates");
+                    var form = table.closest(".timesheet").find(".timesheet-dates");
+                    flog("update form", form, newSubmitForm);
+                    form.html(newSubmitForm);
+                }
+            });
         });
 
         table.on("change", ".timesheet-item", function (e) {
             try {
                 flog("item changed");
                 var node = $(e.target);
-                flog("item changed2");
                 var tr = node.closest("tr");
-                flog("item changed3");
                 tr.find("input").prop("disabled", false);
             } catch (e) {
                 flog("Error: ", e);
@@ -27,6 +52,7 @@ $(function () {
             var hours = node.val();
             var date = node.data("day");
             var item = node.closest("tr").find(".timesheet-item").val();
+            updateTotals(table);
             $.ajax({
                 url: '/timesheets/',
                 type: 'post',
@@ -52,5 +78,33 @@ $(function () {
     });
 });
 
+function updateTotals(table) {
+    var bodyRows = table.find("tbody tr");
+    var tr = table.find(".totals");
+    var grandTotal = 0;
+    tr.find("th").each(function (i, n) {
+        if (i > 0) {
+            var td = $(n);
+            var total = calcTotal(bodyRows, i);
+            td.text(total);
+            grandTotal += total;
+        }
+    });
+    table.find(".grand-total").text(grandTotal);
+}
 
-
+function calcTotal(bodyRows, i) {
+    var total = 0;
+    bodyRows.each(function (rowNum, n) {
+        var tr = $(n);
+        var td = $(tr.find("td")[i]);
+        var inp = td.find("input");
+        //flog("calcTotal td=", td, td.text());
+        var v = inp.val().trim();
+        var v2 = parseFloat(v);
+        if (!isNaN(v2)) {
+            total += v2;
+        }
+    });
+    return total;
+}

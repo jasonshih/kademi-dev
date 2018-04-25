@@ -22,6 +22,7 @@
             <ul class="nav nav-tabs tab-bricky">
                 <li class="active"><a data-toggle="tab" href="#products" aria-expanded="true">Products</a></li>
                 <li><a data-toggle="tab" href="#general">General</a></li>
+                <li><a data-toggle="tab" href="#pricing">Pricing rules</a></li>
             </ul>
             <div class="tab-content">
 
@@ -63,15 +64,15 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             #macro(genCategories $categories)
-                                #foreach($cat in $categories)
-                                    #set( $size = $cat.childCategories.size())
-                                    $formatter.option($cat.name, "$formatter.padWith('-', '', $cat.level) $cat.title", $request.params.categoryName)
-                                    #if( $size > 0 )
-                                        #genCategories($cat.childCategories)
-                                    #end
-                                #end
+                            #foreach($cat in $categories)
+                            #set( $size = $cat.childCategories.size())
+                            $formatter.option($cat.name, "$formatter.padWith('-', '', $cat.level) $cat.title", $request.params.categoryName)
+                            #if( $size > 0 )
+                            #genCategories($cat.childCategories)
+                            #end
+                            #end
                             #end
                         </div>
                     </div>
@@ -103,7 +104,7 @@
                             <tbody id="products-list">
                                 #set($paginator = $page.paginator)
                                 #set( $products = $paginator.records )
-                                
+
                                 #if( $products.isEmpty() )
                                 <tr>
                                     <td colspan="6">No products were found matching the critieria</td>
@@ -195,7 +196,102 @@
 
                     </div>
                 </div>
-                <!-- End content of General tab -->
+                <div id="pricing" class="tab-pane">
+                    <h2>Pricing rules</h2>
+
+                    #set( $rulesDir = $rootFolder.find("/repositories/$page.storeWebsite.name/$page.storeWebsite.liveBranch/WEB-INF/") )
+                    #set( $rulesFile = $rulesDir.child("pricing-rules.csv") )
+
+                    #if( $rulesFile )
+                    <a href="/repositories/ecom1/version1/WEB-INF/"></a>
+
+                    #set( $rules = $services.pricingRulesService.rules($page.storeWebsite) )
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th colspan="9">$rules.size() rules</th>
+                            </tr>
+                            <tr>
+                                <th>Promotion</th>
+                                <th>User ID</th>
+                                <th>Group</th>
+                                <th>Org ID</th>
+                                <th>Org Type</th>
+                                <th>Expression</th>
+                                <th>Add</th>
+                                <th>Multiply</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($rule in $rules)
+                            <tr>
+                                <td>$!rule.promotionName</td>
+                                <td>$!rule.userId</td>
+                                <td>$!rule.groupName</td>
+                                <td>$!rule.orgId</td>
+                                <td>$!rule.orgType</td>
+                                <td>$!rule.mvelExpression</td>
+                                <td>$!rule.addValue</td>
+                                <td>$!rule.multValue</td>
+                                <td>$!rule.notes</td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                    #else
+                    <p class="lead">No pricing rules file exists for this website</p>
+
+                    <a href="${rulesDir.href}texteditor?fileName=pricing-rules.csv">Create and edit as a text file</a>
+
+                    <br/>
+
+                    OR upload a spread sheet in the correct format here:
+                    <a href="${rulesDir.href}">Upload to this directory</a>
+
+                    Use this format as a CSV file (omit the header row)
+                    <br/>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="odd">
+                                <th colspan="9">1 rules</th>
+                            </tr>
+                            <tr class="even">
+                                <th>Promotion</th>
+                                <th>User ID</th>
+                                <th>Group</th>
+                                <th>Org ID</th>
+                                <th>Org Type</th>
+                                <th>Expression</th>
+                                <th>Add</th>
+                                <th>Multiply</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td class="first">promo1</td>
+                                <td>admin</td>
+                                <td>administrators</td>
+                                <td>myorg</td>
+                                <td>trade</td>
+                                <td></td>
+                                <td>1</td>
+                                <td>0.9</td>
+                                <td class="last">just a test</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="well">
+                    You can copy/paste this as a template:
+
+                    <textarea class="form-control">promo1,admin,administrators,myorg,trade,,1,0.9,just an example</textarea>
+                    </div>
+
+                    #end
+                </div>
+                <!-- End content of pricing tab -->
             </div>
         </div>
 
