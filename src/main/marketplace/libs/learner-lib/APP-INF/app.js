@@ -178,7 +178,7 @@ controllerMappings.addTableDef("tableLearnersModulesDetails", "Learners Modules 
     .addHeader("Course")
     .addHeader("Module")
     //.addHeader("Certificate")
-    .addHeader("Renwale")
+    .addHeader("Renewal")
     .addHeader("Expire")
     .addHeader("Date completed");
     
