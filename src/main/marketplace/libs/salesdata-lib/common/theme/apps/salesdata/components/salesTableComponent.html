@@ -6,6 +6,11 @@
 #set( $salesPage = $rootFolder.find($href) )
 
 #if ($page)
+#if ($filterByUser && $filterByUser == 'true')
+    #set( $dataToFilter = $salesPage.recordsForProfile($profile) )
+#else
+    #set( $dataToFilter = $salesPage.history )
+#end
 <div class="panel panel-default panel-sales-table">
     <div class="panel-heading">
         <i class="fa fa-bar-chart"></i> Sales Table
@@ -24,7 +29,7 @@
                         </tr>
                     </thead>
                     <tbody id="history-table-body">
-                        #foreach($item in $salesPage.history)
+                        #foreach($item in $dataToFilter)
                         <tr>
                             <td title="$formatter.formatDateISO8601($item.periodFrom)">$formatter.formatDateTime($item.periodFrom, $page.organisation.timezone)</td>
                             <td>

@@ -59,6 +59,15 @@
                             dynamicElement.html('<p>Please select Serie</p>');
                         }
                     });
+
+                    form.find('.filter-by-user').on('change', function () {
+                        var checked = $(this).prop("checked");
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-filter-by-user', checked);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -68,6 +77,7 @@
 
             var dataAttributes = keditor.getDataAttributes(component, [], false);
             form.find('.select-data').val(dataAttributes['data-name']);
+            form.find('.filter-by-user').prop("checked", dataAttributes['data-filter-by-user'] == "true");
         }
     };
 
