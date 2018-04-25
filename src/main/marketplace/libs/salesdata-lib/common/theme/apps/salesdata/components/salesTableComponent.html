@@ -11,9 +11,17 @@
 #else
     #set( $dataToFilter = $salesPage.history )
 #end
+
+#if( !$label || $label == "" )
+#set( $label = "Sales Table" )
+#end
+
+#if( !$icon || $icon == "" )
+#set( $icon = "fa-bar-chart" )
+#end
 <div class="panel panel-default panel-sales-table">
     <div class="panel-heading">
-        <i class="fa fa-bar-chart"></i> Sales Table
+        <i class="fa $icon"></i> $label
     </div>
     <div class="panel-body">
 

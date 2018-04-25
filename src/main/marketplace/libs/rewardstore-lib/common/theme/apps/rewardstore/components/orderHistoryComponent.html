@@ -1,34 +1,59 @@
 #set( $history = $applications.rewardStore.productOrderStatusHistory )
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Item</th>
-            <th>Date</th>            
-            <th>Status</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        #if ($history.size() < 1)
-        <tr>
-            <td colspan="99">There are no orders yet</td>
-        </tr>
-        #else
-        #set( $last = false )
-        #foreach( $status in $history )
-        <tr>
-            <td>
-                #if( $last != $status.productOrder )
-                $status.productOrder.itemDescription
-                #set( $last = $status.productOrder )
-                #end
-            </td>
-            <td>$!status.statusDate</td>
-            <td>$!status.statusCode</td>
-            <td>$!status.description</td>
-        </tr>
-        #end
-        #end
-    </tbody>
-</table>
+#if( !$label || $label == "" )
+#set( $label = "Orders History" )
+#end
+
+#if( !$icon || $icon == "" )
+#set( $icon = "fa-bar-chart" )
+#end
+
+#if( !$height )
+#set( $height = 200 )
+#end
+
+<div class="panel panel-default panel-sales-table">
+    <div class="panel-heading">
+        <i class="fa $icon"></i> $label
+    </div>
+    <div class="panel-body">
+        <div style="height: $!{height}px; overflow-y: auto;">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Date</th>            
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #if ($history.size() < 1)
+                        <tr>
+                            <td colspan="99">There are no orders yet</td>
+                        </tr>
+                        #else
+                        #set( $last = false )
+                        #foreach( $status in $history )
+                        <tr>
+                            <td>
+                                #if( $last != $status.productOrder )
+                                $status.productOrder.itemDescription
+                                #set( $last = $status.productOrder )
+                                #end
+                            </td>
+                            <td>$!status.productOrder.quantity</td>
+                            <td>$!status.statusDate</td>
+                            <td>$!status.statusCode</td>
+                            <td>$!status.description</td>
+                        </tr>
+                        #end
+                        #end
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
