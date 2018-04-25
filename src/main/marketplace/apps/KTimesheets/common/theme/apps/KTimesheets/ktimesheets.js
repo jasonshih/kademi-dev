@@ -2,16 +2,19 @@ $(function () {
 
     flog("init submit forms", $(".timesheet-submit-form"));
 
-    $(".timesheet-submit-form").forms({
-        onSuccess : function(resp) {
-            if( resp && resp.status ) {
-                Msg.info("Submitted ok. Reloading page..");
-                window.location.reload();
-            } else {
-                Msg.error("Sorry, something didnt work");
+    var forms = $(".timesheet-submit-form");
+    if (forms.length > 0) {
+        $(".timesheet-submit-form").forms({
+            onSuccess: function (resp) {
+                if (resp && resp.status) {
+                    Msg.info("Submitted ok. Reloading page..");
+                    window.location.reload();
+                } else {
+                    Msg.error("Sorry, something didnt work");
+                }
             }
-        }
-    });
+        });
+    }
 
     $(".timesheet-table").each(function (i, n) {
         var table = $(n);
@@ -21,7 +24,7 @@ $(function () {
         $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
             flog("reloading", table.attr("id"));
             table.reloadFragment({
-                whenComplete : function(newDom, resp, status, xhr){
+                whenComplete: function (newDom, resp, status, xhr) {
                     updateTotals(table);
                     var newSubmitForm = newDom.find(".timesheet-dates");
                     var form = table.closest(".timesheet").find(".timesheet-dates");
@@ -79,8 +82,8 @@ function updateTotals(table) {
     var bodyRows = table.find("tbody tr");
     var tr = table.find(".totals");
     var grandTotal = 0;
-    tr.find("th").each(function(i, n) {
-        if( i > 0 ) {
+    tr.find("th").each(function (i, n) {
+        if (i > 0) {
             var td = $(n);
             var total = calcTotal(bodyRows, i);
             td.text(total);
@@ -92,14 +95,14 @@ function updateTotals(table) {
 
 function calcTotal(bodyRows, i) {
     var total = 0;
-    bodyRows.each(function(rowNum, n) {
+    bodyRows.each(function (rowNum, n) {
         var tr = $(n);
         var td = $(tr.find("td")[i]);
         var inp = td.find("input");
         //flog("calcTotal td=", td, td.text());
         var v = inp.val().trim();
         var v2 = parseFloat(v);
-        if( !isNaN(v2)) {
+        if (!isNaN(v2)) {
             total += v2;
         }
     });
