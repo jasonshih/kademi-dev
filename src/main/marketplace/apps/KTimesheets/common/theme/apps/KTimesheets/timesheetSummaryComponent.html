@@ -1,0 +1,49 @@
+#if ($page && $page.is("lead"))
+#set( $timesheet = $services.timesheetManager.getTimesheet($userResource.thisProfile, $page.createDate, $formatter.now))
+<div class="timesheet">
+    <table class="table table-striped timesheet-table-summary">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Hours</th>
+        </tr>
+        </thead>
+        <tbody>
+        #foreach( $entry in $timesheet.entries )
+        #if ($entry.lead.id == $page.leadId)
+            <tr>
+                <td>$applications.userApp.findUserResource($entry.workedBy).formattedName</td>
+                <td>$formatter.formatDate($entry.workedDate)</td>
+                <td>$entry.hours</td>
+            </tr>
+        #end
+        #end
+        </tbody>
+    </table>
+</div>
+#else
+<div class="timesheet">
+    <table class="table table-striped timesheet-table-summary">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Hours</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Sample Name</td>
+            <td>$formatter.formatDate($formatter.now)</td>
+            <td>$entry.hours</td>
+        </tr>
+        <tr>
+            <td>Another name</td>
+            <td>$formatter.formatDate($formatter.now)</td>
+            <td>5</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+#end
