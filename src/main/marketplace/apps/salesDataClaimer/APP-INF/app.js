@@ -54,6 +54,28 @@ function checkProcessedGoal(rootFolder, lead, funnel, eventParams, customNextNod
     return false;
 }
 
+controllerMappings.addGoalNodeType("claimGroupSubmittedGoal", "salesDataClaimer/claimGroupSubmittedGoalNode.js", "checkSubmittedGoal");
+
+function checkGroupSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
+    log.info('checkSubmittedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);
+    if (!lead) {
+        return true;
+    }
+
+    var claimId = attributes.get(LEAD_CLAIM_GROUP_ID);
+
+    if (isNotBlank(claimId)) {
+        // Process only for this claim ID
+        return safeString(eventParams.claim) === safeString(claimId);
+    } else {
+        attributes.put(LEAD_CLAIM_GROUP_ID, eventParams.claim);
+
+        return true;
+    }
+
+    return false;
+}
+
 function initSalesDataClaimerApp(orgRoot, webRoot, enabled) {
     log.info("initApp SalesDataClaimer > orgRoot={}, webRoot={}", orgRoot, webRoot);
 

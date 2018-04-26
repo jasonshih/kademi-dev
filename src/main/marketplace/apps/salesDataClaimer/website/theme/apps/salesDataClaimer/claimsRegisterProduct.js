@@ -1,6 +1,4 @@
 (function ($) {
-
-
     $(function () {
         initWizard();
 
@@ -90,6 +88,57 @@
         $("body").on("change", ".dynamic-toggle", function() {
             $("." + $(this).data("group-class")).hide();
             $($(this).find(":selected").data("toggle")).show();
+        });
+        
+        var options = {
+        types: ['geocode'],
+        componentRestrictions: {country: "au"}
+        };
+        
+        var componentForm = {
+              locality: '#suburb',
+              administrative_area_level_1: '#state',
+              postal_code: '#postcode'
+            };
+        
+        var input = document.getElementById("address1");
+        google.maps.event.addDomListener(input, 'keydown', function(event) { 
+          if (event.keyCode === 13) { 
+              event.preventDefault(); 
+          }
+        }); 
+        
+        var selected = false;
+        
+        $("#address1").on("keyup", function() {
+              selected = false;
+        });
+        
+        $("#address1").on("blur", function() {
+              if (!selected) {
+                      $("#address1").val("");
+          }
+        });
+        
+        var autocomplete = new google.maps.places.Autocomplete(input, options);
+        autocomplete.addListener('place_changed', function (event) {
+          var place = autocomplete.getPlace();
+        
+              if (place === undefined || place.address_components === undefined) {
+                      $("#address1").val("");
+                      selected = false;
+                      return;	
+          }
+        
+              for (var i = 0; i < place.address_components.length; i++) {
+            var addressType = place.address_components[i].types[0];
+            if (componentForm[addressType]) {
+              var val = place.address_components[i]['long_name'];
+                      $(componentForm[addressType]).val(val);
+            }
+          }
+        
+              selected = true;
         });
     }
 
