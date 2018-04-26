@@ -11,6 +11,7 @@ controllerMappings
         .build();
 
 controllerMappings.addComponent("KTimesheets", "timesheet", "web", "Shows a table to enter timesheet hours", "KTimesheets component");
+controllerMappings.addComponent("KTimesheets", "timesheetSummary", "lead", "Shows hours related to a lead on the lead page", "KTimesheets component");
 
 
 function submitTimesheet(page, params) {
