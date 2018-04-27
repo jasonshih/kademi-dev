@@ -1,5 +1,6 @@
 $(function () {
     initProposalDetailsForm();
+    initDateTimePickers()
 });
 
 function initProposalDetailsForm() {
@@ -101,4 +102,39 @@ function initProposalDetailsForm() {
     function initQuoteFiles() {
         $('#attachment').dropzone();
     }
+}
+
+function initDateTimePickers() {
+    var date = new Date();
+    date.setDate(date.getDate() - 1);
+    $('body').css('position', 'relative');
+    var opts = {
+        widgetParent: 'body',
+        format: 'DD/MM/YYYY HH:mm'
+    };
+
+    $('.date-pickers').datetimepicker(opts);
+
+    $('.date-pickers').on('dp.show', function () {
+        var datepicker = $('body').find('.bootstrap-datetimepicker-widget:last');
+        if (datepicker.hasClass('bottom')) {
+            var top = $(this).offset().top - $(this).outerHeight();
+            var left = $(this).offset().left;
+            datepicker.css({
+                'top': top + 'px',
+                'bottom': 'auto',
+                'left': left + 'px',
+                'z-index': 9999
+            });
+        } else if (datepicker.hasClass('top')) {
+            var top = $(this).offset().top - datepicker.outerHeight() - 40;
+            var left = $(this).offset().left;
+            datepicker.css({
+                'top': top + 'px',
+                'bottom': 'auto',
+                'left': left + 'px',
+                'z-index': 9999
+            });
+        }
+    });
 }
