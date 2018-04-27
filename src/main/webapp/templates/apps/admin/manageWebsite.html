@@ -108,10 +108,10 @@
                             Find more apps
                         </a>
                         <p>
-                        Currently installed:
-                        #foreach( $app in $marketplaceApps )
-                        <span class="label label-info">$app.title</span>
-                        #end
+                            Currently installed:
+                            #foreach( $app in $marketplaceApps )
+                            <span class="label label-info">$app.title</span>
+                            #end
                         </p>
                         <p>Manage
                             <a href="#panel_apps-tab">app settings from the apps tab</a>, or find apps from the
@@ -259,33 +259,33 @@
                     <hr/>
                     <div class="alert alert-info">Below is a list of templates provided by applications currently enabled for this website. Click the link to override and customise the template. <b>Not all applications are integrated with template management</b>, and might not appear here</div>
                     #foreach($templateList in $page.allTemplates.entrySet() )
-                        <table class="table table-hover">
-                            <colgroup>
-                                <col width="200" />
-                                <col />
-                                <col width="100" />
-                            </colgroup>
-                            <thead>
-                                <tr>
-                                    <th colspan="99">$page.appTitle($templateList.key)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                #foreach($template in $templateList.value)
-                                    <tr>
-                                        <td>
-                                            <a href="$page.href?editTemplate=$template.path" target="_blank">$template.fileName</a>
-                                        </td>
-                                        <td>$template.description</td>
-                                        <td>
-                                            #if( $page.isCustomised($template) )
-                                                Customised
-                                            #end
-                                        </td>
-                                    </tr>
-                                #end
-                            </tbody>
-                        </table>
+                    <table class="table table-hover">
+                        <colgroup>
+                            <col width="200" />
+                            <col />
+                            <col width="100" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th colspan="99">$page.appTitle($templateList.key)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($template in $templateList.value)
+                            <tr>
+                                <td>
+                                    <a href="$page.href?editTemplate=$template.path" target="_blank">$template.fileName</a>
+                                </td>
+                                <td>$template.description</td>
+                                <td>
+                                    #if( $page.isCustomised($template) )
+                                    Customised
+                                    #end
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
                     #end
 
                 </div> <!-- End theme -->
@@ -300,7 +300,7 @@
                     </p>
 
                     <hr/>
-                    
+
                     <div class="Content Recipient">
                         <!--<button class="btn btn-sm btn-default AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>-->
                         <div class="dropdown pull-left" id="addGroupDropdown" style="margin-right: 15px">
@@ -320,7 +320,7 @@
                         <p class="clearfix"></p>
                         <br />
                         <div id="group-list" class="clearfix GroupList">
-                            
+
                             #foreach($g in $page.selectedGroups)
                             <div class="alert alert-info">
                                 <a style="margin-left: 5px" href="$g.name" title="Remove group" class="btn btn-sm btn-danger pull-right btnRemoveGroup"><i class="fa fa-trash"></i></a>
@@ -437,7 +437,7 @@
                             <a href="#" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-send-test"><i class="fa fa-envelope"></i> Send Test Email</a>
                         </div>
                     </div>
-                    
+
                     #else
                     <p>You're using Kademi's domain, so relax, you dont need to do anything :)</p>
                     #end
@@ -800,10 +800,10 @@
                         #end
                         <div class="clearfix"></div>
 
-                    #else
-                            <p>Applications control large chunks of functionality, like forums or emails. You can add them to websites</p>
-                            <p>Applications are made available for websites by activating them on your organisation's Manage Applications page. Available apps are then shown on the website apps list where they can be turned on or off as required.</p>
-                    #end
+                        #else
+                        <p>Applications control large chunks of functionality, like forums or emails. You can add them to websites</p>
+                        <p>Applications are made available for websites by activating them on your organisation's Manage Applications page. Available apps are then shown on the website apps list where they can be turned on or off as required.</p>
+                        #end
                     </div>
 
                     <div class="input-group">
@@ -878,27 +878,91 @@
                     #end
                 </div> <!-- End apps -->
                 <div id="panel_controllers" class="tab-pane controllersContainer">
+                    $page.controllerMappings
+                    #if( $page.controllerMappings )
                     <h3>
-                        <a href="WEB-INF/texteditor?fileName=controllers.xml">Controller sources: $page.controllerMappings.sources.size()</a>
+                        <a href="WEB-INF/texteditor?fileName=controllers.xml">Controller sources: $!page.controllerMappings.sources.size()</a>
                     </h3>
                     <table class="table table-striped">
-                    #foreach( $source in $page.controllerMappings.sources)
-                    <tr>
-                        <td>
-                            <a href="WEB-INF/texteditor?fileName=$source">$source</a>
-                        </td>
-                    </tr>
-                    #end
-                    </table>   
-                    
+                        #foreach( $source in $page.controllerMappings.sources)
+                        <tr>
+                            <td>
+                                <a href="WEB-INF/texteditor?fileName=$source">$source</a>
+                            </td>
+                        </tr>
+                        #end
+                    </table>
+
                     <h3>Controller mappings: $!page.controllerMappings.websiteMappings.size()</h3>
                     <table class="table table-striped">
-                    #foreach( $controller in $page.controllerMappings.websiteMappings)
-                    <tr>
-                        <td>$controller</td>
-                    </tr>
-                    #end
+                        <thead>
+                            <tr>
+                                <th>Enabled</th>
+                                <th>Method</th>
+                                <th>Param</th>
+                                <th>Function</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach( $controller in $page.controllerMappings.websiteMappings)
+                            <tr>
+                                <td  colspan="4">
+                                    #if( $controller.enabled )
+                                    <span class="badge badge-success">
+                                        <i class="fa fa-check"></i>
+                                    </span>
+                                    #else
+                                    <span class="badge badge-danger">
+                                        <i class="fa fa-times"></i>
+                                    </span>
+                                    #end
+                                    $controller.path
+                                </td>
+                            </tr>
+                            #foreach( $method in $controller.methods)
+                            <tr>
+                                <td></td>
+                                <td>$!method.method</td>
+                                <td>$!method.requiredParameter</td>
+                                <td>$!method.function</td>
+                            </tr>
+                            #end
+                            #end
+                        </tbody>
                     </table>
+
+                    <h3>Components: $!page.controllerMappings.components.size()</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>compId</th>
+                                <th>Types</th>
+                                <th>Categories</th>
+                                <th>Description</th>
+                                <th>Files</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach( $comp in $page.controllerMappings.components)
+                            <tr>
+                                <td>$comp.componentId</td>
+                                <td>$!formatter.toCsv($comp.types)</td>
+                                <td>$!formatter.toCsv($comp.categories)</td>
+                                <td>$!comp.description</td>
+                                <td>
+                                    $comp.jsFile
+                                    <br/>$comp.editorHtml
+                                    <br/>$comp.previewImage
+                                    <br/>$comp.renderTemplate
+                                    <br/>$comp.settingsTemplate
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                    #else
+                    <p>No controller mappings file exists</p>
+                    #end
                 </div>
             </div>
         </div>
