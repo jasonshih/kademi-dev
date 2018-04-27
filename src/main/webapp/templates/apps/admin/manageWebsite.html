@@ -46,7 +46,7 @@
         <div class="btn-group">
             <div class="btn-group">
                 <a target='_blank' href='$page.externalUrl' class="btn btn-sm btn-success">
-                    <i class="fa fa-arrow-circle-right"></i> View website
+                    <i class="fa fa-arrow-circle-right"></i> View
                 </a>
                 <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="caret"></span>
@@ -58,10 +58,10 @@
             </div>
 
             <a href='/repositories/$page.closest("website").name/$page.name' class="btn btn-sm btn-info">
-                <i class="fa fa-file"></i> Files
+                <i class="fa fa-folder-open" title="File manager"></i>
             </a>
             <a href='/pages/$page.closest("website").name/$page.name' class="btn btn-sm btn-info">
-                <i class="fa fa-edit"></i> Pages
+                <i class="fa fa-edit" title="Edit web pages"></i>
             </a>
 
             <div class="btn-group">
@@ -89,12 +89,13 @@
         </div>
         <div class="tabbable">
             <ul class="nav nav-tabs tab-bricky" id="myTab">
-                <li class="active"><a data-toggle="tab" href="#panel_details"><i class="green fa fa-home"></i> Details</a></li>
-                <li class=""><a data-toggle="tab" href="#panel_theme"><i class="green fa fa-paint-brush"></i> Theme</a></li>
-                <li class=""><a data-toggle="tab" href="#panel_groups"><i class="green fa fa-users"></i> Group access</a></li>
-                <li class=""><a data-toggle="tab" href="#panel_mailserver"><i class="green fa fa-envelope"></i> Mail server</a></li>
-                <li class=""><a data-toggle="tab" href="#panel_sslserver"><i class="green fa fa-lock"></i> Security</a></li>
-                <li class=""><a data-toggle="tab" href="#panel_apps"><i class="green fa fa-cog"></i> Apps</a></li>
+                <li class="active"><a data-toggle="tab" href="#panel_details"><i class="green fa fa-home"></i></a></li>
+                <li class=""><a data-toggle="tab" href="#panel_theme"><i class="green fa fa-paint-brush"></i></a></li>
+                <li class=""><a data-toggle="tab" href="#panel_groups"><i class="green fa fa-users"></i></a></li>
+                <li class=""><a data-toggle="tab" href="#panel_mailserver"><i class="green fa fa-envelope"></i></a></li>
+                <li class=""><a data-toggle="tab" href="#panel_sslserver"><i class="green fa fa-lock"></i></a></li>
+                <li class=""><a data-toggle="tab" href="#panel_apps" title="Apps and app settings"><i class="green fa fa-cogs"></i></a></li>
+                <li class=""><a data-toggle="tab" href="#panel_controllers" title="Code and controllers"><i class="green fa fa-code"></i></a></li>
             </ul>
 
             <div class="tab-content">
@@ -290,6 +291,16 @@
                 </div> <!-- End theme -->
 
                 <div id="panel_groups" class="tab-pane">
+                    <h3>Configuring group access</h3>
+                    <p>This section is for you to tell Kademi which groups of users you expect to use this website. This helps
+                        Kademi present the right options in different places, such as the "login as" feature, and with registration pages.
+                    </p>
+                    <p>
+                        Note that this <b>doesnt affect permissions</b>, you still need to set that up on each group.
+                    </p>
+
+                    <hr/>
+                    
                     <div class="Content Recipient">
                         <!--<button class="btn btn-sm btn-default AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>-->
                         <div class="dropdown pull-left" id="addGroupDropdown" style="margin-right: 15px">
@@ -309,6 +320,7 @@
                         <p class="clearfix"></p>
                         <br />
                         <div id="group-list" class="clearfix GroupList">
+                            
                             #foreach($g in $page.selectedGroups)
                             <div class="alert alert-info">
                                 <a style="margin-left: 5px" href="$g.name" title="Remove group" class="btn btn-sm btn-danger pull-right btnRemoveGroup"><i class="fa fa-trash"></i></a>
@@ -345,6 +357,7 @@
                     <div class="alert alert-danger pageMessage">.</div>
 
                     <h3>Setting up DNS for email</h3>
+                    #if( $page.customDomain )
                     <p>Spam is a big problem, and most email applications and servers try to prevent it. There are several
                         ways for email senders increase the level of trust with email receivers, to increase the number of emails
                         that get through. The main ones are:
@@ -353,7 +366,7 @@
                     <p>
                         Add a line like this to your DNS records:
                     </p>
-                    <pre class="prettyprint">mydomain.com. 600 IN TXT "v=spf1 include:_spf.${page.primaryDomain} ~all"</pre>
+                    <pre class="prettyprint">$page.domainName 600 IN TXT "v=spf1 include:_spf.${page.primaryDomain} ~all"</pre>
 
                     <h4>DKIM</h4>
                     <p class="">DKIM is a way to increase the number of emails which reach your recipients, by
@@ -424,6 +437,10 @@
                             <a href="#" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-send-test"><i class="fa fa-envelope"></i> Send Test Email</a>
                         </div>
                     </div>
+                    
+                    #else
+                    <p>You're using Kademi's domain, so relax, you dont need to do anything :)</p>
+                    #end
                 </div>
 
                 <div id="panel_sslserver" class="tab-pane">
@@ -860,6 +877,29 @@
                     #end
                     #end
                 </div> <!-- End apps -->
+                <div id="panel_controllers" class="tab-pane controllersContainer">
+                    <h3>
+                        <a href="WEB-INF/texteditor?fileName=controllers.xml">Controller sources: $page.controllerMappings.sources.size()</a>
+                    </h3>
+                    <table class="table table-striped">
+                    #foreach( $source in $page.controllerMappings.sources)
+                    <tr>
+                        <td>
+                            <a href="WEB-INF/texteditor?fileName=$source">$source</a>
+                        </td>
+                    </tr>
+                    #end
+                    </table>   
+                    
+                    <h3>Controller mappings: $!page.controllerMappings.websiteMappings.size()</h3>
+                    <table class="table table-striped">
+                    #foreach( $controller in $page.controllerMappings.websiteMappings)
+                    <tr>
+                        <td>$controller</td>
+                    </tr>
+                    #end
+                    </table>
+                </div>
             </div>
         </div>
 
