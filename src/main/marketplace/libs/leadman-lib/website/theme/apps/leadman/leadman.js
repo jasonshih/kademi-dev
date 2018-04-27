@@ -1363,9 +1363,17 @@ function mAssignTo(name, href, blockId) {
         success: function (resp) {
             if (resp && resp.status) {
                 Msg.info("The assignment has been changed.");
+
                 $("#" + blockId).reloadFragment({
                     url: href || window.location.pathname
                 });
+
+                var tasksList = $('#tasksList');
+                if (tasksList.length){
+                    tasksList.reloadFragment({
+                        url: window.location.pathname
+                    })
+                }
 
                 var dashboard = $('.dash-secondary');
                 if (dashboard.length) {
