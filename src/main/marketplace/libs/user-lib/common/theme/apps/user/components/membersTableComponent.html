@@ -25,7 +25,11 @@
 </div>
 
 #macro(renderIndividual)
-    #set ($resp = $queryManager.runQuery("membersTableAll"))
+    #set ($resp = $queryManager.runQuery("membersOrgs"))
+    #if ($formatter.isNotNull($group))
+        #set ($queryParams = {"groupName": $group})
+        #set ($resp = $queryManager.runQuery("membersOrgsByGroup", $queryParams))
+    #end
 
     #if( $resp.hits.totalHits == 0 )
         No current results

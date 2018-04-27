@@ -35,7 +35,10 @@
 #macro(renderOrg)
     #set ($respOrg = $queryManager.runQuery("memberTableOrgPoints"))
     #set ($resp = $queryManager.runQuery("membersOrgs"))
-
+    #if ($formatter.isNotNull($group))
+        #set ($queryParams = {"groupName": $group})
+        #set ($resp = $queryManager.runQuery("membersOrgsByGroup", $queryParams))
+    #end
     #if( $resp.hits.totalHits == 0 )
         No current results
     #else
@@ -218,9 +221,11 @@
 #macro(renderIndividual)
     #set ($respPointsDebit = $queryManager.runQuery("membersSpentPoint"))
     #set ($pointsDebitBucket = $respPointsDebit.aggregations.get("byProfileIds").buckets)
-
-    #set ($resp = $queryManager.runQuery("membersTableAll"))
-
+    #set ($resp = $queryManager.runQuery("membersOrgs"))
+    #if ($formatter.isNotNull($group))
+        #set ($queryParams = {"groupName": $group})
+        #set ($resp = $queryManager.runQuery("membersOrgsByGroup", $queryParams))
+    #end
     #if( $resp.hits.totalHits == 0 )
         No current results
     #else
