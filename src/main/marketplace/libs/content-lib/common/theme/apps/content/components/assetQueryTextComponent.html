@@ -1,19 +1,26 @@
-#set( $queryAsset = $applications.content.assetManager.find($query) )
-#set( $queryResult = $applications.content.assetManager.evaluateAssetQuery($queryAsset) )
-#set( $assetsFolder = $rootFolder.find("/assets") )
-
 #if( $page )
-#set( $notEditor = !$page.is("editor") )
+    #set( $notEditor = !$page.is("editor") )
 #else
-#set( $notEditor = false )
+    #set( $notEditor = false )
 #end
 
-#if( $notEditor || $queryResult.length > 0 )
-#foreach( $asset in $queryResult )
-<div class="col-xs-6 col-md-3">
-    $asset.text
-</div>
-#end
+#if( $query )
+    #set( $queryAsset = $applications.content.assetManager.find($query) )
+    #set( $queryResult = $applications.content.assetManager.evaluateAssetQuery($queryAsset) )
+    #set( $assetsFolder = $rootFolder.find("/assets") )
+
+    #if( $notEditor || $queryResult.length > 0 )
+    #foreach( $asset in $queryResult )
+
+        $asset.text
+
+    #end
+    #end
+#elseif( $assetId )
+    #set( $textAsset = $applications.content.assetManager.find($assetId) )
+    #if( $notEditor || $textAsset )
+        $textAsset.text    
+    #end
 #else
-<p>Dolores quasi sit ipsum ad eligendi. Molestiae pariatur quia eaque ut veritatis omnis aut libero. Dolore aut autem et doloribus nesciunt impedit et ut. Est omnis dolores dolorem dolorem modi minima fugit.</p>
+    <p>Dolores quasi sit ipsum ad eligendi. Molestiae pariatur quia eaque ut veritatis omnis aut libero. Dolore aut autem et doloribus nesciunt impedit et ut. Est omnis dolores dolorem dolorem modi minima fugit.</p>
 #end

@@ -25,6 +25,15 @@
 
                         self.loadFields(form, keditor);
                     });
+                    form.find('#asset-single-select').on('change', function () {
+                        var comp = keditor.getSettingComponent();
+                        comp.attr('data-asset-id', this.value);
+
+                        var dynamicElement = comp.find('[data-dynamic-href]');
+                        keditor.initDynamicContent(dynamicElement);
+
+                        self.loadFields(form, keditor);
+                    });
 
                 }
             });
@@ -35,6 +44,8 @@
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
 
             form.find('#asset-query-select').val(dataAttributes['data-query'] || '');
+            form.find('#asset-single-select').val(dataAttributes['data-asset-id'] || '');
+            
 
         }
     };
