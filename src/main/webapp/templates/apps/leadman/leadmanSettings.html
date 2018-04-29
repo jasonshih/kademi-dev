@@ -108,4 +108,21 @@
         $formatter.checkbox( "enableNotifications", $applications.leadMan.enableNotifications )
     </div>
 </div>
+
+<div class="form-group">
+    <label class="col-sm-4 control-label" for="salesOrgType">Calendar integration</label>
+    <div class="col-sm-7">
+
+        #set( $selectedCalendarName = $applications.leadMan.taskCalendarSetting )
+
+        <select class="form-control" name="taskCalendar">
+            $formatter.option("", "[Not enabled]", $selectedCalendarName)
+            #foreach($cal in $rootFolder.find("/Calendars").children )
+            $formatter.option($cal.name, $cal.title, $selectedCalendarName)
+            #end
+        </select>
+
+        <i>If enabled, calendar events will be automatically created to represent tasks.</i>
+    </div>
+</div>
 #end
