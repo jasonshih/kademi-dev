@@ -265,7 +265,7 @@
                 var bsbReg = new RegExp("^[0-9]{6}$");
                 if(!bsbReg.test($('#bsb-number').val())){
                     showErrorField($('#bsb-number'));
-                    showErrorMessage(stepPane4, null, 'Your BSB number must be between exaclty 6 digits and cointains digits only to be eligible');
+                    showErrorMessage(stepPane4, null, 'Your BSB number must be between exactly 6 digits and contains digits only to be eligible');
                     evt.preventDefault();
                     error = true;
                 }
@@ -273,7 +273,7 @@
                 var accountReg = new RegExp("^[0-9]{1,10}$");
                 if(!accountReg.test($('#account-no').val())){
                     showErrorField($('#account-no'));
-                    showErrorMessage(stepPane4, null, 'Your account number must be less than 10 digits and cointains digits only to be eligible');
+                    showErrorMessage(stepPane4, null, 'Your account number must be less than 10 digits and contains digits only to be eligible');
                     evt.preventDefault();
                     error = true;
                 }
