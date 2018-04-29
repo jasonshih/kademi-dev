@@ -33,7 +33,6 @@
     margin-bottom: 10px;
 }
 
-
 span.summary-field {
     display: block;
     width: 100%;
@@ -43,3 +42,7 @@ span.summary-field {
 }
 
 span.summary-field:empty:before {content: "Not specified";color: gray;font-style: italic;}
+
+span.compulsory-field {
+    color: red;
+}

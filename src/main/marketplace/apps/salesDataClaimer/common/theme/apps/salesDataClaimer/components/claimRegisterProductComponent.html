@@ -27,6 +27,12 @@
     #if( $orgs.add($orgObj) ) #end
 #end
 
+<div class="row">
+    <div class="col-md-12" style="text-align: center; margin-bottom: 5px;">
+        <b><span class="compulsory-field">*</span>Compulsory Fields</b>
+    </div>
+</div>
+
 <form method="post" id="ClaimRegisterProductForm" action="/salesDataClaimsProducts/" class="form-horizontal fuelux claimRegisterProductForm" enctype="multipart/form-data">
     <section class="form-message"></section>
     <input type="hidden" name="saveProductClaim" />
@@ -69,7 +75,7 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="title" class="col-md-12">Title:</label>
+                            <label for="title" class="col-md-12"><span class="compulsory-field">*</span>Title:</label>
                             <div class="col-md-12">
                                 <select id="title" name="title" class="form-control required-if-shown">
                                     <option value="">[No Title selected]</option>
@@ -84,7 +90,7 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="col-md-12" for="firstName">First Name:</label>
+                            <label class="col-md-12" for="firstName"><span class="compulsory-field">*</span>First Name:</label>
                             <div class="col-md-12">
                                 <input class="required-if-shown form-control" type="text" name="firstName" value="$!user.firstName" id="firstName" placeholder="Your first name" />
                             </div>
@@ -93,7 +99,7 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="col-md-12" for="surName">Last Name:</label>
+                            <label class="col-md-12" for="surName"><span class="compulsory-field">*</span>Last Name:</label>
                             <div class="col-md-12">
                                 <input class="required-if-shown form-control" type="text" name="surName" value="$!user.surName"  id="surName" placeholder="Your last name" />
                             </div>
@@ -102,7 +108,7 @@
 
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label class="col-md-12" for="address1">Address 1:</label>
+                            <label class="col-md-12" for="address1"><span class="compulsory-field">*</span>Address 1:</label>
                             <div class="col-md-12">
                                 <input class="form-control required-if-shown" type="text" name="address1" id="address1" placeholder="Address 1" />
                             </div>
@@ -120,7 +126,7 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="col-md-12" for="suburb">Suburb:</label>
+                            <label class="col-md-12" for="suburb"><span class="compulsory-field">*</span>Suburb:</label>
                             <div class="col-md-12">
                                 <input class="form-control required-if-shown" type="text" name="suburb" id="suburb" placeholder="Suburb" />
                             </div>
@@ -129,7 +135,7 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="col-md-12" for="postcode">Post Code:</label>
+                            <label class="col-md-12" for="postcode"><span class="compulsory-field">*</span>Post Code:</label>
                             <div class="col-md-12">
                                 <input class="form-control required-if-shown number" type="number" name="postcode" id="postcode" placeholder="Post Code" />
                             </div>
@@ -147,7 +153,7 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="col-md-12" for="phone">Phone/Mobile:</label>
+                            <label class="col-md-12" for="phone"><span class="compulsory-field">*</span>Phone/Mobile:</label>
                             <div class="col-md-12">
                                 <input class="form-control required-if-shown number" type="number" name="phone" value="$!user.phone"  id="phone" placeholder="Your Phone/Mobile" />
                             </div>
@@ -156,9 +162,18 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="col-md-12" for="email">Email Address:</label>
+                            <label class="col-md-12" for="email"><span class="compulsory-field">*</span>Email Address:</label>
                             <div class="col-md-12">
-                                <input class="required-if-shown form-control" type="email" name="email" value="$!user.email"  id="email" placeholder="Your email address" />
+                                <input class="required-if-shown form-control" type="email" name="email"  id="email" placeholder="Your email address" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-12" for="confirm-email"><span class="compulsory-field">*</span>Confirm Email Address:</label>
+                            <div class="col-md-12">
+                                <input class="required-if-shown form-control" type="email" id="confirm-email" placeholder="Confirm email address" />
                             </div>
                         </div>
                     </div>
@@ -171,7 +186,7 @@
 
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="promotion" class="col-md-12">How did you find out about this promotion?</label>
+                            <label for="promotion" class="col-md-12"><span class="compulsory-field">*</span>How did you find out about this promotion?</label>
                             <div class="col-md-12">
                                 <select id="promotion" name="promotion" class="form-control required-if-shown ">
                                     <option value="">[No promotion type selected]</option>
@@ -222,9 +237,9 @@
 
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="required-action-type" class="col-md-12">Please select the following:</label>
+                            <label for="required-action-type" class="col-md-12"><span class="compulsory-field">*</span>Please select the following:</label>
                             <div class="col-md-12">
-                                <select id="required-if-shown-action-type" name="required-action-type" class="form-control dynamic-toggle" data-group-class="required-actions">
+                                <select id="required-action-type" name="required-action-type" class="required form-control dynamic-toggle" data-group-class="required-actions">
                                     <option value="">[No action selected]</option>
                                     <option data-toggle="#supplier-info-section, #client-info-section" value="Supply and Install (Invoice must contain Product/s purchased and installation details)">Supply and Install (Invoice must contain Product/s purchased and installation details)</option>
                                     <option data-toggle="#installer-info-section, #client-info-section" value="Supply of air-conditioning unit ONLY (Product/s purchased without installation)">Supply of air-conditioning unit ONLY (Product/s purchased without installation)</option>
@@ -232,20 +247,20 @@
                             </div>
                         </div>
                     </div>
-
+                                    
                     <div class="required-actions" id="client-info-section" style="display: none;">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-md-12" for="purchase-date">Date of purchase:</label>
+                                <label class="col-md-12" for="purchase-date"><span class="compulsory-field">*</span>Date of purchase:</label>
                                 <div class="col-md-12">
-                                    <input class="required-if-shown form-control" type="date" name="purchase-date" id="purchase-date" placeholder="" />
+                                    <input class="required-if-shown form-control" type="text" name="purchase-date" id="purchase-date" placeholder="" />
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-md-12" for="store-name">Store/Company name:</label>
+                                <label class="col-md-12" for="store-name"><span class="compulsory-field">*</span>Store/Company name:</label>
                                 <div class="col-md-12">
                                     <input class="required-if-shown form-control" type="text" name="store-name" id="store-name" placeholder="" />
                                 </div>
@@ -254,9 +269,9 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-md-12" for="store-suburb">Suburb:</label>
+                                <label class="col-md-12" for="store-suburb"><span class="compulsory-field">*</span>Suburb:</label>
                                 <div class="col-md-12">
-                                    <input class="form-control" type="text" name="store-suburb" id="store-suburb" placeholder="" />
+                                    <input class="required-if-shown form-control" type="text" name="store-suburb" id="store-suburb" placeholder="" />
                                 </div>
                             </div>
                         </div>
@@ -280,7 +295,8 @@
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <input type="file" id="invoice-image" name="invoice-image" style="display:  inline-block;opacity:  0;position:  absolute;" class="btn btn-primary required-if-shown">
-                                    <button class="btn btn-primary" name="invoice-image-btn" id="invoice-image-btn">UPLOAD PDF OR IMAGE OF THE INVOICE</button>
+                                    <button class="btn btn-primary" name="invoice-image-btn" id="invoice-image-btn"><span class="compulsory-field">*</span>UPLOAD PDF OR IMAGE OF THE INVOICE</button>
+                                    <div class="btn btn-success success-invoice-image"><i class="fa fa-check"></i></div>
                                 </div>
                             </div>
                         </div>
@@ -298,7 +314,7 @@
                         
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-md-12" for="supplier-orgId">Supplier Name:</label>
+                                <label class="col-md-12" for="supplier-orgId"><span class="compulsory-field">*</span>Supplier Name:</label>
                                 <div class="col-md-12">
                                     <select id="supplier-orgId" name="supplier-orgId" class="form-control required-if-shown">
                                         <option value="">[No supplier selected]</option>                                
@@ -339,9 +355,18 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-md-12" for="supplier-email">Email address:</label>
+                                <label class="col-md-12" for="supplier-email"><span class="compulsory-field">*</span>Email address:</label>
                                 <div class="col-md-12">
                                     <input class="required-if-shown form-control" type="email" name="supplier-email" id="contact-email" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                         <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-12"><span class="compulsory-field">*</span>Confirm email address:</label>
+                                <div class="col-md-12">
+                                    <input class="required-if-shown form-control" type="email" id="confirm-contact-email" placeholder="" />
                                 </div>
                             </div>
                         </div>
@@ -361,7 +386,7 @@
                             <div class="form-group">
                                 <label class="col-md-12" for="installation-date">Date of installation:</label>
                                 <div class="col-md-12">
-                                    <input class="form-control" type="date" name="installation-date" id="installation-date" placeholder="" />
+                                    <input class="form-control" type="text" name="installation-date" id="installation-date" placeholder="" />
                                 </div>
                             </div>
                         </div>
@@ -369,7 +394,7 @@
                         
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-md-12" for="installer-orgId">Installer Name (company name):</label>
+                                <label class="col-md-12" for="installer-orgId"><span class="compulsory-field">*</span>Installer Name (company name):</label>
                                 <div class="col-md-12">
                                     <select id="installer-orgId" name="installer-orgId" class="form-control required-if-shown">
                                         <option value="">[No installer selected]</option>                                
@@ -411,9 +436,18 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-md-12" for="installer-email">Email address:</label>
+                                <label class="col-md-12" for="installer-email"><span class="compulsory-field">*</span>Email address:</label>
                                 <div class="col-md-12">
-                                    <input class="form-control" type="email" name="installer-email" id="installer-email" placeholder="" />
+                                    <input class="required-if-shown form-control" type="email" name="installer-email" id="installer-email" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-12"><span class="compulsory-field">*</span>Confirm email address:</label>
+                                <div class="col-md-12">
+                                    <input class="required-if-shown form-control" type="email" id="confirm-installer-email" placeholder="" />
                                 </div>
                             </div>
                         </div>
@@ -421,8 +455,9 @@
                         <div class="col-md-6 col-md-offset-3" style="text-align:  center;">
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    <input type="file" id="installation-invoice-image-btn" name="installation-invoice-image" style="display:  inline-block;opacity:  0;position:  absolute;" class="btn btn-primary">
-                                    <button class="btn btn-primary" name="installation-invoice-image-btn" id="installation-invoice-image-btn">UPLOAD PDF OR IMAGEOF THE INSTALLATION INVOICE</button>
+                                    <input type="file" id="installation-invoice-image" name="installation-invoice-image" style="display:  inline-block;opacity:  0;position:  absolute;" class="btn btn-primary">
+                                    <button class="btn btn-primary" name="installation-invoice-image-btn" id="installation-invoice-image-btn">UPLOAD PDF OR IMAGE OF THE INSTALLATION INVOICE</button>
+                                    <div class="btn btn-success success-installation-image"><i class="fa fa-check"></i></div>
                                 </div>
                             </div>
                         </div>
@@ -443,9 +478,9 @@
 
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="claims-number" class="col-md-12">How many products are you claiming?</label>
+                                <label for="claims-number" class="col-md-12"><span class="compulsory-field">*</span>How many products are you claiming?</label>
                                 <div class="col-md-12">
-                                    <select id="claims-number" name="claims-number" class="form-control dynamic-toggle" data-group-class="options">
+                                    <select id="claims-number" name="claims-number" class="form-control dynamic-toggle required-if-shown" data-group-class="options">
                                         <option value="">[Not selected]</option>
                                         <option data-toggle=".option-1" value="1">One</option>
                                         <option data-toggle=".option-1, .option-2" value="2">Two</option>
@@ -457,9 +492,9 @@
 
                         <div class="col-md-12">
                             <p>
-                                A maximum of three <b>(3)</b> eligible products purchased in one <b>(1)</b> trasaction can be claimed towards the cash bounc offer.<br>
+                                A maximum of three <b>(3)</b> eligible products purchased in one <b>(1)</b> transaction can be claimed towards the cash bounc offer.<br>
                                 Eligible claimants may submit a maximum of <b>one(1)</b> Eligible Claim per household in the Promotions.<br>
-                                Dublicate tax invoices will be rejected.<br>
+                                Duplicate tax invoices will be rejected.<br>
                                 <b>Note: Business applications will NOT be accepted. Invoices under a business name and/or with ABN will NOT be accepted</b>
                             </p>
                         </div>
@@ -475,9 +510,9 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="prod1-model-number" class="col-md-12">Set Model No:</label>
+                                        <label for="prod1-model-number" class="col-md-12"><span class="compulsory-field">*</span>Set Model No:</label>
                                         <div class="col-md-12">
-                                            <select id="prod1-model-number" name="prod1-model-number" class="form-control">
+                                            <select id="prod1-model-number" name="prod1-model-number" class="form-control required-if-shown">
                                                 <option value="">Please select from the options</option>
                                                 #foreach($product in $applications.productsApp.products)
                                                     $formatter.option( $product.name, $product.title, "" )
@@ -489,7 +524,7 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="prod1-indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
+                                        <label for="prod1-indoor-model-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor Unit Model No:</label>
                                         <div class="col-md-12">
                                             <input class="required-if-shown form-control" type="text" name="prod1-indoor-model-number" id="prod1-indoor-model-number" placeholder="" />
                                         </div>
@@ -498,7 +533,7 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="prod1-indoor-serial-number" class="col-md-12">Indoor serial No:</label>
+                                        <label for="prod1-indoor-serial-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor serial No:</label>
                                         <div class="col-md-12">
                                             <input class="required-if-shown form-control" type="text" name="prod1-indoor-serial-number" id="prod1-indoor-serial-number" placeholder="" />
                                         </div>
@@ -515,13 +550,12 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="prod2-model-number" class="col-md-12">Set Model No:</label>
+                                        <label for="prod2-model-number" class="col-md-12"><span class="compulsory-field">*</span>Set Model No:</label>
                                         <div class="col-md-12">
-                                            <select id="prod2-model-number" name="prod2-model-number" class="form-control">
+                                            <select id="prod2-model-number" name="prod2-model-number" class="form-control required-if-shown">
                                                 <option value="">Please select from the options</option>
-                                                #set( $numbers = ["Model One", "Model Two", "Model Three"] )
-                                                #foreach($number in $numbers)
-                                                    $formatter.option( $number, $number, "" )
+                                                #foreach($product in $applications.productsApp.products)
+                                                    $formatter.option( $product.name, $product.title, "" )
                                                 #end
                                             </select>
                                         </div>
@@ -530,7 +564,7 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="prod2-indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
+                                        <label for="prod2-indoor-model-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor Unit Model No:</label>
                                         <div class="col-md-12">
                                             <input class="required-if-shown form-control" type="text" name="prod2-indoor-model-number" id="prod2-indoor-model-number" placeholder="" />
                                         </div>
@@ -539,7 +573,7 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="prod2-indoor-serial-number" class="col-md-12">Indoor serial No:</label>
+                                        <label for="prod2-indoor-serial-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor serial No:</label>
                                         <div class="col-md-12">
                                             <input class="required-if-shown form-control" type="text" name="prod2-indoor-serial-number" id="prod2-indoor-serial-number" placeholder="" />
                                         </div>
@@ -547,9 +581,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        
-                        
                         
                         <div class="col-md-12 option-3 options" style="display: none;">
                             <div class="row">
@@ -559,13 +590,12 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="prod3-model-number" class="col-md-12">Set Model No:</label>
+                                        <label for="prod3-model-number" class="col-md-12"><span class="compulsory-field">*</span>Set Model No:</label>
                                         <div class="col-md-12">
-                                            <select id="prod3-model-number" name="prod3-model-number" class="form-control">
+                                            <select id="prod3-model-number" name="prod3-model-number" class="form-control required-if-shown">
                                                 <option value="">Please select from the options</option>
-                                                #set( $numbers = ["Model One", "Model Two", "Model Three"] )
-                                                #foreach($number in $numbers)
-                                                    $formatter.option( $number, $number, "" )
+                                                #foreach($product in $applications.productsApp.products)
+                                                    $formatter.option( $product.name, $product.title, "" )
                                                 #end
                                             </select>
                                         </div>
@@ -574,7 +604,7 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="prod3-indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
+                                        <label for="prod3-indoor-model-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor Unit Model No:</label>
                                         <div class="col-md-12">
                                             <input class="required-if-shown form-control" type="text" name="prod3-indoor-model-number" id="prod3-indoor-model-number" placeholder="" />
                                         </div>
@@ -583,7 +613,7 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="prod3-indoor-serial-number" class="col-md-12">Indoor serial No:</label>
+                                        <label for="prod3-indoor-serial-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor serial No:</label>
                                         <div class="col-md-12">
                                             <input class="required-if-shown form-control" type="text" name="prod3-indoor-serial-number" id="prod3-indoor-serial-number" placeholder="" />
                                         </div>
@@ -605,7 +635,7 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="account-name" class="col-md-12">Account Name:</label>
+                            <label for="account-name" class="col-md-12"><span class="compulsory-field">*</span>Account Name:</label>
                             <div class="col-md-12">
                                 <input class="required-if-shown form-control" type="text" name="account-name" id="account-name" placeholder="" />
                             </div>
@@ -614,7 +644,7 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="bank-name" class="col-md-12">Bank Name:</label>
+                            <label for="bank-name" class="col-md-12"><span class="compulsory-field">*</span>Bank Name:</label>
                             <div class="col-md-12">
                                 <input class="required-if-shown form-control" type="text" name="bank-name" id="bank-name" placeholder="" />
                             </div>
@@ -623,7 +653,7 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="bsb-number" class="col-md-12">BSB Number:</label>
+                            <label for="bsb-number" class="col-md-12"><span class="compulsory-field">*</span>BSB Number:</label>
                             <div class="col-md-12">
                                 <input class="required-if-shown form-control" type="text" name="bsb-number" id="bsb-number" placeholder="" />
                             </div>
@@ -632,7 +662,7 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="account-no" class="col-md-12">Account No:</label>
+                            <label for="account-no" class="col-md-12"><span class="compulsory-field">*</span>Account No:</label>
                             <div class="col-md-12">
                                 <input class="required-if-shown form-control" type="text" name="account-no" id="account-no" placeholder="" />
                             </div>
