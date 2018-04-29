@@ -90,7 +90,6 @@
         <div class="tabbable">
             <ul class="nav nav-tabs tab-bricky" id="myTab">
                 <li class="active"><a data-toggle="tab" href="#panel_details"><i class="green fa fa-home"></i></a></li>
-                <li class=""><a data-toggle="tab" href="#panel_theme"><i class="green fa fa-paint-brush"></i></a></li>
                 <li class=""><a data-toggle="tab" href="#panel_groups"><i class="green fa fa-users"></i></a></li>
                 <li class=""><a data-toggle="tab" href="#panel_mailserver"><i class="green fa fa-envelope"></i></a></li>
                 <li class=""><a data-toggle="tab" href="#panel_sslserver"><i class="green fa fa-lock"></i></a></li>
@@ -197,6 +196,58 @@
                             </div>
                         </div>
                     </form>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="clip-pictures"></i>Theme
+                        </div>
+                        <div class="panel-body">
+
+                                <div class="form-group">
+                                    <label for="" class="col-sm-3 control-label">Check</label>
+                                    <div class="col-sm-9">
+
+                                        <a class="btn btn-info" href="$page.href?goto=&gotoPath=/theme-checker" title="Click here to review all styles" target="_blank">
+                                            #set($theme = $page.currentTheme)
+                                            #set($publicTheme = "")
+                                            #if( $theme )
+                                            #if( $theme.previewImage )
+                                            #set($publicTheme = $theme.name)
+                                            <img style="width: 150px" src="/templates/themes/$theme.name/$theme.previewImage" />
+                                            #else
+                                            #set($publicTheme = $theme.name)
+                                            $theme.title
+                                            #end
+                                            #else
+                                            No selected theme
+                                            #end
+                                            <i class="fa fa-check"></i>
+                                        </a>
+                                        <br/>
+                                        <small><i>Click here to review all components and styles in the theme</i></small>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="" class="col-sm-3 control-label">Change</label>
+                                    <div class="col-sm-9">
+
+
+                                        <a class="btn btn-success" href="/marketPlace?websiteBranch=$page.name&websiteName=$page.parent.name&type=theme">
+                                            Browse
+                                            <i class="fa fa-arrow-circle-right"></i>
+                                        </a>
+                                        <br/>
+                                        <small><i>Browse the marketplace to select a new theme</i></small>
+                                    </div>
+                                </div>
+
+                        </div>
+                    </div>
+
+
+
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <i class="clip-pictures"></i>Website image
@@ -218,77 +269,6 @@
                     </div>
 
                 </div> <!-- End Details -->
-
-                <div id="panel_theme" class="tab-pane">
-                    <form name="frmDetails" action="." method="post" class="form-horizontal details" role="form">
-                        <div class="alert alert-danger pageMessage">.</div>
-                        <div class="form-group">
-                            <label for="" class="col-sm-3 control-label">Theme</label>
-                            <div class="col-sm-9">
-                                <div class="btn-group">
-                                    <a class="btn btn-info" href="$page.href?goto=&gotoPath=/theme-checker" title="Click here to review all styles" target="_blank">
-                                        #set($theme = $page.currentTheme)
-                                        #set($publicTheme = "")
-                                        #if( $theme )
-                                        #if( $theme.previewImage )
-                                        #set($publicTheme = $theme.name)
-                                        <img style="width: 150px" src="/templates/themes/$theme.name/$theme.previewImage" />
-                                        #else
-                                        #set($publicTheme = $theme.name)
-                                        $theme.title
-                                        #end
-                                        #else
-                                        No selected theme
-                                        #end
-                                        <i class="fa fa-check"></i>
-                                    </a>
-
-
-                                    <a class="btn btn-success" href="/marketPlace?websiteBranch=$page.name&websiteName=$page.parent.name&type=theme">
-                                        Browse themes
-                                        <i class="fa fa-arrow-circle-right"></i>
-                                    </a>
-
-                                </div>
-                                <input type="hidden" name="publicTheme" value="$publicTheme"/>
-                            </div>
-                        </div>
-
-
-                    </form>
-                    <hr/>
-                    <div class="alert alert-info">Below is a list of templates provided by applications currently enabled for this website. Click the link to override and customise the template. <b>Not all applications are integrated with template management</b>, and might not appear here</div>
-                    #foreach($templateList in $page.allTemplates.entrySet() )
-                    <table class="table table-hover">
-                        <colgroup>
-                            <col width="200" />
-                            <col />
-                            <col width="100" />
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th colspan="99">$page.appTitle($templateList.key)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            #foreach($template in $templateList.value)
-                            <tr>
-                                <td>
-                                    <a href="$page.href?editTemplate=$template.path" target="_blank">$template.fileName</a>
-                                </td>
-                                <td>$template.description</td>
-                                <td>
-                                    #if( $page.isCustomised($template) )
-                                    Customised
-                                    #end
-                                </td>
-                            </tr>
-                            #end
-                        </tbody>
-                    </table>
-                    #end
-
-                </div> <!-- End theme -->
 
                 <div id="panel_groups" class="tab-pane">
                     <h3>Configuring group access</h3>
@@ -878,10 +858,49 @@
                     #end
                 </div> <!-- End apps -->
                 <div id="panel_controllers" class="tab-pane controllersContainer">
-                    $page.controllerMappings
+
+                    <div class="alert alert-info">Below is a list of templates provided by applications currently enabled for this website. Click the link to override and customise the template. <b>Not all applications are integrated with template management</b>, and might not appear here</div>
+                    #foreach($templateList in $page.allTemplates.entrySet() )
+                    <table class="table table-hover">
+                        <colgroup>
+                            <col width="200" />
+                            <col />
+                            <col width="100" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th colspan="99">$page.appTitle($templateList.key)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($template in $templateList.value)
+                            <tr>
+                                <td>
+                                    <a href="$page.href?editTemplate=$template.path" target="_blank">$template.fileName</a>
+                                </td>
+                                <td>$template.description</td>
+                                <td>
+                                    #if( $page.isCustomised($template) )
+                                    Customised
+                                    #end
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                    #end
+
+                    <hr/>
+
+                    <h2>Controllers</h2>
+
                     #if( $page.controllerMappings )
+                    <a href="WEB-INF/texteditor?fileName=controllers.xml" class="btn btn-info pull-right">
+                        <i class="fa fa-pencil"></i>
+                        Edit
+                    </a>
                     <h3>
-                        <a href="WEB-INF/texteditor?fileName=controllers.xml">Controller sources: $!page.controllerMappings.sources.size()</a>
+                        Sources: $!page.controllerMappings.sources.size()
                     </h3>
                     <table class="table table-striped">
                         #foreach( $source in $page.controllerMappings.sources)
@@ -893,7 +912,7 @@
                         #end
                     </table>
 
-                    <h3>Controller mappings: $!page.controllerMappings.websiteMappings.size()</h3>
+                    <h3>Mappings: $!page.controllerMappings.websiteMappings.size()</h3>
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -931,7 +950,7 @@
                         </tbody>
                     </table>
 
-                    <h3>Components: $!page.controllerMappings.components.size()</h3>
+                    <h3>Custom components: $!page.controllerMappings.components.size()</h3>
                     <table class="table table-striped">
                         <thead>
                             <tr>
