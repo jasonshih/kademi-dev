@@ -217,6 +217,34 @@
                 
                 if (!validateFormFields(stepPane3)) {
                     evt.preventDefault();
+                    error = true;
+                }
+                
+                var serialReg = new RegExp("^([a-zA-Z0-9]){11}$");
+                if($('#prod1-indoor-serial-number').is(":visible")){
+                    
+                    if(!serialReg.test($('#prod1-indoor-serial-number').val())){
+                        showErrorField($('#prod1-indoor-serial-number'));
+                        showErrorMessage(stepPane3, null, 'Product 1 indoor serial must be 11 digits to be eligible');
+                        evt.preventDefault();
+                        error = true;
+                    }
+                }
+                if($('#prod2-indoor-serial-number').is(":visible")){
+                    if(!serialReg.test($('#prod2-indoor-serial-number').val())){
+                        showErrorField($('#prod2-indoor-serial-number'));
+                        showErrorMessage(stepPane3, null, 'Product 2 indoor serial must be 11 digits to be eligible');
+                        evt.preventDefault();
+                        error = true;
+                    }
+                }
+                if($('#prod3-indoor-serial-number').is(":visible")){
+                    if(!serialReg.test($('#prod3-indoor-serial-number').val())){
+                        showErrorField($('#prod3-indoor-serial-number'));
+                        showErrorMessage(stepPane3, null, 'Product 3 indoor serial must be 11 digits to be eligible');
+                        evt.preventDefault();
+                        error = true;
+                    }
                 }
                 
                 if (!error) {
