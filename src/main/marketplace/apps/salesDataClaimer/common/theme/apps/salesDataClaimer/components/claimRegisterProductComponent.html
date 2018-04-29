@@ -2,7 +2,8 @@
 #set ($query = '{  
                     "stored_fields":[  
                         "orgTitle",
-                        "orgId"
+                        "orgId",
+                        "email"
                     ],
                     "query":{  
                         "bool":{  
@@ -21,7 +22,8 @@
 #foreach( $org in $queryRes.hits.hits )
     #set( $orgObj = {
             "orgTitle": $org.fields.orgTitle.value,
-            "orgId": $org.fields.orgId.value
+            "orgId": $org.fields.orgId.value,
+            "orgEmail": $org.fields.email.value 
             }
         )
     #if( $orgs.add($orgObj) ) #end
@@ -280,10 +282,14 @@
                                 <div class="col-md-12">
                                     <select id="store-state" name="store-state" class="form-control">
                                         <option value="">[No state selected]</option>
-                                        #set( $states = ["New South Wales"] )
-                                        #foreach($state in $states)
-                                            $formatter.option( $state, $state, "" )
-                                        #end
+                                        <option value="nsw">New South Wales</option>
+                                        <option value="vic">Victoria</option>
+                                        <option value="qld">Queensland</option>
+                                        <option value="wa">Western Australia</option>
+                                        <option value="sa">South Australia</option>
+                                        <option value="tas">Tasmania</option>
+                                        <option value="act">Australian Capital Territory</option>
+                                        <option value="nt">Northern Territory</option>
                                     </select>
                                 </div>
                             </div>
@@ -314,10 +320,10 @@
                             <div class="form-group">
                                 <label class="col-md-12" for="supplier-orgId"><span class="compulsory-field">*</span>Supplier Name:</label>
                                 <div class="col-md-12">
-                                    <select id="supplier-orgId" name="supplier-orgId" class="form-control required-if-shown">
+                                    <select id="supplier-orgId" name="supplier-orgId" class="form-control required-if-shown" data-email-to="contact-email">
                                         <option value="">[No supplier selected]</option>                                
                                         #foreach($org in $orgs)
-                                            $formatter.option( $org.orgId, $org.orgTitle, "" )
+                                            <option value="$org.orgId" data-email="$org.orgEmail">$org.orgTitle</option>
                                         #end
                                     </select>
                                 </div>
@@ -394,10 +400,10 @@
                             <div class="form-group">
                                 <label class="col-md-12" for="installer-orgId"><span class="compulsory-field">*</span>Installer Name (company name):</label>
                                 <div class="col-md-12">
-                                    <select id="installer-orgId" name="installer-orgId" class="form-control required-if-shown">
+                                    <select id="installer-orgId" name="installer-orgId" class="form-control required-if-shown" data-email-to="installer-email">
                                         <option value="">[No installer selected]</option>                                
                                         #foreach($org in $orgs)
-                                            $formatter.option( $org.orgId, $org.orgTitle, "" )
+                                            <option value="$org.orgId" data-email="$org.orgEmail">$org.orgTitle</option>
                                         #end
                                     </select>
                                 </div>
