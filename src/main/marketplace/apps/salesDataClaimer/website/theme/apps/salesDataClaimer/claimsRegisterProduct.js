@@ -3,7 +3,7 @@
         initWizard();
         initDateTimePickers();
         initImagePicker();
-        initSelect2OrgPickers();
+        initOrgPickers();
         
         $(".claimRegisterProductForm").forms({
             beforePostForm: function(form, config, data) {
@@ -87,8 +87,14 @@
         });
     }
     
-    function initSelect2OrgPickers() {
+    function initOrgPickers() {
         //$("#supplier-orgId, #installer-orgId").select2();
+        $("#supplier-orgId, #installer-orgId").on("change", function() {
+            var email = $(this).find(":selected").data("email");
+            
+            $("#" + $(this).data("email-to")).val(email);
+            $("#confirm-" + $(this).data("email-to")).val(email);
+        });
     }
     
     function parseDate(input) {
@@ -133,20 +139,33 @@
         });
 
         myWizard.on('actionclicked.fu.wizard', function (evt, data) {
+            if (data.direction === "previous") {
+                $(".form-message").remove();
+                    
+                return;
+            }
+            
+            var error = false;
+            
             if (data.step === 1) {
                 var stepPane1 = stepPane.eq(0);
                 resetValidation(stepPane1);
                 $(".form-message .error-message, .form-message .error-message-title").remove();
 
-                
                 if (!validateFormFields(stepPane.eq(0))) {
                     evt.preventDefault();
+                    error = true;
                 }
                 
                 if( $('#confirm-email').val() != $('#email').val()){
                     showErrorField($('#confirm-email'));
                     showErrorMessage(stepPane1, null, 'Email address and confirm email address must be similar');
                     evt.preventDefault();
+                    error = true;
+                }
+                
+                if (!error) {
+                    $(".form-message").remove();
                 }
             }
 
@@ -157,6 +176,7 @@
                 
                 if (!validateFormFields(stepPane2)) {
                     evt.preventDefault();
+                    error = true;
                 }
                 
                 if($('#purchase-date').length > 0 && validateFormFields(stepPane2) ){
@@ -167,6 +187,7 @@
                         showErrorField($('#purchase-date'));
                         showErrorMessage(stepPane2, null, 'Your purchase must be between 1st May and 31st August to be eligible');
                         evt.preventDefault();
+                        error = true;
                     }
                 }
                 
@@ -174,14 +195,19 @@
                     showErrorField($('#confirm-contact-email'));
                     showErrorMessage(stepPane2, null, 'Supplier email address and confirm email address must be similar');
                     evt.preventDefault();
+                    error = true;
                 }
                 
                 if($('#installer-email').is(":visible") && $('#installer-email').val() != $('#confirm-installer-email').val()){
                     showErrorField($('#confirm-installer-email'));
                     showErrorMessage(stepPane2, null, 'Installer email address and confirm email address must be similar');
                     evt.preventDefault();
+                    error = true;
                 }
                 
+                if (!error) {
+                    $(".form-message").remove();
+                }
             }
 
             if (data.step === 3) {
@@ -192,6 +218,10 @@
                 if (!validateFormFields(stepPane3)) {
                     evt.preventDefault();
                 }
+                
+                if (!error) {
+                    $(".form-message").remove();
+                }
             }
 
             if (data.step === 4) {
@@ -201,6 +231,7 @@
                 
                 if (!validateFormFields(stepPane4)) {
                     evt.preventDefault();
+                    error = true;
                 }
                 
                 var bsbReg = new RegExp("^[0-9]{6}$");
@@ -208,6 +239,7 @@
                     showErrorField($('#bsb-number'));
                     showErrorMessage(stepPane4, null, 'Your BSB number must be between exaclty 6 digits and cointains digits only to be eligible');
                     evt.preventDefault();
+                    error = true;
                 }
                 
                 var accountReg = new RegExp("^[0-9]{1,10}$");
@@ -215,12 +247,20 @@
                     showErrorField($('#account-no'));
                     showErrorMessage(stepPane4, null, 'Your account number must be less than 10 digits and cointains digits only to be eligible');
                     evt.preventDefault();
+                    error = true;
+                }
+                
+                if (!error) {
+                    $(".form-message").remove();
                 }
             }
 
             if (data.step === 5) {
                 $('#ClaimRegisterProductForm').trigger('submit');
-                //myWizard.find('.actions .btn').prop('disabled', true);
+                
+                if (!error) {
+                    $(".form-message").remove();
+                }
             }
         });
 
@@ -286,7 +326,11 @@
 
  function showFormMessage(form, config, message, title, type, callback) {
     var alertMsg = $(".form-message");
-	
+
+	if (alertMsg.find(":contains(" + $(message).text() + ")").length > 0) {
+		return;
+    }
+
 	if (alertMsg.length > 0) {
         alertMsg.append(message);
         alertMsg.attr('class', 'form-message alert alert-' + type);
