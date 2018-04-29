@@ -3,6 +3,7 @@
         initWizard();
         initDateTimePickers();
         initImagePicker();
+        initOrgPickers();
         
         $(".claimRegisterProductForm").forms({
             beforePostForm: function(form, config, data) {
@@ -41,6 +42,16 @@
                     Msg.info('Sorry there was an error submitting the form.');
                 } else {
                     $(".result-unique-id-no").html(resp.data.claimGroupId);
+                    
+                    $(".last-step .step-pane:eq(0) > .row").prepend('<div class="col-md-6 print-show" style="display: none;">' +
+                        '<div class="form-group">' +
+                            '<label for="title" class="col-md-12">Unique ID number:</label>' +
+                            '<div class="col-md-12">' +
+                                '<span class="summary-field" data-parent-step="1">' + resp.data.claimGroupId + '</span>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>');
+                    
                     $("#ClaimRegisterProductForm").slideUp(300);
                     $("#thankYou").slideDown(300);
                 }
@@ -73,6 +84,16 @@
         $('.success-installation-image').hide();
         $('#installation-invoice-image').change(function(){
             $('.success-installation-image').show();    
+        });
+    }
+    
+    function initOrgPickers() {
+        //$("#supplier-orgId, #installer-orgId").select2();
+        $("#supplier-orgId, #installer-orgId").on("change", function() {
+            var email = $(this).find(":selected").data("email");
+            
+            $("#" + $(this).data("email-to")).val(email);
+            $("#confirm-" + $(this).data("email-to")).val(email);
         });
     }
     
@@ -118,30 +139,44 @@
         });
 
         myWizard.on('actionclicked.fu.wizard', function (evt, data) {
+            if (data.direction === "previous") {
+                $(".form-message").remove();
+                    
+                return;
+            }
+            
+            var error = false;
+            
             if (data.step === 1) {
                 var stepPane1 = stepPane.eq(0);
                 resetValidation(stepPane1);
-                $(".form-message").slideUp(300, function() {    $(this).remove();   });
+                $(".form-message .error-message, .form-message .error-message-title").remove();
 
-                
                 if (!validateFormFields(stepPane.eq(0))) {
                     evt.preventDefault();
+                    error = true;
                 }
                 
                 if( $('#confirm-email').val() != $('#email').val()){
                     showErrorField($('#confirm-email'));
                     showErrorMessage(stepPane1, null, 'Email address and confirm email address must be similar');
                     evt.preventDefault();
+                    error = true;
+                }
+                
+                if (!error) {
+                    $(".form-message").remove();
                 }
             }
 
             if (data.step === 2) {
                 var stepPane2 = stepPane.eq(1);
                 resetValidation(stepPane2);
-                $(".form-message").slideUp(300, function() {    $(this).remove();   });
+                $(".form-message .error-message, .form-message .error-message-title").remove();
                 
                 if (!validateFormFields(stepPane2)) {
                     evt.preventDefault();
+                    error = true;
                 }
                 
                 if($('#purchase-date').length > 0 && validateFormFields(stepPane2) ){
@@ -152,6 +187,7 @@
                         showErrorField($('#purchase-date'));
                         showErrorMessage(stepPane2, null, 'Your purchase must be between 1st May and 31st August to be eligible');
                         evt.preventDefault();
+                        error = true;
                     }
                 }
                 
@@ -159,33 +195,71 @@
                     showErrorField($('#confirm-contact-email'));
                     showErrorMessage(stepPane2, null, 'Supplier email address and confirm email address must be similar');
                     evt.preventDefault();
+                    error = true;
                 }
                 
                 if($('#installer-email').is(":visible") && $('#installer-email').val() != $('#confirm-installer-email').val()){
                     showErrorField($('#confirm-installer-email'));
                     showErrorMessage(stepPane2, null, 'Installer email address and confirm email address must be similar');
                     evt.preventDefault();
+                    error = true;
                 }
                 
+                if (!error) {
+                    $(".form-message").remove();
+                }
             }
 
             if (data.step === 3) {
                 var stepPane3 = stepPane.eq(2);
                 resetValidation(stepPane3);
-                $(".form-message").slideUp(300, function() {    $(this).remove();   });
+                $(".form-message .error-message, .form-message .error-message-title").remove();
                 
                 if (!validateFormFields(stepPane3)) {
                     evt.preventDefault();
+                    error = true;
+                }
+                
+                var serialReg = new RegExp("^([a-zA-Z0-9]){11}$");
+                if($('#prod1-indoor-serial-number').is(":visible")){
+                    
+                    if(!serialReg.test($('#prod1-indoor-serial-number').val())){
+                        showErrorField($('#prod1-indoor-serial-number'));
+                        showErrorMessage(stepPane3, null, 'Product 1 indoor serial must be 11 digits to be eligible');
+                        evt.preventDefault();
+                        error = true;
+                    }
+                }
+                if($('#prod2-indoor-serial-number').is(":visible")){
+                    if(!serialReg.test($('#prod2-indoor-serial-number').val())){
+                        showErrorField($('#prod2-indoor-serial-number'));
+                        showErrorMessage(stepPane3, null, 'Product 2 indoor serial must be 11 digits to be eligible');
+                        evt.preventDefault();
+                        error = true;
+                    }
+                }
+                if($('#prod3-indoor-serial-number').is(":visible")){
+                    if(!serialReg.test($('#prod3-indoor-serial-number').val())){
+                        showErrorField($('#prod3-indoor-serial-number'));
+                        showErrorMessage(stepPane3, null, 'Product 3 indoor serial must be 11 digits to be eligible');
+                        evt.preventDefault();
+                        error = true;
+                    }
+                }
+                
+                if (!error) {
+                    $(".form-message").remove();
                 }
             }
 
             if (data.step === 4) {
                 var stepPane4 = stepPane.eq(3);
                 resetValidation(stepPane4);
-                $(".form-message").slideUp(300, function() {    $(this).remove();   });
+                $(".form-message .error-message, .form-message .error-message-title").remove();
                 
                 if (!validateFormFields(stepPane4)) {
                     evt.preventDefault();
+                    error = true;
                 }
                 
                 var bsbReg = new RegExp("^[0-9]{6}$");
@@ -193,6 +267,7 @@
                     showErrorField($('#bsb-number'));
                     showErrorMessage(stepPane4, null, 'Your BSB number must be between exaclty 6 digits and cointains digits only to be eligible');
                     evt.preventDefault();
+                    error = true;
                 }
                 
                 var accountReg = new RegExp("^[0-9]{1,10}$");
@@ -200,12 +275,20 @@
                     showErrorField($('#account-no'));
                     showErrorMessage(stepPane4, null, 'Your account number must be less than 10 digits and cointains digits only to be eligible');
                     evt.preventDefault();
+                    error = true;
+                }
+                
+                if (!error) {
+                    $(".form-message").remove();
                 }
             }
 
             if (data.step === 5) {
                 $('#ClaimRegisterProductForm').trigger('submit');
-                //myWizard.find('.actions .btn').prop('disabled', true);
+                
+                if (!error) {
+                    $(".form-message").remove();
+                }
             }
         });
 
@@ -270,11 +353,18 @@
 })(jQuery);
 
  function showFormMessage(form, config, message, title, type, callback) {
-	$(".form-message").slideUp(300, function() { 
-		$(this).remove();
-	});
+    var alertMsg = $(".form-message");
 
-    var alertMsg = $(config.renderMessageWrapper(message, type));
+	if (alertMsg.find(":contains(" + $(message).text() + ")").length > 0) {
+		return;
+    }
+
+	if (alertMsg.length > 0) {
+        alertMsg.append(message);
+        alertMsg.attr('class', 'form-message alert alert-' + type);
+    } else {
+		alertMsg = $(config.renderMessageWrapper(message, type));
+    }
 
 	if (title && title.length > 0) {
         var messageTitle = alertMsg.find('.form-message-title');

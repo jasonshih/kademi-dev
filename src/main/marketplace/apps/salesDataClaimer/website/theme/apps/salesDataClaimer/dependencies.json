@@ -45,6 +45,18 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/select2/4.0.3/dist/js/select2.min.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/select2/4.0.3/dist/css/select2.min.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
             }
         },
