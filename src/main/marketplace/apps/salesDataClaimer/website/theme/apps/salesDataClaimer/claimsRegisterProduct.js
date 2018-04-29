@@ -3,6 +3,7 @@
         initWizard();
         initDateTimePickers();
         initImagePicker();
+        initSelect2OrgPickers();
         
         $(".claimRegisterProductForm").forms({
             beforePostForm: function(form, config, data) {
@@ -41,6 +42,16 @@
                     Msg.info('Sorry there was an error submitting the form.');
                 } else {
                     $(".result-unique-id-no").html(resp.data.claimGroupId);
+                    
+                    $(".last-step .step-pane:eq(0) > .row").prepend('<div class="col-md-6 print-show" style="display: none;">' +
+                        '<div class="form-group">' +
+                            '<label for="title" class="col-md-12">Unique ID number:</label>' +
+                            '<div class="col-md-12">' +
+                                '<span class="summary-field" data-parent-step="1">' + resp.data.claimGroupId + '</span>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>');
+                    
                     $("#ClaimRegisterProductForm").slideUp(300);
                     $("#thankYou").slideDown(300);
                 }
@@ -74,6 +85,10 @@
         $('#installation-invoice-image').change(function(){
             $('.success-installation-image').show();    
         });
+    }
+    
+    function initSelect2OrgPickers() {
+        //$("#supplier-orgId, #installer-orgId").select2();
     }
     
     function parseDate(input) {
@@ -121,7 +136,7 @@
             if (data.step === 1) {
                 var stepPane1 = stepPane.eq(0);
                 resetValidation(stepPane1);
-                $(".form-message").slideUp(300, function() {    $(this).remove();   });
+                $(".form-message .error-message, .form-message .error-message-title").remove();
 
                 
                 if (!validateFormFields(stepPane.eq(0))) {
@@ -138,7 +153,7 @@
             if (data.step === 2) {
                 var stepPane2 = stepPane.eq(1);
                 resetValidation(stepPane2);
-                $(".form-message").slideUp(300, function() {    $(this).remove();   });
+                $(".form-message .error-message, .form-message .error-message-title").remove();
                 
                 if (!validateFormFields(stepPane2)) {
                     evt.preventDefault();
@@ -172,7 +187,7 @@
             if (data.step === 3) {
                 var stepPane3 = stepPane.eq(2);
                 resetValidation(stepPane3);
-                $(".form-message").slideUp(300, function() {    $(this).remove();   });
+                $(".form-message .error-message, .form-message .error-message-title").remove();
                 
                 if (!validateFormFields(stepPane3)) {
                     evt.preventDefault();
@@ -182,7 +197,7 @@
             if (data.step === 4) {
                 var stepPane4 = stepPane.eq(3);
                 resetValidation(stepPane4);
-                $(".form-message").slideUp(300, function() {    $(this).remove();   });
+                $(".form-message .error-message, .form-message .error-message-title").remove();
                 
                 if (!validateFormFields(stepPane4)) {
                     evt.preventDefault();
@@ -270,11 +285,14 @@
 })(jQuery);
 
  function showFormMessage(form, config, message, title, type, callback) {
-	$(".form-message").slideUp(300, function() { 
-		$(this).remove();
-	});
-
-    var alertMsg = $(config.renderMessageWrapper(message, type));
+    var alertMsg = $(".form-message");
+	
+	if (alertMsg.length > 0) {
+        alertMsg.append(message);
+        alertMsg.attr('class', 'form-message alert alert-' + type);
+    } else {
+		alertMsg = $(config.renderMessageWrapper(message, type));
+    }
 
 	if (title && title.length > 0) {
         var messageTitle = alertMsg.find('.form-message-title');
