@@ -39,7 +39,44 @@ controllerMappings
         .enabled(true)
         .build();
 
+function contactRequestWithSameAddressExists(page, address) {
+    var contactReuqests = page.find("/contactRequests");
+    var requests = contactReuqests.contactRequests;
+    
+    for (var i = 0; i < requests.size(); i++) {
+        var request = requests[i].contactRequest
+        
+        if (address == request.fields["address1"]) {
+            return true;
+        }
+    }
+    
+    return false;
+}
 
+function contactRequestWithProductNumbersExists(page, numbers) {
+    var contactReuqests = page.find("/contactRequests");
+    var requests = contactReuqests.contactRequests;
+    var duplicateNumbers = {};
+    
+    for (var i = 0; i < requests.size(); i++) {
+        var request = requests[i].contactRequest
+        
+        for (var numberKey in numbers) {
+            var number = numbers[numberKey];
+            
+            if (number == request.fields["prod1-indoor-serial-number"]) {
+                duplicateNumbers[number] = true;
+            } else if (number == request.fields["prod2-indoor-serial-number"]) {
+                duplicateNumbers[number] = true;
+            } else if (number == request.fields["prod3-indoor-serial-number"]) {
+                duplicateNumbers[number] = true;
+            }
+        }
+    }
+    
+    return duplicateNumbers;
+}
 
 function getOwnClaims(page, params) {
     log.info('getOwnClaims > page={}, params={}', page, params);
