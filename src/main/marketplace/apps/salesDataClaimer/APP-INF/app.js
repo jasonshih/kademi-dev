@@ -54,26 +54,36 @@ function checkProcessedGoal(rootFolder, lead, funnel, eventParams, customNextNod
     return false;
 }
 
-controllerMappings.addGoalNodeType("claimGroupSubmittedGoal", "salesDataClaimer/claimGroupSubmittedGoalNode.js", "checkSubmittedGoal");
+controllerMappings.addGoalNodeType("claimGroupSubmittedGoal", "salesDataClaimer/claimGroupSubmittedGoalNode.js", "checkGroupSubmittedGoal");
 
 function checkGroupSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
-    log.info('checkSubmittedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);
+    log.info('checkGroupSubmittedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);
+    
     if (!lead) {
+        log.info('checkGroupSubmittedGoal > No Lead Found');
+        
         return true;
     }
+    
+    //var submitted = false;
 
-    var claimId = attributes.get(LEAD_CLAIM_GROUP_ID);
-
-    if (isNotBlank(claimId)) {
+    /*if (isNotBlank(claimId)) {
         // Process only for this claim ID
-        return safeString(eventParams.claim) === safeString(claimId);
+        submitted = safeString(eventParams.claim) === safeString(claimId);
     } else {
         attributes.put(LEAD_CLAIM_GROUP_ID, eventParams.claim);
 
-        return true;
-    }
+        submitted = true;
+    }*/
+    
+    
+    log.info('checkGroupSubmittedGoal > Added claim group id {}', eventParams.claimGroup);
+    
+    //if (submitted) {
+    lead.setFieldValue("claim_group_recordId", eventParams.claimGroup);
+    //}
 
-    return false;
+    return true;
 }
 
 function initSalesDataClaimerApp(orgRoot, webRoot, enabled) {

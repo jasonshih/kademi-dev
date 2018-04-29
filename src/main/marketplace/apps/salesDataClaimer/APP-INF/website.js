@@ -57,7 +57,7 @@ function contactRequestWithSameAddressExists(page, address) {
 function contactRequestWithProductNumbersExists(page, numbers) {
     var contactReuqests = page.find("/contactRequests");
     var requests = contactReuqests.contactRequests;
-    var duplicateNumbers = {};
+    var duplicateNumbers = [];
     
     for (var i = 0; i < requests.size(); i++) {
         var request = requests[i].contactRequest
@@ -66,11 +66,11 @@ function contactRequestWithProductNumbersExists(page, numbers) {
             var number = numbers[numberKey];
             
             if (number == request.fields["prod1-indoor-serial-number"]) {
-                duplicateNumbers[number] = true;
+                duplicateNumbers[duplicateNumbers.length] = number;
             } else if (number == request.fields["prod2-indoor-serial-number"]) {
-                duplicateNumbers[number] = true;
+                duplicateNumbers[duplicateNumbers.length] = number;
             } else if (number == request.fields["prod3-indoor-serial-number"]) {
-                duplicateNumbers[number] = true;
+                duplicateNumbers[duplicateNumbers.length] = number;
             }
         }
     }
@@ -321,10 +321,14 @@ function saveProductClaim(page, params, files) {
             return views.jsonObjectView(JSON.stringify(result));
         }
         
+        var indoorSerialNumbersToCheck = [];
+        
         for( var i = 0; i < productsNumber; i++ ){
-            var productModelNumber = params["prod"+ (i+1) +"-model-number"];
-            var productIndoorModelNumber = params["prod"+ (i+1) +"-indoor-model-number"];
+            //var productModelNumber = params["prod"+ (i+1) +"-model-number"];
+            //var productIndoorModelNumber = params["prod"+ (i+1) +"-indoor-model-number"];
             var productIndoorSerialNumber = params["prod"+ (i+1) +"-indoor-serial-number"];
+            
+            indoorSerialNumbersToCheck[indoorSerialNumbersToCheck.length] = productIndoorSerialNumber;
             
             var salesDataExtraFields = formatter.newMap();
             salesDataExtraFields.put("serial-no", productIndoorSerialNumber);
@@ -335,6 +339,7 @@ function saveProductClaim(page, params, files) {
                 log.error('Sales Data record with serial number: ' + productIndoorSerialNumber +' not found');
                 result.status = false;
                 result.messages = ['Invalid products indoor serial number: ' + productIndoorSerialNumber];
+                
                 return views.jsonObjectView(JSON.stringify(result));
             }
             
@@ -342,13 +347,31 @@ function saveProductClaim(page, params, files) {
             productsSKUs.push(salesDataRecord.productSku);
         }
         
+        var existanceCheck = contactRequestWithProductNumbersExists(page, indoorSerialNumbersToCheck);
+        
+        if (existanceCheck.length > 0) {
+            result.status = false;
+            result.messages = ['The following serials have already been submitted before: ' + existanceCheck.join(", ")];
+            
+            return views.jsonObjectView(JSON.stringify(result));
+        }
+        
+        if (contactRequestWithSameAddressExists(page, params['address1'])) {
+            result.status = false;
+            result.messages = ['A previous claim was submitted from this address, only one claim form can be submitted per address'];
+            
+            return views.jsonObjectView(JSON.stringify(result));
+        }
+        
+        var claimGroupId = "";
+        
         transactionManager.runInTransaction(function () {                                            
             
             var cr = contactFormService.processContactRequest(page, params, files);
             var enteredUser = applications.userApp.findUserResource(cr.profile);
             var now = formatter.formatDateISO8601(formatter.now, org.timezone);
             
-            var claimGroupId = getLastClaimGroupId(page);
+            claimGroupId = getLastClaimGroupId(page);
             
             if (claimGroupId != null) {
                 var number = formatter.toString(formatter.toInteger(claimGroupId.substring(5)) + 1).replace(".0", "");
@@ -362,11 +385,7 @@ function saveProductClaim(page, params, files) {
                 claimGroupId: claimGroupId,
                 enteredDate: now,
                 contactRequest: cr.id
-            }
-            
-            securityManager.runAsUser(enteredUser, function () {
-                db.createNew(claimGroupId, JSON.stringify(claimGroupObj), TYPE_CLAIM_GROUP);
-            });
+            };
             
             var tempDateTime = params['purchase-date'];
             var tempDate = tempDateTime.substring(0, tempDateTime.indexOf(' ')).split('/');
@@ -398,8 +417,13 @@ function saveProductClaim(page, params, files) {
                 });
             }
             
+            securityManager.runAsUser(enteredUser, function () {
+                db.createNew(claimGroupId, JSON.stringify(claimGroupObj), TYPE_CLAIM_GROUP);
+                eventManager.goalAchieved("claimGroupSubmittedGoal", {"claimGroup": claimGroupId});
+            });
             
-            
+            result.data = {};
+            result.data.claimGroupId = claimGroupId;
         });
 
     } catch (e) {

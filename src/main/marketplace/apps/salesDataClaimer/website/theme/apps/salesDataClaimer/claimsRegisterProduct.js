@@ -5,12 +5,44 @@
         initImagePicker();
         
         $(".claimRegisterProductForm").forms({
+            beforePostForm: function(form, config, data) {
+                $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", true);
+                $(".form-message").slideUp(300, function() {    $(this).remove();   });
+                
+                return data;
+            },
+            onError: function (resp, form, config) {
+                $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", false);
+                
+                try {
+                    flog('[jquery.forms] Status indicates failure', resp);
+                    
+                    if (resp) {
+                        if (resp.messages && resp.messages.length > 0) {
+                            showErrorMessage(form, config, resp.messages);
+                        } else {
+                            showErrorMessage(form, config, config.cantProcessRequestErrorMessage);
+                        }
+                        
+                        showFieldMessages(resp.fieldMessages, form);
+                    } else {
+                        showErrorMessage(form, config, config.cantProcessRequestErrorMessage);
+                    }
+                } catch (e) {
+                    flog('[jquery.forms] Error!', e);
+                }
+            },
             onSuccess: function (resp, form) {
                 flog('Claims :: ', resp);
+                
+                $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", false);
+                
                 if (resp === undefined || resp.status === false) {
                     Msg.info('Sorry there was an error submitting the form.');
                 } else {
-                    Msg.info("Thank you for your claim");
+                    $(".result-unique-id-no").html(resp.data.claimGroupId);
+                    $("#ClaimRegisterProductForm").slideUp(300);
+                    $("#thankYou").slideDown(300);
                 }
             }
         });
@@ -21,9 +53,9 @@
     
         var purchaseDate = $('#purchase-date');
         purchaseDate.datetimepicker({
-            format: 'DD/MM/YYYY',
+            format: 'DD/MM/YYYY'/*,
             startDate: '01/05/2018',
-            endDate: '31/08/2018'
+            endDate: '31/08/2018'*/
         });
         
         var installationDate = $('#installation-date');
@@ -89,13 +121,16 @@
             if (data.step === 1) {
                 var stepPane1 = stepPane.eq(0);
                 resetValidation(stepPane1);
-                if (!validateFormFields(stepPane1)) {
+                $(".form-message").slideUp(300, function() {    $(this).remove();   });
+
+                
+                if (!validateFormFields(stepPane.eq(0))) {
                     evt.preventDefault();
                 }
                 
                 if( $('#confirm-email').val() != $('#email').val()){
                     showErrorField($('#confirm-email'));
-                    showErrorMessage(stepPane2, null, 'Email address and confirm email address must be similar');
+                    showErrorMessage(stepPane1, null, 'Email address and confirm email address must be similar');
                     evt.preventDefault();
                 }
             }
@@ -103,6 +138,8 @@
             if (data.step === 2) {
                 var stepPane2 = stepPane.eq(1);
                 resetValidation(stepPane2);
+                $(".form-message").slideUp(300, function() {    $(this).remove();   });
+                
                 if (!validateFormFields(stepPane2)) {
                     evt.preventDefault();
                 }
@@ -135,6 +172,8 @@
             if (data.step === 3) {
                 var stepPane3 = stepPane.eq(2);
                 resetValidation(stepPane3);
+                $(".form-message").slideUp(300, function() {    $(this).remove();   });
+                
                 if (!validateFormFields(stepPane3)) {
                     evt.preventDefault();
                 }
@@ -143,6 +182,8 @@
             if (data.step === 4) {
                 var stepPane4 = stepPane.eq(3);
                 resetValidation(stepPane4);
+                $(".form-message").slideUp(300, function() {    $(this).remove();   });
+                
                 if (!validateFormFields(stepPane4)) {
                     evt.preventDefault();
                 }
@@ -227,3 +268,30 @@
 
 
 })(jQuery);
+
+ function showFormMessage(form, config, message, title, type, callback) {
+	$(".form-message").slideUp(300, function() { 
+		$(this).remove();
+	});
+
+    var alertMsg = $(config.renderMessageWrapper(message, type));
+
+	if (title && title.length > 0) {
+        var messageTitle = alertMsg.find('.form-message-title');
+        if (messageTitle.length === 0) {
+            var btnClose = alertMsg.find('.close');
+            var titleHtml = '<p class="form-message-title"><b>' + title + '</b></p>';
+            if (btnClose.length === 0) {
+                alertMsg.prepend(titleHtml);
+            } else {
+                btnClose.after(titleHtml);
+            }
+        } else {
+            messageTitle.html('<b>' + title + '</b');
+        }
+    }
+
+    $(".step-content").prepend(alertMsg);
+
+    alertMsg.slideDown(300);
+ }
