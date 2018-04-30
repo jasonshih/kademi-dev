@@ -320,12 +320,13 @@
                             <div class="form-group">
                                 <label class="col-md-12" for="supplier-orgId"><span class="compulsory-field">*</span>Supplier Name:</label>
                                 <div class="col-md-12">
-                                    <select id="supplier-orgId" name="supplier-orgId" class="form-control required-if-shown" data-email-to="contact-email">
+                                    <input class="form-control required" type="text" name="supplier-org-name" id="supplier-org-name" placeholder="" />
+                                    <!--<select id="supplier-orgId" name="supplier-orgId" class="form-control required-if-shown" data-email-to="contact-email">
                                         <option value="">[No supplier selected]</option>                                
                                         #foreach($org in $orgs)
                                             <option value="$org.orgId" data-email="$org.orgEmail">$org.orgTitle</option>
                                         #end
-                                    </select>
+                                    </select>-->
                                 </div>
                             </div>
                         </div>

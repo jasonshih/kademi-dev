@@ -301,10 +301,10 @@ function saveProductClaim(page, params, files) {
         var soldBy = "";
         var soldById = "";
         
-        if(params['supplier-orgId']){
-            soldBy = params['supplier-orgId'];
+        if(params['supplier-org-name']){
+            soldBy = 'supplier';
         }else if (params['installer-orgId']){
-            soldBy = params['installer-orgId']
+            soldBy = params['installer-orgId'];
         }else{
             log.error('Please select Supplier/Installer name');
             result.status = false;

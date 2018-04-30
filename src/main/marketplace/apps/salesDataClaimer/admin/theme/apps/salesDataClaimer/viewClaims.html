@@ -244,7 +244,7 @@
         #macro (renderClaimGroup $hit)            
             #if($formatter.isNotNull($hit.source.contactRequest))
                 #set( $contactPath = "/manageContacts/" + $hit.source.contactRequest )                
-                #set( $contactRequest = $page.find($contactPath) ) <br>
+                #set( $contactRequest = $page.find($contactPath) )
                 <tr>
                     <td>$hit.source.claimGroupId</td>
                     <td>$contactRequest.contactRequest.firstName $contactRequest.contactRequest.surName</td>

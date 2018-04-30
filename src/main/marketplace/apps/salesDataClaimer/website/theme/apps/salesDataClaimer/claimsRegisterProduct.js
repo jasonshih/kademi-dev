@@ -89,7 +89,8 @@
     
     function initOrgPickers() {
         //$("#supplier-orgId, #installer-orgId").select2();
-        $("#supplier-orgId, #installer-orgId").on("change", function() {
+        //#supplier-orgId, 
+        $("#installer-orgId").on("change", function() {
             var email = $(this).find(":selected").data("email");
             
             $("#" + $(this).data("email-to")).val(email);
