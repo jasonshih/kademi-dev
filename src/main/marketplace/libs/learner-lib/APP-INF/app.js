@@ -187,10 +187,11 @@ function loadLearnersModulesDetails(start, maxRows, rowsResult, rootFolder) {
     
     var profileId = http.request.params.profileId;
     var user = applications.userApp.findUserResource(profileId);
-    var modulesResp = formatter.sortReverse(applications.learning.searchModuleStatuses(profileId, start, maxRows));
+    var modulesResp = applications.learning.searchModuleStatuses(profileId, start, maxRows);
+    var records = formatter.sortReverse(modulesResp.records);
         
-    for(var i in modulesResp.records){
-        var record = modulesResp.records[i];
+    for(var i in records){
+        var record = records[i];
         
 //        var link = "";        
 //        var module = rootFolder.find("/programs/"+record.programCode+"/"+record.courseCode+"/"+record.moduleCode);  
