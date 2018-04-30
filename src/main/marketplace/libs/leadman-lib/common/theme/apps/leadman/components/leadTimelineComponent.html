@@ -53,7 +53,16 @@
                             <br />
                             #set ($app = $applications.get("leadman-lib"))
                             #set ($processedNotes = $app.call("urlify", $!task.taskDescription))
+
                             $!processedNotes
+
+                            #if( $task.calEvent )
+                            <br/>
+                            <a href="$task.calEvent.href">
+                                <i class="fa fa-calendar"></i>
+                                $formatter.formatDate($task.calEvent.startDate) to $formatter.formatDate($task.calEvent.endDate)
+                            </a>
+                            #end
                         </div>
                     </div>
                 </div>
@@ -69,7 +78,7 @@
 #if( $page.currentGoal  )
 <div class="panel">
     <div class="panel-body">
-        
+
         <div id="notes">
             <div class="leadAutomationBody">
                 <ul class="timeline timeline-left">
@@ -90,9 +99,9 @@
                             </div>
                         </li>
                     #end
-                    
+
                     <li class="">
-                        
+
                         #if( $!page.currentGoalIsTask == false )
                         <div class="timeline-panel">
                             <div class="timeline-heading">
@@ -139,9 +148,9 @@
                                 <p>$page.nodeTitle( $page.currentGoal )</p>
                             </div>
                         </div>
-                        
+
                         #end
-                    </li>                    
+                    </li>
 
                     <li class="">
                         <div class="timeline-panel">

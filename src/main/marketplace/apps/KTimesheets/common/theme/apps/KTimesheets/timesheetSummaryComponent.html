@@ -1,49 +1,48 @@
-#if ($page && $page.is("lead"))
-#set( $timesheet = $services.timesheetManager.getTimesheet($userResource.thisProfile, $page.createDate, $formatter.now))
+
 <div class="timesheet">
     <table class="table table-striped timesheet-table-summary">
         <thead>
-        <tr>
-            <th>Name</th>
-            <th>Date</th>
-            <th>Hours</th>
-        </tr>
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Hours</th>
+            </tr>
         </thead>
+
+#if ($page && $page.is("lead"))
         <tbody>
-        #foreach( $entry in $timesheet.entries )
-        #if ($entry.lead.id == $page.leadId)
+            #set( $totalHours = 0 )
+            #set( $entries = $services.timesheetManager.getTimesheetEntries($page, null, null))
+            #foreach( $entry in $entries )
             <tr>
                 <td>$applications.userApp.findUserResource($entry.workedBy).formattedName</td>
                 <td>$formatter.formatDate($entry.workedDate)</td>
-                <td>$entry.hours</td>
+                <td class="text-right">$entry.hours</td>
+                #set( $totalHours = $totalHours + $entry.hours )
             </tr>
-        #end
-        #end
+            #end
         </tbody>
-    </table>
-</div>
 #else
-<div class="timesheet">
-    <table class="table table-striped timesheet-table-summary">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Date</th>
-            <th>Hours</th>
-        </tr>
-        </thead>
         <tbody>
-        <tr>
-            <td>Sample Name</td>
-            <td>$formatter.formatDate($formatter.now)</td>
-            <td>$entry.hours</td>
-        </tr>
-        <tr>
-            <td>Another name</td>
-            <td>$formatter.formatDate($formatter.now)</td>
-            <td>5</td>
-        </tr>
+            <tr>
+                <td>Sample Name</td>
+                <td>$formatter.formatDate($formatter.now)</td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>Another name</td>
+                <td>$formatter.formatDate($formatter.now)</td>
+                <td>5</td>
+            </tr>
+            #set( $totalHours = 8 )
         </tbody>
+#end
+        <tfoot>
+            <tr>
+                <td></td>
+                <td></td>
+                <th class="text-right">$totalHours</th>
+            </tr>
+        </tfoot>
     </table>
 </div>
-#end
