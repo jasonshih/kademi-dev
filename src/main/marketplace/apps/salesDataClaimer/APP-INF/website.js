@@ -35,9 +35,39 @@ controllerMappings
         .websiteController()
         .path('/salesDataClaimsProducts/')
         .addMethod('GET', 'searchProducts')
-        .addMethod('POST', 'saveProductClaim')
+        .addMethod('POST', 'validateProductClaim', 'validate')
+        .addMethod('POST', 'saveProductClaim', 'promotion')
         .enabled(true)
         .build();
+
+function validateProductClaim(page, params, files) {
+    var result = {
+        status: true
+    };
+    
+    if(params.serialNumber){
+        var serialNumber = params.serialNumber;
+        var serialNumberArray = [serialNumber]
+        var duplicateNumbers = contactRequestWithProductNumbersExists(page, serialNumberArray);
+        if(duplicateNumbers.length > 0){
+            log.error('Address already exist');
+            result.status = false;
+            result.messages = ['Product serial number already exist'];
+        }
+    }else if(params.address){
+        var address = params.address;
+        if( contactRequestWithSameAddressExists(page, address) ){
+            log.error('Address already exist');
+            result.status = false;
+            result.messages = ['Address already exist'];
+        }
+    }else{
+        log.error('neither serial numbers nor address sent: ' + e, e);
+        result.status = false;
+        result.messages = ['neither serial numbers nor address sent: ' + e];
+    }
+    return views.jsonObjectView(JSON.stringify(result));
+}
 
 function contactRequestWithSameAddressExists(page, address) {
     var contactReuqests = page.find("/contactRequests");
@@ -58,13 +88,12 @@ function contactRequestWithProductNumbersExists(page, numbers) {
     var contactReuqests = page.find("/contactRequests");
     var requests = contactReuqests.contactRequests;
     var duplicateNumbers = [];
-    
+
     for (var i = 0; i < requests.size(); i++) {
         var request = requests[i].contactRequest
         
         for (var numberKey in numbers) {
             var number = numbers[numberKey];
-            
             if (number == request.fields["prod1-indoor-serial-number"]) {
                 duplicateNumbers[duplicateNumbers.length] = number;
             } else if (number == request.fields["prod2-indoor-serial-number"]) {
@@ -301,8 +330,8 @@ function saveProductClaim(page, params, files) {
         var soldBy = "";
         var soldById = "";
         
-        if(params['supplier-org-name']){
-            soldBy = 'supplier';
+        if(params['supplier-orgId']){
+            soldBy = params['supplier-orgId'];
         }else if (params['installer-orgId']){
             soldBy = params['installer-orgId'];
         }else{

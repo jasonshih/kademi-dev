@@ -4,6 +4,8 @@
         initDateTimePickers();
         initImagePicker();
         initOrgPickers();
+        initBSBNumber();
+        initIndoorSerialCheck();
         
         $(".claimRegisterProductForm").forms({
             beforePostForm: function(form, config, data) {
@@ -90,13 +92,142 @@
     function initOrgPickers() {
         //$("#supplier-orgId, #installer-orgId").select2();
         //#supplier-orgId, 
-        $("#installer-orgId").on("change", function() {
+        $("#supplier-orgId, #installer-orgId").on("change", function() {
             var email = $(this).find(":selected").data("email");
-            
+            if(email === ""){
+                return;
+            }
             $("#" + $(this).data("email-to")).val(email);
             $("#confirm-" + $(this).data("email-to")).val(email);
         });
+    }   
+    
+    function initBSBNumber() {
+        
+        var dash = "-"; 
+
+        function isNumber (o) {
+          return ! isNaN (o-0);
+        }  
+        
+        $(".bsb-number-12").keyup(function(e){
+            txtVal = $(this).val();  
+            if(isNumber(txtVal) && txtVal.length>3) {
+                $(this).val(txtVal.substring(0,3) )
+            }
+        });
+        
+        //called when key is pressed in textbox
+        $("#bsb-number-1, #bsb-number-2").keydown(function (e) {
+             //if the letter is not digit then display error and don't type anything
+             if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+                $("#errmsg12").html("Digits Only").show().fadeOut("slow");
+                return false;
+            }
+            else{
+               $('#bsb-number-1').bind('keypress', function(e) {
+                    if($(this).val().length == 2){
+                      $('#bsb-number-2').focus();
+                    }
+                });   
+            }
+        });
+        
+        $("#bsb-number-1").keyup(function(){
+            $('#bsb-number').val( $(this).val() +  dash + $('#bsb-number-2').val() );
+        });        
+        $("#bsb-number-2").keyup(function(){
+            $('#bsb-number').val( $('#bsb-number-1').val() +  dash + $(this).val() );
+        });
+         
+        $('#btn').click(function(){
+            alert( $('#bsb-number').val() );
+        });
+        
+        
     }
+    
+    function initIndoorSerialCheck(){
+        
+        $("#prod1-indoor-serial-number").change(function() {
+            $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", true);
+        	$.ajax({
+                url: /salesDataClaimsProducts/,
+                type: 'POST',
+                dataType: 'JSON',
+                data: {
+                    validate: true,
+                    serialNumber: $('#prod1-indoor-serial-number').val()
+                },
+                success: function (resp) {
+                    $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", false);
+                    if (!resp.status) {
+                        showErrorField($('#prod1-indoor-serial-number'));
+                        showErrorMessage($(".step-pane:eq(2)"), null, 'A claim has already been submitted from this serial number "' + $("#prod1-indoor-serial-number").val() + '"!');
+                        $("#prod1-indoor-serial-number").val("");  
+                    } 
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    flog('Error in checking address: ', jqXHR, textStatus, errorThrown);
+                    $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", false);
+                }
+            });
+        });
+        
+        $("#prod2-indoor-serial-number").change(function() {
+            $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", true);
+        	$.ajax({
+                url: /salesDataClaimsProducts/,
+                type: 'POST',
+                dataType: 'JSON',
+                data: {
+                    validate: true,
+                    serialNumber: $('#prod2-indoor-serial-number').val()
+                },
+                success: function (resp) {
+                    $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", false);
+                    if (!resp.status) {
+                        showErrorField($('#prod2-indoor-serial-number'));
+                        showErrorMessage($(".step-pane:eq(2)"), null, 'A claim has already been submitted from this serial number "' + $("#prod2-indoor-serial-number").val() + '"!');
+                        $("#prod2-indoor-serial-number").val("");    
+                    } 
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    flog('Error in checking address: ', jqXHR, textStatus, errorThrown);
+                    $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", false);
+                }
+            });
+        });
+        
+        $("#prod3-indoor-serial-number").change(function() {
+            $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", true);
+        	$.ajax({
+                url: /salesDataClaimsProducts/,
+                type: 'POST',
+                dataType: 'JSON',
+                data: {
+                    validate: true,
+                    serialNumber: $('#prod3-indoor-serial-number').val()
+                },
+                success: function (resp) {
+                    $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", false);
+                    if (!resp.status) {
+                        showErrorField($('#prod3-indoor-serial-number'));
+                        showErrorMessage($(".step-pane:eq(2)"), null, 'A claim has already been submitted from this serial number "' + $("#prod3-indoor-serial-number").val() + '"!');
+                        $("#prod3-indoor-serial-number").val("");        
+                    } 
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    flog('Error in checking address: ', jqXHR, textStatus, errorThrown);
+                    $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", false);
+                }
+            });
+        });
+        
+       
+    }
+    
     
     function parseDate(input) {
       var parts = input.match(/(\d+)/g);
@@ -126,10 +257,10 @@
                 $("#ClaimRegisterProductForm .step-pane:not(.last-step)")
                         .find("select :selected").each(function() { 
                             $(this).attr("selected", "selected"); 
-                        }).end()
-                        .find("button").each(function(){ 
-                            $(this).replaceWith("");
-                        }).end().clone().css("display", "block")
+                        }).end().clone()
+                        .find("button").remove().end()
+						.find(".ignore").remove().end()
+						.css("display", "block")
                         .find(":input").each(function() {
                             $(this).replaceWith('<span class="summary-field" data-parent-step="' + $(this).parents(".step-pane").data("step") + '">' + ($(this).find(":selected").html() === undefined ? $(this).val().replace("C:\\fakepath\\", "") : $(this).find(":selected").html()) + '</span>'); 
                         }).end().appendTo(".last-step");
@@ -226,7 +357,7 @@
                     
                     if(!serialReg.test($('#prod1-indoor-serial-number').val())){
                         showErrorField($('#prod1-indoor-serial-number'));
-                        showErrorMessage(stepPane3, null, 'Product 1 indoor serial must be 11 digits to be eligible');
+                        showErrorMessage(stepPane3, null, 'Product 1 indoor Serial must contain 11 characters including numbers and letters to be eligible');
                         evt.preventDefault();
                         error = true;
                     }
@@ -234,7 +365,7 @@
                 if($('#prod2-indoor-serial-number').is(":visible")){
                     if(!serialReg.test($('#prod2-indoor-serial-number').val())){
                         showErrorField($('#prod2-indoor-serial-number'));
-                        showErrorMessage(stepPane3, null, 'Product 2 indoor serial must be 11 digits to be eligible');
+                        showErrorMessage(stepPane3, null, 'Product 2 indoor Serial must contain 11 characters including numbers and letters to be eligible');
                         evt.preventDefault();
                         error = true;
                     }
@@ -242,7 +373,7 @@
                 if($('#prod3-indoor-serial-number').is(":visible")){
                     if(!serialReg.test($('#prod3-indoor-serial-number').val())){
                         showErrorField($('#prod3-indoor-serial-number'));
-                        showErrorMessage(stepPane3, null, 'Product 3 indoor serial must be 11 digits to be eligible');
+                        showErrorMessage(stepPane3, null, 'Product 3 indoor Serial must contain 11 characters including numbers and letters to be eligible');
                         evt.preventDefault();
                         error = true;
                     }
@@ -263,7 +394,7 @@
                     error = true;
                 }
                 
-                var bsbReg = new RegExp("^[0-9]{6}$");
+                var bsbReg = new RegExp("^[0-9]{3}-[0-9]{3}$");
                 if(!bsbReg.test($('#bsb-number').val())){
                     showErrorField($('#bsb-number'));
                     showErrorMessage(stepPane4, null, 'Your BSB number must be between exactly 6 digits and contains digits only to be eligible');
@@ -336,17 +467,40 @@
                       $("#address1").val("");
                       selected = false;
                       return;	
-          }
-        
-              for (var i = 0; i < place.address_components.length; i++) {
-            var addressType = place.address_components[i].types[0];
-            if (componentForm[addressType]) {
-              var val = place.address_components[i]['long_name'];
-                      $(componentForm[addressType]).val(val);
             }
-          }
         
-              selected = true;
+            $.ajax({
+                url: /salesDataClaimsProducts/,
+                type: 'POST',
+                dataType: 'JSON',
+                data: {
+                    validate: true,
+                    address: $('#address1').val()
+                },
+                success: function (resp) {
+                    if (!resp.status) {
+                        showErrorField($('#address1'));
+                        showErrorMessage($(".step-pane:eq(0)"), null, 'A claim has already been submitted from this address "' + $("#address1").val() + '"!');
+                        $("#address1").val("");
+                        selected = false;
+                    } else {
+                        
+                        for (var i = 0; i < place.address_components.length; i++) {
+                            var addressType = place.address_components[i].types[0];
+                            if (componentForm[addressType]) {
+                              var val = place.address_components[i]['long_name'];
+                                      $(componentForm[addressType]).val(val);
+                            }
+                        }
+                
+                        selected = true;
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    flog('Error in checking address: ', jqXHR, textStatus, errorThrown);
+                }
+            });
+    
         });
     }
 

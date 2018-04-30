@@ -29,6 +29,37 @@
     #if( $orgs.add($orgObj) ) #end
 #end
 
+#set( $supplierOrgs = [] )
+#set ($query = '{  
+                    "stored_fields":[  
+                        "orgTitle",
+                        "orgId",
+                        "email"
+                    ],
+                    "query":{  
+                        "bool":{  
+                            "must":{  
+                                "term":{  
+                                    "orgTypes":"supplier"
+                                }
+                            }
+                        }
+                    },
+                    "size":10000
+                }')
+
+#set( $queryRes = $applications.search.searchManager.search($query, 10000, 'org'))
+
+#foreach( $org in $queryRes.hits.hits )
+    #set( $orgObj = {
+            "orgTitle": $org.fields.orgTitle.value,
+            "orgId": $org.fields.orgId.value,
+            "orgEmail": $org.fields.email.value 
+            }
+        )
+    #if( $supplierOrgs.add($orgObj) ) #end
+#end
+
 <form method="post" id="ClaimRegisterProductForm" action="/salesDataClaimsProducts/" class="form-horizontal fuelux claimRegisterProductForm" enctype="multipart/form-data">
     <div class="row print-hide">
         <div class="col-md-12" style="margin-bottom: 5px; margin-top: 5px;">
@@ -79,7 +110,7 @@
                             <div class="col-md-12">
                                 <select id="title" name="title" class="form-control required-if-shown">
                                     <option value="">[No Title selected]</option>
-                                    #set( $titles = ["Mr.", "Mrs."] )
+                                    #set( $titles = ["Mr.", "Mrs.", "Ms."] )
                                     #foreach($title in $titles)
                                         $formatter.option( $title, $title, "" )
                                     #end
@@ -300,12 +331,12 @@
                                 <div class="col-md-12">
                                     <input type="file" id="invoice-image" name="invoice-image" style="display:  inline-block;opacity:  0;position:  absolute;" class="btn btn-primary required-if-shown">
                                     <button class="btn btn-primary" name="invoice-image-btn" id="invoice-image-btn"><span class="compulsory-field">*</span>UPLOAD PDF OR IMAGE OF THE INVOICE</button>
-                                    <div class="btn btn-success success-invoice-image"><i class="fa fa-check"></i></div>
+                                    <div class="btn btn-success success-invoice-image ignore"><i class="fa fa-check"></i></div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-md-offset-5">
+                        <div class="col-md-3 col-md-offset-5 ignore">
                             <h6>Maximum file size of 5MB</h6>
                         </div>
 
@@ -320,13 +351,13 @@
                             <div class="form-group">
                                 <label class="col-md-12" for="supplier-orgId"><span class="compulsory-field">*</span>Supplier Name:</label>
                                 <div class="col-md-12">
-                                    <input class="form-control required" type="text" name="supplier-org-name" id="supplier-org-name" placeholder="" />
-                                    <!--<select id="supplier-orgId" name="supplier-orgId" class="form-control required-if-shown" data-email-to="contact-email">
+                                    <!-- <input class="form-control required" type="text" name="supplier-org-name" id="supplier-org-name" placeholder="" /> -->
+                                    <select id="supplier-orgId" name="supplier-orgId" class="form-control required-if-shown" data-email-to="contact-email">
                                         <option value="">[No supplier selected]</option>                                
-                                        #foreach($org in $orgs)
-                                            <option value="$org.orgId" data-email="$org.orgEmail">$org.orgTitle</option>
+                                        #foreach($org in $supplierOrgs)
+                                            <option value="$org.orgId" data-email="$!org.orgEmail">$org.orgTitle</option>
                                         #end
-                                    </select>-->
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -660,7 +691,13 @@
                         <div class="form-group">
                             <label for="bsb-number" class="col-md-12"><span class="compulsory-field">*</span>BSB Number:</label>
                             <div class="col-md-12">
-                                <input class="required-if-shown form-control" type="text" name="bsb-number" id="bsb-number" placeholder="" />
+                                <div class="row">
+                                    <div class="col-xs-6"><input class="required-if-shown form-control bsb-number-12 ignore" type="text" id="bsb-number-1" placeholder="" /></div>
+                                    <div class="col-xs-6"><input class="required-if-shown form-control bsb-number-12 ignore" type="text" id="bsb-number-2" placeholder="" /></div>
+                                </div>
+                                <span style=" position: absolute; top: -2px; left: 49.2%; font-size: 26px;" class="ignore">-</span>
+                                <input class="required-if-shown form-control" type="hidden" name="bsb-number" id="bsb-number" placeholder="" />
+                                <div id="errmsg12"></div>
                             </div>
                         </div>
                     </div>
@@ -690,10 +727,11 @@
 
 <div id="thankYou" class="row print-hide" style="display: none;">
     <div class="col-md-12" style="margin-bottom: 15px; margin-top: 15px; text-align: center; line-height: 30px;">
-        Thank you for registering your Mitsubishi Air-Conditioning unit for the <strong>MHIAA Summer 2018 Promotion.</strong><br />
-Your Unique ID number is <strong class="result-unique-id-no"></strong> and can be used to track your claim by contacting <strong><a href="mailto:info@mhiaapromotion.com">info@mhiaapromotion.com</a></strong>.<br />
-An email has been sent to you with the relevant details.<br /><br />
-    <button class="btn btn-primary" onclick="window.print();">Print Receipt</button>
+        Thank you for registering your Mitsubishi Air-Conditioning unit for the <strong>MHIAA Winter 2018 Promotion.</strong> <br>
+        Your Unique ID number is <strong class="result-unique-id-no"></strong> and can be used to track your claim by contacting <strong><a href="mailto:info@mhiaapromo.com.au">info@mhiaapromo.com.au</a></strong>. <br>
+        An email has been sent to you with the relevant details. <br>
+        
+    <button class="btn btn-primary" onclick="window.print();">Print your Submission</button>
     </div>
 </div>
 
