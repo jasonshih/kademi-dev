@@ -203,45 +203,45 @@
                         </div>
                         <div class="panel-body">
 
-                                <div class="form-group">
-                                    <label for="" class="col-sm-3 control-label">Check</label>
-                                    <div class="col-sm-9">
+                            <div class="form-group">
+                                <label for="" class="col-sm-3 control-label">Check</label>
+                                <div class="col-sm-9">
 
-                                        <a class="btn btn-info" href="$page.href?goto=&gotoPath=/theme-checker" title="Click here to review all styles" target="_blank">
-                                            #set($theme = $page.currentTheme)
-                                            #set($publicTheme = "")
-                                            #if( $theme )
-                                            #if( $theme.previewImage )
-                                            #set($publicTheme = $theme.name)
-                                            <img style="width: 150px" src="/templates/themes/$theme.name/$theme.previewImage" />
-                                            #else
-                                            #set($publicTheme = $theme.name)
-                                            $theme.title
-                                            #end
-                                            #else
-                                            No selected theme
-                                            #end
-                                            <i class="fa fa-check"></i>
-                                        </a>
-                                        <br/>
-                                        <small><i>Click here to review all components and styles in the theme</i></small>
+                                    <a class="btn btn-info" href="$page.href?goto=&gotoPath=/theme-checker" title="Click here to review all styles" target="_blank">
+                                        #set($theme = $page.currentTheme)
+                                        #set($publicTheme = "")
+                                        #if( $theme )
+                                        #if( $theme.previewImage )
+                                        #set($publicTheme = $theme.name)
+                                        <img style="width: 150px" src="/templates/themes/$theme.name/$theme.previewImage" />
+                                        #else
+                                        #set($publicTheme = $theme.name)
+                                        $theme.title
+                                        #end
+                                        #else
+                                        No selected theme
+                                        #end
+                                        <i class="fa fa-check"></i>
+                                    </a>
+                                    <br/>
+                                    <small><i>Click here to review all components and styles in the theme</i></small>
 
-                                    </div>
                                 </div>
+                            </div>
 
-                                <div class="form-group">
-                                    <label for="" class="col-sm-3 control-label">Change</label>
-                                    <div class="col-sm-9">
+                            <div class="form-group">
+                                <label for="" class="col-sm-3 control-label">Change</label>
+                                <div class="col-sm-9">
 
 
-                                        <a class="btn btn-success" href="/marketPlace?websiteBranch=$page.name&websiteName=$page.parent.name&type=theme">
-                                            Browse
-                                            <i class="fa fa-arrow-circle-right"></i>
-                                        </a>
-                                        <br/>
-                                        <small><i>Browse the marketplace to select a new theme</i></small>
-                                    </div>
+                                    <a class="btn btn-success" href="/marketPlace?websiteBranch=$page.name&websiteName=$page.parent.name&type=theme">
+                                        Browse
+                                        <i class="fa fa-arrow-circle-right"></i>
+                                    </a>
+                                    <br/>
+                                    <small><i>Browse the marketplace to select a new theme</i></small>
                                 </div>
+                            </div>
 
                         </div>
                     </div>
@@ -859,36 +859,68 @@
                 </div> <!-- End apps -->
                 <div id="panel_controllers" class="tab-pane controllersContainer">
 
-                    <div class="alert alert-info">Below is a list of templates provided by applications currently enabled for this website. Click the link to override and customise the template. <b>Not all applications are integrated with template management</b>, and might not appear here</div>
-                    #foreach($templateList in $page.allTemplates.entrySet() )
-                    <table class="table table-hover">
-                        <colgroup>
-                            <col width="200" />
-                            <col />
-                            <col width="100" />
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th colspan="99">$page.appTitle($templateList.key)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            #foreach($template in $templateList.value)
-                            <tr>
-                                <td>
-                                    <a href="$page.href?editTemplate=$template.path" target="_blank">$template.fileName</a>
-                                </td>
-                                <td>$template.description</td>
-                                <td>
-                                    #if( $page.isCustomised($template) )
-                                    Customised
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="alert alert-info">Below is a list of templates provided by applications currently enabled for this website. Click the link to override and customise the template. <b>Not all applications are integrated with template management</b>, and might not appear here</div>
+                            #foreach($templateList in $page.allTemplates.entrySet() )
+                            <table class="table table-hover">
+                                <colgroup>
+                                    <col width="200" />
+                                    <col />
+                                    <col width="100" />
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th colspan="99">$page.appTitle($templateList.key)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    #foreach($template in $templateList.value)
+                                    <tr>
+                                        <td>
+                                            <a href="$page.href?editTemplate=$template.path" target="_blank">$template.fileName</a>
+                                        </td>
+                                        <td>$template.description</td>
+                                        <td>
+                                            #if( $page.isCustomised($template) )
+                                            Customised
+                                            #end
+                                        </td>
+                                    </tr>
                                     #end
-                                </td>
-                            </tr>
+                                </tbody>
+                            </table>
                             #end
-                        </tbody>
-                    </table>
-                    #end
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="alert alert-info">Below is a list of components provided by applications currently enabled for this website. Click the link to override and customise.</div>
+                            #foreach($compList in $page.allComponents.entrySet() )
+                            <table class="table table-hover">
+                                <colgroup>
+                                    <col width="200" />
+                                    <col />
+                                    <col width="100" />
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th colspan="99">$page.appTitle($compList.key)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    #foreach($comp in $compList.value)
+                                    <tr>
+                                        <td>
+                                            <a href="$page.href?editTemplate=$comp.renderTemplate&editor=texteditor" target="_blank">$comp.componentId</a>
+                                        </td>
+                                        <td>$comp.description</td>
+                                    </tr>
+                                    #end
+                                </tbody>
+                            </table>
+                            #end
+                        </div>
+                    </div>
+
 
                     <hr/>
 
