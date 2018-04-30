@@ -209,7 +209,10 @@ function loadLearnersModulesDetails(start, maxRows, rowsResult, rootFolder) {
         rowsResult.addRow();
         
         rowsResult.addCell(record.programCode);
-        rowsResult.addCell(record.courseCode);
+        
+        var course = rootFolder.find("/programs/" + record.programCode + "/" + record.courseCode);
+        
+        rowsResult.addCell(course.title);
         rowsResult.addCell(record.moduleCode);
         // rowsResult.addCell(link);
         rowsResult.addCell(formatter.formatDate(record.renewalDate));
