@@ -8,48 +8,48 @@
                 #end
                 #if ($firstName == "true")
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="firstName">First name</label>
+                    <label class="col-sm-3 control-label trans-lookup" for="firstName">First name</label>
                     <div class="col-sm-9">
-                        <input type="text" name="firstName" id="firstName" class="required form-control" placeholder="Enter your first name" value="$!user.firstName" />
+                        <input type="text" name="firstName" id="firstName" class="required form-control trans-lookup" placeholder="Enter your first name" value="$!user.firstName" />
                     </div>
                 </div>
                 #end
                 #if ($surName == "true")
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="surName">Surname</label>
+                    <label class="col-sm-3 control-label trans-lookup" for="surName">Surname</label>
                     <div class="col-sm-9">
-                        <input type="text" name="surName" id="surName" class="form-control" placeholder="Enter your surname" value="$!user.surName" />
+                        <input type="text" name="surName" id="surName" class="form-control trans-lookup" placeholder="Enter your surname" value="$!user.surName" />
                     </div>
                 </div>
                 #end
                 #if ($email == "true")
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="email">Email</label>
+                    <label class="col-sm-3 control-label trans-lookup" for="email">Email</label>
                     <div class="col-sm-9">
-                        <input type="text" name="email" id="email" class="required form-control" placeholder="Enter your email address" value="$!user.email" />
+                        <input type="text" name="email" id="email" class="required form-control trans-lookup" placeholder="Enter your email address" value="$!user.email" />
                     </div>
                 </div>
                 #end
                 #if ($company == "true")
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="company">Company</label>
+                    <label class="col-sm-3 control-label trans-lookup" for="company">Company</label>
                     <div class="col-sm-9">
-                        <input type="text" name="company" id="company" class="form-control" placeholder="Enter your company name" />
+                        <input type="text" name="company" id="company" class="form-control trans-lookup" placeholder="Enter your company name" />
                     </div>
                 </div>
                 #end
                 #if ($phone == "true")
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="phone">Phone</label>
+                    <label class="col-sm-3 control-label trans-lookup" for="phone">Phone</label>
                     <div class="col-sm-9">
-                        <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your best contact number" value="$!user.phone" />
+                        <input type="text" name="phone" id="phone" class="form-control trans-lookup" placeholder="Enter your best contact number" value="$!user.phone" />
                     </div>
                 </div>
                 #end
                 #if ($message == "true")
                 <div class="form-group">
-                    <div class="col-sm-offset-3 col-sm-9">
-                        <textarea placeholder="Tell us how we can help" rows="10" class="form-control" name="message"></textarea>
+                    <div class="col-sm-offset-3 col-sm-9 ">
+                        <textarea placeholder="Tell us how we can help" rows="10" class="form-control trans-lookup" name="message"></textarea>
                     </div>
                 </div>
                 #end
