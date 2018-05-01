@@ -225,6 +225,8 @@
                         if (typeof config.onInvalid === 'function') {
                             config.onInvalid.call(this, form, config);
                         }
+
+                        form.forms('enable');
                     }
                 });
             });
