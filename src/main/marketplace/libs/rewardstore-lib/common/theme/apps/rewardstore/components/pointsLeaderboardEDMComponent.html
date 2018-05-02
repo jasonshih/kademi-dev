@@ -81,7 +81,7 @@
         <td valign="top" style="$baseStyles; ${cellStyles}">$name</td>
         #end
         <td valign="top" style="$baseStyles; ${cellStyles}">
-            $formatter.ifNull($point, 0) pts
+            $formatter.ifNull($formatter.toDecimal($point,0), 0) pts
         </td>
     </tr>
 #end
