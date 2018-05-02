@@ -1762,11 +1762,18 @@
             });
             
             var editor = ckeditorPlace.ckeditor(options.ckeditorOptions).editor;
-            editor.on('instanceReady', function () {
+            editor.on('instanceReady', function (e) {
                 flog('CKEditor is ready', component);
                 
                 if (typeof options.onComponentReady === 'function') {
                     options.onComponentReady.call(contentArea, component, editor);
+                }
+                if (options.iframeMode){
+                    e.editor.on('focus', function (e) {
+                        setTimeout(function () {
+                            $('#'+e.editor.id + '_top').parents('.'+e.editor.id).css('top', 0).css('position', 'fixed');
+                        }, 0);
+                    });
                 }
             });
         },

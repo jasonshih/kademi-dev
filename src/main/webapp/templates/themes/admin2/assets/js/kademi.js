@@ -1504,7 +1504,7 @@ function initImagePicker(target, basePath, pagePath) {
             wrapper.prepend(editorLoading);
         }
 
-        $.getScriptOnce('/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js', function () {
+        $.getScriptOnce('/theme/apps/contentEditor-lib/jquery.contentEditor.js', function () {
             var pageName = getFileName(window.location.href);
             var pagePath = target.attr('data-page-path') || '';
             var basePath = target.attr('data-base-path') || '';

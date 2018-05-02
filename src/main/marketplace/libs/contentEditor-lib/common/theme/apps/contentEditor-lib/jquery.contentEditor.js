@@ -42,6 +42,11 @@
         EDITOR_PATH + 'jquery.contentEditor.css',
         '/static/bootstrap-colorpicker/2.5.1/css/bootstrap-colorpicker.min.css'
     ];
+
+    contentEditor.keditorStyles = [
+        '/theme/apps/keditor-lib/dist/css/keditor-0.0.0.min.css',
+        '/theme/apps/keditor-lib/dist/css/keditor-components-0.0.0.min.css'
+    ];
     
     contentEditor.checkDependencies = function (options, callback) {
         flog('[jquery.contentEditor] checkDependencies');
@@ -58,6 +63,12 @@
             }
             
             $.each(contentEditor.dependStyles, function (i, style) {
+                options.contentStyles.push({
+                    href: style
+                });
+            });
+
+            $.each(contentEditor.keditorStyles, function (i, style) {
                 options.contentStyles.push({
                     href: style
                 });
