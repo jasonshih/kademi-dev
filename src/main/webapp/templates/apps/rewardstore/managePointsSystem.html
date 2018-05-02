@@ -329,7 +329,9 @@
                                     #set( $paginator = $formatter.paginator().pageSize(10).totalRecords($page.debitPointsCount).skipToStart(false))
                                     #foreach($debit in $paginator.records($page.debitPoints($paginator.start, $paginator.pageSize) ) )
                                     <tr>
-                                        <td>$debit.numPoints</td>
+                                        <td class="text-right">
+                                            $formatter.toDecimal($debit.numPoints, 0)
+                                        </td>
                                         <td>$formatter.formatDateTime($debit.issuedDate, $rootFolder.organisation.timezone)</td>
                                         <td>
                                             #if( $debit.issuedTo )
