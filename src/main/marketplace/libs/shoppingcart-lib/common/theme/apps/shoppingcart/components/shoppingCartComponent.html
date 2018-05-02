@@ -15,7 +15,7 @@
 
             #set($totalCost = 0)
             #set( $items = $formatter.sortByProperty( $page.shoppingCartItemBeans, "href" ) )
-            
+
             #foreach($item in $items )
                 <div class="media item-row">
                     <div class="media-left media-middle">
@@ -72,7 +72,7 @@
                 </div>
 
                 #set($totalCost = $totalCost + $subTotal)
-            
+
                 #if( $item.discountAmount )
                 <div class="row item-row">
                     <div class="col-sm-3 item-photo">
@@ -96,10 +96,10 @@
                     </div>
                     <div class="col-sm-1 item-action text-right center-content">
                     </div>
-                </div>                                    
+                </div>
                 #end
-                
-                
+
+
             #end
         </div>
         <div class="cart-footer bg-primary">
