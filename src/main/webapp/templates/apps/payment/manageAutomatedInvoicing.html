@@ -16,16 +16,42 @@
         <hr/>
 
         <table class="table table-striped">
+            <cols>
+                <col  style="width: 100px"  />
+                <col />
+                <col style="width: 100px"  />
+                <col style="width: 100px"  />
+                <col style="width: 100px"  />
+                <col style="width: 100px" />
+            </cols>
             <thead>
                 <tr>
-                    <th>Invoice title</th>
+                    <th colspan="2">Description</th>
+                    <th>Unit price</th>
+                    <th>Tax rate</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
                 </tr>
             </thead>
             <tbody>
                 #foreach($invoice in $page.nextInvoices)
                 <tr>
-                    <td>$invoice.invoiceList.title</td>
+                    <td colspan="2">$invoice.invoiceList.title</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <th class="text-right">$formatter.formatCurrency($invoice.invoiceList.total)</th>
                 </tr>
+                #foreach( $lineItem in $invoice.invoiceList.lineItems )
+                <tr>
+                    <td></td>
+                    <td>$lineItem.description</td>
+                    <td class="text-right">$formatter.formatCurrency($lineItem.unitPrice)</td>
+                    <td class="text-right">$formatter.formatCurrency($lineItem.taxRate)</td>
+                    <td class="text-right">$lineItem.quantity</td>
+                    <td class="text-right">$formatter.formatCurrency($lineItem.amount)</td>
+                </tr>
+                #end
                 #end
             </tbody>
         </table>
