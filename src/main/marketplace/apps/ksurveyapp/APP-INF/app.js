@@ -152,17 +152,17 @@ controllerMappings
 
 function initApp(orgRoot, webRoot, enabled) {
     log.info("initApp ksurveyapp: orgRoot={}", orgRoot);
-    
+
     var dbs = orgRoot.find('jsondb');
     var db = dbs.child(DB_NAME);
-    
+
     if (isNull(db)) {
         log.info('{} does not exist!', DB_TITLE);
-        
+
         db = dbs.createDb(DB_NAME, DB_TITLE, DB_NAME);
-        
+
         setAllowAccess(db, true);
-        
+
         saveMapping(db);
     }
 }
@@ -172,7 +172,7 @@ function checkRedirect(page, params) {
     if (!href.endsWith('/')) {
         href = href + '/';
     }
-    
+
     return views.redirectView(href);
 }
 
@@ -194,46 +194,46 @@ function loadSurveyFields(rootFolder, fields) {
     questions.forEach(function (q) {
         log.info('question {}', q);
         var surveyId = q.jsonObject.surveyId;
-        
+
         if (q.jsonObject.type == 1) {
             // Plain text question
             fields.addTextJourneyField("ksurvey-" + q.name, "KSurvey: " + q.jsonObject.title, function () {
                 log.info('callback function {}', arguments);
                 log.info('question name {}', q.name);
-                
+
                 var lead = arguments[0];
                 var profileId = lead.profile === undefined ? lead.name : lead.profile.name;
                 log.info("loadSurveyFields: profileid={}", profileId);
                 return getKsurveyFields(profileId, q.name, surveyId, true);
             });
-            
+
         } else {
             var answers = getAnswersByQuestion(q.name, surveyId);
             fields.addSelectJourneyField("ksurvey-" + q.name, "KSurvey: " + q.jsonObject.title, 'string', answers, ['contains', 'not_contains'], function () {
                 log.info('callback function {}', arguments);
                 log.info('question name {}', q.name);
-                
+
                 var lead = arguments[0];
                 var profileId = lead.profile === undefined ? lead.name : lead.profile.name;
-                
+
                 log.info("loadSurveyFields: profileid={}", profileId);
                 return getKsurveyFields(profileId, q.name, surveyId, false);
             });
         }
-        
+
     });
 }
 
 function getKsurveyFields(profileId, questionId, surveyId, plainText) {
     var jsonDB = applications.KongoDB.findDatabase(DB_NAME);
     log.info('jsondb is {}', jsonDB);
-    
+
     var db = jsonDB;
     if (db == null) {
         log.error("Could not find database " + DB_NAME);
         return null;
     }
-    
+
     var queryJson = {
         'stored_fields': ['answerBody', 'answerId'],
         'query': {
@@ -251,43 +251,43 @@ function getKsurveyFields(profileId, questionId, surveyId, plainText) {
             {"createdDate": "desc"}
         ]
     };
-    
+
     // find most recent response from this profile
     var searchResult = db.search(JSON.stringify(queryJson));
     log.info('getKsurveyFields search hit {}', searchResult.hits.totalHits);
     if (searchResult.hits.totalHits > 0) {
         if (plainText) {
             var hit = searchResult.hits.hits[0];
-            log.info('getKsurveyFields answerBody {}', hit.fields.answerBody.value);
+            // log.info('getKsurveyFields answerBody {}', hit.fields.answerBody.value);
             return hit.fields.answerBody.value;
         } else {
             var listAnswers = [];
             for (var i = 0; i < searchResult.hits.hits.length; i++) {
                 var hit = searchResult.hits.hits[i];
-                log.info('getKsurveyFields answerId {}', hit.fields.answerId.value);
+                //log.info('getKsurveyFields answerId {}', hit.fields.answerId.value);
                 // we need to return answer text to compare
                 var answer = db.child(hit.fields.answerId.value);
-                log.info('getKsurveyFields answer body {}', answer.jsonObject.body);
+                //log.info('getKsurveyFields answer body {}', answer.jsonObject.body);
                 listAnswers.push(answer.jsonObject.body);
             }
-            log.info(' ZZANH {}', listAnswers);
+            //log.info(' ZZANH {}', listAnswers);
             return listAnswers.join(' @KSURVEY@ ');
         }
-        
+
     }
 }
 
 function getAnswersByQuestion(questionId, surveyId) {
-    log.info('getAnswersByQuestion is {} {}', questionId, surveyId);
+    // log.info('getAnswersByQuestion is {} {}', questionId, surveyId);
     var jsonDB = applications.KongoDB.findDatabase(DB_NAME);
-    log.info('jsondb is {}', jsonDB);
-    
+    // log.info('jsondb is {}', jsonDB);
+
     var db = jsonDB;
     if (db == null) {
         log.error("Could not find database " + DB_NAME);
         return null;
     }
-    
+
     var queryJson = {
         'stored_fields': ['body'],
         'query': {
@@ -307,17 +307,17 @@ function getAnswersByQuestion(questionId, surveyId) {
     var arr = [];
     for (var i = 0; i < searchResult.hits.hits.length; i++) {
         var hit = searchResult.hits.hits[i];
-        log.info('getAnswersByQuestion answer body {}', hit.fields.body.value);
+        //log.info('getAnswersByQuestion answer body {}', hit.fields.body.value);
         arr.push(hit.fields.body.value);
     }
-    
+
     return arr;
 }
 
 function onKsurveySubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
     log.info('onKsurveySubmittedGoal customSettings {}', customSettings);
     log.info('onKsurveySubmittedGoal event parameters {}', event.parameters);
-    
+
     if (customSettings && eventParams && eventParams.survey && customSettings.survey) {
         return customSettings.survey === eventParams.survey;
     }
