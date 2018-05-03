@@ -91,9 +91,10 @@
                                 </button>
                                 <ul class="dropdown-menu pull-right" role="menu">
                                     <li class="presentation" role="menuitem"><a href="#" class="deleteCart"><i class="glyphicon glyphicon-trash"></i> Delete</a></li>
-                                    <li class="separator"></li>
-                                    <li class="presentation" role="menuitem"><a href="#" data-status="A" class="markFulfilled">Approved</a></li>
-                                    <li class="presentation" role="menuitem"><a href="#" data-status="S" class="markFulfilled">Shipped</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    #foreach( $statusEntry in $page.fulfilmentStatuses.entrySet() )
+                                    <li class="presentation" role="menuitem"><a href="#" data-status="$statusEntry.key" class="markFulfilled">$statusEntry.key - $statusEntry.value</a></li>
+                                    #end
                                 </ul>
                             </div>
                         </div>
