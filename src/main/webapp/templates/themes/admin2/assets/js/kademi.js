@@ -1563,12 +1563,12 @@ function initImagePicker(target, basePath, pagePath) {
     function initKeditor(target, isContentEditor, isEdmEditor, allGroups) {
         var previewLink = target.attr('data-preview');
         if (isContentEditor) {
-            $.getScriptOnce('/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js', function () {
+            $.getScriptOnce('/theme/apps/contentEditor-lib/jquery.contentEditor.js', function () {
                 initFullscreenEditorModal(target, isContentEditor, isEdmEditor, allGroups);
                 initFullscreenEditorPreview(target, previewLink);
             });
         } else {
-            $.getScriptOnce('/static/jquery.edmEditor/1.0.0/jquery.edmEditor-1.0.0.js', function () {
+            $.getScriptOnce('/theme/apps/edmEditor-lib/jquery.edmEditor.js', function () {
                 initFullscreenEditorModal(target, isContentEditor, isEdmEditor, allGroups);
                 initFullscreenEditorPreview(target, previewLink);
             });
