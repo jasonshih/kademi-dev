@@ -16,13 +16,13 @@
         },        
         {
             "css": {
-                "path": "/theme/apps/formBuilder/form-builder.min.css",
+                "path": "/theme/apps/formBuilder/form-builder.css",
                 "cssMedia": "all"
             }
         },
         {
             "css": {
-                "path": "/theme/apps/formBuilder/form-render.min.css",
+                "path": "/theme/apps/formBuilder/form-render.css",
                 "cssMedia": "all"
             }
         }        
