@@ -44,16 +44,22 @@ function validateProductClaim(page, params, files) {
     var result = {
         status: true
     };
-    
+    log.info('----> here');
     if(params.serialNumber){
         var serialNumber = params.serialNumber;
-        var serialNumberArray = [serialNumber]
+        var serialNumberArray = [serialNumber];
         var duplicateNumbers = contactRequestWithProductNumbersExists(page, serialNumberArray);
         if(duplicateNumbers.length > 0){
-            log.error('Address already exist');
+            log.error('Product serial number already exist');
             result.status = false;
             result.messages = ['Product serial number already exist'];
         }
+        if( !checkIfProductNumberExists(serialNumber) ){
+            log.error('Wrong product serial number');
+            result.status = false;
+            result.messages = ['Wrong product serial number'];
+        }
+         
     }else if(params.address){
         var address = params.address;
         if( contactRequestWithSameAddressExists(page, address) ){
@@ -82,6 +88,22 @@ function contactRequestWithSameAddressExists(page, address) {
     }
     
     return false;
+}
+
+function checkIfProductNumberExists(productNumber){
+    var salesDataApp = applications.get("salesData");
+    var salesDateSeries = salesDataApp.getSalesDataSeries('allowed-ac-models');
+    
+    var salesDataExtraFields = formatter.newMap();
+    salesDataExtraFields.put("serial-no", productNumber);
+
+    var salesDataRecord = salesDataApp.findDataPoint(salesDateSeries, null, null, salesDataExtraFields);
+    
+    if(salesDataRecord == null){
+        return false;
+    }else{
+        return true;
+    }
 }
 
 function contactRequestWithProductNumbersExists(page, numbers) {
@@ -330,25 +352,25 @@ function saveProductClaim(page, params, files) {
         var soldBy = "";
         var soldById = "";
         
-        if(params['supplier-orgId']){
-            soldBy = params['supplier-orgId'];
-        }else if (params['installer-orgId']){
-            soldBy = params['installer-orgId'];
-        }else{
-            log.error('Please select Supplier/Installer name');
-            result.status = false;
-            result.messages = ['Please select Supplier/Installer name'];
-            return views.jsonObjectView(JSON.stringify(result));
-        }
+        // if(params['supplier-orgId']){
+        //     soldBy = params['supplier-orgId'];
+        // }else if (params['installer-orgId']){
+        //     soldBy = params['installer-orgId'];
+        // }else{
+        //     log.error('Please select Supplier/Installer name');
+        //     result.status = false;
+        //     result.messages = ['Please select Supplier/Installer name'];
+        //     return views.jsonObjectView(JSON.stringify(result));
+        // }
         
-        if(page.parent.orgData.childOrg(soldBy)){
-            soldById = page.parent.orgData.childOrg(soldBy).id;
-        }else{
-            log.error('Supplier/Installer id: ' + soldBy + 'is invalid');
-            result.status = false;
-            result.messages = ['Supplier/Installer name is invalid'];
-            return views.jsonObjectView(JSON.stringify(result));
-        }
+        // if(page.parent.orgData.childOrg(soldBy)){
+        //     soldById = page.parent.orgData.childOrg(soldBy).id;
+        // }else{
+        //     log.error('Supplier/Installer id: ' + soldBy + 'is invalid');
+        //     result.status = false;
+        //     result.messages = ['Supplier/Installer name is invalid'];
+        //     return views.jsonObjectView(JSON.stringify(result));
+        // }
         
         var indoorSerialNumbersToCheck = [];
         

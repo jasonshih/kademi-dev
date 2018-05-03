@@ -1,4 +1,6 @@
 (function ($) {
+    var step3Ready = false;
+
     $(function () {
         initWizard();
         initDateTimePickers();
@@ -6,6 +8,9 @@
         initOrgPickers();
         initBSBNumber();
         initIndoorSerialCheck();
+        bottomNextPrev();
+        initProductModelNumber();
+        initAutoFillStoreData();
         
         $(".claimRegisterProductForm").forms({
             beforePostForm: function(form, config, data) {
@@ -100,7 +105,40 @@
             $("#" + $(this).data("email-to")).val(email);
             $("#confirm-" + $(this).data("email-to")).val(email);
         });
-    }   
+    }  
+    
+    function initProductModelNumber() {
+        $('#prod1-model-number').on('change', function(e) {
+            $('#prod1-indoor-model-number-view').val($(e.target).find(':selected').data("product-model"));
+            $('#prod1-indoor-model-number').val($(e.target).find(':selected').data("product-model"));
+            $('#prod1-consumer-bonus').val($(e.target).find(':selected').data("consumer-bonus"));
+        });
+        
+        $('#prod2-model-number').on('change', function(e) {
+            $('#prod2-indoor-model-number-view').val($(e.target).find(':selected').data("product-model"));
+            $('#prod2-indoor-model-number').val($(e.target).find(':selected').data("product-model"));
+            $('#prod2-consumer-bonus').val($(e.target).find(':selected').data("consumer-bonus"));
+        });
+        
+        $('#prod3-model-number').on('change', function(e) {
+            $('#prod3-indoor-model-number-view').val($(e.target).find(':selected').data("product-model"));
+            $('#prod3-indoor-model-number').val($(e.target).find(':selected').data("product-model"));
+            $('#prod3-consumer-bonus').val($(e.target).find(':selected').data("consumer-bonus"));
+        });
+    }
+    
+    function initAutoFillStoreData() {
+        $('#store-name').on('change', function(e) {
+            
+            if ( $("#suppliers option[value='" + $(e.target).val() + "']").length > 0){
+                $('#store-suburb').val($("#suppliers option[value='" + $(e.target).val() + "']").data("suburb"));
+                $('#store-state').val($("#suppliers option[value='" + $(e.target).val() + "']").data("state").toLowerCase());
+            }else{
+                $('#store-suburb').val("");
+                $('#store-state').val("");
+            }
+        });
+    }
     
     function initBSBNumber() {
         
@@ -149,83 +187,9 @@
     }
     
     function initIndoorSerialCheck(){
-        
-        $("#prod1-indoor-serial-number").change(function() {
-            $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", true);
-        	$.ajax({
-                url: /salesDataClaimsProducts/,
-                type: 'POST',
-                dataType: 'JSON',
-                data: {
-                    validate: true,
-                    serialNumber: $('#prod1-indoor-serial-number').val()
-                },
-                success: function (resp) {
-                    $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", false);
-                    if (!resp.status) {
-                        showErrorField($('#prod1-indoor-serial-number'));
-                        showErrorMessage($(".step-pane:eq(2)"), null, 'A claim has already been submitted from this serial number "' + $("#prod1-indoor-serial-number").val() + '"!');
-                        $("#prod1-indoor-serial-number").val("");  
-                    } 
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    flog('Error in checking address: ', jqXHR, textStatus, errorThrown);
-                    $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", false);
-                }
-            });
+        $(".product-serial-number").on("change", function() {
+            step3Ready = false;
         });
-        
-        $("#prod2-indoor-serial-number").change(function() {
-            $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", true);
-        	$.ajax({
-                url: /salesDataClaimsProducts/,
-                type: 'POST',
-                dataType: 'JSON',
-                data: {
-                    validate: true,
-                    serialNumber: $('#prod2-indoor-serial-number').val()
-                },
-                success: function (resp) {
-                    $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", false);
-                    if (!resp.status) {
-                        showErrorField($('#prod2-indoor-serial-number'));
-                        showErrorMessage($(".step-pane:eq(2)"), null, 'A claim has already been submitted from this serial number "' + $("#prod2-indoor-serial-number").val() + '"!');
-                        $("#prod2-indoor-serial-number").val("");    
-                    } 
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    flog('Error in checking address: ', jqXHR, textStatus, errorThrown);
-                    $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", false);
-                }
-            });
-        });
-        
-        $("#prod3-indoor-serial-number").change(function() {
-            $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", true);
-        	$.ajax({
-                url: /salesDataClaimsProducts/,
-                type: 'POST',
-                dataType: 'JSON',
-                data: {
-                    validate: true,
-                    serialNumber: $('#prod3-indoor-serial-number').val()
-                },
-                success: function (resp) {
-                    $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", false);
-                    if (!resp.status) {
-                        showErrorField($('#prod3-indoor-serial-number'));
-                        showErrorMessage($(".step-pane:eq(2)"), null, 'A claim has already been submitted from this serial number "' + $("#prod3-indoor-serial-number").val() + '"!');
-                        $("#prod3-indoor-serial-number").val("");        
-                    } 
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    flog('Error in checking address: ', jqXHR, textStatus, errorThrown);
-                    $("#ClaimRegisterProductForm button, #ClaimRegisterProductForm :input").prop("disabled", false);
-                }
-            });
-        });
-        
-       
     }
     
     
@@ -253,7 +217,7 @@
 
             if (data.step === 5) {
                // $(".last-step").html(""); $("#ClaimRegisterProductForm .step-pane:not(.last-step)").clone().css("display", "block").find(":input").prop("disabled", true).end().appendTo(".last-step")
-                $(".last-step").html(""); 
+                $(".summary-last-step").html(""); 
                 $("#ClaimRegisterProductForm .step-pane:not(.last-step)")
                         .find("select :selected").each(function() { 
                             $(this).attr("selected", "selected"); 
@@ -263,13 +227,23 @@
 						.css("display", "block")
                         .find(":input").each(function() {
                             $(this).replaceWith('<span class="summary-field" data-parent-step="' + $(this).parents(".step-pane").data("step") + '">' + ($(this).find(":selected").html() === undefined ? $(this).val().replace("C:\\fakepath\\", "") : $(this).find(":selected").html()) + '</span>'); 
-                        }).end().appendTo(".last-step");
+                        }).end().appendTo(".summary-last-step");
                 $("body").on("click", ".summary-field", function() {
                     $("li[data-step='" + $(this).data("parent-step") + "']").click();
                 });
+                
+                var str1 = $('#errmsg12:last-child').parent('.col-md-12').children('.summary-field').text();
+                var res1 = str1.substr(0, 3);
+                $('#errmsg12:last-child').parent('.col-md-12').children('.summary-field').text( res1 + '-xxx' );
+                
+                var str2 = $('#getAccountNoOnSummary:last-child').parent('.col-md-12').children('.summary-field').text();
+                var res2 = str2.substr(0, 3);
+                $('#getAccountNoOnSummary:last-child').parent('.col-md-12').children('.summary-field').text( res2 + '-xxxxxxx' );
+                
+                setTimeout(function(){ $(window).scrollTop(0); }, 100);
             }
         });
-
+        
         myWizard.on('actionclicked.fu.wizard', function (evt, data) {
             if (data.direction === "previous") {
                 $(".form-message").remove();
@@ -292,6 +266,14 @@
                 if( $('#confirm-email').val() != $('#email').val()){
                     showErrorField($('#confirm-email'));
                     showErrorMessage(stepPane1, null, 'Email address and confirm email address must be similar');
+                    evt.preventDefault();
+                    error = true;
+                }
+                
+                var phoneReg = new RegExp("^[+]?[0-9]*$");
+                if(!phoneReg.test($('#phone').val())){
+                    showErrorField($('#phone'));
+                    showErrorMessage(stepPane1, null, 'Please check the format of your phone number');
                     evt.preventDefault();
                     error = true;
                 }
@@ -323,22 +305,9 @@
                     }
                 }
                 
-                if($('#contact-email').is(":visible") && $('#contact-email').val() != $('#confirm-contact-email').val()){
-                    showErrorField($('#confirm-contact-email'));
-                    showErrorMessage(stepPane2, null, 'Supplier email address and confirm email address must be similar');
-                    evt.preventDefault();
-                    error = true;
-                }
-                
-                if($('#installer-email').is(":visible") && $('#installer-email').val() != $('#confirm-installer-email').val()){
-                    showErrorField($('#confirm-installer-email'));
-                    showErrorMessage(stepPane2, null, 'Installer email address and confirm email address must be similar');
-                    evt.preventDefault();
-                    error = true;
-                }
-                
                 if (!error) {
                     $(".form-message").remove();
+                    step3Ready = false;
                 }
             }
 
@@ -379,8 +348,95 @@
                     }
                 }
                 
+                if($('#prod1-indoor-serial-number').is(":visible") && $('#prod2-indoor-serial-number').is(":visible")){
+                    if( $('#prod1-indoor-serial-number').val() == $('#prod2-indoor-serial-number').val() ){
+                        showErrorField($('#prod2-indoor-serial-number'));
+                        showErrorMessage(stepPane3, null, 'You must enter a unique serial number for each product.');
+                        evt.preventDefault();
+                        error = true;
+                    }
+                }
+                
+                if($('#prod2-indoor-serial-number').is(":visible") && $('#prod3-indoor-serial-number').is(":visible")){
+                    if( $('#prod2-indoor-serial-number').val() == $('#prod3-indoor-serial-number').val() ){
+                        showErrorField($('#prod3-indoor-serial-number'));
+                        showErrorMessage(stepPane3, null, 'You must enter a unique serial number for each product.');
+                        evt.preventDefault();
+                        error = true;
+                    }
+                    
+                    if( $('#prod1-indoor-serial-number').val() == $('#prod3-indoor-serial-number').val() ){
+                        showErrorField($('#prod3-indoor-serial-number'));
+                        showErrorMessage(stepPane3, null, 'You must enter a unique serial number for each product.');
+                        evt.preventDefault();
+                        error = true;
+                    }
+                }
+                
                 if (!error) {
                     $(".form-message").remove();
+                    
+                    if (!step3Ready) {
+                        evt.preventDefault();
+                        
+                        var productsCount = $(".product-serial-number:visible").length;
+                        var checkedProductsCount = 0;
+                        var error = false;
+                        
+                        if (productsCount > 0) {
+                            $("#ClaimRegisterProductForm button, #ClaimRegisterProduct:input:not(#prod1-indoor-model-number):not(#prod2-indoor-model-number):not(#prod3-indoor-model-number)").prop("disabled", true);
+                        }
+                        
+                        $(".product-serial-number:visible").each(function() {
+                            var $this = $(this);
+                            
+                        	$.ajax({
+                                url: /salesDataClaimsProducts/,
+                                type: 'POST',
+                                dataType: 'JSON',
+                                data: {
+                                    validate: true,
+                                    serialNumber: $(this).val()
+                                },
+                                success: function (resp) {
+                                    checkedProductsCount++;
+
+                                    if (!resp.status) {
+                                        error = true;
+                                        
+                                        showErrorField($this);
+                                        showErrorMessage($(".step-pane:eq(2)"), null, 'Serial number does not exist or a claim has already been submitted from this serial number "' + $this.val() + '"!');
+                                    } 
+                                    
+                                    if (checkedProductsCount === productsCount) {
+                                        $("#ClaimRegisterProductForm button, #ClaimRegisterProduct:input:not(#prod1-indoor-model-number):not(#prod2-indoor-model-number):not(#prod3-indoor-model-number)").prop("disabled", false);
+                                        
+                                        if (!error) {
+                                            step3Ready = true;
+                                            
+                                            $(".btn-next").click();
+                                        }
+                                    }
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    checkedProductsCount++;
+                                    error = true;
+                                    
+                                    flog('Error in checking address: ', jqXHR, textStatus, errorThrown);
+                                    
+                                    if (checkedProductsCount === productsCount) {
+                                        $("#ClaimRegisterProductForm button, #ClaimRegisterProduct:input:not(#prod1-indoor-model-number):not(#prod2-indoor-model-number):not(#prod3-indoor-model-number)").prop("disabled", false);
+                                        
+                                        if (!error) {
+                                            step3Ready = true;
+                                            
+                                            $(".btn-next").click();
+                                        }
+                                    }
+                                }
+                            });
+                        });
+                    }
                 }
             }
 
@@ -416,7 +472,19 @@
             }
 
             if (data.step === 5) {
-                $('#ClaimRegisterProductForm').trigger('submit');
+                error = false;
+                var stepPane5 = stepPane.eq(4);
+                resetValidation(stepPane5);
+                $(".form-message .error-message, .form-message .error-message-title").remove();
+                
+                if (!validateFormFields(stepPane5)) {
+                    evt.preventDefault();
+                    error = true;
+                }
+                console.log("error --> ", error)
+                if(!error){
+                    $('#ClaimRegisterProductForm').trigger('submit');
+                }
                 
                 if (!error) {
                     $(".form-message").remove();
@@ -427,6 +495,7 @@
         $("body").on("change", ".dynamic-toggle", function() {
             $("." + $(this).data("group-class")).hide();
             $($(this).find(":selected").data("toggle")).show();
+            $("." + $(this).data("group-class") + ":not(:visible) :input").val("");
         });
         
         var options = {
@@ -441,6 +510,9 @@
             };
         
         var input = document.getElementById("address1");
+        
+        $("input, select").on("keydown", function(e) { if (e.keyCode === 13) { e.preventDefault(); return false; } });
+        
         google.maps.event.addDomListener(input, 'keydown', function(event) { 
           if (event.keyCode === 13) { 
               event.preventDefault(); 
@@ -504,6 +576,30 @@
         });
     }
 
+function bottomNextPrev(){
+
+
+
+$('.bottom-next-prev .bottom-next').click(function(){
+
+    $('#myWizard .actions .btn-next').click();
+    $(this).html($('#myWizard .actions .btn-next').html());
+    
+    $('html, body').animate({
+        scrollTop: ($('#myWizard .steps-container').offset().top)
+    },500);
+
+});
+
+$('*').click(function(){
+    $('.bottom-next-prev .bottom-next').html($('#myWizard .actions .btn-next').html());
+});
+$('.bottom-next-prev .bottom-prev').click(function(){
+
+    $('#myWizard .actions .btn-prev').click();
+    
+});
+}
 
 })(jQuery);
 

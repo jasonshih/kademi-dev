@@ -1,40 +1,11 @@
-#set( $orgs = [] )
-#set ($query = '{  
-                    "stored_fields":[  
-                        "orgTitle",
-                        "orgId",
-                        "email"
-                    ],
-                    "query":{  
-                        "bool":{  
-                            "must":{  
-                                "term":{  
-                                    "orgTypes":"installer"
-                                }
-                            }
-                        }
-                    },
-                    "size":10000
-                }')
-
-#set( $queryRes = $applications.search.searchManager.search($query, 10000, 'org'))
-
-#foreach( $org in $queryRes.hits.hits )
-    #set( $orgObj = {
-            "orgTitle": $org.fields.orgTitle.value,
-            "orgId": $org.fields.orgId.value,
-            "orgEmail": $org.fields.email.value 
-            }
-        )
-    #if( $orgs.add($orgObj) ) #end
-#end
-
 #set( $supplierOrgs = [] )
 #set ($query = '{  
                     "stored_fields":[  
                         "orgTitle",
                         "orgId",
-                        "email"
+                        "email",
+                        "addressState",
+                        "addressLine2"
                     ],
                     "query":{  
                         "bool":{  
@@ -54,11 +25,22 @@
     #set( $orgObj = {
             "orgTitle": $org.fields.orgTitle.value,
             "orgId": $org.fields.orgId.value,
-            "orgEmail": $org.fields.email.value 
+            "orgEmail": $org.fields.email.value,
+            "state": $org.fields.addressState.value,
+            "suburb": $org.fields.addressLine2.value
             }
         )
     #if( $supplierOrgs.add($orgObj) ) #end
 #end
+
+#set( $productModels = {} )
+#foreach( $record in $page.find("/sales/ac-model-detail").history)
+    #set( $productModels[$record.productSku] = {
+        "modelNumber": $record.extraFields["Indoor Model"],
+        "consumerBonus": $record.extraFields["Consumer Bonus"],
+        "sku": $record.productSku
+    }) 
+#end 
 
 <form method="post" id="ClaimRegisterProductForm" action="/salesDataClaimsProducts/" class="form-horizontal fuelux claimRegisterProductForm" enctype="multipart/form-data">
     <div class="row print-hide">
@@ -95,9 +77,9 @@
         </div>
         <div class="actions">
             <button type="button" class="btn btn-default btn-prev">
-                <span class="glyphicon glyphicon-arrow-left"></span>Prev
+                <span class="glyphicon glyphicon-arrow-left"></span> &shy; &shy; Prev
             </button>
-            <button type="button" class="btn btn-primary btn-next" data-last="Complete">Next
+            <button type="button" class="btn btn-primary btn-next" data-last="Complete">Next &shy; &shy;
                 <span class="glyphicon glyphicon-arrow-right"></span>
             </button>
         </div>
@@ -157,9 +139,9 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="col-md-12" for="suburb"><span class="compulsory-field">*</span>Suburb:</label>
+                            <label class="col-md-12" for="suburb">Suburb:</label>
                             <div class="col-md-12">
-                                <input class="form-control required-if-shown" type="text" name="suburb" id="suburb" placeholder="Suburb" />
+                                <input class="form-control" type="text" name="suburb" id="suburb" placeholder="Suburb" />
                             </div>
                         </div>
                     </div>
@@ -186,7 +168,7 @@
                         <div class="form-group">
                             <label class="col-md-12" for="phone"><span class="compulsory-field">*</span>Phone/Mobile:</label>
                             <div class="col-md-12">
-                                <input class="form-control required-if-shown number" type="number" name="phone" value="$!user.phone"  id="phone" placeholder="Your Phone/Mobile" />
+                                <input class="form-control required-if-shown number" type="text" name="phone" value="$!user.phone"  id="phone" placeholder="Your Phone/Mobile" />
                             </div>
                         </div>
                     </div>
@@ -265,21 +247,8 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="required-action-type" class="col-md-12"><span class="compulsory-field">*</span>Please select the following:</label>
-                            <div class="col-md-12">
-                                <select id="required-action-type" name="required-action-type" class="required form-control dynamic-toggle" data-group-class="required-actions">
-                                    <option value="">[No action selected]</option>
-                                    <option data-toggle="#supplier-info-section, #client-info-section" value="Supply and Install (Invoice must contain Product/s purchased and installation details)">Supply and Install (Invoice must contain Product/s purchased and installation details)</option>
-                                    <option data-toggle="#installer-info-section, #client-info-section" value="Supply of air-conditioning unit ONLY (Product/s purchased without installation)">Supply of air-conditioning unit ONLY (Product/s purchased without installation)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
                                     
-                    <div class="required-actions" id="client-info-section" style="display: none;">
+                    <div class="required-actions" id="client-info-section">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-md-12" for="purchase-date"><span class="compulsory-field">*</span>Date of purchase:</label>
@@ -291,18 +260,23 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-md-12" for="store-name"><span class="compulsory-field">*</span>Store/Company name:</label>
+                                <label class="col-md-12" for="store-name"><span class="compulsory-field">*</span> Dealer/Retailer Name:</label>
                                 <div class="col-md-12">
-                                    <input class="required-if-shown form-control" type="text" name="store-name" id="store-name" placeholder="" />
+                                    <input class="required-if-shown form-control" type="text" name="store-name" id="store-name" placeholder="" list="suppliers" />
+                                      <datalist id="suppliers">
+                                          #foreach( $supplier in $supplierOrgs)
+                                            <option value="$supplier.orgTitle" data-suburb="$supplier.suburb" data-state="$supplier.state">
+                                          #end
+                                      </datalist>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-md-12" for="store-suburb"><span class="compulsory-field">*</span>Suburb:</label>
+                                <label class="col-md-12" for="store-suburb">Dealer/Retailer Suburb:</label>
                                 <div class="col-md-12">
-                                    <input class="required-if-shown form-control" type="text" name="store-suburb" id="store-suburb" placeholder="" />
+                                    <input class="form-control" type="text" name="store-suburb" id="store-suburb" placeholder="" />
                                 </div>
                             </div>
                         </div>
@@ -336,115 +310,30 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-md-offset-5 ignore">
-                            <h6>Maximum file size of 5MB</h6>
+                        <div class="col-md-4 col-md-offset-4 ignore">
+                            <h6 class="text-center">Maximum file size of 5MB</h6>
                         </div>
 
                     </div>
 
-                    <div class="required-actions" id="supplier-info-section" style="display: none;">
-                        <div class="col-md-12">
-                            <h4>Supplier information</h4>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-md-12" for="supplier-orgId"><span class="compulsory-field">*</span>Supplier Name:</label>
-                                <div class="col-md-12">
-                                    <!-- <input class="form-control required" type="text" name="supplier-org-name" id="supplier-org-name" placeholder="" /> -->
-                                    <select id="supplier-orgId" name="supplier-orgId" class="form-control required-if-shown" data-email-to="contact-email">
-                                        <option value="">[No supplier selected]</option>                                
-                                        #foreach($org in $supplierOrgs)
-                                            <option value="$org.orgId" data-email="$!org.orgEmail">$org.orgTitle</option>
-                                        #end
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-md-12" for="supplier-abn">ABN:</label>
-                                <div class="col-md-12">
-                                    <input class="form-control" type="text" name="supplier-abn" id="supplier-abn" placeholder="" />
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-md-12" for="supplier-trade-license">Applicable trade license no:</label>
-                                <div class="col-md-12">
-                                    <input class="form-control" type="text" name="supplier-trade-license" id="supplier-trade-license" placeholder="" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-md-12" for="supplier-name">Contact name (First & Last Name):</label>
-                                <div class="col-md-12">
-                                    <input class="form-control" type="text" name="supplier-name" id="supplier-name" placeholder="" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-md-12" for="supplier-email"><span class="compulsory-field">*</span>Email address:</label>
-                                <div class="col-md-12">
-                                    <input class="required-if-shown form-control" type="email" name="supplier-email" id="contact-email" placeholder="" />
-                                </div>
-                            </div>
-                        </div>
-                        
-                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-md-12"><span class="compulsory-field">*</span>Confirm email address:</label>
-                                <div class="col-md-12">
-                                    <input class="required-if-shown form-control" type="email" id="confirm-contact-email" placeholder="" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-7 col-md-offset-3">
-                            <h6>*Only upload if the installation was invoiced separately from where you purchased the unit from.</h6>
-                        </div>
-                    </div>
-
-
-                    <div class="required-actions" id="installer-info-section" style="display: none;">
+                    <div class="required-actions" id="installer-info-section">
                         <div class="col-md-12">
                             <h4>Installer information</h4>
                         </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-md-12" for="installation-date">Date of installation:</label>
-                                <div class="col-md-12">
-                                    <input class="form-control" type="text" name="installation-date" id="installation-date" placeholder="" />
-                                </div>
-                            </div>
-                        </div>
-                        
                         
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-md-12" for="installer-orgId"><span class="compulsory-field">*</span>Installer Name (company name):</label>
+                                <label class="col-md-12" for="installer-orgId">install Business Name:</label>
                                 <div class="col-md-12">
-                                    <select id="installer-orgId" name="installer-orgId" class="form-control required-if-shown" data-email-to="installer-email">
-                                        <option value="">[No installer selected]</option>                                
-                                        #foreach($org in $orgs)
-                                            <option value="$org.orgId" data-email="$org.orgEmail">$org.orgTitle</option>
-                                        #end
-                                    </select>
+                                    <input class="form-control" type="text" name="installer-orgId" id="installer-orgId" placeholder="" />
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-md-12" for="installer-contact-name">Contact name (name of the installer):</label>
+                                <label class="col-md-12" for="installer-contact-name">Installer Name:</label>
                                 <div class="col-md-12">
                                     <input class="form-control" type="text" name="installer-contact-name" id="installer-contact-name" placeholder="" />
                                 </div>
@@ -468,22 +357,13 @@
                                 </div>
                             </div>
                         </div>
-
+ 
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-md-12" for="installer-email"><span class="compulsory-field">*</span>Email address:</label>
+                                <label class="col-md-12" for="installer-email"> Email address:</label>
                                 <div class="col-md-12">
-                                    <input class="required-if-shown form-control" type="email" name="installer-email" id="installer-email" placeholder="" />
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-md-12"><span class="compulsory-field">*</span>Confirm email address:</label>
-                                <div class="col-md-12">
-                                    <input class="required-if-shown form-control" type="email" id="confirm-installer-email" placeholder="" />
+                                    <input class="form-control  required-if email" type="email" name="installer-email" id="installer-email" placeholder="" />
                                 </div>
                             </div>
                         </div>
@@ -493,13 +373,13 @@
                                 <div class="col-md-12">
                                     <input type="file" id="installation-invoice-image" name="installation-invoice-image" style="display:  inline-block;opacity:  0;position:  absolute;" class="btn btn-primary">
                                     <button class="btn btn-primary" name="installation-invoice-image-btn" id="installation-invoice-image-btn">UPLOAD PDF OR IMAGE OF THE INSTALLATION INVOICE</button>
-                                    <div class="btn btn-success success-installation-image"><i class="fa fa-check"></i></div>
+                                    <div class="btn btn-success success-installation-image ignore"><i class="fa fa-check"></i></div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-7 col-md-offset-3">
-                            <h6>*Only upload if the installation was invoiced separately from where you purchased the unit from.</h6>
+                        <div class="col-md-6 col-md-offset-3 ignore">
+                            <h6 class="text-center">Only upload if the installation was invoiced separately from where you purchased the unit from.</h6>
                         </div>
                     </div>
 
@@ -528,8 +408,8 @@
 
                         <div class="col-md-12">
                             <p>
-                                A maximum of three <b>(3)</b> eligible products purchased in one <b>(1)</b> transaction can be claimed towards the cash bounc offer.<br>
-                                Eligible claimants may submit a maximum of <b>one(1)</b> Eligible Claim per household in the Promotions.<br>
+                                A maximum of <b> three (3)</b> eligible products purchased in <b> one (1)</b> transaction can be claimed towards the <b> cash back </b> offer.<br>
+                                Eligible claimants may submit a maximum of <b>one (1)</b> Eligible Claim per household in the Promotions.<br>
                                 Duplicate tax invoices will be rejected.<br>
                                 <b>Note: Business applications will NOT be accepted. Invoices under a business name and/or with ABN will NOT be accepted</b>
                             </p>
@@ -550,8 +430,8 @@
                                         <div class="col-md-12">
                                             <select id="prod1-model-number" name="prod1-model-number" class="form-control required-if-shown">
                                                 <option value="">Please select from the options</option>
-                                                #foreach($product in $applications.productsApp.products)
-                                                    $formatter.option( $product.name, $product.title, "" )
+                                                #foreach($product in $productModels)
+                                                    <option value="$product.sku" data-product-model="$product.modelNumber" data-consumer-bonus="$product.consumerBonus">$product.sku</option>
                                                 #end
                                             </select>
                                         </div>
@@ -560,18 +440,22 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="prod1-indoor-model-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor Unit Model No:</label>
+                                        <label for="prod1-indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
                                         <div class="col-md-12">
-                                            <input class="required-if-shown form-control" type="text" name="prod1-indoor-model-number" id="prod1-indoor-model-number" placeholder="" />
+                                            <input class="required-if-shown form-control" type="text" id="prod1-indoor-model-number-view" disabled=true placeholder="Ex A15900474YK" />
+                                        </div>
+                                        <div class="col-md-12">
+                                            <input class="form-control ignore" type="hidden" name="prod1-consumer-bonus" id="prod1-consumer-bonus" />
+                                            <input class="form-control ignore" type="hidden" name="prod1-indoor-model-number" id="prod1-indoor-model-number" />
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="prod1-indoor-serial-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor serial No:</label>
+                                        <label for="prod1-indoor-serial-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor Serial No:</label>
                                         <div class="col-md-12">
-                                            <input class="required-if-shown form-control" type="text" name="prod1-indoor-serial-number" id="prod1-indoor-serial-number" placeholder="" />
+                                            <input class="required-if-shown form-control product-serial-number" type="text" name="prod1-indoor-serial-number" id="prod1-indoor-serial-number" placeholder="Ex A15900474YK" />
                                         </div>
                                     </div>
                                 </div>
@@ -590,8 +474,8 @@
                                         <div class="col-md-12">
                                             <select id="prod2-model-number" name="prod2-model-number" class="form-control required-if-shown">
                                                 <option value="">Please select from the options</option>
-                                                #foreach($product in $applications.productsApp.products)
-                                                    $formatter.option( $product.name, $product.title, "" )
+                                                #foreach($product in $productModels)
+                                                    <option value="$product.sku" data-product-model="$product.modelNumber" data-consumer-bonus="$product.consumerBonus">$product.sku</option>
                                                 #end
                                             </select>
                                         </div>
@@ -600,18 +484,22 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="prod2-indoor-model-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor Unit Model No:</label>
+                                        <label for="prod2-indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
                                         <div class="col-md-12">
-                                            <input class="required-if-shown form-control" type="text" name="prod2-indoor-model-number" id="prod2-indoor-model-number" placeholder="" />
+                                            <input class="required-if-shown form-control" type="text" name="prod2-indoor-model-number" id="prod2-indoor-model-number-view" placeholder="Ex A15900474YK" disabled=true />
+                                        </div>
+                                        <div class="col-md-12">
+                                            <input class="form-control ignore" type="hidden" name="prod2-consumer-bonus" id="prod2-consumer-bonus" />
+                                            <input class="form-control ignore" type="hidden" name="prod2-indoor-model-number" id="prod2-indoor-model-number" />
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="prod2-indoor-serial-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor serial No:</label>
+                                        <label for="prod2-indoor-serial-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor Serial No:</label>
                                         <div class="col-md-12">
-                                            <input class="required-if-shown form-control" type="text" name="prod2-indoor-serial-number" id="prod2-indoor-serial-number" placeholder="" />
+                                            <input class="required-if-shown form-control product-serial-number" type="text" name="prod2-indoor-serial-number" id="prod2-indoor-serial-number" placeholder="Ex A15900474YK" />
                                         </div>
                                     </div>
                                 </div>
@@ -630,8 +518,8 @@
                                         <div class="col-md-12">
                                             <select id="prod3-model-number" name="prod3-model-number" class="form-control required-if-shown">
                                                 <option value="">Please select from the options</option>
-                                                #foreach($product in $applications.productsApp.products)
-                                                    $formatter.option( $product.name, $product.title, "" )
+                                                #foreach($product in $productModels)
+                                                    <option value="$product.sku" data-product-model="$product.modelNumber" data-consumer-bonus="$product.consumerBonus">$product.sku</option>
                                                 #end
                                             </select>
                                         </div>
@@ -640,18 +528,22 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="prod3-indoor-model-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor Unit Model No:</label>
+                                        <label for="prod3-indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
                                         <div class="col-md-12">
-                                            <input class="required-if-shown form-control" type="text" name="prod3-indoor-model-number" id="prod3-indoor-model-number" placeholder="" />
+                                            <input class="form-control" type="text" name="prod3-indoor-model-number" id="prod3-indoor-model-number-view" placeholder="Ex A15900474YK" disabled=true />
+                                        </div>
+                                        <div class="col-md-12">
+                                            <input class="form-control ignore" type="hidden" name="prod3-consumer-bonus" id="prod3-consumer-bonus" />
+                                            <input class="form-control ignore" type="hidden" name="prod3-indoor-model-number" id="prod3-indoor-model-number" />
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="prod3-indoor-serial-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor serial No:</label>
+                                        <label for="prod3-indoor-serial-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor Serial No:</label>
                                         <div class="col-md-12">
-                                            <input class="required-if-shown form-control" type="text" name="prod3-indoor-serial-number" id="prod3-indoor-serial-number" placeholder="" />
+                                            <input class="required-if-shown form-control product-serial-number" type="text" name="prod3-indoor-serial-number" id="prod3-indoor-serial-number" placeholder="Ex A15900474YK" />
                                         </div>
                                     </div>
                                 </div>
@@ -692,10 +584,11 @@
                             <label for="bsb-number" class="col-md-12"><span class="compulsory-field">*</span>BSB Number:</label>
                             <div class="col-md-12">
                                 <div class="row">
-                                    <div class="col-xs-6"><input class="required-if-shown form-control bsb-number-12 ignore" type="text" id="bsb-number-1" placeholder="" /></div>
-                                    <div class="col-xs-6"><input class="required-if-shown form-control bsb-number-12 ignore" type="text" id="bsb-number-2" placeholder="" /></div>
+                                    <div class="col-xs-6 col-sm-2"><input class="required-if-shown form-control bsb-number-12 ignore text-center" type="text" id="bsb-number-1" placeholder="" /></div>
+                                    <div class="col-xs-6 col-sm-2"><input class="required-if-shown form-control bsb-number-12 ignore text-center" type="text" id="bsb-number-2" placeholder="" /></div>
+                                    <div class="col-xs-12 col-sm-6 ignore"><span style="line-height: 2.4; ">Example: 011-652</span></div>
                                 </div>
-                                <span style=" position: absolute; top: -2px; left: 49.2%; font-size: 26px;" class="ignore">-</span>
+                                <span class="ignore bsb-number-dashe">-</span>
                                 <input class="required-if-shown form-control" type="hidden" name="bsb-number" id="bsb-number" placeholder="" />
                                 <div id="errmsg12"></div>
                             </div>
@@ -707,6 +600,7 @@
                             <label for="account-no" class="col-md-12"><span class="compulsory-field">*</span>Account No:</label>
                             <div class="col-md-12">
                                 <input class="required-if-shown form-control" type="text" name="account-no" id="account-no" placeholder="" />
+                                <div id="getAccountNoOnSummary"></div>
                             </div>
                         </div>
                     </div>
@@ -714,13 +608,37 @@
                     <div class="col-md-12">
                         <h6>To avoid delays on your payment please ensure you provide accurate bank account details.</h6>
                     </div>
-
                 </div>
             </div>
             <div class="step-pane sample-pane alert last-step" data-step="5">
-
+                <div class="summary-last-step"></div>
+                <div class="row">
+                    <div class="col-md-12"><div class="col-md-12">
+                    <div class="form-check">
+                      <input class="form-check-input required" type="checkbox"  value="true" id="defaultCheck1" name="check-terms-and-conditions">
+                      <label class="form-check-label" for="defaultCheck1" style=" vertical-align:  top; ">
+                        <span class="compulsory-field">*</span> By ticking this box, you agree to the promotion's <a href="https://mhiaapromo.com.au/terms-and-conditions/"> Terms and Conditions </a> and our <a href="https://mhiaa.com.au/privacy-policy-terms-of-use/"> Privacy Policy </a>.
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="true" id="defaultCheck2" name="check-if-competition">
+                      <label class="form-check-label" for="defaultCheck2" style=" vertical-align:  top; ">
+                        I would like to be entered into the Cruise Through Winter - Win a cruise for 2! Competition.
+                      </label>
+                    </div>
+                    </div>
+                </div> </div> 
             </div>
         </div>
+        
+        <div class="bottom-next-prev" style="padding: 2em 25px;">
+            <div class="row">
+                <div class="col-sm-4 col-xs-12"></div>
+                <div class="col-sm-2 col-xs-6 "><button type="button" class="btn btn-block btn-default  btn-prev"><span class="glyphicon glyphicon-arrow-left"></span> &shy; &shy;Prev </button></div>
+                <div class="col-sm-2 col-xs-6"><button type="button" class="btn btn-block btn-primary bottom-next" data-last="Complete">Next &shy; &shy; <span class="glyphicon glyphicon-arrow-right"></span></button></div>
+            </div>
+        </div>    
+        
     </div>
 
 </form>
