@@ -57,9 +57,9 @@
                         <div class="input-group col-md-6">
                             <select id="searchFulfillmentState" class="form-control">
                                 <option value="">Any fulfillment state</option>
-                                $formatter.option("N", "Not fulfilled", $params.fulfillment)
-                                $formatter.option("C", "Fulfilled", $params.fulfillment)
-                                ## $formatter.option("D", "Deleted", $params.fulfillment)
+                                #foreach( $statusEntry in $page.fulfilmentStatuses.entrySet() )
+                                <option value="$statusEntry.key">$statusEntry.key - $statusEntry.value</option>
+                                #end
                             </select>
                         </div>
                     </div>
