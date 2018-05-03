@@ -15,11 +15,11 @@ $(function () {
 
         $('.orgSelectorWrap').on('click', 'a:not(.btn-reporting-clear-selected-org)', function (e) {
             e.preventDefault();
-
             var orgId = $(this).attr('data-orgId');
             var orgTitle;
+
             if (orgId) {
-                orgTitle = $(this).text();
+                orgTitle = $(this).find('small').text().trim();
                 $.cookie('selectedOrg', orgId, {expires: 360, path: '/'});
             } else {
                 $.cookie('selectedOrg', "", {expires: 360, path: '/'});

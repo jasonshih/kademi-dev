@@ -5,24 +5,24 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/formBuilder/form-builder.js"
+                "path": "/theme/apps/formBuilder/form-builder.min.js"
             }
         },
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/formBuilder/form-render.js"
+                "path": "/theme/apps/formBuilder/form-render.min.js"
             }
         },        
         {
             "css": {
-                "path": "/theme/apps/formBuilder/form-builder.css",
+                "path": "/theme/apps/formBuilder/form-builder.min.css",
                 "cssMedia": "all"
             }
         },
         {
             "css": {
-                "path": "/theme/apps/formBuilder/form-render.css",
+                "path": "/theme/apps/formBuilder/form-render.min.css",
                 "cssMedia": "all"
             }
         }        
