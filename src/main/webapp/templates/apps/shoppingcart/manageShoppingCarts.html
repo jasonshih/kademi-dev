@@ -85,12 +85,15 @@
                             </div>
 
                             <div class="btn-group btn-group-sm">
-                                <a role="button" href="#" class="btn btn-success markFulfilled"><i class="fa fa-check"></i> Fulfilled</a>
+                                <a role="button" href="#" data-status="C" class="btn btn-success markFulfilled"><i class="fa fa-check"></i> Fulfilled</a>
                                 <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu pull-right" role="menu">
                                     <li class="presentation" role="menuitem"><a href="#" class="deleteCart"><i class="glyphicon glyphicon-trash"></i> Delete</a></li>
+                                    <li class="separator"></li>
+                                    <li class="presentation" role="menuitem"><a href="#" data-status="A" class="markFulfilled">Approved</a></li>
+                                    <li class="presentation" role="menuitem"><a href="#" data-status="S" class="markFulfilled">Shipped</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -364,6 +367,8 @@
         <td class="icon clickable" data-href="$v.href" title="$statusMsg">
             #if($statusClass)
             <i class="$statusClass"></i>
+            #else
+            <i class="badge badge-info">$v.cart.fulfilmentState</i>
             #end
         </td>
         #end

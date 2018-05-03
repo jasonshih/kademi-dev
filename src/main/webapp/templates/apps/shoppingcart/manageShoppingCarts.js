@@ -76,15 +76,19 @@ function initButtons() {
     });
     $(document.body).on('click', '.markFulfilled', function (e) {
         e.preventDefault();
+        var link = $(e.target).closest("a");
+        flog("Clicked", link);
+        var linkText = link.text();
+        var statusCode = link.data("status");
         var listToFulfill = [];
         $(document.body).find(':checkbox.cart-check:checked').each(function () {
             var href = $(this).data("cartid");
             listToFulfill.push(href);
         });
-        if (listToFulfill.length > 0 && confirm("Are you sure you want to mark " + listToFulfill.length + " shopping carts as fulfilled?")) {
+        if (listToFulfill.length > 0 && confirm("Are you sure you want to mark " + listToFulfill.length + " shopping carts as " + linkText + "?")) {
             $(document.body).find('.check-all').check(false).change();
             flog(listToFulfill.join(','));
-            markFulfilled(listToFulfill.join(','));
+            markFulfilled(listToFulfill.join(','), statusCode);
         }
     });
     $(document.body).on('change', '#searchFulfillmentState', function (e) {
@@ -92,6 +96,7 @@ function initButtons() {
         doSearch()
     });
 }
+
 
 function deleteCarts(listToDelete) {
     for (var i = 0; i < listToDelete.length; i++) {
@@ -101,12 +106,13 @@ function deleteCarts(listToDelete) {
     Msg.info("Successfully deleted " + listToDelete.length + " carts");
 }
 
-function markFulfilled(listToFulfill) {
+function markFulfilled(listToFulfill, statusCode) {
     $.ajax({
         type: "POST",
         url: window.location.pathname,
         data: {
-            fulfill: listToFulfill
+            fulfill: listToFulfill,
+            status : statusCode
         },
         success: function (content) {
             flog('response', content);
