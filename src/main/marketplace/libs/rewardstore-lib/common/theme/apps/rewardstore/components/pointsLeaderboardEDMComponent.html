@@ -22,6 +22,7 @@
     #else
         #set( $myPointsInfo = $applications.rewardStore.myPointsInfo($pointsBucket, $formatter.toInteger($numUsers), $since) )
     #end
+    #set ($reward = $applications.rewardStore.findPointsBucket($pointsBucket))
 #end
 
 #if(!$showUsername)
@@ -31,6 +32,13 @@
 #set ($cellStyles = 'padding-top: ' + $cellPadding + 'px; padding-bottom:' + $cellPadding + 'px; padding-right: ' + $cellPadding + 'px; padding-left: ' + $cellPadding + 'px')
 #set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
 
+#set ($showCurrentUser = false)
+#if ($reward)
+    #set ($participantsList = $applications.rewardStore.findParticipantsForReward($userResource.thisProfile, $reward))
+    #if ($participantsList && !$participantsList.isEmpty())
+        #set ($showCurrentUser = true)
+    #end
+#end
 <!--[if (gte mso 9)|(IE)]>
 <table cellspacing="0" cellpadding="0" width="$width" border="0">
     <tr>
@@ -58,8 +66,8 @@
             #set( $rank = $rank + 1 )
         #end
 
-        #if( !$foundThis )
-        #set( $thisExtProfileBean = $userResource.extProfileBean )
+        #if( !$foundThis && $showCurrentUser)
+            #set( $thisExtProfileBean = $userResource.extProfileBean )
             #renderPointRecord($rank $thisExtProfileBean.formattedName() $myPointsInfo.myPointsTotal)
         #end
     #else
