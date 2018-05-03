@@ -1504,22 +1504,20 @@ function initImagePicker(target, basePath, pagePath) {
             wrapper.prepend(editorLoading);
         }
 
-        $.getScriptOnce('/theme/apps/contentEditor-lib/jquery.contentEditor.js', function () {
-            var pageName = getFileName(window.location.href);
-            var pagePath = target.attr('data-page-path') || '';
-            var basePath = target.attr('data-base-path') || '';
+        var pageName = getFileName(window.location.href);
+        var pagePath = target.attr('data-page-path') || '';
+        var basePath = target.attr('data-base-path') || '';
 
-            target.contentEditor({
-                iframeMode: true,
-                snippetsUrl: './_components?fileName=' + pageName,
-                snippetsHandlersUrl: './_components?handlers&fileName=' + pageName,
-                basePath: basePath,
-                pagePath: pagePath,
-                allGroups: allGroups,
-                onReady: function () {
-                    editorLoading.hide();
-                }
-            });
+        target.contentEditor({
+            iframeMode: true,
+            snippetsUrl: './_components?fileName=' + pageName,
+            snippetsHandlersUrl: './_components?handlers&fileName=' + pageName,
+            basePath: basePath,
+            pagePath: pagePath,
+            allGroups: allGroups,
+            onReady: function () {
+                editorLoading.hide();
+            }
         });
     }
 
@@ -1563,15 +1561,11 @@ function initImagePicker(target, basePath, pagePath) {
     function initKeditor(target, isContentEditor, isEdmEditor, allGroups) {
         var previewLink = target.attr('data-preview');
         if (isContentEditor) {
-            $.getScriptOnce('/theme/apps/contentEditor-lib/jquery.contentEditor.js', function () {
-                initFullscreenEditorModal(target, isContentEditor, isEdmEditor, allGroups);
-                initFullscreenEditorPreview(target, previewLink);
-            });
+            initFullscreenEditorModal(target, isContentEditor, isEdmEditor, allGroups);
+            initFullscreenEditorPreview(target, previewLink);
         } else {
-            $.getScriptOnce('/theme/apps/edmEditor-lib/jquery.edmEditor.js', function () {
-                initFullscreenEditorModal(target, isContentEditor, isEdmEditor, allGroups);
-                initFullscreenEditorPreview(target, previewLink);
-            });
+            initFullscreenEditorModal(target, isContentEditor, isEdmEditor, allGroups);
+            initFullscreenEditorPreview(target, previewLink);
         }
     }
 
