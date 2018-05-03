@@ -6,7 +6,7 @@
             #set( $startDate = $formatter.addMonths($formatter.now, $monthsNeg))
             #set( $points = "N/A" )
             #if ($store && $store != "")
-                #set( $points = $applications.rewardStore.sumAllPoints( $profile, $store, $startDate, null) )
+                #set( $points = $formatter.toDecimal($applications.rewardStore.sumAllPoints( $profile, $store, $startDate, null),0) )
 
                 #if (!$page)
                     #set( $points = 999)
