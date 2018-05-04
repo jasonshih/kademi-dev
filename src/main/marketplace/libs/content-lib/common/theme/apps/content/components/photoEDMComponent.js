@@ -3,15 +3,7 @@
     var edmEditor = $.edmEditor;
     var flog = KEditor.log;
 
-    function getPxValue(value) {
-        if (value) {
-            return value.replace('px', '');
-        } else {
-            return '';
-        }
-    }
-
-    KEditor.components['photoEDM'] = KEditor.components['photo'] = {
+    KEditor.components['photoEDM'] = {
         init: function (contentArea, container, component, keditor) {
             flog('init "photoEDM" component', component);
             
@@ -39,7 +31,7 @@
                 component.attr('data-background-color', tdWrapper.attr('bgcolor') || '');
                 
                 $.each(['padding-top', 'padding-bottom', 'padding-left', 'padding-right'], function (i, dataCss) {
-                    component.attr('data-' + dataCss, getPxValue(tdWrapper.css(dataCss)));
+                    component.attr('data-' + dataCss, edmEditor.getPxValue(tdWrapper.css(dataCss)));
                 });
                 
                 componentContent.html(dynamicElement);
@@ -100,7 +92,7 @@
                             });
                         }
                     });
-                    
+
                     edmEditor.initDefaultComponentControls(form, keditor, {
                         dynamicComponent: true
                     });
