@@ -60,11 +60,12 @@
     #set($foundThis = false)
     #if( $myPointsInfo.hasPoints )
         #foreach($leader in $myPointsInfo.allMemberPoints )
-            #set($foundThis = false)
+            #set ($foundCurrUser = false)
             #if( $applications.rewardStore.isSameParticipant($leader.member, $profile) )
                 #set($foundThis = true)
+                #set ($foundCurrUser = true)
             #end
-            #renderPointRecord($rank $leader.member.formattedName() $leader.numPoints $foundThis)
+            #renderPointRecord($rank $leader.member.formattedName() $leader.numPoints $foundCurrUser)
             #set( $rank = $rank + 1 )
         #end
 
