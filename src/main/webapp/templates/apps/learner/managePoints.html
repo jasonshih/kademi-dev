@@ -115,6 +115,15 @@
 
                 <hr />
 
+                <div id="points-stats" class="hide">
+                    services.criteriaBuilders.points.groupBy("pointsTag").count("id")
+                    #set( $stats = $page.pointsByTag )
+                    $stats
+                    <table class="table table-striped" >
+
+                    </table>
+                </div>
+
                 <div class="table-responsive" id="pointsContainer">
                     <table class="table table-striped table-hover pagination-container" id="pointsTable">
                         <thead>
@@ -166,9 +175,9 @@
                                 <td>$!formatter.formatDateTime($p.expiryDate, $page.organisation.timezone)</td>
                                 <td>
                                     #if($isDebit)
-                                    <span class="label label-warning">-$p.numPoints</span>
+                                    <span class="label label-warning">- $formatter.toDecimal($p.numPoints,0)</span>
                                     #else
-                                    <span class="label label-success">$p.numPoints</span>
+                                    <span class="label label-success">$formatter.toDecimal($p.numPoints,0)</span>
                                     #end
                                 </td>
                                 <td>$!p.reason</td>
