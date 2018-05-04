@@ -50,6 +50,8 @@
             <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>Rank</strong></th>
             #if($showUsername == "true")
             <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>Participant</strong></th>
+            #else
+            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>&nbsp;</strong></th>
             #end
             <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>Points</strong></th>
         </tr>
@@ -91,6 +93,12 @@
         <td height="$rowHeight" valign="top" style="$baseStyles; ${cellStyles}; $!fontBold">$rank</td>
         #if($showUsername == "true")
         <td valign="top" style="$baseStyles; ${cellStyles}; $!fontBold">$name</td>
+        #else
+            #if ($found)
+                <td valign="top" style="$baseStyles; ${cellStyles}; $!fontBold">$name</td>
+            #else
+                <td valign="top" style="$baseStyles; ${cellStyles}; $!fontBold">&nbsp;</td>
+            #end
         #end
         <td valign="top" style="$baseStyles; ${cellStyles}; $!fontBold">
             $formatter.ifNull($formatter.toDecimal($point,0), 0) pts
