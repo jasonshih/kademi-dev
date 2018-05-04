@@ -58,17 +58,17 @@
     #set($foundThis = false)
     #if( $myPointsInfo.hasPoints )
         #foreach($leader in $myPointsInfo.allMemberPoints )
-
+            #set($foundThis = false)
             #if( $applications.rewardStore.isSameParticipant($leader.member, $profile) )
                 #set($foundThis = true)
             #end
-            #renderPointRecord($rank $leader.member.formattedName() $leader.numPoints)
+            #renderPointRecord($rank $leader.member.formattedName() $leader.numPoints $foundThis)
             #set( $rank = $rank + 1 )
         #end
 
         #if( !$foundThis && $showCurrentUser)
             #set( $thisExtProfileBean = $userResource.extProfileBean )
-            #renderPointRecord($rank $thisExtProfileBean.formattedName() $myPointsInfo.myPointsTotal)
+            #renderPointRecord($rank $thisExtProfileBean.formattedName() $myPointsInfo.myPointsTotal true)
         #end
     #else
         #renderPointRecord("1" "[Please select point bucket]" "99")
@@ -82,13 +82,17 @@
 </table>
 <![endif]-->
 
-#macro (renderPointRecord $rank $name $point)
+#macro (renderPointRecord $rank $name $point $found)
+    #set ($fontBold = "")
+    #if ($found)
+        #set ($fontBold = "font-weight: bold")
+    #end
     <tr bgcolor="$!bodyBgColor">
-        <td height="$rowHeight" valign="top" style="$baseStyles; ${cellStyles}">$rank</td>
+        <td height="$rowHeight" valign="top" style="$baseStyles; ${cellStyles}; $!fontBold">$rank</td>
         #if($showUsername == "true")
-        <td valign="top" style="$baseStyles; ${cellStyles}">$name</td>
+        <td valign="top" style="$baseStyles; ${cellStyles}; $!fontBold">$name</td>
         #end
-        <td valign="top" style="$baseStyles; ${cellStyles}">
+        <td valign="top" style="$baseStyles; ${cellStyles}; $!fontBold">
             $formatter.ifNull($formatter.toDecimal($point,0), 0) pts
         </td>
     </tr>
