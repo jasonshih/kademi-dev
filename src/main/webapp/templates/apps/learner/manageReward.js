@@ -192,6 +192,10 @@ function refreshTableEvents() {
 
                 var $tableContent = newDom.find('#pointsFooter');
                 $('#pointsFooter').replaceWith($tableContent);
+                
+                flog("update ponts stats", $('#points-stats'));
+                var $pointsStats = newDom.find("#points-stats");
+                $('#points-stats').replaceWith($pointsStats);
 
                 refreshTableEvents();
             },
@@ -742,7 +746,7 @@ function initHistorySearch() {
 
 function doHistorySearch() {
     flog('doHistorySearch');
-    Msg.info("Doing search...", 2000);
+    Msg.info("Doing search...", 'points', 2000);
 
     var data = {
         dataQuery: $("#data-query").val(),
@@ -779,9 +783,14 @@ function doHistorySearch() {
         dataType: 'html',
         success: function (content) {
             flog('response', content);
-            Msg.success("Search complete", 2000);
-            var newBody = $(content).find("#pointsTable");
+            Msg.success("Search complete", 'points', 2000);
+            var newDom = $(content);
+            var newBody = newDom.find("#pointsTable");
             target.replaceWith(newBody);
+            
+            var $pointsStats = newDom.find("#points-stats");
+            $('#points-stats').replaceWith($pointsStats);            
+            
             history.pushState(null, null, link);
 
             refreshTableEvents();

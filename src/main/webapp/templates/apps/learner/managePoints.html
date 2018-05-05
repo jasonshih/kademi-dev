@@ -116,9 +116,9 @@
                 <hr />
                                 
 
-                <div class="row">
+                <div class="row" id="points-stats">
                     <div class="col-lg-6">
-                        <div id="points-stats" class="">                                                                               
+                        <div class="">                                                                               
                             #set( $crit = $services.criteriaBuilders.points.groupBy("pointsTag").count("id").sum("numPoints") )
                             #set( $crit = $crit.ge("issuedDate", $services.queryManager.commonStartDate) )
                             #set( $crit = $crit.lt("issuedDate", $services.queryManager.commonFinishDate) )
@@ -141,7 +141,7 @@
                         </div>                        
                     </div>
                     <div class="col-lg-6">
-                        <div id="points-stats" class="">                                                                               
+                        <div class="">                                                                               
                             #set( $crit =  $services.criteriaBuilders.pointsDebit.groupBy("reasonCode").count("id").sum("numPoints") )
                             #set( $crit = $crit.ge("issuedDate", $services.queryManager.commonStartDate) )
                             #set( $crit = $crit.lt("issuedDate", $services.queryManager.commonFinishDate) )
