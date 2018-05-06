@@ -49,14 +49,7 @@
                                     </div>
 
                                     <div class="col-sm-2">
-                                        <label class="control-label" for="name">Expiry Date</label>
-                                        <div class="input-group col-sm-12">
-                                            <input name="expiryDate" class="form-control date-pickers" value="$formatter.formatJodaDate($page.expiryDate, "dd/MM/yyyy HH:mm")" />
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-2">
-                                        <label class="control-label" for="name">Quote #</label>
+                                        <label class="control-label" for="name">PO #</label>
                                         <div class="input-group col-sm-12">
                                             <input name="quoteNumber" class="form-control" value="$page.number" />
                                         </div>
@@ -158,19 +151,19 @@
                                 </tbody>
                                 <tfoot>
                                     <tr class="subtotal">
-                                        <td colspan="6" rowspan="3"></td>
+                                        <td colspan="5" rowspan="3"></td>
                                         <td>Subtotal</td>
-                                        <td class="subtotal-field">0.00</td>
+                                        <td class="subtotal-field">$page.subTotal</td>
                                     </tr>
 
                                     <tr class="gst">
                                         <td>GST</td>
-                                        <td>0.00</td>
+                                        <td>$page.tax</td>
                                     </tr>
 
                                     <tr class="total">
                                         <td>Total</td>
-                                        <td class="global-total-field">0.00</td>
+                                        <td class="global-total-field">$page.total</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -190,7 +183,7 @@
         <script type="text/javascript">
             var currentQuoteId = '$page.name';
             $(function () {
-                initEditableQuote();
+                //initEditableQuote();
             });
         </script>
     </body>

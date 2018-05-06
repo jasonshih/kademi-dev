@@ -55,9 +55,10 @@
             </div><!-- /.modal -->
         </div>
 
+        #set($purchaseOrders = $page.children.ofType("purchaseOrder"))
+
         <div class="panel panel-default">
             <div class="panel-body" id="purchase-order-table-wrapper">
-                #set($purchaseOrders = $page.children.ofType("purchaseOrder"))
                 <table id="purchase-order-wrapper" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                     <colgroup>
                         <col width="" />
@@ -79,6 +80,7 @@
                             <th>Tax</th>
                             <th>Total</th>
                             <th>Issue Date</th>
+                            <th>Items</th>
                             <th class="action"></th>
                         </tr>
                     </thead>
@@ -93,7 +95,7 @@
                             <td>$v.tax</td>
                             <td>$v.total</td>
                             <td><abbr title="$formatter.formatDateISO8601($v.issuedDate)" class="timeago">$v.issuedDate</abbr></td>
-
+                            <td>$!v.lineItems.size()</td>
                             <td class="action">
                                 <div class="btn-group btn-group-sm">
                                     <a href="$v.name" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i></a>
