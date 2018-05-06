@@ -1,12 +1,12 @@
-function initManageInvoices() {
-    flog("initManageInvoices");
+function initManagePurchaseOrders() {
+    flog("initManagePurchaseOrders");
 
     initTimeAgo();
     initInvoiceFilter();
     initModalForm();
     initDateTimePicker();
     initInvoiceDelete();
-    initInvoiceTable();
+    initTable();
     initMarkAsSentInvoice();
 }
 
@@ -80,31 +80,9 @@ function initDateTimePicker() {
     });
 }
 
-function initMarkAsSentInvoice() {
-    $('#invoice-wrapper').on('click', '.markAsSent', function (e) {
-        e.preventDefault();
 
-        var btn = $(this);
-        var href = btn.attr('href');
-        var url = window.location.href + "/" + href;
-
-        $.ajax({
-            url: url,
-            method: 'POST',
-            dataType: 'json',
-            data: {
-                'markAsSent': true
-            },
-            success: function (data) {
-                Msg.success('Invoice marked as sent.', "invoiceSent");
-                reloadInvoiceTable();
-            }
-        });
-    });
-}
-
-function initInvoiceDelete() {
-    $('#invoice-wrapper').on('click', '.XInvoice', function (e) {
+function initDelete() {
+    $('#purchase-order-wrapper').on('click', '.XInvoice', function (e) {
         e.preventDefault();
         var href = $(this).attr('href');
         confirmDelete(href, getFileName(href), function () {
@@ -114,8 +92,8 @@ function initInvoiceDelete() {
     });
 }
 
-function initInvoiceTable() {
-    $('#invoice-wrapper').DataTable({
+function initTable() {
+    $('#purchase-order-wrapper').DataTable({
         searching: false,
         paging: false,
         "order": [[6, 'desc'], [1, 'desc']],
@@ -141,11 +119,11 @@ var filter_options = {
 
 function reloadInvoiceTable() {
     var href = window.location.pathname + '?' + $.param(filter_options);
-    $('#invoiceTableWrapper').reloadFragment({
+    $('#purchase-order-table-wrapper').reloadFragment({
         url: href,
         whenComplete: function () {
             $('abbr.timeago').timeago();
-            initInvoiceTable();
+            initTable();
             initMarkAsSentInvoice();
         }
     });
