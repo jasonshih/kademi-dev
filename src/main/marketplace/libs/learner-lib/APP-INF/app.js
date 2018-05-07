@@ -4,6 +4,7 @@ controllerMappings.addComponent("learner/components", "coursePicker", "html", "D
 controllerMappings.addComponent("learner/components", "courseDescription", "html", "Displays course description", "Learning App");
 controllerMappings.addComponent("learner/components", "moduleStatuses", "html", "Displays table of module statuses", "Learning App");
 controllerMappings.addComponent("learner/components", "certificates", "html", "Lists the user's certificates", "Learning App");
+controllerMappings.addComponent("learner/components", "certificate", "html", "Shows certificate content", "Learning App");
 
 controllerMappings.addQuery("/APP-INF/queries/learningCompletedModules.query.json", ["profile"], []);
 controllerMappings.addQuery("/APP-INF/queries/learningStartedModules.query.json", ["profile"], []);
