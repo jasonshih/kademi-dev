@@ -204,7 +204,7 @@
                         <tr>
                             <td height="56" valign="middle" bgcolor="$!{backgroundItem}" style="padding-left: 15px; padding-right: 15px; $baseStyles">
                                 <a href="$productUrl" style="$!linkStyles" title="$productTitle">$formatter.truncate($productTitle, 20)</a><br />
-                                <span style="font-size: 12px;">$productPrice pts</span>
+                                <span style="font-size: 12px;">$formatter.formatCurrency($productPrice, false) pts</span>
                             </td>
                         </tr>
                     </table>
