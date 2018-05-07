@@ -109,7 +109,7 @@
                                 <th class="quantity">Quantity</th>
                                 <th class="price">Unit Price</th>
                                 <th class="discount">Discount %</th>
-                                <th class="tax-rate">Tax Rate</th>
+                                <th class="tax-rate">Tax %</th>
                                 <th class="amount">Amount</th>
                             </tr>
                         </thead>
@@ -185,12 +185,17 @@
                             <tr class="subtotal">
                                 <td colspan="6" rowspan="3"></td>
                                 <td>Subtotal</td>
-                                <td class="subtotal-field">0.00</td>
+                                <td class="text-right">$page.subTotal</td>
+                            </tr>
+
+                            <tr class="">
+                                <td>Tax</td>
+                                <td class="text-right">$page.tax</td>
                             </tr>
 
                             <tr class="total">
                                 <td>Total</td>
-                                <td class="global-total-field">0.00</td>
+                                <td class="text-right">$page.total</td>
                             </tr>
                         </tfoot>
                     </table>
