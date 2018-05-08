@@ -20,3 +20,6 @@ body.certificate div.body, #editor {
     #end    
 }
 
+@page {
+    size: a4 portrait;
+}
