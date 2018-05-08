@@ -12,6 +12,17 @@
     #else
     #set($bg = "/theme/img/photo_holder.png")
     #end
+    
+    #if ($formatter.isNull($tilesPerRow) 
+        #set($tilesPerRow = 3)
+    #end
+    
+    #if ($tilesPerRow > 12)
+        #set($tilesPerRow = 12)
+    #end
+    
+    #set ($tilesCols = $formatter.toInteger(12 / $tilesPerRow))
+    
 
     #set ($col = "col-md-6 col-lg-4")
     #if ($featured && $featured.contains($reward.name))
@@ -50,7 +61,7 @@
     #set($bg = "/theme/img/photo_holder.png")
     #end
 
-    <div class="col-md-6 col-lg-4">
+    <div class="col-md-6 col-lg-$!tilesCols">
         <div class="thumbnail rewardItem rewardTile">
             <a href="$!reward.href" class="promotionTile" style="background-image: url($bg);">
                 <div class="rewardItemCaption">
