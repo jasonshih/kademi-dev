@@ -2,28 +2,28 @@
 <div class="row">
     #set( $rewards = $applications.rewards.rewardsHome )
     #set( $activeRewards = $rewards.activeRewards )
-    
+
     #if ($formatter.isNull($tilesPerRow))
         #set($tilesPerRow = 3)
     #end
-    
+
     #if ($tilesPerRow > 12)
         #set($tilesPerRow = 12)
     #end
-    
+
     #set ($tilesCols = 12 / $tilesPerRow)
     #set ($tilesCols = $formatter.toInteger($tilesCols))
-    
+
     #if( $activeRewards.isEmpty() )
     #else
     #foreach( $reward in $rewards.activeRewards )
 
     #if( $reward.imageHash )
-    #set( $bg = "/_hashes/files/$reward.imageHash/alt-300-300.png" )
+    #set( $bg = "/_hashes/files/$reward.imageHash/alt-640-480.png" )
     #else
     #set($bg = "/theme/img/photo_holder.png")
     #end
-    
+
     #set ($col = "col-md-6 col-lg-" + $tilesCols)
     #if ($featured && $featured.contains($reward.name))
     #set ($col = "col-md-12 col-lg-8")
