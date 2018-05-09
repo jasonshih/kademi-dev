@@ -1,8 +1,19 @@
 #if($page)
 <div class="row">
     #set( $rewards = $applications.rewards.rewardsHome )
-
     #set( $activeRewards = $rewards.activeRewards )
+    
+    #if ($formatter.isNull($tilesPerRow))
+        #set($tilesPerRow = 3)
+    #end
+    
+    #if ($tilesPerRow > 12)
+        #set($tilesPerRow = 12)
+    #end
+    
+    #set ($tilesCols = 12 / $tilesPerRow)
+    #set ($tilesCols = $formatter.toInteger($tilesCols))
+    
     #if( $activeRewards.isEmpty() )
     #else
     #foreach( $reward in $rewards.activeRewards )
@@ -12,8 +23,8 @@
     #else
     #set($bg = "/theme/img/photo_holder.png")
     #end
-
-    #set ($col = "col-md-6 col-lg-4")
+    
+    #set ($col = "col-md-6 col-lg-" + $tilesCols)
     #if ($featured && $featured.contains($reward.name))
     #set ($col = "col-md-12 col-lg-8")
     #set ($hero = "promotionTileHero")
@@ -50,7 +61,7 @@
     #set($bg = "/theme/img/photo_holder.png")
     #end
 
-    <div class="col-md-6 col-lg-4">
+    <div class="col-md-6 col-lg-$!tilesCols">
         <div class="thumbnail rewardItem rewardTile">
             <a href="$!reward.href" class="promotionTile" style="background-image: url($bg);">
                 <div class="rewardItemCaption">
