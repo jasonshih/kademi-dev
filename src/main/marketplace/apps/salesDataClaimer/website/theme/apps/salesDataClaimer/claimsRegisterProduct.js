@@ -148,29 +148,61 @@
           return ! isNaN (o-0);
         }  
         
-        $(".bsb-number-12").keyup(function(e){
-            txtVal = $(this).val();  
-            if(isNumber(txtVal) && txtVal.length>3) {
-                $(this).val(txtVal.substring(0,3) )
-            }
-        });
+        // $(".bsb-number-12").keyup(function(e){
+        //     txtVal = $(this).val();  
+        //     if(isNumber(txtVal) && txtVal.length>3) {
+        //         $(this).val(txtVal.substring(0,3) )
+        //     }
+        // });
+        
+        $(".bsb-number-12").inputmask('999');
         
         //called when key is pressed in textbox
         $("#bsb-number-1, #bsb-number-2").keydown(function (e) {
              //if the letter is not digit then display error and don't type anything
-             if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+             if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) && (e.which < 96 || e.which > 105)) {
                 //display error message
                 $("#errmsg12").html("Digits Only").show().fadeOut("slow");
                 return false;
             }
-            else{
-               $('#bsb-number-1').bind('keypress', function(e) {
-                    if($(this).val().length == 2){
-                      $('#bsb-number-2').focus();
-                    }
-                });   
+        });
+        
+        // navigator.sayswho= (function(){
+        //     var ua= navigator.userAgent, tem, 
+        //     M= ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+        //     if(/trident/i.test(M[1])){
+        //         tem=  /\brv[ :]+(\d+)/g.exec(ua) || [];
+        //         return 'IE '+(tem[1] || '');
+        //     }
+        //     if(M[1]=== 'Chrome'){
+        //         tem= ua.match(/\b(OPR|Edge)\/(\d+)/);
+        //         if(tem!= null) return tem.slice(1).join(' ').replace('OPR', 'Opera');
+        //     }
+        //     M= M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
+        //     if((tem= ua.match(/version\/(\d+)/i))!= null) M.splice(1, 1, tem[1]);
+        //     return M.join(' ');
+        // })();
+        
+        // if( navigator.sayswho.contains("IE") || navigator.sayswho.contains("ie")){
+        //     $("#bsb-number-1").keyup(function () {
+        //         if($(this).val().replace("_","").length == 3){
+        //             $('#bsb-number-2').focus();
+        //         }
+        //     });  
+        // }else{
+        //     $("#bsb-number-1").keyup(function () {
+        //         if($(this).val().replace("_","").length == 3){
+        //             $('#bsb-number-2').focus();
+        //         }
+        //     });
+        // }
+        
+        $("#bsb-number-1").keyup(function () {
+            if($(this).val().replace("_","").length == 3){
+                $('#bsb-number-2').focus();
             }
         });
+    
         
         $("#bsb-number-1").keyup(function(){
             $('#bsb-number').val( $(this).val() +  dash + $('#bsb-number-2').val() );
@@ -270,10 +302,10 @@
                     error = true;
                 }
                 
-                var phoneReg = new RegExp("^[+]?[0-9]*$");
+                var phoneReg = new RegExp("^[0-9]*$");
                 if(!phoneReg.test($('#phone').val())){
                     showErrorField($('#phone'));
-                    showErrorMessage(stepPane1, null, 'Please check the format of your phone number');
+                    showErrorMessage(stepPane1, null, 'Please check the format of your phone number. Only use numbers and no special characters.');
                     evt.preventDefault();
                     error = true;
                 }
@@ -293,16 +325,23 @@
                     error = true;
                 }
                 
-                if($('#purchase-date').length > 0 && validateFormFields(stepPane2) ){
+                if( $('#purchase-date').length > 0 ){
                     var purchaseDate = parseDate($('#purchase-date').val());
                     var month = purchaseDate.getMonth() + 1;
                     var year = purchaseDate.getFullYear();
                     if( month < 5 || month > 8 || year != 2018){
                         showErrorField($('#purchase-date'));
-                        showErrorMessage(stepPane2, null, 'Your purchase must be between 1st May and 31st August to be eligible');
+                        showErrorMessage(stepPane2, null, 'Your purchase must be between 1st May and 31st August to be eligible.');
                         evt.preventDefault();
                         error = true;
                     }
+                }
+                
+                if($("#invoice-image").val() == ""){
+                    showErrorField($('#invoice-image'));
+                    showErrorMessage(stepPane2, null, 'Please upload a PDF or image of the invoice.');
+                    evt.preventDefault();
+                    error = true;
                 }
                 
                 if (!error) {
@@ -321,32 +360,33 @@
                     error = true;
                 }
                 
-                var serialReg = new RegExp("^([a-zA-Z0-9]){11}$");
-                if($('#prod1-indoor-serial-number').is(":visible")){
-                    
-                    if(!serialReg.test($('#prod1-indoor-serial-number').val())){
-                        showErrorField($('#prod1-indoor-serial-number'));
-                        showErrorMessage(stepPane3, null, 'Product 1 indoor Serial must contain 11 characters including numbers and letters to be eligible');
-                        evt.preventDefault();
-                        error = true;
-                    }
-                }
-                if($('#prod2-indoor-serial-number').is(":visible")){
-                    if(!serialReg.test($('#prod2-indoor-serial-number').val())){
-                        showErrorField($('#prod2-indoor-serial-number'));
-                        showErrorMessage(stepPane3, null, 'Product 2 indoor Serial must contain 11 characters including numbers and letters to be eligible');
-                        evt.preventDefault();
-                        error = true;
-                    }
-                }
-                if($('#prod3-indoor-serial-number').is(":visible")){
-                    if(!serialReg.test($('#prod3-indoor-serial-number').val())){
-                        showErrorField($('#prod3-indoor-serial-number'));
-                        showErrorMessage(stepPane3, null, 'Product 3 indoor Serial must contain 11 characters including numbers and letters to be eligible');
-                        evt.preventDefault();
-                        error = true;
-                    }
-                }
+                // Commented due to Paddy's request.
+                
+                // var serialReg = new RegExp("^([a-zA-Z0-9]){11}$");
+                // if($('#prod1-indoor-serial-number').is(":visible")){
+                //     if(!serialReg.test($('#prod1-indoor-serial-number').val())){
+                //         showErrorField($('#prod1-indoor-serial-number'));
+                //         showErrorMessage(stepPane3, null, 'Product 1 indoor Serial must contain 11 characters including numbers and letters to be eligible');
+                //         evt.preventDefault();
+                //         error = true;
+                //     }
+                // }
+                // if($('#prod2-indoor-serial-number').is(":visible")){
+                //     if(!serialReg.test($('#prod2-indoor-serial-number').val())){
+                //         showErrorField($('#prod2-indoor-serial-number'));
+                //         showErrorMessage(stepPane3, null, 'Product 2 indoor Serial must contain 11 characters including numbers and letters to be eligible');
+                //         evt.preventDefault();
+                //         error = true;
+                //     }
+                // }
+                // if($('#prod3-indoor-serial-number').is(":visible")){
+                //     if(!serialReg.test($('#prod3-indoor-serial-number').val())){
+                //         showErrorField($('#prod3-indoor-serial-number'));
+                //         showErrorMessage(stepPane3, null, 'Product 3 indoor Serial must contain 11 characters including numbers and letters to be eligible');
+                //         evt.preventDefault();
+                //         error = true;
+                //     }
+                // }
                 
                 if($('#prod1-indoor-serial-number').is(":visible") && $('#prod2-indoor-serial-number').is(":visible")){
                     if( $('#prod1-indoor-serial-number').val() == $('#prod2-indoor-serial-number').val() ){
@@ -402,11 +442,16 @@
                                     checkedProductsCount++;
 
                                     if (!resp.status) {
-                                        error = true;
-                                        
-                                        showErrorField($this);
-                                        showErrorMessage($(".step-pane:eq(2)"), null, 'Serial number does not exist or a claim has already been submitted from this serial number "' + $this.val() + '"!');
-                                    } 
+                                        if (resp.messages[0] === 'Product serial number already exist') {
+                                            error = true;
+                                            showErrorField($this);
+                                            showErrorMessage($(".step-pane:eq(2)"), null, 'Serial number has already been submitted before "' + $this.val() + '"!');
+                                        } else {
+                                            $this.next().val("Yes");
+                                        }
+                                    }else{
+                                        $this.next().val("No");
+                                    }
                                     
                                     if (checkedProductsCount === productsCount) {
                                         $("#ClaimRegisterProductForm button, #ClaimRegisterProduct:input:not(#prod1-indoor-model-number):not(#prod2-indoor-model-number):not(#prod3-indoor-model-number)").prop("disabled", false);
@@ -481,7 +526,14 @@
                     evt.preventDefault();
                     error = true;
                 }
-                console.log("error --> ", error)
+                
+                if( $('#terms-checkbox').prop('checked') != true){
+                    showErrorField($('#terms-checkbox'));
+                    showErrorMessage(stepPane5, null, 'Please accept terms and conditions agreement.');
+                    evt.preventDefault();
+                    error = true;
+                }
+                
                 if(!error){
                     $('#ClaimRegisterProductForm').trigger('submit');
                 }

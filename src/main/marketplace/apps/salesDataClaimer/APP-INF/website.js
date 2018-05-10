@@ -44,7 +44,6 @@ function validateProductClaim(page, params, files) {
     var result = {
         status: true
     };
-    log.info('----> here');
     if(params.serialNumber){
         var serialNumber = params.serialNumber;
         var serialNumberArray = [serialNumber];
@@ -375,7 +374,7 @@ function saveProductClaim(page, params, files) {
         var indoorSerialNumbersToCheck = [];
         
         for( var i = 0; i < productsNumber; i++ ){
-            //var productModelNumber = params["prod"+ (i+1) +"-model-number"];
+            var productModelNumber = params["prod"+ (i+1) +"-model-number"];
             //var productIndoorModelNumber = params["prod"+ (i+1) +"-indoor-model-number"];
             var productIndoorSerialNumber = params["prod"+ (i+1) +"-indoor-serial-number"];
             
@@ -384,18 +383,18 @@ function saveProductClaim(page, params, files) {
             var salesDataExtraFields = formatter.newMap();
             salesDataExtraFields.put("serial-no", productIndoorSerialNumber);
 
-            var salesDataRecord = salesDataApp.findDataPoint(salesDateSeries, null, null, salesDataExtraFields);
+            // var salesDataRecord = salesDataApp.findDataPoint(salesDateSeries, null, null, salesDataExtraFields);
             
-            if(salesDataRecord == null){
-                log.error('Sales Data record with serial number: ' + productIndoorSerialNumber +' not found');
-                result.status = false;
-                result.messages = ['Invalid products indoor serial number: ' + productIndoorSerialNumber];
+            // if(salesDataRecord == null){
+            //     log.error('Sales Data record with serial number: ' + productIndoorSerialNumber +' not found');
+            //     result.status = false;
+            //     result.messages = ['Invalid products indoor serial number: ' + productIndoorSerialNumber];
                 
-                return views.jsonObjectView(JSON.stringify(result));
-            }
+            //     return views.jsonObjectView(JSON.stringify(result));
+            // }
             
-            log.info("Claim Products data - input: {} - output: {} , {}", productIndoorSerialNumber, salesDataRecord.id, salesDataRecord.productSku);
-            productsSKUs.push(salesDataRecord.productSku);
+            //log.info("Claim Products data - input: {} - output: {} , {}", productIndoorSerialNumber, salesDataRecord.id, productModelNumber);
+            productsSKUs.push(productModelNumber);
         }
         
         var existanceCheck = contactRequestWithProductNumbersExists(page, indoorSerialNumbersToCheck);
