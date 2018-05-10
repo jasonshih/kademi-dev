@@ -34,13 +34,43 @@
 #end
 
 #set( $productModels = {} )
-#foreach( $record in $page.find("/sales/ac-model-detail").history)
-    #set( $productModels[$record.productSku] = {
-        "modelNumber": $record.extraFields["Indoor Model"],
-        "consumerBonus": $record.extraFields["Consumer Bonus"],
-        "sku": $record.productSku
+
+#set($query = '{  
+        "stored_fields":[  
+            "Consumer Bonus",
+            "Indoor Model",
+            "productSku"
+        ],
+        "query":{  
+            "bool":{  
+                "must":[  
+                    {  
+                        "term":{  
+                            "dataSeriesName":"ac-model-detail"
+                        }
+                    }
+                ]
+            }
+        },
+        "size":10000
+    }')
+    
+#set( $queryRes = $applications.search.searchManager.search($query, 10000, 'dataseries'))
+#foreach( $record in $queryRes.hits.hits )
+    #set( $productModels[$record.fields.productSku.value] = {
+        "modelNumber": $record.fields["Indoor Model"].value,
+        "consumerBonus": $record.fields["Consumer Bonus"].value,
+        "sku": $record.fields.productSku.value
     }) 
-#end 
+#end
+
+###foreach( $record in $page.find("/sales/ac-model-detail").history)
+##    #set( $productModels[$record.productSku] = {
+##        "modelNumber": $record.extraFields["Indoor Model"],
+##        "consumerBonus": $record.extraFields["Consumer Bonus"],
+##        "sku": $record.productSku
+##    }) 
+###end 
 
 <form method="post" id="ClaimRegisterProductForm" action="/salesDataClaimsProducts/" class="form-horizontal fuelux claimRegisterProductForm" enctype="multipart/form-data">
     <div class="row print-hide">
@@ -300,10 +330,10 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-md-offset-3" style="text-align:  center;">
+                        <div class="col-md-4 col-md-offset-4" style="text-align:  center;">
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    <input type="file" id="invoice-image" name="invoice-image" style="display:  inline-block;opacity:  0;position:  absolute;" class="btn btn-primary required-if-shown">
+                                    <input type="file" id="invoice-image" name="invoice-image" style="display:  inline-block;opacity:  0;position:  absolute;" class="btn btn-primary">
                                     <button class="btn btn-primary" name="invoice-image-btn" id="invoice-image-btn"><span class="compulsory-field">*</span>UPLOAD PDF OR IMAGE OF THE INVOICE</button>
                                     <div class="btn btn-success success-invoice-image ignore"><i class="fa fa-check"></i></div>
                                 </div>
@@ -319,12 +349,12 @@
 
                     <div class="required-actions" id="installer-info-section">
                         <div class="col-md-12">
-                            <h4>Installer information</h4>
+                            <h4>Installer Information</h4>
                         </div>
                         
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-md-12" for="installer-orgId">install Business Name:</label>
+                                <label class="col-md-12" for="installer-orgId">Installer Business Name:</label>
                                 <div class="col-md-12">
                                     <input class="form-control" type="text" name="installer-orgId" id="installer-orgId" placeholder="" />
                                 </div>
@@ -361,14 +391,14 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-md-12" for="installer-email"> Email address:</label>
+                                <label class="col-md-12" for="installer-email">Email address:</label>
                                 <div class="col-md-12">
                                     <input class="form-control  required-if email" type="email" name="installer-email" id="installer-email" placeholder="" />
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-md-offset-3" style="text-align:  center;">
+                        <div class="col-md-4 col-md-offset-4" style="text-align:  center;">
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <input type="file" id="installation-invoice-image" name="installation-invoice-image" style="display:  inline-block;opacity:  0;position:  absolute;" class="btn btn-primary">
@@ -408,10 +438,10 @@
 
                         <div class="col-md-12">
                             <p>
-                                A maximum of <b> three (3)</b> eligible products purchased in <b> one (1)</b> transaction can be claimed towards the <b> cash back </b> offer.<br>
+                                A maximum of <b> three (3)</b> eligible products purchased in <b> one (1)</b> transaction can be claimed towards the cash back offer.<br>
                                 Eligible claimants may submit a maximum of <b>one (1)</b> Eligible Claim per household in the Promotions.<br>
                                 Duplicate tax invoices will be rejected.<br>
-                                <b>Note: Business applications will NOT be accepted. Invoices under a business name and/or with ABN will NOT be accepted</b>
+                                <b>Note: Business applications will NOT be accepted. Invoices under a business name and/or with ABN will NOT be accepted.</b>
                             </p>
                         </div>
 
@@ -442,7 +472,7 @@
                                     <div class="form-group">
                                         <label for="prod1-indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
                                         <div class="col-md-12">
-                                            <input class="required-if-shown form-control" type="text" id="prod1-indoor-model-number-view" disabled=true placeholder="Ex A15900474YK" />
+                                            <input class="required-if-shown form-control" type="text" id="prod1-indoor-model-number-view" disabled=true />
                                         </div>
                                         <div class="col-md-12">
                                             <input class="form-control ignore" type="hidden" name="prod1-consumer-bonus" id="prod1-consumer-bonus" />
@@ -455,7 +485,8 @@
                                     <div class="form-group">
                                         <label for="prod1-indoor-serial-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor Serial No:</label>
                                         <div class="col-md-12">
-                                            <input class="required-if-shown form-control product-serial-number" type="text" name="prod1-indoor-serial-number" id="prod1-indoor-serial-number" placeholder="Ex A15900474YK" />
+                                            <input class="required-if-shown form-control product-serial-number" type="text" name="prod1-indoor-serial-number" id="prod1-indoor-serial-number" placeholder="e.g. A15900474YK" />
+                                            <input class="form-control ignore" type="hidden" name="prod1-arbitrary-serial" id="prod1-arbitrary-serial" />
                                         </div>
                                     </div>
                                 </div>
@@ -486,7 +517,7 @@
                                     <div class="form-group">
                                         <label for="prod2-indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
                                         <div class="col-md-12">
-                                            <input class="required-if-shown form-control" type="text" name="prod2-indoor-model-number" id="prod2-indoor-model-number-view" placeholder="Ex A15900474YK" disabled=true />
+                                            <input class="required-if-shown form-control" type="text" name="prod2-indoor-model-number" id="prod2-indoor-model-number-view" disabled=true />
                                         </div>
                                         <div class="col-md-12">
                                             <input class="form-control ignore" type="hidden" name="prod2-consumer-bonus" id="prod2-consumer-bonus" />
@@ -499,7 +530,8 @@
                                     <div class="form-group">
                                         <label for="prod2-indoor-serial-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor Serial No:</label>
                                         <div class="col-md-12">
-                                            <input class="required-if-shown form-control product-serial-number" type="text" name="prod2-indoor-serial-number" id="prod2-indoor-serial-number" placeholder="Ex A15900474YK" />
+                                            <input class="required-if-shown form-control product-serial-number" type="text" name="prod2-indoor-serial-number" id="prod2-indoor-serial-number" placeholder="e.g. A15900474YK" />
+                                            <input class="form-control ignore" type="hidden" name="prod2-arbitrary-serial" id="prod2-arbitrary-serial" />
                                         </div>
                                     </div>
                                 </div>
@@ -530,7 +562,7 @@
                                     <div class="form-group">
                                         <label for="prod3-indoor-model-number" class="col-md-12">Indoor Unit Model No:</label>
                                         <div class="col-md-12">
-                                            <input class="form-control" type="text" name="prod3-indoor-model-number" id="prod3-indoor-model-number-view" placeholder="Ex A15900474YK" disabled=true />
+                                            <input class="form-control" type="text" name="prod3-indoor-model-number" id="prod3-indoor-model-number-view" disabled=true />
                                         </div>
                                         <div class="col-md-12">
                                             <input class="form-control ignore" type="hidden" name="prod3-consumer-bonus" id="prod3-consumer-bonus" />
@@ -543,7 +575,8 @@
                                     <div class="form-group">
                                         <label for="prod3-indoor-serial-number" class="col-md-12"><span class="compulsory-field">*</span>Indoor Serial No:</label>
                                         <div class="col-md-12">
-                                            <input class="required-if-shown form-control product-serial-number" type="text" name="prod3-indoor-serial-number" id="prod3-indoor-serial-number" placeholder="Ex A15900474YK" />
+                                            <input class="required-if-shown form-control product-serial-number" type="text" name="prod3-indoor-serial-number" id="prod3-indoor-serial-number" placeholder="e.g. A15900474YK" />
+                                            <input class="form-control ignore" type="hidden" name="prod3-arbitrary-serial" id="prod3-arbitrary-serial" />
                                         </div>
                                     </div>
                                 </div>
@@ -558,7 +591,7 @@
                 <div class="row">
 
                     <div class="col-md-12">
-                        <h5><b>** Please note, all cash bonuses will be paid via EFT only</b></h5>
+                        <h5><b>** Please note, all cash backs will be paid via EFT only</b></h5>
                     </div>
 
                     <div class="col-md-6">
@@ -611,18 +644,26 @@
                 </div>
             </div>
             <div class="step-pane sample-pane alert last-step" data-step="5">
+                
+                <div class="row">
+                    <div class="col-md-12">
+                 <h4><b>Application review</b></h4>
+                 <p>Before submitting your claim please check that all information on your application is correct. </p>
+                 </div> </div>
+                 
+                 
                 <div class="summary-last-step"></div>
                 <div class="row">
                     <div class="col-md-12"><div class="col-md-12">
                     <div class="form-check">
-                      <input class="form-check-input required" type="checkbox"  value="true" id="defaultCheck1" name="check-terms-and-conditions">
-                      <label class="form-check-label" for="defaultCheck1" style=" vertical-align:  top; ">
-                        <span class="compulsory-field">*</span> By ticking this box, you agree to the promotion's <a href="https://mhiaapromo.com.au/terms-and-conditions/"> Terms and Conditions </a> and our <a href="https://mhiaa.com.au/privacy-policy-terms-of-use/"> Privacy Policy </a>.
+                      <input class="form-check-input" type="checkbox"  value="true" id="terms-checkbox" name="check-terms-and-conditions">
+                      <label class="form-check-label" for="terms-checkbox" style=" vertical-align:  top; ">
+                        <span class="compulsory-field">*</span> By ticking this box, you agree to the promotion's <a target="_blank" href="https://mhiaapromo.com.au/terms-and-conditions/"> Terms and Conditions </a> and our <a target="_blank" href="https://mhiaa.com.au/privacy-policy-terms-of-use/"> Privacy Policy</a>.
                       </label>
                     </div>
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="true" id="defaultCheck2" name="check-if-competition">
-                      <label class="form-check-label" for="defaultCheck2" style=" vertical-align:  top; ">
+                      <input class="form-check-input" type="checkbox" value="true" id="competition-checkbox" name="check-if-competition">
+                      <label class="form-check-label" for="competition-checkbox" style=" vertical-align:  top; ">
                         I would like to be entered into the Cruise Through Winter - Win a cruise for 2! Competition.
                       </label>
                     </div>

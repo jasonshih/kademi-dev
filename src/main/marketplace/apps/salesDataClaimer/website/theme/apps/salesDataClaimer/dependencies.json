@@ -79,6 +79,24 @@
             }
         },
         {
+            "js": {
+                "group": "main",
+                "path": "/static/inputmask/min/inputmask/inputmask.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/inputmask/min/inputmask/inputmask.numeric.extensions.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/inputmask/min/inputmask/jquery.inputmask.min.js"
+            }
+        },
+        {
             "css": {
                 "cssMedia": "all",
                 "path": "/theme/apps/salesDataClaimer/salesDataClaimer.css"

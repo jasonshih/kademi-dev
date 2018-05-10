@@ -135,7 +135,6 @@
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Action Type</th>
-                                    <th>Required Action</th>
                                     <th>Purchased Date</th>
                                     <th>Store Name</th>
                                     <th>Claims Number</th>
@@ -249,8 +248,7 @@
                     <td>$hit.source.claimGroupId</td>
                     <td>$contactRequest.contactRequest.firstName $contactRequest.contactRequest.surName</td>
                     <td>$contactRequest.contactRequest.email</td>
-                    <td>$contactRequest.contactRequest.fieldValue('action-type')</td>                    
-                    <td>$contactRequest.contactRequest.fieldValue('required-action-type')</td>
+                    <td>$contactRequest.contactRequest.fieldValue('action-type')</td>
                     <td>$contactRequest.contactRequest.fieldValue('purchase-date')</td>
                     <td>$contactRequest.contactRequest.fieldValue('store-name')</td>
                     <td><a href="/manageSaleDataClaimer/?claimGroup=$hit.source.claimGroupId#claims-list-tab">$contactRequest.contactRequest.fieldValue('claims-number')</a></td>
