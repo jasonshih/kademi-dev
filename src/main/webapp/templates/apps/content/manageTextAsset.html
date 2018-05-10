@@ -10,10 +10,16 @@
         <div id="main-asset">
             <form action="$page.href" method="POST" class="form-asset-main form form-horizontal">
                 <input type="hidden" name="langCode" value="$!request.params.lang" />
-                <button type="submit" class="btn btn-success pull-right">
-                    <span class="fa fa-save"></span>
-                    Save
-                </button>
+                <div class="btn-group pull-right">
+                    <a class="btn btn-default" href="texteditor?fileName=$page.asset.uniqueId" title="Edit as plain text" >
+                        <span class="fa fa-pencil"></span>
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <span class="fa fa-save"></span>
+                        Save
+                    </button>
+
+                </div>
 
                 <div class="row">
                     <div class="col-sm-7">
