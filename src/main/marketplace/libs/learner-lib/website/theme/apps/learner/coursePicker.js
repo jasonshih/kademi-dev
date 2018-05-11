@@ -85,15 +85,15 @@
                 
                 $.pjax({
                     selector: 'a.course:not(.pjaxdone)',
-                    fragment: '[data-dynamic-href="_components/modulesList"]',
-                    container: '[data-type="component-modulesList"]',
+                    fragment: '.modules-list',
+                    container: '.modules-list-wrap',
                     timeout: 5000,
                     url: href,
                     debug: true,
                     success: function (data) {
                         var newDom = $('<div />').html(data);
                         
-                        $('[data-type="component-courseDescription"] [data-dynamic-href]').html(newDom.find('[data-dynamic-href="_components/courseDescription"]'));
+                        $('.courseDescription').html(newDom.find('.courseDescription'));
                     }
                 });
                 
