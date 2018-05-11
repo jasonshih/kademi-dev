@@ -114,11 +114,11 @@
                 </div>
 
                 <hr />
-                                
+
 
                 <div class="row" id="points-stats">
                     <div class="col-lg-6">
-                        <div class="">                                                                               
+                        <div class="">
                             #set( $crit = $services.criteriaBuilders.points.groupBy("pointsTag").count("id").sum("numPoints") )
                             #set( $crit = $crit.ge("issuedDate", $services.queryManager.commonStartDate) )
                             #set( $crit = $crit.lt("issuedDate", $services.queryManager.commonFinishDate) )
@@ -134,18 +134,18 @@
                                 <tr>
                                     <td>$!row[0].title</td>
                                     <td class="text-right">$!row[1]</td>
-                                    <td class="text-right">$!row[2]</td>
+                                    <td class="text-right">$!formatter.toDecimal($row[2],0)</td>
                                 </tr>
                                 #end
                             </table>
-                        </div>                        
+                        </div>
                     </div>
                     <div class="col-lg-6">
-                        <div class="">                                                                               
+                        <div class="">
                             #set( $crit =  $services.criteriaBuilders.pointsDebit.groupBy("reasonCode").count("id").sum("numPoints") )
                             #set( $crit = $crit.ge("issuedDate", $services.queryManager.commonStartDate) )
                             #set( $crit = $crit.lt("issuedDate", $services.queryManager.commonFinishDate) )
-                            #set( $stats = $crit.execute(1000) )                            
+                            #set( $stats = $crit.execute(1000) )
 
                             <table class="table table-striped" >
                                 <tr>
@@ -157,11 +157,11 @@
                                 <tr>
                                     <td>$!row[0]</td>
                                     <td class="text-right">$!row[1]</td>
-                                    <td class="text-right">$!row[2]</td>
+                                    <td class="text-right">$!formatter.toDecimal($row[2],0)</td>
                                 </tr>
                                 #end
                             </table>
-                        </div>    
+                        </div>
                     </div>
                 </div>
 
