@@ -14,8 +14,9 @@
         <div class="dropdown pull-right btn btn-default" style="margin-right: 15px">
             <a data-toggle="dropdown" class="dropdown-toggle" href="#" style="text-decoration: none;">
                 <i class="fa fa-language"></i>
-                #if( $!request.params.lang.length() > 0 )
-                $request.params.lang
+Language:
+                #if( $page.langCode )
+ $page.langCode
                 #else
                 Default
                 #end
@@ -34,7 +35,7 @@
                     </a>
                 </li>
                 #end
-                
+
                 #foreach($lang in $page.notTranslated)
                 <li class="">
                     <a href="$lang.code" class="create-translation">
