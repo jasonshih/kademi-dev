@@ -97,6 +97,7 @@
             <tr>
                 <th>Displaying $page.paginator.records.size() of $page.paginator.totalRecords assets</th>
                 <th>Format</th>
+                <th>Language</th>
                 <th>Created</th>
                 <th>Modified</th>
                 <th width="40"><input type="checkbox" class="chk-all"></th>
@@ -110,6 +111,7 @@
                     <a href="/content-types/$ct" class="label label-info">$ct</a>
                     #end
                 </td>
+                <td>$!asset.language</td>
                 <td><abbr class="timeago" title="$formatter.formatDateISO8601($asset.createdDate, $page.parent.organisation.timezone)">$formatter.formatDateTime($asset.createdDate, $page.parent.organisation.timezone)</abbr></td>
                 <td><abbr class="timeago" title="$formatter.formatDateISO8601($asset.modifiedDate, $page.parent.organisation.timezone)">$formatter.formatDateTime($asset.modifiedDate, $page.parent.organisation.timezone)</abbr></td>
                 <td>
