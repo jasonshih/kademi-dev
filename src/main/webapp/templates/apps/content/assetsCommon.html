@@ -27,11 +27,18 @@
                         Default
                     </a>
                 </li>
-
-                #foreach($lang in $rootFolder.languages)
-                <li class="addGroup">
-                    <a href="$page.href?lang=$lang.code" class="">
-                        $lang.title
+                #foreach($translation in $page.translations)
+                <li class="">
+                    <a href="$translation.uniqueId" class="">
+                        Edit $translation.language
+                    </a>
+                </li>
+                #end
+                
+                #foreach($lang in $page.notTranslated)
+                <li class="">
+                    <a href="$lang.code" class="create-translation">
+                        Create $lang.title
                     </a>
                 </li>
                 #end

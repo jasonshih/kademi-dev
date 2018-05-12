@@ -62,6 +62,33 @@ $(function () {
             }
         });
     });
+    
+    $(document.body).on('click', '.create-translation', function (e) {
+        e.preventDefault();
+        var link = $(e.target).closest('a');
+        var langCode = link.attr("href");
+        
+        $.ajax({
+            url: window.location.pathname,
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                createLangCode: langCode
+            },
+            success: function (resp) {
+                if (resp.status) {
+                    Msg.info('Created translation');
+                    
+                } else {
+                    Msg.error('Sorry, an error occured creating the translation');
+                }
+            },
+            error: function () {
+                Msg.error('Sorry, an error occured creating the translation');
+            }
+        });
+    });    
+    
 });
 
 /**
