@@ -484,3 +484,45 @@ function saveProductClaim(page, params, files) {
 
     return views.jsonObjectView(JSON.stringify(result));
 }
+
+function getClaimGroupContactRequest(rf, claimGroupId) {
+    log.info("claimGroupId ---=> {} ", claimGroupId);
+    
+    var claimGroup = findClaimGroupById(rf, claimGroupId);
+    
+    log.info("contact request ---=> {} ", claimGroup.contactRequest);
+    
+    var query = {                  
+        "query":{
+            "bool":{  
+               "must":[  
+                    {  
+                        "term":{  
+                            "_type":"contactRequest"
+                        }
+                    },
+                    {  
+                       "term":{  
+                            "contactRequest": claimGroup.contactRequest 
+                        }
+                    }
+                ]
+            }
+        }
+    };
+
+    var queryRes = applications.search.searchManager.search(JSON.stringify(query), 10000, 'profile');
+    
+    for( var index in queryRes.hits.hits){
+        // var record = queryRes[index].fields
+    }
+    
+    return queryRes;
+}
+
+function findClaimGroupById(rf, claimGroupId) {   
+    var db = getDB(rf);
+    var claimGroup = db.child(claimGroupId);
+    
+    return claimGroup;
+}
