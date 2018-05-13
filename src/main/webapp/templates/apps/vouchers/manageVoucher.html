@@ -74,6 +74,14 @@
                             <th>Allocated to</th>
                             <td>$!page.allocatedToId</td>
                         </tr>
+                        <tr>
+                            <th>Expiry date</th>
+                            <td>$formatter.formatDate($page.expiryDate)</td>
+                        </tr>
+                        <tr>
+                            <th>Type</th>
+                            <td><a href="/voucher-type/$page.voucherTypeName/">$page.voucherTypeTitle</a></td>
+                        </tr>
                         #foreach($customField in $page.customFields)
                         <tr>
                             <th>$customField.text</th>

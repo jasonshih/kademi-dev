@@ -11,11 +11,16 @@
 
         #macro (assetTypes)
         #if( $page.asset )
-        <div class="dropdown pull-right btn btn-default" style="margin-right: 15px">
+        <div class="btn-group pull-right">
+        #if( $page.translationSource )
+        <a href="$page.translationSource.uniqueId" class="btn btn-default">Translation source</a>
+        #end
+        <div class="dropdown btn btn-default" style="margin-right: 15px">
             <a data-toggle="dropdown" class="dropdown-toggle" href="#" style="text-decoration: none;">
                 <i class="fa fa-language"></i>
-                #if( $!request.params.lang.length() > 0 )
-                $request.params.lang
+Language:
+                #if( $page.langCode )
+ $page.langCode
                 #else
                 Default
                 #end
@@ -27,15 +32,23 @@
                         Default
                     </a>
                 </li>
+                #foreach($translation in $page.translations)
+                <li class="">
+                    <a href="$translation.uniqueId" class="">
+                        Edit $translation.language
+                    </a>
+                </li>
+                #end
 
-                #foreach($lang in $rootFolder.languages)
-                <li class="addGroup">
-                    <a href="$page.href?lang=$lang.code" class="">
-                        $lang.title
+                #foreach($lang in $page.notTranslated)
+                <li class="">
+                    <a href="$lang.code" class="create-translation">
+                        Create $lang.title
                     </a>
                 </li>
                 #end
             </ul>
+        </div>
         </div>
 
         <div class="memberships-wrapper" id="membershipsContainer">

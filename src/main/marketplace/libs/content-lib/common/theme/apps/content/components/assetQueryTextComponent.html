@@ -19,7 +19,7 @@
 #elseif( $assetId )
     #set( $textAsset = $applications.content.assetManager.find($assetId) )
     #if( $notEditor || $textAsset )
-        $textAsset.text    
+        $applications.content.assetManager.getText($textAsset)
     #end
 #else
     <p>Dolores quasi sit ipsum ad eligendi. Molestiae pariatur quia eaque ut veritatis omnis aut libero. Dolore aut autem et doloribus nesciunt impedit et ut. Est omnis dolores dolorem dolorem modi minima fugit.</p>

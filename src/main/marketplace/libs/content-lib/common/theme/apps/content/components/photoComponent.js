@@ -83,10 +83,13 @@
                                 var dynamicElement = component.find('[data-dynamic-href]');
                                 
                                 component.attr('data-photo-src', this.value);
+                                component.attr('data-photo-select', "");
                                 keditor.initDynamicContent(dynamicElement);
                             });
+                                                     
                         }
                     });
+                                     
                     
                     form.find('#photo-link').on('change', function () {
                         var component = keditor.getSettingComponent();

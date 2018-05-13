@@ -16,8 +16,13 @@
         <div class="col-sm-12">
             <select class="form-control" id="asset-single-select">
                 <option value="">None</option>
-                #foreach( $query in $services.assetManager.search("text", null, null) )
-                    <option data-target-type="$!query.targetAssetType" value="$query.uniqueId">$query.name</option>
+                #foreach( $asset in $services.assetManager.search("text", null, null) )
+                    <option data-target-type="$!asset.targetAssetType" value="$asset.uniqueId">
+                        $asset.name
+                        #if( $asset.language )
+                        ($asset.language)
+                        #end
+                    </option>
                 #end
             </select>
         </div>

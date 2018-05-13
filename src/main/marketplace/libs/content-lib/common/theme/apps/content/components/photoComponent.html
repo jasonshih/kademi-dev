@@ -5,8 +5,15 @@
     #if ($photoLinkable == "true")
     <a href="$!photoLink" target="$!photoLinkTarget">
     #end
+        #if( $photoSrc.startsWith("/asset") )
+            #set( $asset = $page.find( $photoSrc ) )
+            #set( $imageHref = "/assets/$asset.currentTranslation.uniqueId" )
+        #else
+            #set( $imageHref = $photoSrc )
+        #end
         
-        <img src="$!photoSrc" style="display: inline-block; vertical-align: $!photoValign;" alt="$!photoAlt" width="$!photoWidth" height="$!photoHeight" class="$!photoStyle #if ($photoResponsive == "true") img-responsive #end" />
+    
+        <img src="$!imageHref" style="display: inline-block; vertical-align: $!photoValign;" alt="$!photoAlt" width="$!photoWidth" height="$!photoHeight" class="$!photoStyle #if ($photoResponsive == "true") img-responsive #end" />
         
     #if ($photoLinkable == "true")
     </a>
