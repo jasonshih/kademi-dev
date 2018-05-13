@@ -6,6 +6,14 @@
     #set( $title = "Query Table" )
 #end
 
+#if ( $formatter.isNull($exportToCsv) )
+    #set( $exportToCsv = true )
+#end
+
+#if ( $formatter.isNull($showPagination) )
+    #set( $showPagination = true )
+#end
+
 #set ($queryTableId = "query-component-tbody-" + $formatter.randomGuid)
 #set ($queryCompId = "query-component-" + $formatter.randomGuid)
 #if($page.profile.name)
@@ -16,9 +24,9 @@
 <div class="panel panel-default panel-query-table" id="$queryCompId" style="height: $!{height}px; min-height: 0; overflow-y: auto" data-items-per-page="$itemsPerPage" data-queryname="$query" data-querytype="$queryType" data-profile="$profileId">
     <div class="panel-heading">
         <i class="fa fa-table"></i> $title
-        #if($queryType == 'queryTable')
-            <a download="data.csv" href="/queries/${query}?as=csv&from=0&size=10000$profileParam" class="pull-right"><i class="fa fa-download"></i> CSV</a>
-        #elseif($queryType == 'query')
+        #if($queryType == 'queryTable' && $exportToCsv == true)
+            <a download="data.csv" href="/queries/${query}?as=csv&from=0&size=10000$profileParam" class="text-white pull-right btnDownloadCSV"><i class="fa fa-download"></i> CSV</a>
+        #elseif($queryType == 'query' && $exportToCsv == true)
             <a href="/queries/${query}?run&from=0&size=10000$profileParam" class="text-white pull-right btnDownloadCSV"><i class="fa fa-download"></i> CSV</a>
         #end
     </div>
@@ -54,11 +62,12 @@
             </table>
         </div>
     </div>
+    #if ($showPagination == true)
     <div class="panel-footer">
         <ul class="pagination">
         </ul>
     </div>
-
+    #end
 </div>
 
 
