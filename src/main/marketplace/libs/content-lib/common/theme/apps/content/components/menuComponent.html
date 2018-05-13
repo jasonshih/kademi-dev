@@ -92,13 +92,13 @@
                     <li class="dropdown navbar-lang-selector">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="fa fa-language"></i>
-                            #set($currentLangText = "Default")
-                            #if ($currentLang == "en")
-                                #set($currentLangText = "English")
-                            #elseif ($currentLang == "ar")
-                                #set($currentLangText = "Arabic")
+                            
+                            #if( $rootFolder.selectedLanguage )
+                                $rootFolder.selectedLanguage.title
+                            #else
+                                Default
                             #end
-                            $currentLangText
+                            
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right">
