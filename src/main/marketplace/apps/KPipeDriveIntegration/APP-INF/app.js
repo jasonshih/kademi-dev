@@ -22,19 +22,14 @@ function handlePipeDriveNode(rootFolder, lead, funnel, exitingNode, settings, no
     
     var claimGroup = lead.getFieldValue("claim_group_recordId");
     log.info("Claim Group ---> {}", claimGroup);
-    //claimGroup = "MHI-W00002";
     
     // TODO:: Get details from Contact Requests.. 
     var contactRequestResponse = applications.salesDataClaimer.call('getClaimGroupContactRequest', rootFolder, claimGroup);
     var contactRequest = {};
     if(contactRequestResponse.hits.hits.length > 0){
         contactRequest = contactRequestResponse.hits.hits[0].source;
-    }else{
-        
     }
      
-    // TODO:: Must check if the profile already exist..    
-    
     // Prepare preson object
     var personInfo = {
         "first_name": contactRequest.firstName,
@@ -43,7 +38,6 @@ function handlePipeDriveNode(rootFolder, lead, funnel, exitingNode, settings, no
         "email": contactRequest.email,
         "title": contactRequest.title,
         "address1": contactRequest.address1,
-        // "consumer_bonus": "",
         "account_name": contactRequest["account-name"],
         "bank_name": contactRequest["bank-name"],
         "bsb_number": contactRequest["bsb-number"],
@@ -66,10 +60,13 @@ function handlePipeDriveNode(rootFolder, lead, funnel, exitingNode, settings, no
         personInfo["state"] = contactRequest.state;
     }
     
-    // var profileResponse = createPipeDriveProfile(personInfo);
-    // var profileId = profileResponse.data.id;
+    var profileId = 0;
+    profileId = checkProfile(personInfo.email);
+    if(profileId === 0){
+        var profileResponse = createPipeDriveProfile(personInfo);
+        profileId = profileResponse.data.id;
+    }
     
-    var profileId = 16;
     
     // Prepare deal object
     var dealInfo = {
@@ -160,6 +157,25 @@ function handlePipeDriveCheckDealNode(rootFolder, lead, funnel, exitingNode, set
         lead.setFieldValue("display_for_customers", settings.displayForCustomers);
         lead.setFieldValue("description_for_customers", settings.description);
         return nodeIds['nextNodeId'];
+    }
+}
+
+function checkProfile(profileEmail){
+    var checkProfileURL = "https://api.pipedrive.com/v1/persons/find?term=" + profileEmail + "&start=0&search_by_email=1&api_token=" + apiToken ;
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", checkProfileURL, false);
+    xhr.send();
+    var response = JSON.parse(xhr.getResponse().getResponseBody());
+    log.info(response.toString())
+    if(!response.success){
+        return 0;
+    }else{
+        if(response.data.length === 0){
+            return 0;
+        }else{
+            return response.data[0].id;
+        }
     }
 }
 
