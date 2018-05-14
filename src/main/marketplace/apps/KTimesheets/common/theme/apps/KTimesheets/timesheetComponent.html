@@ -2,8 +2,19 @@
 #set( $timesheet = $services.timesheetManager.timesheet )
 
 <div class="timesheet">
+    <div class="table-responsive">
     <table class="table table-striped timesheet-table" id="the-timesheet">
         <thead>
+            <colgroup>
+                <col style="min-width: 200px" />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+            </colgroup>
             <tr>
                 <th>Item</th>
 
@@ -22,10 +33,33 @@
 
         <tbody>
             #foreach( $item in $timesheet.workItems )
+            #set( $showItem = true )
+            #if( $item.class.simpleName == "Task" )
+                #if( $item.completedDate )
+                    #if( $formatter.durationDays($item.completedDate, $formatter.now) > 14 )
+                        #set( $showItem = false )
+                    #else
+                        #if( $item.relatedLead )
+                            #if( $item.relatedLead.cancelled )
+                                #set( $showItem = false )
+                            #end
+                        #end
+                    #end
+                #end
+            #end
+
+            #if( $showItem )
             <tr>
                 <td>
                     #if( $item.class.simpleName == "Task" )
-                    <a href="/tasks/$item.id">$item.formattedName</a>
+                    <a href="/tasks/$item.id/ .taskViewModal" class="mr btn btn-danger btn-sm btn-circle" data-target="#modalEditTask" data-toggle="modal">T</a>
+                    $item.formattedName
+                    #if( $item.relatedLead )
+                    <a href="/leads/$item.relatedLead.id/">
+                        / $item.relatedLead.formattedName
+                    </a>
+                    #end
+                    </a>
                     <input type="hidden" class="form-control timesheet-item" name="item" value="$item.id" />
                     #elseif( $item.class.simpleName == "Lead" )
                     <a href="/leads/$item.id">$item.formattedName</a>
@@ -41,6 +75,7 @@
                 </td>
                 #end
             </tr>
+            #end
             #end
 
 
@@ -76,6 +111,7 @@
             </tr>
         </tfoot>
     </table>
+    </div>
 
     <div class="well">
         <form method="post" action="/timesheets/" class="timesheet-submit-form">

@@ -10,6 +10,8 @@ controllerMappings.addComponent("salesDataClaimer/components", "claimsOverTime",
 controllerMappings.addComponent("salesDataClaimer/components", "claimsTable", "html", "Table of dealers that shows date of claim, dealer name, product purhcased, sale amount, status i.e. pending or approved", "Sales Data Claimer");
 controllerMappings.addComponent("salesDataClaimer/components", "claimRegisterProduct", "html", "Register products form", "Sales Data Claimer");
 
+controllerMappings.addComponent("salesDataClaimer/components", "claimTracking", "html", "Enables check claim status", "Sales Data Claimer");
+
 controllerMappings.addGoalNodeType("claimSubmittedGoal", "salesDataClaimer/claimSubmittedGoalNode.js", "checkSubmittedGoal");
 
 function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {

@@ -2,6 +2,10 @@
     var step3Ready = false;
 
     $(function () {
+        if ( $("#ClaimRegisterProductForm").length === 0) {
+            return;
+        }
+        
         initWizard();
         initDateTimePickers();
         initImagePicker();

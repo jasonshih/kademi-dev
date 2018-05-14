@@ -43,7 +43,7 @@ controllerMappings
         .build();
 
 function getPointsBalance() {
-    log.info('getPointsBalance');
+    // log.info('getPointsBalance');
 }
 
 function findProducts(page, params, rewardName, numberOfProducts, sort, asc) {

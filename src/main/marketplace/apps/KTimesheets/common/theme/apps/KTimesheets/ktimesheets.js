@@ -100,10 +100,13 @@ function calcTotal(bodyRows, i) {
         var td = $(tr.find("td")[i]);
         var inp = td.find("input");
         //flog("calcTotal td=", td, td.text());
-        var v = inp.val().trim();
-        var v2 = parseFloat(v);
-        if (!isNaN(v2)) {
-            total += v2;
+        var v = inp.val();
+        if( v ) {
+            v = v.trim();
+            var v2 = parseFloat(v);
+            if (!isNaN(v2)) {
+                total += v2;
+            }
         }
     });
     return total;

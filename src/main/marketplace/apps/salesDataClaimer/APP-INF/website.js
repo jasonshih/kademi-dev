@@ -40,6 +40,67 @@ controllerMappings
         .enabled(true)
         .build();
 
+controllerMappings
+        .websiteController()
+        .path('/trackClaimGroup/')
+        .addMethod('GET', 'trackClaimGroup')
+        .enabled(true)
+        .build();
+        
+function trackClaimGroup(page, params) {
+    var claimGroupContactRequest = getClaimGroupContactRequest(page, params.claimId);
+    
+    if (claimGroupContactRequest == null || claimGroupContactRequest.hits == null || claimGroupContactRequest.hits.hits == null || claimGroupContactRequest.hits.hits.length === 0) {
+        var result = {
+            status: false
+        };
+            
+        return views.jsonObjectView(JSON.stringify(result));
+    }
+    
+    var email = claimGroupContactRequest.hits.hits[0].source.email;
+    
+    if (email == null) {
+        var result = {
+            status: false
+        };
+            
+        return views.jsonObjectView(JSON.stringify(result));
+    }
+    
+    var user = applications.userApp.findUserResource(email);
+    
+    var userLeads = applications.funnels.getLeadsForProfile(user.thisProfile);
+    
+    var selectedLead;
+    
+    for (index in userLeads) {
+        var lead = userLeads[index];
+        
+        if (lead.funnel.name === 'claim-form-tracking') {
+            selectedLead = lead;
+        }
+    }
+    
+    if (selectedLead != null) {
+        var result = {
+            status: true,
+            data: {
+                claimId: params.claimId,
+                stageName: selectedLead.getFieldValue('display_for_customers'),
+                stageDescription: selectedLead.getFieldValue('description_for_customers')
+            }
+        };
+    } else {
+        var result = {
+            status: false
+        };
+    }
+        
+    return views.jsonObjectView(JSON.stringify(result));
+    
+}
+        
 function validateProductClaim(page, params, files) {
     var result = {
         status: true
@@ -512,10 +573,6 @@ function getClaimGroupContactRequest(rf, claimGroupId) {
     };
 
     var queryRes = applications.search.searchManager.search(JSON.stringify(query), 10000, 'profile');
-    
-    for( var index in queryRes.hits.hits){
-        // var record = queryRes[index].fields
-    }
     
     return queryRes;
 }
