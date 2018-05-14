@@ -74,6 +74,24 @@
                         });
                     });
 
+                    form.find('.select-export-to-csv').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        var inp = $(this).find(":selected");
+                        component.attr('data-export-to-csv', inp.val());
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+                    
+                    form.find('.select-show-pagination').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        var inp = $(this).find(":selected");
+                        component.attr('data-show-pagination', inp.val());
+                        keditor.initDynamicContent(dynamicElement);
+                    })
+
                     //form.find('.show-paginator').on('change', function () {
                     //    var component = keditor.getSettingComponent();
                     //    var dynamicElement = component.find('[data-dynamic-href]');
@@ -111,6 +129,8 @@
             form.find('.queryType[value=' + selectedQueryType + ']').prop("checked", true);
             form.find('.select-query option').addClass('hide');
             form.find('.' + selectedQueryType).removeClass('hide');
+            form.find('.select-export-to-csv').find("option[value='" + (dataAttributes['data-export-to-csv'] === undefined ? "true" : dataAttributes['data-export-to-csv']) + "']").prop("selected", true);
+            form.find('.select-show-pagination').find("option[value='" + (dataAttributes['data-show-pagination'] === undefined ? "true" : dataAttributes['data-show-pagination']) + "']").prop("selected", true);
 
         }
     };
