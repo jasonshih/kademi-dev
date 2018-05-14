@@ -92,13 +92,12 @@
                     <li class="dropdown navbar-lang-selector">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="fa fa-language"></i>
-                            
                             #if( $rootFolder.selectedLanguage )
                                 $rootFolder.selectedLanguage.title
                             #else
                                 Default
                             #end
-                            
+
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right">
@@ -121,17 +120,17 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li>
-                                    <a href="/profile">Profile</a>
+                                    <a href="/profile" class="trans-lookup" data-transcode="profile">Profile</a>
                                 </li>
                                 <li>
-                                    <a href="#" class="logout">Logout</a>
+                                    <a href="#" class="logout trans-lookup" data-transcode="logout">Logout</a>
                                 </li>
                             </ul>
                         </li>
                     #else
                         <li class="dropdown login">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                Login
+                                <span class="trans-lookup" data-transcode="login">Login</span>
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right">

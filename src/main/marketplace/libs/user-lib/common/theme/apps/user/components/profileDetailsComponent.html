@@ -32,13 +32,13 @@
 
 <div class="details well profile-details-component">
     <form action="$request.absolutePath" method="POST" enctype="multipart/form-data" class="profile form-horizontal form-horizontal-narrow" role="form">
-        <h4 class="trans-lookup">$title</h4>
+        <h4 class="trans-lookup" data-transcode="profile-heading">$title</h4>
 
         <div class="pageMessage alert alert-danger form-message" style="display: none"></div>
-        <p>$description</p>
+        <p class="trans-lookup" data-transcode="profile-panel-desc">$description</p>
         #if ($nickName == "true")
             <div class="control-group form-group row">
-                <label class="control-label col-md-3" for="nickName">Nickname</label>
+                <label class="control-label col-md-3 trans-lookup" for="nickName">Nickname</label>
 
                 <div class="controls col-md-8">
                     <input type="text" name="nickName" id="nickName" required="true" class="required form-control" value="$!page.profile.nickName" />
@@ -47,7 +47,7 @@
         #end
         #if ($email == "true")
             <div class="control-group form-group">
-                <label class="control-label col-md-3" for="nickName">Email</label>
+                <label class="control-label col-md-3 trans-lookup" for="email">Email</label>
 
                 <div class="controls col-md-8">
                     <input type="text" id="email" name="email" required="true" class="required form-control" value="$!page.profile.email" />
@@ -56,7 +56,7 @@
         #end
         #if ($firstName == "true")
             <div class="control-group form-group">
-                <label class="control-label col-md-3" for="firstName">First name</label>
+                <label class="control-label col-md-3 trans-lookup" for="firstName">First name</label>
 
                 <div class="controls col-md-8">
                     <input type="text" id="firstName" name="firstName" class="form-control" value="$!page.profile.firstName" />
@@ -65,7 +65,7 @@
         #end
         #if ($surName == "true")
             <div class="control-group form-group">
-                <label class="control-label col-md-3" for="nickName">Surname</label>
+                <label class="control-label col-md-3 trans-lookup" for="surName">Surname</label>
 
                 <div class="controls col-md-8">
                     <input type="text" id="surName" name="surName" class=" form-control" value="$!page.profile.surName" />
@@ -74,7 +74,7 @@
         #end
         #if ($phone == "true")
             <div class="control-group form-group">
-                <label class="control-label col-md-3" for="nickName">Phone</label>
+                <label class="control-label col-md-3 trans-lookup" for="nickName">Phone</label>
 
                 <div class="controls col-md-8">
                     <input type="text" id="phone" name="phone" class=" form-control" value="$!page.profile.phone" />
@@ -86,7 +86,7 @@
             #if ($extraFields && $extraFields.contains($field.name))
             #else
                 <div class="control-group form-group">
-                    <label class="control-label col-md-3" for="field_${field.name}">$field.text</label>
+                    <label class="control-label col-md-3 trans-lookup" for="field_${field.name}">$field.text</label>
 
                     <div class="controls col-md-8">
                         $field.html( $fields[$field] )
@@ -96,7 +96,7 @@
         #end
         <div class="control-group form-group">
             <div class="controls col-md-offset-3 col-md-8">
-                <button class="btn btn-success" type="submit">$btnText</button>
+                <button class="btn btn-success trans-lookup" type="submit">$btnText</button>
             </div>
         </div>
 
