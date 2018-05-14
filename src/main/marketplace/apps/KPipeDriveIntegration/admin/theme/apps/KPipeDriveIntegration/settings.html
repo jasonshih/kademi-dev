@@ -1,0 +1,10 @@
+#set ($apiKey = $!page.getAppSetting($app.instanceId, 'apiKey'))
+<hr>
+<div class="form-group">
+    <label class="col-sm-4 control-label" for="kpipe-drive-integration-apikey">API KEY:</label>
+    <div class="col-sm-6">
+        <div class="input">            
+            <input type="text" name="api-key" id="kpipe-drive-integration-apikey" value="$apiKey">                            
+        </div>
+    </div>    
+</div>
