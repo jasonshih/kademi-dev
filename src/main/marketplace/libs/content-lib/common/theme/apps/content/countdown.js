@@ -8,6 +8,10 @@ $(function () {
         if (face){
             options.clockFace = face;
         }
+        var selectedLang = $.cookie("selectedLangCode");
+        if (selectedLang){
+            options.language = selectedLang.toLowerCase();
+        }
         var clock = $(this).FlipClock(new Date(date),options);
     })
 });
