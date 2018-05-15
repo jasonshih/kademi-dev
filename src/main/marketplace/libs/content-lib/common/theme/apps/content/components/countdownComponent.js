@@ -37,6 +37,15 @@
                             self.initCountdown(component);
                         });
                     });
+
+                    form.find('.clock-face').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-clock-face', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initCountdown(component);
+                        });
+                    });
                 }
             });
         },
@@ -44,14 +53,19 @@
             flog('showSettingForm "countdown" component');
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('input.date').val(dataAttributes['data-date']);
+            form.find('.clock-face').val(dataAttributes['data-clock-face']);
         },
         initCountdown: function (component) {
             $.getScriptOnce('/theme/apps/content/flipclock.min.js', function () {
                 var date = component.find('.kcountdown').attr('data-date');
-                var clock = component.find('.kcountdown').FlipClock(new Date(date),{
-                    clockFace: 'DailyCounter',
+                var face = component.find('.kcountdown').attr('data-clock-face');
+                var options = {
                     countdown: true
-                });
+                };
+                if (face){
+                    options.clockFace = face;
+                }
+                var clock = component.find('.kcountdown').FlipClock(new Date(date),options);
             })
 
 
