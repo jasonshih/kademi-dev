@@ -3,10 +3,10 @@
 #end
 
 #if( !$label || $label == "" )
-    #set( $label = "Points Earned" )
+    #set( $label = "Points Debited" )
 #end
 
-<div class="panel panel-default rewardstore-pointsBalance-component">
+<div class="panel panel-default rewardstore-pointsDebited-component">
     <div class="panel-body">
         <div class="row">
             <div class="c-white">
@@ -29,10 +29,19 @@
                                 #end
                             #end
 
-                            #set($points = $applications.rewardStore.pointsBalance( $pointsBucket, $be) )
 
-                            #if(!$points)
-                            #set($points = 0)
+                            TODO
+                            #set( $crit = $services.criteriaBuilders.pointsDebit.sum("numPoints") )
+                            #set( $crit = $crit.eq("issuedTo", $be) )
+                            #if ($useDateRange == "true")
+                                #set( $crit = $crit.ge("issuedDate", $services.queryManager.commonStartDate) )
+                                #set( $crit = $crit.lt("issuedDate", $services.queryManager.commonFinishDate) )
+                            #end
+                            #set( $results = $crit.execute(1000) )
+                            #if( $results.isEmpty() )
+                                #set($points = 0 )
+                            #else
+                                #set($points = $results[0] )
                             #end
 
                             $formatter.toInteger( $points )
