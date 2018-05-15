@@ -35,9 +35,9 @@
             });
         },
 
-        getContent: function (component, keditor) {
-            return '<div data-dynamic-href="_components/assetQueryText"></div>';
-        },
+        // getContent: function (component, keditor) {
+        //     return '<div data-dynamic-href="_components/assetQueryText"></div>';
+        // },
 
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "assetQueryText" component');
