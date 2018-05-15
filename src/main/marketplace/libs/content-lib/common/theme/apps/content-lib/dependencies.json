@@ -9,6 +9,12 @@
         {
             "css": {
                 "cssMedia": "all",
+                "path": "/theme/apps/content/flipclock.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
                 "path": "/static/animate-css/animate.css"
             }
         },
@@ -22,6 +28,12 @@
             "less": {
                 "lessMedia": "all",
                 "path": "/theme/apps/content/content.less"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/flipclock.min.js"
             }
         },
         {
@@ -82,6 +94,12 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/content/cktemplates.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/countdown.js"
             }
         }
     ]

@@ -55,3 +55,5 @@ controllerMappings.addComponent("content/components", "photoEDM")
         .addDefaultAtt("photo-link", "")
         .addDefaultAtt("photo-link-target", "")
         .build();
+
+controllerMappings.addComponent("content/components", "countdown", "html", "Shows a countdown timer from a date", "Content App component");

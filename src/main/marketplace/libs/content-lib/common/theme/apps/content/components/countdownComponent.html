@@ -1,0 +1,18 @@
+#if ($formatter.isNull($date))
+#set ($date = $formatter.addDays($formatter.now, 7))
+#else
+#set ($date = $formatter.toDate($date))
+#end
+
+<div class="kcountdownWrap text-center">
+    <div data-date="$!formatter.formatDateISO8601($date)" class="kcountdown"></div>
+</div>
+<style>
+    .flip-clock-wrapper {
+        text-align: center !important;
+        position: relative;
+        width: auto;
+        margin: 1em;
+        display: inline-block;
+    }
+</style>
