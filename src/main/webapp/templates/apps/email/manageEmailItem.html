@@ -67,7 +67,11 @@ pre {
                             <p class="label label-danger">
                                 <span class="glyphicon glyphicon-remove"></span>
                                 $page.statusText
+                                #if( $page.emailItem.nextAttempt )
                                 , next attempt $page.emailItem.nextAttempt
+                                #else
+                                , will not re-attempt
+                                #end
                             </p>
                         #else
                             <span class="glyphicon glyphicon-time"></span> Preparing..
