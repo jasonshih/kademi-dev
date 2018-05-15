@@ -18,8 +18,13 @@
     #end
 #elseif( $assetId )
     #set( $textAsset = $applications.content.assetManager.find($assetId) )
-    #if( $notEditor || $textAsset )
+    #if( $notEditor )
         $applications.content.assetManager.getText($textAsset)
+    #else
+        <p class="well">Asset text selected: <strong>$textAsset.name
+            #if( $textAsset.language )
+            ($asset.language)
+            #end</strong></p>
     #end
 #else
     <p>Dolores quasi sit ipsum ad eligendi. Molestiae pariatur quia eaque ut veritatis omnis aut libero. Dolore aut autem et doloribus nesciunt impedit et ut. Est omnis dolores dolorem dolorem modi minima fugit.</p>

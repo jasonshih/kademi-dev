@@ -22,8 +22,6 @@
 
                         var dynamicElement = comp.find('[data-dynamic-href]');
                         keditor.initDynamicContent(dynamicElement);
-
-                        self.loadFields(form, keditor);
                     });
                     form.find('#asset-single-select').on('change', function () {
                         var comp = keditor.getSettingComponent();
@@ -31,12 +29,14 @@
 
                         var dynamicElement = comp.find('[data-dynamic-href]');
                         keditor.initDynamicContent(dynamicElement);
-
-                        self.loadFields(form, keditor);
                     });
 
                 }
             });
+        },
+
+        getContent: function (component, keditor) {
+            return '<div data-dynamic-href="_components/assetQueryText"></div>';
         },
 
         showSettingForm: function (form, component, keditor) {
