@@ -22,8 +22,8 @@
     <div class="panel-body">
         #if ($page)
             #if( $userResource )
-                <h1>Sorry, you don't have permission to view this page</h1>
-                <h4>You're currently logged in as <b>$userResource.title</b> with email <b>$userResource.email</b></h4>
+                <h1 class="trans-lookup" data-transcode="sorry-no-permission-to-view-page">Sorry, you don't have permission to view this page</h1>
+                <h4><span class="trans-lookup" data-transcode="you-are-logged-in-as">You're currently logged in as</span> <b>$userResource.title</b> <span class="trans-lookup" data-transcode="with-email">with email</span> <b>$userResource.email</b></h4>
             #else
                 #renderLoginForm($layout)
             #end
@@ -48,7 +48,7 @@
     <div class="$colClass">
         <div class="login-container">
             #if ($formatter.isNull($logo))
-                <h2>$loginFormTitle</h2>
+                <h2 class="trans-lookup" data-transcode="login-form-title">$loginFormTitle</h2>
                 <br>
             #else
                 <p><img src="$logo" class="img-responsive" /></p>
@@ -73,15 +73,15 @@
                         <p>
                             <label>
                                 <input type="checkbox" class="" name="keepLoggedIn" value="true" />
-                                Keep me logged in
+                                <span class="trans-lookup" data-transcode="keep-me-logged-in">Keep me logged in</span>
                             </label>
                         </p>
 
                         <p>
-                            <button type="submit" class="btn btn-block btn-lg btn-primary"><span>Login</span></button>
+                            <button type="submit" class="btn btn-block btn-lg btn-primary"><span class="trans-lookup" data-transcode="button-login-text">Login</span></button>
                         </p>
                         <div class="text-center small">
-                            <a class="small" title="Forgotten password" href="/password-reset">Forgotten password</a>
+                            <a class="small trans-lookup" title="Forgotten password" href="/password-reset" data-transcode="forgotten-password">Forgotten password</a>
                         </div>
                     </div>
                 </div>
