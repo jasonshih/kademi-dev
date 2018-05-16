@@ -580,17 +580,17 @@ function initNewLeadForm() {
                 errorFields: [],
                 errorMessages: []
             };
-            
-//             https://github.com/Kademi/kademi-dev/issues/3565
-//            var taskDescription = form.find('textarea[name=taskDescription]').val();
-//            if (!taskDescription) {
-//                var title = form.find("#newLeadTaskTitle").val();
-//                if (!title) {
-//                    ret.error ++;
-//                    ret.errorFields.push(form.find("#newLeadTaskTitle"));
-//                    ret.errorMessages.push("Please complete the task title.");
-//                }
-//            }
+
+             // https://github.com/Kademi/kademi-dev/issues/3565
+            var taskDescription = form.find('textarea[name=taskDescription]').val();
+            if (taskDescription && taskDescription.length > 0 ) {
+                var title = form.find("#newLeadTaskTitle").val();
+                if (!title) {
+                    ret.error ++;
+                    ret.errorFields.push(form.find("#newLeadTaskTitle"));
+                    ret.errorMessages.push("Please complete the task title.");
+                }
+            }
 
             flog("ret ok ", ret);
             return ret;
