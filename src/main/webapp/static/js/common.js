@@ -11,14 +11,14 @@
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 flog('Error when loading script: ' + url, jqXHR, textStatus, errorThrown);
-                
+
                 if (typeof onError === 'function') {
                     onError.call(this, url, jqXHR, textStatus, errorThrown);
                 }
             }
         });
     };
-    
+
 }(jQuery));
 
 (function ($) {
@@ -30,7 +30,7 @@
             flog('"' + url + '" is already loaded');
         }
     };
-    
+
 }(jQuery));
 
 $.fn.fshow = function () {
@@ -122,7 +122,7 @@ $.extend({
                 var d = c.charCodeAt(x);
                 var h = d.toString(16);
                 o += '%' + (h.length < 2 ? '0' : '') + h.toUpperCase();
-                
+
                 //                if(c[x]==' ')o+='+';
                 //                else{
                 //                    var d=c.charCodeAt(x);
@@ -176,7 +176,7 @@ function log() {
  */
 function flog() {
     if (typeof (console) != 'undefined') {
-        
+
         // BM: Previous used JSON, but that crashed IE sometimes. So this is pretty crap, but at least safer
         if (arguments.length == 1) {
             console.log(arguments[0]);
@@ -242,7 +242,7 @@ function dateOrd(post1, post2) {
         }
     }
     var m = post2.date;
-    
+
     if (n.year < m.year) {
         return -1;
     } else if (n.year > m.year) {
@@ -286,7 +286,7 @@ function ajaxLoadingOn(sel) {
 
 function ajaxLoadingOff(sel) {
     log('ajax OFF', sel);
-    
+
 }
 
 /** Displays a modal with a title and message
@@ -417,7 +417,7 @@ function getFileName(path) {
         var pos = name.lastIndexOf('#');
         name = name.substring(0, pos);
     }
-    
+
     path = path.replaceAll(' ', '%20'); // safari bug. path is returned encoded from window.location.pathname
     return name;
 }
@@ -485,10 +485,10 @@ function clearForm(form) {
         var inputs = currentForm.find('input');
         var selects = currentForm.find('select');
         var textareas = currentForm.find('textarea');
-        
+
         inputs.each(function () {
             var input = $(this);
-            
+
             if (input.is(':checkbox') || input.is(':radio')) {
                 input.prop('checked', false);
             } else if (input.is(':reset') || input.is(':button') || input.is(':submit') || input.is(':image')) {
@@ -497,7 +497,7 @@ function clearForm(form) {
                 input.val('');
             }
         });
-        
+
         selects.each(function () {
             var select = $(this);
             select.val('');
@@ -513,7 +513,7 @@ function edify(container, callback, validateCallback) {
     flog('edify', container, callback);
     $('body').removeClass('edifyIsViewMode');
     $('body').addClass('edifyIsEditMode');
-    
+
     if (!callback) {
         callback = function (resp) {
             if (resp.nextHref) {
@@ -523,12 +523,12 @@ function edify(container, callback, validateCallback) {
             }
         };
     }
-    
+
     container.animate({
         opacity: 0
     }, 200, function () {
         initHtmlEditors();
-        
+
         $('.inputTextEditor').each(function (i, n) {
             var $n = $(n);
             var s = $n.text();
@@ -536,7 +536,7 @@ function edify(container, callback, validateCallback) {
         });
         container.wrap('<form id="edifyForm" action="' + window.location + '" method="POST"></form>');
         $('#edifyForm').append('<input type="hidden" name="body" value="" />');
-        
+
         $('#edifyForm').submit(function (e) {
             flog('edifyForm submit');
             e.preventDefault();
@@ -568,22 +568,22 @@ function submitEdifiedForm(callback, validateCallback) {
         }
         log('copied html editor val to:', inp, 'for', key);
     }
-    
+
     resetValidation(form);
     if (!checkRequiredFields(form)) {
         return false;
     }
-    
+
     if (validateCallback) {
         if (!validateCallback(form)) {
             log('validation callback reported false');
             return false;
         }
     }
-    
+
     var data = form.serialize();
     log('serialied', data);
-    
+
     try {
         //$('#edifyForm input[name=body]').attr('value', CKEDITOR.instances['editor1'].getData() );
         $.ajax({
@@ -628,7 +628,7 @@ function deleteFile(href, callback) {
             log('deleted', href);
             ajaxLoadingOff();
             if (callback) {
-                callback(resp);
+                callback(resp, href);
             }
         },
         error: function (resp) {
@@ -797,12 +797,12 @@ function promptRenameModal(id, url, title, instructions, caption, buttonName, bu
     if (existing) {
         existing.remove();
     }
-    
+
     var modalString = '<div id="' + id + '" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="promptModalLabel" aria-hidden="true"></div>';
     myPromptModal = $(modalString);
-    
+
     var inputId = id + '_';
-    
+
     myPromptModal.html(
         '<div class="modal-dialog modal-sm">' +
         '   <div class="modal-content">' +
@@ -828,14 +828,14 @@ function promptRenameModal(id, url, title, instructions, caption, buttonName, bu
         '   </div>' +
         '</div>'
     );
-    
+
     var form = myPromptModal.find('form');
-    
+
     form.submit(function (e) {
         flog("submit");
         e.preventDefault();
         resetValidation(form);
-        
+
         var checkResult = validateFormFields(form);
         if (checkResult) {
             var newName = form.find('input').val();
@@ -870,16 +870,16 @@ function promptRenameModal(id, url, title, instructions, caption, buttonName, bu
                     );
                 }
             });
-            
+
         }
     });
-    
+
     $('body').append(myPromptModal);
     myPromptModal.on('shown.bs.modal', function () {
         myPromptModal.find('[name=' + buttonName + ']').trigger('focus');
         document.execCommand("selectall", null, false);
     });
-    
+
     showModal(myPromptModal);
 }
 
@@ -1106,7 +1106,7 @@ function refreshIE8Layout(element) {
         var height = p.height();
         p.css('height', height);
         p.css('height', 'auto');
-        
+
         //        var contentForm = element.closest('.contentForm');
         //        contentForm
     }
@@ -1129,7 +1129,7 @@ function stripFragment(href) {
  * http://javascriptbase64.googlecode.com/svn/trunk/base64.js
  *
  Copyright (c) 2008 Fred Palmer fred.palmer_at_gmail.com
- 
+
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
  files (the 'Software'), to deal in the Software without
@@ -1138,10 +1138,10 @@ function stripFragment(href) {
  copies of the Software, and to permit persons to whom the
  Software is furnished to do so, subject to the following
  conditions:
- 
+
  The above copyright notice and this permission notice shall be
  included in all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -1168,58 +1168,58 @@ var Base64 = {
     codex: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
     encode: function (input) {
         var output = new StringBuffer();
-        
+
         var enumerator = new Utf8EncodeEnumerator(input);
         while (enumerator.moveNext()) {
             var chr1 = enumerator.current;
-            
+
             enumerator.moveNext();
             var chr2 = enumerator.current;
-            
+
             enumerator.moveNext();
             var chr3 = enumerator.current;
-            
+
             var enc1 = chr1 >> 2;
             var enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
             var enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
             var enc4 = chr3 & 63;
-            
+
             if (isNaN(chr2)) {
                 enc3 = enc4 = 64;
             } else if (isNaN(chr3)) {
                 enc4 = 64;
             }
-            
+
             output.append(this.codex.charAt(enc1) + this.codex.charAt(enc2) + this.codex.charAt(enc3) + this.codex.charAt(enc4));
         }
-        
+
         return output.toString();
     },
     decode: function (input) {
         var output = new StringBuffer();
-        
+
         var enumerator = new Base64DecodeEnumerator(input);
         while (enumerator.moveNext()) {
             var charCode = enumerator.current;
-            
+
             if (charCode < 128)
                 output.append(String.fromCharCode(charCode));
             else if ((charCode > 191) && (charCode < 224)) {
                 enumerator.moveNext();
                 var charCode2 = enumerator.current;
-                
+
                 output.append(String.fromCharCode(((charCode & 31) << 6) | (charCode2 & 63)));
             } else {
                 enumerator.moveNext();
                 var charCode2 = enumerator.current;
-                
+
                 enumerator.moveNext();
                 var charCode3 = enumerator.current;
-                
+
                 output.append(String.fromCharCode(((charCode & 15) << 12) | ((charCode2 & 63) << 6) | (charCode3 & 63)));
             }
         }
-        
+
         return output.toString();
     }
 };
@@ -1241,14 +1241,14 @@ Utf8EncodeEnumerator.prototype = {
             return false;
         } else {
             var charCode = this._input.charCodeAt(++this._index);
-            
+
             // '\r\n' -> '\n'
             //
             if ((charCode == 13) && (this._input.charCodeAt(this._index + 1) == 10)) {
                 charCode = 10;
                 this._index += 2;
             }
-            
+
             if (charCode < 128) {
                 this.current = charCode;
             } else if ((charCode > 127) && (charCode < 2048)) {
@@ -1259,7 +1259,7 @@ Utf8EncodeEnumerator.prototype = {
                 this._buffer.push(((charCode >> 6) & 63) | 128);
                 this._buffer.push((charCode & 63) | 128);
             }
-            
+
             return true;
         }
     }
@@ -1285,19 +1285,19 @@ Base64DecodeEnumerator.prototype = {
             var enc2 = Base64.codex.indexOf(this._input.charAt(++this._index));
             var enc3 = Base64.codex.indexOf(this._input.charAt(++this._index));
             var enc4 = Base64.codex.indexOf(this._input.charAt(++this._index));
-            
+
             var chr1 = (enc1 << 2) | (enc2 >> 4);
             var chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
             var chr3 = ((enc3 & 3) << 6) | enc4;
-            
+
             this.current = chr1;
-            
+
             if (enc3 != 64)
                 this._buffer.push(chr2);
-            
+
             if (enc4 != 64)
                 this._buffer.push(chr3);
-            
+
             return true;
         }
     }

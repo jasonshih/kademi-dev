@@ -25,11 +25,11 @@ function initFilesPjax() {
     filesContainer.on("click", "a.pjax", function (e) {
         flog("click pjax");
         e.preventDefault();
-        
+
         var a = $(this);
         var href = a.attr("href");
         var name = a.text();
-        
+
         files.reloadFragment({
             url: href,
             whenComplete: function (response, status, xhr) {
@@ -74,7 +74,7 @@ function initUpload() {
             });
         }
     });
-    
+
 }
 
 function initUploadZip() {
@@ -104,23 +104,23 @@ function initCopyCutPaste() {
 
 function initImport() {
     var modal = $('#modal-import');
-    
+
     $('.btn-show-import').on('click', function (e) {
         e.preventDefault();
-        
+
         modal.modal('show');
     });
-    
+
     modal.find('form').forms({
         onSuccess: function (resp) {
             flog('resp', resp);
             Msg.info('The importer is running')
         }
     });
-    
+
     $('.btn-import-status').on('click', function (e) {
         e.preventDefault();
-        
+
         $.getJSON(window.location.pathname + '?importStatus', function (data) {
             $('#import-status-result').val(data.messages).show(300);
         });
@@ -129,7 +129,7 @@ function initImport() {
 
 function initCRUDFiles() {
     var container = $('#filesContainer');
-    
+
     container.on('click', '.btn-create-folder', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -138,44 +138,44 @@ function initCRUDFiles() {
             reloadFileList();
         });
     });
-    
+
     container.on('click', '.btn-upload-file', function (e) {
         e.stopPropagation();
         e.preventDefault();
-        
+
         $('#modal-upload').modal('show');
     });
-    
+
     container.on('click', '.btn-upload-zip', function (e) {
         e.stopPropagation();
         e.preventDefault();
-        
+
         $('#modal-upload-zip').modal('show');
     });
-    
+
     container.on('click', '.btn-new-text-file', function (e) {
         e.stopPropagation();
         e.preventDefault();
-        
+
         var name = prompt('Please enter a name for the new file');
         if (name !== null) {
             putEmptyFile(name);
         }
     });
-    
+
     $('#importFromUrl').click(function (e) {
         e.stopPropagation();
         e.preventDefault();
-        
+
         flog('click');
-        
+
         showImportFromUrl();
     });
 }
 
 function reloadFileList() {
     flog('reloadFileList');
-    
+
     $('#table-files-body').reloadFragment({
         url: window.location.href,
         whenComplete: function () {
@@ -188,7 +188,7 @@ function reloadFileList() {
 function initFilesLayout() {
     flog('initFiles');
     var tableFiles = $('#table-files');
-    
+
     tableFiles.find('a.show-color-box').each(function (i, n) {
         var href = $(n).attr('href');
         $(n).attr('href', href + '/alt-640-360.png');
@@ -199,29 +199,61 @@ function initFilesLayout() {
 function initFiles() {
     initFilesLayout();
     var container = $('#filesContainer');
+
     container.on('click', '.btn-delete-file', function (e) {
         e.preventDefault();
-        
+
         var target = $(this);
         var href = target.attr('href');
         flog('click delete href: ', href);
         var name = getFileName(href);
         var tr = target.closest('tr');
-        
+
         confirmDelete(href, name, function () {
             flog('deleted', tr);
             tr.remove();
             Msg.success('Deleted ' + name);
         });
     });
-    
+
+    container.on('click', '.btn-delete-list', function (e) {
+        e.preventDefault();
+
+        var target = $(this);
+        var checkBoxes = container.find("input[type=checkbox][name=file-chk]:checked")
+        if (checkBoxes.length == 0) {
+            Msg.error("Please select the files you want to remove by clicking the checkboxs to the right");
+        } else {
+            Kalert.confirm("Are you sure you want to remove " + checkBoxes.length + " files/folders?", function () {
+                deleteItemInList(0, checkBoxes);
+            });
+        }
+
+    });
+
+    function deleteItemInList(itemNum, checkBoxes ) {
+        flog("deleteItemInList", itemNum, checkBoxes);
+        if( itemNum >= checkBoxes.length ) {
+            Msg.info("Finished", "delete-notify");
+        } else {
+            var chk = $(checkBoxes[itemNum]);
+            var href = chk.val();
+            flog("deleteItemInList", href);
+            deleteFile(href, function(resp, href) {
+                Msg.info("Deleted " + href, "delete-notify");
+                chk.closest("tr").remove();
+                deleteItemInList(itemNum+1, checkBoxes);
+            });
+        }
+    }
+
     container.on('click', '.btn-rename-file', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        
+
         var target = $(this);
         var href = target.attr('href');
-        
+
         promptRenameModal("renameFileFolder", "", "Rename file or folder", "", "Enter new name", "newName", "Rename", "simpleChars", "Enter file or folder name", href, function (sourceHref, destHref) {
             var sourceName = getFileName(sourceHref);
             var destName = getFileName(destHref);
@@ -229,7 +261,7 @@ function initFiles() {
             Msg.success(sourceName + ' is renamed to ' + destName);
         });
     });
-    
+
     // Call history stuff directly, so we can reload
     var config = {
         'pageUrl': null,
@@ -252,7 +284,7 @@ function initFiles() {
             }
         }
     };
-    
+
     container.on('click', '.btn-history-file', function (e) {
         e.stopPropagation();
         e.preventDefault();
