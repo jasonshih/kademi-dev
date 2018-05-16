@@ -186,7 +186,6 @@ function reloadFileList() {
 }
 
 function initFilesLayout() {
-    flog('initFiles');
     var tableFiles = $('#table-files');
 
     tableFiles.find('a.show-color-box').each(function (i, n) {
@@ -227,24 +226,7 @@ function initFiles() {
                 deleteItemInList(0, checkBoxes);
             });
         }
-
     });
-
-    function deleteItemInList(itemNum, checkBoxes ) {
-        flog("deleteItemInList", itemNum, checkBoxes);
-        if( itemNum >= checkBoxes.length ) {
-            Msg.info("Finished", "delete-notify");
-        } else {
-            var chk = $(checkBoxes[itemNum]);
-            var href = chk.val();
-            flog("deleteItemInList", href);
-            deleteFile(href, function(resp, href) {
-                Msg.info("Deleted " + href, "delete-notify");
-                chk.closest("tr").remove();
-                deleteItemInList(itemNum+1, checkBoxes);
-            });
-        }
-    }
 
     container.on('click', '.btn-rename-file', function (e) {
         e.preventDefault();
@@ -343,4 +325,20 @@ function putEmptyFile(name) {
             Msg.error('An error occured creating file ' + name + ' - ' + resp.messages);
         }
     });
+}
+
+function deleteItemInList(itemNum, checkBoxes) {
+    flog("deleteItemInList", itemNum, checkBoxes);
+    if (itemNum >= checkBoxes.length) {
+        Msg.info("Finished", "delete-notify");
+    } else {
+        var chk = $(checkBoxes[itemNum]);
+        var href = chk.val();
+        flog("deleteItemInList", href);
+        deleteFile(href, function (resp, href) {
+            Msg.info("Deleted " + href, "delete-notify");
+            chk.closest("tr").remove();
+            deleteItemInList(itemNum + 1, checkBoxes);
+        });
+    }
 }
