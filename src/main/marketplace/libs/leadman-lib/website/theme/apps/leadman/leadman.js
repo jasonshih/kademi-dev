@@ -580,8 +580,10 @@ function initNewLeadForm() {
                 errorFields: [],
                 errorMessages: []
             };
+
+             // https://github.com/Kademi/kademi-dev/issues/3565
             var taskDescription = form.find('textarea[name=taskDescription]').val();
-            if (!taskDescription) {
+            if (taskDescription && taskDescription.length > 0 ) {
                 var title = form.find("#newLeadTaskTitle").val();
                 if (!title) {
                     ret.error ++;

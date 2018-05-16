@@ -22,25 +22,25 @@
                 </a>
 
                 #if( !$currentBranch.locks.isEmpty() )
-                    <a href="$currentBranch.href/commits" class="btn btn-sm btn-warning" title="This branch has locks">
-                        <i class="fa fa-lock"></i>
-                    </a>
+                <a href="$currentBranch.href/commits" class="btn btn-sm btn-warning" title="This branch has locks">
+                    <i class="fa fa-lock"></i>
+                </a>
                 #end
 
                 #if( $currentBranch.live )
-                    <a href="/repositories/$page.closest(
-                        'repository').name/manageBranches" class="islive btn btn-sm btn-danger" title="This is the live branch. Manage repository versions">
-                        <i class="fa fa-exclamation-triangle"></i>
-                    </a>
+                <a href="/repositories/$page.closest(
+                   'repository').name/manageBranches" class="islive btn btn-sm btn-danger" title="This is the live branch. Manage repository versions">
+                    <i class="fa fa-exclamation-triangle"></i>
+                </a>
                 #else
-                    <a href="${currentBranch.href}publish" class="publish btn btn-sm btn-success">
-                        <i class="glyphicon glyphicon-ok-sign"></i>
-                        PUBLISH
-                    </a>
-                    <a href="/repositories/$page.closest("repository").name/manageBranches" class="btn btn-sm btn-primary">
-                        <i class="fa fa-gear"></i>
-                        Manage versions
-                    </a>
+                <a href="${currentBranch.href}publish" class="publish btn btn-sm btn-success">
+                    <i class="glyphicon glyphicon-ok-sign"></i>
+                    PUBLISH
+                </a>
+                <a href="/repositories/$page.closest("repository").name/manageBranches" class="btn btn-sm btn-primary">
+                   <i class="fa fa-gear"></i>
+                    Manage versions
+                </a>
                 #end
 
                 <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
@@ -50,19 +50,19 @@
                 </a>
                 <ul role="menu" class="dropdown-menu list branches">
                     #foreach($b in $page.closest("branch").parent.children.ofType.branch)
-                        <li role="presentation" class="list-item">
-                            <aside class="list-item-controller">
-                                <a href="#" class="copy btn btn-xs btn-primary pull-right" title="Copy this to a new version"><i class="fa fa-copy"></i></a>
-                                #if( $b.live )
+                    <li role="presentation" class="list-item">
+                        <aside class="list-item-controller">
+                            <a href="#" class="copy btn btn-xs btn-primary pull-right" title="Copy this to a new version"><i class="fa fa-copy"></i></a>
+                            #if( $b.live )
 
-                                #else
-                                    <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
-                                #end
-                            </aside>
-                            <a href="${b.href}" class="branch noclear">
-                                $b.name
-                            </a>
-                        </li>
+                            #else
+                            <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
+                            #end
+                        </aside>
+                        <a href="${b.href}" class="branch noclear">
+                            $b.name
+                        </a>
+                    </li>
                     #end
                 </ul>
             </div>
@@ -77,19 +77,41 @@
                 <div style="padding: 15px">
                     <ol class="breadcrumb">
                         #foreach($p in $page.asList.parents.reverse)
-                            #if( $p.is("physicalFolder") || $p.is("branch") )
-                                <li><a href="$p.href" class="pjax">$p.name</a></li>
-                            #end
+                        #if( $p.is("physicalFolder") || $p.is("branch") )
+                        <li><a href="$p.href" class="pjax">$p.name</a></li>
+                        #end
                         #end
                     </ol>
                 </div>
                 <div>
-                    <table id="table-files" class="table table-striped table-hover">
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <a title="Delete selected files" class="btn btn-danger btn-sm btn-delete-list" href=""><i class="fa fa-times-circle"></i></a>
+                            <a title="Copy selected files" class="btn btn-info btn-sm btn-sm btn-copy-list" href=""><i class="fa fa-copy"></i></a>
+                            <a title="Paste copied/cut files" href="$page.href" class="btn btn-success btn-sm btn-paste requires-clipboard hide" data-clipboard="default" href="$page.href"><i class="fa fa-paste"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-cog"></i> <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="btn-upload-file" href=""><i class="fa fa-cloud-upload"></i> Upload files</a></li>
+                            <li></li>
+                            <li><a class="btn-create-folder" href=""><i class="clip-folder-plus"></i> New folder</a></li>
+                            <li><a class="btn-new-text-file" href=""><i class="fa fa-file-text-o"></i> New text file</a></li>
+                            <li><a class="btn-upload-zip" href=""><i class="fa fa-upload"></i> Upload and extract zip file</a></li>
+                        </ul>
+                    </div>
+
+                    <table id="table-files" class="table table-striped table-hover table-bordered">
                         <colgroup>
                             <col style="width: 60px;" />
                             <col />
                             <col />
-                            <col />
+                            <col style="width: 1    00px;" />
+                            <col style="width: 70px;" />
                             <col style="width: 70px;" />
                         </colgroup>
                         <thead>
@@ -97,99 +119,94 @@
                                 <th class="icon">Type</th>
                                 <th>Name</th>
                                 <th>Modified</th>
-                                <th class="action" colspan="2">
-                                    <div class="btn-group pull-right">
-                                        <a title="Create a folder" class="btn btn-success btn-sm btn-create-folder" href=""><i class="clip-folder-plus"></i></a>
-                                        <a title="Create text file" class="btn btn-success btn-sm btn-new-text-file" href=""><i class="fa fa-file-text-o"></i></a>
-                                        <a title="Paste" href="$page.href" class="btn btn-success btn-sm btn-paste requires-clipboard" data-clipboard="default" href="$page.href"><i class="fa fa-paste"></i></a>
-                                        <a title="Upload files" class="btn btn-success btn-sm btn-upload-file" href=""><i class="fa fa-cloud-upload"></i></a>
-                                        <a title="Upload and extract a ZIP file" class="btn btn-success btn-sm btn-upload-zip" href=""><i class="fa fa-upload"></i></a>
-                                    </div>
-                                </th>
+                                <th>Size</th>
+                                <th></th>
+                                <th><input type="checkbox" name="" class="chk-all" /></th>
                             </tr>
                         </thead>
                         <tbody id="table-files-body">
                             #if (!$page.is("branch"))
-                                <tr class="folder">
-                                    <td class="icon">
-                                        <a href="../#files-tab" class="pjax"><i class="fa fa-reply"></i></a>
-                                    </td>
-                                    <td class="left">
-                                        <a href="../#files-tab" class="pjax">Parent Directory</a>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="action"></td>
-                                </tr>
+                            <tr class="folder">
+                                <td class="icon">
+                                    <a href="../#files-tab" class="pjax"><i class="fa fa-reply"></i></a>
+                                </td>
+                                <td class="left">
+                                    <a href="../#files-tab" class="pjax">Parent Directory</a>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td class="action"></td>
+                                <td></td>
+                            </tr>
                             #end
                             #foreach($f in $formatter.sortByProperty( $page.subFolders, "name" ))
-                                <tr class="folder">
-                                    <td class="icon">
-                                        <a href="$f.href#files-tab" class="pjax"><i class="clip-folder"></i></a>
-                                    </td>
-                                    <td class="left">
-                                        <a href="${f.href}#files-tab" class="pjax">$f.name</a>
-                                    </td>
-                                    <td><abbr title="$formatter.formatDateISO8601($f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
-                                    <td></td>
-                                    <td class="action">
-                                        <div class="btn-group btn-group-sm">
-                                            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i>
-                                                <span class="caret"></span></button>
-                                            <ul class="dropdown-menu pull-right" role="menu">
-                                                <li><a href="${f.href}" class="btn-rename-file" title="Rename folder"><i class="fa fa-edit"></i> Rename</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="$f.href" class="btn-duplicate"><span class="fa fa-copy"></span> Duplicate</a></li>
-                                                <li><a href="$f.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>
-                                                <li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>
-                                                <li class="requires-clipboard" data-clipboard="default"><a href="$f.href" class="btn-paste"><span class="fa fa-paste"></span> Paste</a>
-                                                </li>
-                                                <li class="divider"></li>
-                                                <li><a href="${f.href}" class="btn-delete-file" title="Delete folder"><i class="fa fa-times"></i> Delete</a></li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <tr class="folder">
+                                <td class="icon">
+                                    <a href="$f.href#files-tab" class="pjax"><i class="clip-folder"></i></a>
+                                </td>
+                                <td class="left">
+                                    <a href="${f.href}#files-tab" class="pjax">$f.name</a>
+                                </td>
+                                <td><abbr title="$formatter.formatDateISO8601($f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
+                                <td></td>
+                                <td class="action">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i>
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="${f.href}" class="btn-rename-file" title="Rename folder"><i class="fa fa-edit"></i> Rename</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="$f.href" class="btn-duplicate"><span class="fa fa-copy"></span> Duplicate</a></li>
+                                            <li><a href="$f.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>
+                                            <li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="${f.href}" class="btn-delete-file" title="Delete folder"><i class="fa fa-times"></i> Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td><input type="checkbox" name="file-chk" value="$f.href" tabindex="" /></td>
+                            </tr>
                             #end
 
                             #foreach($f in $formatter.sortByProperty( $page.files, "name" ))
-                                #set($isImage = $f.is("image"))
-                                #set($type = $formatter.ifTrue($f.is("image"), "image", "file"))
-                                #set($imgClass = $formatter.ifTrue($f.is("image"), "fa fa-picture-o", "clip-file"))
-                                #set($aClass = $formatter.ifTrue($f.is("image"), "show-color-box group1 cboxElement", ""))
-                                #set($linkToFile = $f.href)
-                                #if(!$isImage)
-                                    #set($linkToFile = "texteditor?fileName=" + $f.name)
-                                #end
+                            #set($isImage = $f.is("image"))
+                            #set($type = $formatter.ifTrue($f.is("image"), "image", "file"))
+                            #set($imgClass = $formatter.ifTrue($f.is("image"), "fa fa-picture-o", "clip-file"))
+                            #set($aClass = $formatter.ifTrue($f.is("image"), "show-color-box group1 cboxElement", ""))
+                            #set($linkToFile = $f.href)
+                            #if(!$isImage)
+                            #set($linkToFile = "texteditor?fileName=" + $f.name)
+                            #end
 
-                                <tr class="$type">
-                                    <td class="icon">
-                                        <a href="$f.href"><i class="$imgClass"></i></a>
-                                    </td>
-                                    <td class="left">
-                                        <a href="$linkToFile" target="_blank" class="$aClass" title="$f.name">$f.name</a>
-                                    </td>
-                                    <td><abbr title="$formatter.formatDateISO8601($!f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
-                                    <td class="size">
-                                        <span title="$f.contentLength bytes">$formatter.formatBytes( $f )</span>
-                                    </td>
-                                    <td class="action">
-                                        <div class="btn-group btn-group-sm">
-                                            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i>
-                                                <span class="caret"></span></button>
-                                            <ul class="dropdown-menu pull-right" role="menu">
-                                                <li><a href="${f.path}" class='btn-rename-file' title="Rename file"><i class="fa fa-edit"></i> Rename</a></li>
-                                                <li><a href="${f.path}" target="_blank" title="Download file"><i class="fa fa-cloud-download"></i> Download</a></li>
-                                                <li><a href="${f.path}" class='btn-history-file' title="Show history"><i class="clip-history"></i> Show history</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="$f.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>
-                                                <li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="${f.path}" class="btn-delete-file" title="Delete file"><i class="fa fa-times"></i> Delete</a></li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <tr class="$type">
+                                <td class="icon">
+                                    <a href="$f.href"><i class="$imgClass"></i></a>
+                                </td>
+                                <td class="left">
+                                    <a href="$linkToFile" target="_blank" class="$aClass" title="$f.name">$f.name</a>
+                                </td>
+                                <td><abbr title="$formatter.formatDateISO8601($!f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
+                                <td class="size">
+                                    <span title="$f.contentLength bytes">$formatter.formatBytes( $f )</span>
+                                </td>
+                                <td class="action">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i>
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="${f.path}" class='btn-rename-file' title="Rename file"><i class="fa fa-edit"></i> Rename</a></li>
+                                            <li><a href="${f.path}" target="_blank" title="Download file"><i class="fa fa-cloud-download"></i> Download</a></li>
+                                            <li><a href="${f.path}" class='btn-history-file' title="Show history"><i class="clip-history"></i> Show history</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="$f.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>
+                                            <li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="${f.path}" class="btn-delete-file" title="Delete file"><i class="fa fa-times"></i> Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td><input type="checkbox" name="file-chk" value="$f.href" tabindex="" /></td>
+                            </tr>
                             #end
                         </tbody>
                     </table>

@@ -157,6 +157,20 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="mvelReasonTemplate">
+                                Reason template
+                            </label>
+                            <div class="col-md-10">
+                                <textarea class="hide" id="mvelReasonTemplate" name="mvelReasonTemplate"></textarea>
+                                <div id="pointsMvelReasonTemplate" class="expressionEditor" style="display:none;">$!formatter.htmlEncode($page.source.mvelReasonTemplate)</div>
+
+                                <p>
+                                    <small>Eg: </small>
+                                </p>
+                                <pre>Points for invoice @{record.fieldValue("InvoiceNo")}</pre>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label class="control-label col-md-2" for="notes">Notes<small>For internal use.</small></label>
@@ -181,15 +195,23 @@
                                     <th>Issued to</th>
                                     <th>Points</th>
                                     <th>Tag</th>
+                                    <th>Reason</th>
                                     <th>Processed date</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 #foreach($alloc in $page.history)
                                 <tr>
-                                    <td>$alloc.points.issuedTo.formattedName</td>
+                                    <td>
+                                        #if( $alloc.points.issuedTo.name )
+                                        <a href="/manageUsers/$alloc.points.issuedTo.id/">$alloc.points.issuedTo.formattedName</a>
+                                        #else
+                                        <a href="/organisations/$alloc.points.issuedTo.id/edit/">$alloc.points.issuedTo.formattedName</a>
+                                        #end
+                                    </td>
                                     <td>$alloc.points.numPoints</td>
                                     <td>$!alloc.points.pointsTag.name</td>
+                                    <td>$!alloc.points.reason</td>
                                     <td>$alloc.createdDate</td>
                                 </tr>
                                 #end
@@ -228,6 +250,7 @@
             (function ($) {
                 var pointsExpressionEditor;
                 var ignoreExpressionEditor;
+                var reasonExpressionEditor;
 
                 function initDetailsForm() {
                     $("form.kpi-form").forms({
@@ -252,6 +275,10 @@
 
                             var ignoreVal = ignoreExpressionEditor.getValue();
                             $('#ignoreExpression').val(ignoreVal);
+
+                            var reasonTemplate = reasonExpressionEditor.getValue();
+                            $('#mvelReasonTemplate').val(reasonTemplate);
+
 
                             return errors;
                         },
@@ -283,6 +310,14 @@
                     $('#ignoreMvelExpression').show();
                 }
 
+                function initReasonMvel() {
+                    reasonExpressionEditor = ace.edit('pointsMvelReasonTemplate');
+                    reasonExpressionEditor.getSession().setMode("ace/mode/javascript");
+                    reasonExpressionEditor.setOptions({
+                        minLines: ignoreExpressionEditor.getSession().$rowLengthCache.length
+                    });
+                    $('#pointsMvelReasonTemplate').show();
+                }
 
                 function initTestAllocation() {
                     $("#test-allocation-modal form").forms({
@@ -299,6 +334,7 @@
                 $(function () {
                     initPointsMvel();
                     initIgnoreMvel();
+                    initReasonMvel();
                     initDetailsForm();
                     initTestAllocation();
                 });
