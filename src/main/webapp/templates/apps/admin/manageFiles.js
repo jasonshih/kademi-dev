@@ -16,6 +16,7 @@ function initManageFiles() {
         initUploadZip();
         initFilesPjax();
     }
+    Msg.singletonForCategory = true;
 }
 
 function initFilesPjax() {
@@ -99,7 +100,7 @@ function initUploadZip() {
 }
 
 function initCopyCutPaste() {
-    $('#table-files').cutcopy();
+    $('#files').cutcopy();
 }
 
 function initImport() {

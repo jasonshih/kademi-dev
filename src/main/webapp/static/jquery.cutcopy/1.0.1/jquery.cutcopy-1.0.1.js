@@ -4,7 +4,7 @@
     var defaultConfig = {
         clipboardName: "default",
         copyClass: ".btn-copy",
-        copySelectedClass: ".btn-copy-selected",
+        copySelectedClass: ".btn-copy-list",
         cutClass: ".btn-cut",
         pasteClass: ".btn-paste",
         duplicateClass: ".btn-duplicate",
@@ -14,7 +14,7 @@
         success: function (sourceHref, newUrl, isCut) {
             var msg = (isCut ? 'Cut' : 'Copied');
             msg += ' successfully'
-            Msg.success(msg);
+            Msg.success(msg, "copy-notify");
         }
     };
 
@@ -57,7 +57,7 @@
             flog("Duplicate", href);
 
             setClipboard(config.clipboardName, href, false);
-            doClipboardAction(href, folder, false, function () {
+            doClipboardActionInList(0, href, folder, false, function () {
                 clearClipboard(config.clipboardName);
                 if (config.success) {
                     config.success(href, folder, false);
@@ -100,6 +100,7 @@
             
             var checkBoxes = container.find("input[type=checkbox]:checked")
             if( checkBoxes.length == 0) {
+                Msg.error("Please select the files you want to copy by clicking the checkboxes to the right");
                 return;                
             }
             
@@ -129,7 +130,7 @@
             checkRequiresClipboard(config.clipboardName);
         });
 
-        container.on('click', config.pasteClass, function (e) {
+        container.off('click', config.pasteClass).on('click', config.pasteClass, function (e) {
             e.preventDefault();
             var newHref = $(e.target).closest("a").attr("href");
             var sourceHref = getClipboardHref(config.clipboardName);
@@ -137,7 +138,7 @@
 
             flog("Paste from clipboard source", sourceHref, isCut, "newHref=", newHref);
 
-            doClipboardAction(sourceHref, newHref, isCut, function () {
+            doClipboardActionInList(0, sourceHref, newHref, isCut, function () {
                 clearClipboard(config.clipboardName);
                 if (config.success) {
                     config.success(sourceHref, newHref, isCut);
@@ -172,12 +173,23 @@ function checkRequiresClipboard(clipboardName) {
     var href = getClipboardHref(clipboardName);
     var items = $(".requires-clipboard").filter('[data-clipboard="' + clipboardName + '"]');
     flog("checkRequiresClipboard", items, "href", href);
-    if (href === null || href === "") {
-        flog("hide");
-        items.hide();
+    if (href && Array.isArray(href) && href.length > 0) {
+        var arr = [];
+        for (var i = 0; i < href.length; i++){
+            if (href[i]){
+                arr.push(href[i]);
+            }
+        }
+        if (arr.length){
+            flog("show");
+            items.removeClass('hide');
+        } else {
+            flog("hide");
+            items.addClass('hide');
+        }
     } else {
-        flog("show");
-        items.show(300);
+        flog("hide");
+        items.addClass('hide');
     }
 }
 
@@ -185,7 +197,7 @@ function setClipboard(clipboardName, href, isCut) {
     var cookieName = 'clipboard-' + clipboardName;
     var val = href;
     if (isCut) {
-        href += "|cut";
+        val += "|cut";
     }
     $.cookie(cookieName, val, {
         path: '/',
@@ -201,7 +213,7 @@ function clearClipboard(clipboardName) {
     });
 }
 
-function getClipboardHrefs(clipboardName) {
+function getClipboardHref(clipboardName) {
     var cookieName = 'clipboard-' + clipboardName;
     var cookieVal = $.cookie(cookieName) || '';
     if (cookieVal.indexOf('|cut') !== -1) {
@@ -216,17 +228,18 @@ function isClipboardCut(clipboardName) {
     return cookieVal.indexOf('|cut') !== -1;
 }
 
-function doClipboardActionInList(itemNum, hrefs) {
+function doClipboardActionInList(itemNum, hrefs, newUrl, isCut, onDone) {
     flog("doClipboardActionInList", itemNum, hrefs);
     if (itemNum >= hrefs.length) {
-        Msg.info("Finished", "delete-notify");
+        typeof onDone == "function" && onDone();
     } else {
         var href = hrefs[itemNum];
         flog("doClipboardActionInList", href);
-        deleteFile(href, function (resp, href) {
-            Msg.info("Deleted " + href, "delete-notify");
-            chk.closest("tr").remove();
-            deleteItemInList(itemNum + 1, checkBoxes);
+        doClipboardAction(href, newUrl, isCut, function (resp, sourceHref, destHref) {
+            var filename = getFileName(href);
+            var copy = isCut ? "Cut" : "Copied";
+            Msg.info(copy + " " + filename, "copy-notify");
+            doClipboardActionInList(itemNum + 1, hrefs, newUrl, isCut, onDone);
         });
     }
 }

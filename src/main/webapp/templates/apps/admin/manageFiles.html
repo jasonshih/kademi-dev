@@ -86,8 +86,9 @@
                 <div>
                     <div class="pull-right">
                         <div class="btn-group">
-                            <a class="btn btn-danger btn-sm btn-delete-list" href=""><i class="fa fa-times-circle"></i></a>
-                            <a class="btn btn-info btn-sm btn-sm btn-copy-list" href=""><i class="fa fa-copy"></i></a>
+                            <a title="Delete selected files" class="btn btn-danger btn-sm btn-delete-list" href=""><i class="fa fa-times-circle"></i></a>
+                            <a title="Copy selected files" class="btn btn-info btn-sm btn-sm btn-copy-list" href=""><i class="fa fa-copy"></i></a>
+                            <a title="Paste copied/cut files" href="$page.href" class="btn btn-success btn-sm btn-paste requires-clipboard hide" data-clipboard="default" href="$page.href"><i class="fa fa-paste"></i></a>
                         </div>
                     </div>
 
@@ -97,7 +98,7 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="btn-upload-file" href=""><i class="fa fa-cloud-upload"></i> Upload files</a></li>
-                            <li><a href="$page.href" class="btn-sm btn-paste requires-clipboard" data-clipboard="default" href="$page.href"><i class="fa fa-paste"></i> Paste</a></li>
+                            <li></li>
                             <li><a class="btn-create-folder" href=""><i class="clip-folder-plus"></i> New folder</a></li>
                             <li><a class="btn-new-text-file" href=""><i class="fa fa-file-text-o"></i> New text file</a></li>
                             <li><a class="btn-upload-zip" href=""><i class="fa fa-upload"></i> Upload and extract zip file</a></li>
@@ -158,8 +159,6 @@
                                             <li><a href="$f.href" class="btn-duplicate"><span class="fa fa-copy"></span> Duplicate</a></li>
                                             <li><a href="$f.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>
                                             <li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>
-                                            <li class="requires-clipboard" data-clipboard="default"><a href="$f.href" class="btn-paste"><span class="fa fa-paste"></span> Paste</a>
-                                            </li>
                                             <li class="divider"></li>
                                             <li><a href="${f.href}" class="btn-delete-file" title="Delete folder"><i class="fa fa-times"></i> Delete</a></li>
                                         </ul>

@@ -404,6 +404,19 @@ function isDate(dtStr) {
     return true;
 }
 
+function getFileNames(pathArr) {
+    var arr = [];
+    if (pathArr && Array.isArray(pathArr) && pathArr.length){
+        for (var i = 0; i < pathArr.length; i++){
+            var name = getFileName(pathArr[i]);
+            if (name){
+                arr.push(name);
+            }
+        }
+    }
+    return arr;
+}
+
 function getFileName(path) {
     var arr = path.split('/');
     if (arr.length === 1) {
