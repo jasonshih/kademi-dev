@@ -219,7 +219,6 @@ function initFiles() {
     container.on('click', '.btn-delete-list', function (e) {
         e.preventDefault();
 
-        var target = $(this);
         var checkBoxes = container.find("input[type=checkbox][name=file-chk]:checked")
         if (checkBoxes.length == 0) {
             Msg.error("Please select the files you want to remove by clicking the checkboxs to the right");
