@@ -45,6 +45,8 @@
                                     <i class="fa fa-exclamation-circle text-warning"></i>
                                     #elseif($sms.status == "Completed" )
                                     <i class="fa fa-check-circle text-success"></i>
+                                    #elseif($sms.status == "Failed" )
+                                    <i class="fa fa-times-circle text-error"></i>
                                     #else
                                     $!sms.status
                                     #end
