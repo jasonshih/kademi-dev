@@ -4,6 +4,7 @@
     var defaultConfig = {
         clipboardName: "default",
         copyClass: ".btn-copy",
+        copySelectedClass: ".btn-copy-selected",
         cutClass: ".btn-cut",
         pasteClass: ".btn-paste",
         duplicateClass: ".btn-duplicate",
@@ -94,6 +95,29 @@
             checkRequiresClipboard(config.clipboardName);
         });
 
+        container.on('click', config.copySelectedClass, function (e) {
+            e.preventDefault();
+            
+            var checkBoxes = container.find("input[type=checkbox]:checked")
+            if( checkBoxes.length == 0) {
+                return;                
+            }
+            
+            var combinedHrefs = "";
+            checkBoxes.each(function(i, n){
+                var href = $(n).val();
+                if( combinedHrefs.length > 0 ) {
+                    combinedHrefs = combinedHrefs + ",";
+                }
+                combinedHrefs = combinedHrefs + href;
+            });
+
+
+            setClipboard(config.clipboardName, combinedHrefs, false);
+            flog("Placed on clipboard (copy)", combinedHrefs);
+            checkRequiresClipboard(config.clipboardName);
+        });
+
         container.on('click', config.cutClass, function (e) {
             e.preventDefault();
 
@@ -177,19 +201,34 @@ function clearClipboard(clipboardName) {
     });
 }
 
-function getClipboardHref(clipboardName) {
+function getClipboardHrefs(clipboardName) {
     var cookieName = 'clipboard-' + clipboardName;
     var cookieVal = $.cookie(cookieName) || '';
     if (cookieVal.indexOf('|cut') !== -1) {
         cookieVal = cookieVal.split('|cut')[0];
     }
-    return cookieVal;
+    return cookieVal.split(',');
 }
 
 function isClipboardCut(clipboardName) {
     var cookieName = 'clipboard-' + clipboardName;
     var cookieVal = $.cookie(cookieName) || '';
     return cookieVal.indexOf('|cut') !== -1;
+}
+
+function doClipboardActionInList(itemNum, hrefs) {
+    flog("doClipboardActionInList", itemNum, hrefs);
+    if (itemNum >= hrefs.length) {
+        Msg.info("Finished", "delete-notify");
+    } else {
+        var href = hrefs[itemNum];
+        flog("doClipboardActionInList", href);
+        deleteFile(href, function (resp, href) {
+            Msg.info("Deleted " + href, "delete-notify");
+            chk.closest("tr").remove();
+            deleteItemInList(itemNum + 1, checkBoxes);
+        });
+    }
 }
 
 function doClipboardAction(oldUrl, newUrl, isCut, ondone) {
