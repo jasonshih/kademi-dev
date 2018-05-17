@@ -1,0 +1,69 @@
+<form class="form-horizontal">
+
+    <div class="form-group">
+        <label class="col-sm-12">Points bucket</label>
+        <div class="col-sm-12">
+            <select class="form-control select-store">
+                <option value="" selected="selected">- None -</option>
+                #foreach($store in $applications.rewardStore.pointsBuckets)
+                <option value="$store.name">$store.title</option>
+                #end
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Points tag</label>
+        <div class="col-sm-12">
+            <select class="form-control select-tag">
+                <option value="">- None -</option>
+                #foreach($tag in $applications.rewardStore.pointsTags)
+                <option value="$tag.name">$tag.title</option>
+                #end
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Hide participant names</label>
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="hide-names" value="" />
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Text when hidden</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control hidden-text" value="" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Number of participants</label>
+        <div class="col-sm-12">
+            <input type="number" class="form-control num-users" value="" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Height</label>
+        <div class="col-sm-12">
+            <input type="number" class="form-control txt-height" value="" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Show points column</label>
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="show-points" value="" />
+                </label>
+            </div>
+        </div>
+    </div>
+</form>
