@@ -269,7 +269,7 @@ function updateRefreshPBStatus() {
 }
 
 function reloadFragmentPoints(onSuccess) {
-    $('#pointsBody, #pointsFooter').reloadFragment({
+    $('#pointsBody, #pointsFooter, #points-stats').reloadFragment({
         whenComplete: onSuccess
     });
 }
