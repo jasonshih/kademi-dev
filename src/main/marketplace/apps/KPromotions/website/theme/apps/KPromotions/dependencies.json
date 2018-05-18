@@ -6,11 +6,11 @@
         },        
         {
             "appId": "rewards-lib",
-            "branch": "1.1.4"
+            "branch": "1.1.7"
         },
         {
             "appId": "formBuilder",
-            "branch": "1.24.5"
+            "branch": "1.24.6"
         }     
   ]
 }
