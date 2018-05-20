@@ -1,4 +1,9 @@
 controllerMappings.addComponent("KCommerce2/components", "ecomStoreSidebar", "html", "Display ecom product details", "E-commerce App component");
+controllerMappings.addComponent("KCommerce2/components", "ecomStoreBreadcrumb", "html", "Displays a breadcrumb trail for ecom pages", "E-commerce App component");
+controllerMappings.addComponent("KCommerce2/components", "storeProductList", "html", "Displays a product list for a store", "E-commerce App component");
+controllerMappings.addComponent("KCommerce2/components", "ecomProductDetails", "html", "Product details in an ecom store", "E-commerce App component");
+controllerMappings.addComponent("KCommerce2/components", "ecomProduct", "html", "Product image and cost panel", "E-commerce App component");
+
 controllerMappings.addComponent("ecommerce/components", "ecomProduct", "html", "Display ecom product details", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "orderHistoryECom", "html", "Shows the current user's orders and status", "E-commerce App component");
 
