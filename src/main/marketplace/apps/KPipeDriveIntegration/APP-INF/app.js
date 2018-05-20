@@ -29,6 +29,12 @@ function handlePipeDriveNode(rootFolder, lead, funnel, exitingNode, settings, no
     if(contactRequestResponse.hits.hits.length > 0){
         contactRequest = contactRequestResponse.hits.hits[0].source;
     }
+    
+    var result = applications.salesDataClaimer.call('searchClaims', rootFolder, null, null, claimGroup);
+    var invoiceURL = "";
+    if(result.hits.hits.length > 0){
+        invoiceURL = "https://claims.mhiaapromo.com.au/" + result.hits.hits[0].fields.receipt.value;
+    }
      
     // Prepare preson object
     var personInfo = {
@@ -87,8 +93,9 @@ function handlePipeDriveNode(rootFolder, lead, funnel, exitingNode, settings, no
     };
     
     
-    dealInfo["invoice_link"] = "invoice_link"; // <=------- ??
-    dealInfo["claim_submitted"] = contactRequest.createdDate ? formatter.formatDate(formatter.toDate(contactRequest.createdDate)) : null; // <=------- ?? contactRequest.createdDate 
+    dealInfo["invoice_link"] = invoiceURL;
+    dealInfo["claim_submitted"] = contactRequest.createdDate ? formatter.toDate(contactRequest.createdDate) : null;
+    dealInfo["expected_close_date"] = contactRequest.createdDate ? formatter.addDays(contactRequest.createdDate, 28) : null; 
     
     
     dealInfo["prod2_model_number"] = contactRequest["prod2-model-number"] ? contactRequest["prod2-model-number"] : null;
@@ -148,15 +155,22 @@ function handlePipeDriveCheckDealNode(rootFolder, lead, funnel, exitingNode, set
         funnelStagesMap[funnelStages.get(index).getName()] = index + 1; 
     }
     
-    log.info("Compare --> settings : {} < pipe drive {} = {}", funnelStagesMap[settings.stage] , stageOrderNumber, funnelStagesMap[settings.stage] > stageOrderNumber );
-    if( funnelStagesMap[settings.stage] > stageOrderNumber ){
-        return nodeIds['notReached'];
-    }else{
-        log.info("stage --> {},  display_for_customers --> {}, description_for_customers --> {}", settings.stage, settings.displayForCustomers, settings.description );
-        lead.setStageName(settings.stage);
-        lead.setFieldValue("display_for_customers", settings.displayForCustomers);
-        lead.setFieldValue("description_for_customers", settings.description);
+    log.info("Data  --> Local : {} , Romote {}", funnelStagesMap[settings.stage] , stageOrderNumber );
+    
+    lead.setStageName(settings.stage);
+    lead.setFieldValue("display_for_customers", settings.displayForCustomers);
+    lead.setFieldValue("description_for_customers", settings.description);
+    
+    if(funnelStagesMap[settings.stage] < stageOrderNumber) {
+        log.info("From "+ settings.stage +" = Next Node ----->" );
+        //log.info("stage --> {},  display_for_customers --> {}, description_for_customers --> {}", settings.stage, settings.displayForCustomers, settings.description );
         return nodeIds['nextNodeId'];
+    }else if( funnelStagesMap[settings.stage] == stageOrderNumber ){
+        log.info("From "+ settings.stage +" = Timer Node ----->" );
+        return nodeIds['notReached'];
+    }else if( ( funnelStagesMap[settings.stage] > stageOrderNumber ) ){
+        log.info("From "+ settings.stage +" = Previous Node ----->" );
+        return nodeIds['previousNodeId'];
     }
 }
 
@@ -171,7 +185,7 @@ function checkProfile(profileEmail){
     if(!response.success){
         return 0;
     }else{
-        if(response.data.length === 0){
+        if(response == null || response.data == null || response.data.length === 0){
             return 0;
         }else{
             return response.data[0].id;
@@ -350,6 +364,7 @@ function createPipeDriveDeal(dealInfo){
         "status":"status",
         "stage_id":"stage_id",
         "person_id":"person_id",
+        "expected_close_date": "expected_close_date",
         "invoice_link":"c2938a766b4f99eb2c3f440ca40d53778b5ad449",
         "promo_name":"ec9398b31908c0f25650ceb57a480fe7c828da89",
         "claim_submitted":"aa4244358b7c167903946d4d99a0ef53198c0064",
@@ -405,7 +420,8 @@ function createPipeDriveDeal(dealInfo){
     
     dealInfo.invoice_link ? DealFormData.append(dealsKeys.invoice_link, dealInfo.invoice_link) : ""; // <------- ??
     
-    dealInfo.claim_submitted ? DealFormData.append(dealsKeys.claim_submitted, dealInfo.claim_submitted) : ""; // <----- ??
+    dealInfo.claim_submitted ? DealFormData.append(dealsKeys.claim_submitted, dealInfo.claim_submitted) : "";
+    dealInfo.expected_close_date ? DealFormData.append(dealsKeys.expected_close_date, dealInfo.expected_close_date) : ""; 
     
     // Prod2 details check
     dealInfo.prod2_model_number ? DealFormData.append(dealsKeys.model_no_2, dealInfo.prod2_model_number) : "";
