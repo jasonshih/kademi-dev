@@ -1,12 +1,4 @@
-controllerMappings
-    .websiteController()
-    .path('/stores/')
-    .enabled(true)
-    .defaultView(views.templateView('KCommerce2/viewStores.html'))
-    .addMethod('GET', 'getSurveys')
-    .build();
-
-
+controllerMappings.addComponent("KCommerce2/components", "ecomStoreSidebar", "html", "Display ecom product details", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "ecomProduct", "html", "Display ecom product details", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "orderHistoryECom", "html", "Shows the current user's orders and status", "E-commerce App component");
 
