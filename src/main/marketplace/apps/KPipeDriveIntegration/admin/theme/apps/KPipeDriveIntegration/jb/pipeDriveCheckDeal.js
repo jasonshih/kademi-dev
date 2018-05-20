@@ -13,6 +13,11 @@ JBNodes['pipeDriveCheckDealNode'] = {
             label: 'not',
             title: 'When Stage Not Reached',
             maxConnections: 1
+        },
+        previousNodeId: {
+            label: 'back',
+            title: 'When Stage Step back',
+            maxConnections: 1
         }
     },
 
@@ -34,6 +39,7 @@ JBNodes['pipeDriveCheckDealNode'] = {
             '           <option value="escalated-to-mhiaa">Escalated to MHIAA</option>' +
             '           <option value="approved">Approved - Send Email</option>' +
             '           <option value="pay-consumer">Pay Consumer</option>' +
+            '           <option value="paid">Paid</option>' +
             '           <option value="payment-bounced">Payment Bounced</option>' +
             '           <option value="declined">Declined</option>' +
             '           <option value="pay-again">Pay Again</option>' +
