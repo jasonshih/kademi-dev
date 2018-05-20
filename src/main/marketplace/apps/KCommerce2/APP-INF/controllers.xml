@@ -1,0 +1,4 @@
+<controllers onAppEnabled="initKCommerce2App" >
+    <source>/APP-INF/app.js</source>  
+    <source>/APP-INF/mappings.js</source>
+</controllers> 
