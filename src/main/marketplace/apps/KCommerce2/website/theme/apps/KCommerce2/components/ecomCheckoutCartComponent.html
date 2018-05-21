@@ -1,3 +1,5 @@
+$services.catalogManager.shoppingCart(false).productOrders
+
 <form id="cart-items" method="POST" action="/storeCheckout">
     <!-- TODO: Currency should be configurable -->
     <div id="ecomItemsTable" class="panel panel-default">
@@ -7,6 +9,7 @@
             </div>
         </div>
 
+        
         <div class="items-list">
             #set($subTotal = 0)
             #set($totalTax = 0)
