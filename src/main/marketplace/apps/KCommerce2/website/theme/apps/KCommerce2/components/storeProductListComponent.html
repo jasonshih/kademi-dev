@@ -46,17 +46,13 @@
         #set($ascParam = false)
     #end
 
-    #if ($page.is('category'))
-        #set ($category = $page.name)
-    #end
-
 
     #set ($catalogManager = $services.catalogManager)
 
     #if($startPrice && $endPrice)
-        #set ($prods = $catalogManager.searchProducts($storeOb.name, $params.q, $category, $startPrice, $endPrice, $sortParam, $ascParam))
+        #set ($prods = $catalogManager.searchProducts($storeOb, $params.q, $page.attributes.category, $startPrice, $endPrice, $sortParam, $ascParam))
     #else
-        #set ($prods = $catalogManager.searchProducts($storeOb.name, $params.q, $category, $sortParam, $ascParam))
+        #set ($prods = $catalogManager.searchProducts($storeOb, $params.q, $page.attributes.category, $sortParam, $ascParam))
     #end
 
 

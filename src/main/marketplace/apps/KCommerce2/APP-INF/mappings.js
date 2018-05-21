@@ -4,6 +4,10 @@ var productInStoreMapping = controllerMappings
         .websiteController()
         .enabled(true)
         .isPublic(true)
+        .title(function (page) {
+            return "TODO";
+        })
+        // .seoContent('_genDealSeoContent')
         .defaultView(views.templateView('/theme/apps/KCommerce2/viewProduct.html'))
         .pathSegmentResolver('productInStore', 'resolveProduct');
 
@@ -12,8 +16,12 @@ var categoryMapping = controllerMappings
         .websiteController()
         .enabled(true)
         .isPublic(true)
-        .pathSegmentName('bannerImage')
-        .addMethod('GET', '_viewDealBannerImage');
+        .title(function (page) {
+            return "TODO";
+        })
+        // .seoContent('_genDealSeoContent')
+        .defaultView(views.templateView('/theme/apps/KCommerce2/viewCategory.html'))
+        .pathSegmentResolver('category', 'resolveCategory');
 
 
 
@@ -73,5 +81,16 @@ function resolveProduct(rf, groupName, groupVal, mapOfGroups) {
     return product;
 }
 
+
+function resolveCategory(rf, groupName, groupVal, mapOfGroups) {
+    // we might want to use this later
+    var store = mapOfGroups.get("store");
+
+    var category = services.criteriaBuilders.get("category")
+            .eq("name", groupVal)
+            .executeSingle();
+
+    return category;
+}
 
 
