@@ -4,6 +4,8 @@ var searchOptions = {
     query: ''
 };
 
+Msg.singletonForCategory = true;
+
 function initManageSalesData() {
     setRecentItem(document.title, window.location.pathname);
     initManageExtraField();
@@ -247,7 +249,7 @@ function doRemoveSalesData(checkBoxes) {
 
 function doHistorySearch() {
     flog('doHistorySearch', searchOptions.startDate, searchOptions.endDate, searchOptions.query);
-    Msg.info("Doing search...", 2000);
+    Msg.info("Doing search...", "sales-cat");
     
     flog("data", searchOptions);
 
@@ -260,7 +262,7 @@ function doHistorySearch() {
         dataType: 'html',
         data: searchOptions,
         success: function (content) {
-            Msg.success("Search complete", 2000);
+            Msg.success("Search complete", "sales-cat");
             var newBody = $(content).find("#history-table-body");
             target.replaceWith(newBody);
             $("abbr.timeago").timeago();
