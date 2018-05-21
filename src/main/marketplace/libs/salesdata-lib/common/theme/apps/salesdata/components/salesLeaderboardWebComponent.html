@@ -58,7 +58,7 @@
                 #set ($isThisUser = $row[1].id == $userResource.userId)
             #elseif ($dataSeriesObj.salesType == "SALES_ORG")
                 #set ($name = $row[1].title)
-                #set ($m = $userResource.memberships.filterByOrg($row[1].orgId))
+                #set ($m = $userResource.primaryMemberships.filterByOrg($row[1].orgId))
                 #set ($isThisUser = $m.size() > 0)
             #end
             #set ($amnt = $formatter.formatCurrency($row[0]))
