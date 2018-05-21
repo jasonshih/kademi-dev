@@ -61,6 +61,7 @@ function setCartItem(page, params, files, form) {
     var quantity = form.integerParam("quantity");
     var skuId = form.longParam("skuId");
     var sku = services.criteriaBuilders.get("productSku").eq("id", skuId).executeSingle();
+    var store = page.attributes.store;
 
     var cart = services.catalogManager.shoppingCart(true);
     services.catalogManager.addOrUpdateShoppingCartItem(cart, sku, quantity, store, true);
