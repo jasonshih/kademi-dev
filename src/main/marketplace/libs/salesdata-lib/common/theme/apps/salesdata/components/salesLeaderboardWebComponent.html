@@ -1,3 +1,9 @@
+#script
+<script>
+    templatingContext.put("String", String.class);
+</script>
+#end
+
 <table class="table table-striped">
     #if (!$rowHeight)
     #set ($rowHeight = 25)
@@ -13,15 +19,18 @@
         #set ($showPoints = "true")
     #end
 
-    #if ($pointsBucket && $pointsBucket != "")
-    #set( $isOrgPoints = false )
-    #set( $myPointsInfo = $applications.rewardStore.myPointsInfo($pointsBucket, $formatter.toInteger(1000), null) )
-        #if( $myPointsInfo.reward.pointsType == "POINTS_ORG" )
-            #set( $isOrgPoints = true )
-        #end
+    #if ($series && $series != "")
+    #set ($dataSeriesObj = $applications.salesData.getSalesDataSeries($series))
+    #set( $crit = $services.criteriaBuilders.salesDataRecord.eq("series", $dataSeriesObj) )
+    #set( $crit = $crit.sum("amount"))
+    #set( $crit = $crit.groupBy("salesBy"))
+    #if ($useDateRange == "true")
+    #set( $crit = $crit.ge("periodFrom", $services.queryManager.commonStartDate) )
+    #set( $crit = $crit.lt("periodFrom", $services.queryManager.commonFinishDate) )
     #end
-
-
+    #set( $results = $crit.execute(10) )
+    #docs($results[0])
+    #end
     <thead>
         <tr>
             <th class="trans-lookup" data-transcode="rank">Rank</th>
@@ -32,21 +41,6 @@
         </tr>
     </thead>
     <tbody>
-    #set ($selectedOrgs = $queryManager.selectedOrgs)
-    #if( $myPointsInfo.hasPoints )
-        #set ($memberships = $userResources.primaryMemberships)
-        #foreach($leader in $myPointsInfo.allMemberPoints($pointsTag) )
-            #set( $isThisUser = ($leader.member.userId == $user.id || $memberships.filterByOrg($leader.member.orgId).size() > 0) )
-            #if( $foreach.count <= $numUsers || $isThisUser )
-                #renderLeaderRow($foreach.count, $leader.member.formattedName(), $leader.numPoints, $isThisUser)
-            #end
-        #end
-    #else
-    <tr>
-        #renderLeaderRow( "1", "[Please select a points bucket]", 999, false)
-        #renderLeaderRow( "2", "[Please select a points bucket]", 998, false)
-    </tr>
-    #end
     </tbody>
 </table>
 

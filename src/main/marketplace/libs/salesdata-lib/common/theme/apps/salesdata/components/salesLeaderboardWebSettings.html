@@ -1,24 +1,12 @@
 <form class="form-horizontal">
 
     <div class="form-group">
-        <label class="col-sm-12">Points bucket</label>
+        <label class="col-sm-12">Data series</label>
         <div class="col-sm-12">
-            <select class="form-control select-store">
+            <select class="form-control select-series">
                 <option value="" selected="selected">- None -</option>
-                #foreach($store in $applications.rewardStore.pointsBuckets)
-                <option value="$store.name">$store.title</option>
-                #end
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="col-sm-12">Points tag</label>
-        <div class="col-sm-12">
-            <select class="form-control select-tag">
-                <option value="">- None -</option>
-                #foreach($tag in $applications.rewardStore.pointsTags)
-                <option value="$tag.name">$tag.title</option>
+                #foreach($series in $applications.salesData.allSalesDataSeries)
+                <option value="$series.name">$series.title</option>
                 #end
             </select>
         </div>
@@ -57,7 +45,7 @@
     </div>
 
     <div class="form-group">
-        <label class="col-sm-12">Show points column</label>
+        <label class="col-sm-12">Show sales amount column</label>
         <div class="col-sm-12">
             <div class="checkbox">
                 <label>
