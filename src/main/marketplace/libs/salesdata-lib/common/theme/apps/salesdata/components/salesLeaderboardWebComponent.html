@@ -31,7 +31,7 @@
             #set( $crit = $crit.le("periodFrom", $to) )
         #end
     #end
-    #set( $results = $crit.execute(10) )
+    #set( $results = $crit.execute($numUsers) )
 
     #end
     <thead>
