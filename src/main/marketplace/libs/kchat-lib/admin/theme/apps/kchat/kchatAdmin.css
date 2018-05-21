@@ -68,6 +68,17 @@
     border-bottom: 1px solid #dfeaf1;
     margin: 0;
 }
+#page-sidebar .media-list .media.active {
+    background: #3988b7;
+}
+
+#page-sidebar .media-list .media.active h4{
+    color: #fff;
+}
+
+#page-sidebar .media-list .media.active a:hover{
+    background: #3988b7;
+}
 
 #page-sidebar .media-list .media a {
     padding: 8px;
