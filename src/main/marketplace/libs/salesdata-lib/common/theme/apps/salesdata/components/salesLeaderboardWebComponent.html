@@ -1,9 +1,3 @@
-#script
-<script>
-    templatingContext.put("String", String.class);
-</script>
-#end
-
 <table class="table table-striped">
     #if (!$rowHeight)
     #set ($rowHeight = 25)
@@ -15,36 +9,50 @@
     #set ($numUsers = $formatter.toInteger($numUsers))
     #end
 
-    #if ($formatter.isNull($showPoints))
-        #set ($showPoints = "true")
+    #if ($formatter.isNull($showAmount))
+        #set ($showAmount = "true")
     #end
 
     #if ($series && $series != "")
     #set ($dataSeriesObj = $applications.salesData.getSalesDataSeries($series))
     #set( $crit = $services.criteriaBuilders.salesDataRecord.eq("series", $dataSeriesObj) )
-    #set( $crit = $crit.sum("amount"))
+    #set( $crit = $crit.sum("amount", "a").sortDesc("a")  )
     #set( $crit = $crit.groupBy("salesBy"))
     #if ($useDateRange == "true")
-    #set( $crit = $crit.ge("periodFrom", $services.queryManager.commonStartDate) )
-    #set( $crit = $crit.lt("periodFrom", $services.queryManager.commonFinishDate) )
+        #set( $crit = $crit.ge("periodFrom", $services.queryManager.commonStartDate) )
+        #set( $crit = $crit.lt("periodFrom", $services.queryManager.commonFinishDate) )
+    #else
+        #if ($startDate && $startDate != "")
+            #set ($since = $formatter.toDate($startDate))
+            #set( $crit = $crit.ge("periodFrom", $since) )
+        #end
+        #if ($endDate && $endDate != "")
+            #set ($to = $formatter.toDate($endDate))
+            #set( $crit = $crit.le("periodFrom", $to) )
+        #end
     #end
     #set( $results = $crit.execute(10) )
-    #docs($results[0])
+
     #end
     <thead>
         <tr>
             <th class="trans-lookup" data-transcode="rank">Rank</th>
             <th class="trans-lookup" data-transcode="participant">Participant</th>
-            #if ($showPoints == "true")
-            <th class="trans-lookup" data-transcode="points">Points</th>
+            #if ($showAmount == "true")
+            <th class="trans-lookup" data-transcode="points">Amount</th>
             #end
         </tr>
     </thead>
     <tbody>
+        #foreach($row in $results)
+        #set ($name = $applications.userApp.findUserResource($row[1]).formattedName)
+        #set ($amnt = $formatter.formatCurrency($row[0]))
+        #set ($isThisUser = $row[1].id == $userResource.userId)
+        #renderLeaderRow($foreach.count $name  $amnt $isThisUser)
+        #end
     </tbody>
 </table>
-
-#macro (renderLeaderRow $rank $participantName $points $highlightRow)
+#macro (renderLeaderRow $rank $participantName $amount $highlightRow)
     <tr>
         <td>
             #if( $highlightRow )
@@ -64,9 +72,9 @@
             #end
             #end
         </td>
-        #if ($showPoints == "true")
+        #if ($showAmount == "true")
         <td>
-            $!points pts
+            $$!amount
         </td>
         #end
     </tr>
