@@ -23,6 +23,18 @@ var categoryMapping = controllerMappings
         .defaultView(views.templateView('/theme/apps/KCommerce2/viewCategory.html'))
         .pathSegmentResolver('category', 'resolveCategory');
 
+var cartMapping = controllerMappings
+        .websiteController()
+        .pathSegmentName('cart')
+        .enabled(true)
+        .isPublic(true)
+        .defaultView(views.templateView('/theme/apps/KCommerce2/storeCheckout.html'))
+        .postPriviledge('READ_CONTENT')
+        .addMethod('POST', 'setCartItem', 'quantity')
+        .addMethod('POST', 'removeCartItem', 'removeLineId')
+        .addMethod('POST', 'checkout', 'checkout');
+
+
 
 
 controllerMappings
@@ -39,7 +51,22 @@ controllerMappings
         .postPriviledge('READ_CONTENT')
         .child(productInStoreMapping)
         .child(categoryMapping)
+        .child(cartMapping)
         .build();
+
+
+
+function setCartItem(page, params, files, form) {
+    log.info("setCartItem: form={}", form);
+    var quantity = form.integerParam("quantity");
+    var skuId = form.longParam("skuId");
+    var sku = services.criteriaBuilders.get("productSku").eq("id", skuId).executeSingle();
+
+    var cart = services.catalogManager.shoppingCart(true);
+    services.catalogManager.addOrUpdateShoppingCartItem(cart, sku, quantity, store, true);
+    return views.jsonView(true, "Added " + sku.title);
+
+}
 
 function resolveStoreName(rf, groupName, groupVal) {
     var store = services.criteriaBuilders.get("ecommerceStore")
