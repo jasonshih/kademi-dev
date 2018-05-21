@@ -295,7 +295,7 @@
 
                     var html = self.$kchat_user_templ(c);
 
-                    self.$elem.find('.media-list').append(html);
+                    self.$elem.find('.media-list').prepend(html);
 
                     self.$elem.find('.user-chat').append(self.$kchat_user_chatlist_templ(c));
                 } else if (c.action === "disconnected") {
@@ -328,11 +328,17 @@
 
                             var html = self.$kchat_user_templ(c.clients[i]);
 
-                            self.$elem.find('.media-list').append(html);
+                            self.$elem.find('.media-list').prepend(html);
 
                             self.$elem.find('.user-chat').append(self.$kchat_user_chatlist_templ(c.clients[i]));
                         }
                     }
+
+                    self.$elem.perfectScrollbar({
+                        wheelSpeed: 1,
+                        minScrollbarLength: 20,
+                        suppressScrollX: true
+                    });
                 } else if (c.action === 'history') {
                     var data = c.data;
 
@@ -502,6 +508,9 @@
                         $('#user-' + cm.visitorId + ' a').click();
                     };
                 }
+
+                // Highlight active chat
+                $('#user-' + cm.visitorId).addClass('active');
             }
         },
         _kchatInitNotificationSound: function () {
@@ -555,6 +564,8 @@
                 self.$elem.addClass('showed-message');
 
                 self._kchatSend({action: 'history', visitorId: href});
+
+                btn.parent().removeClass('active');
             });
 
             self.$elem.find('.sidebar-back').on('click', function (e) {
@@ -584,7 +595,7 @@
                 return result;
             });
 
-            ol.empty().append(chats);
+            ol.empty().prepend(chats);
         }
     };
 
