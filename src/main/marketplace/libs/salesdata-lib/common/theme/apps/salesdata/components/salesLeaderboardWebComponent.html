@@ -15,6 +15,7 @@
 
     #if ($series && $series != "")
     #set ($dataSeriesObj = $applications.salesData.getSalesDataSeries($series))
+
     #set( $crit = $services.criteriaBuilders.salesDataRecord.eq("series", $dataSeriesObj) )
     #set( $crit = $crit.sum("amount", "a").sortDesc("a")  )
     #set( $crit = $crit.groupBy("salesBy"))
@@ -51,10 +52,17 @@
             #end
         #else
             #foreach($row in $results)
-            #set ($name = $applications.userApp.findUserResource($row[1]).formattedName)
+            #set ($isThisUser = false)
+            #if ($dataSeriesObj.salesType == "SALES_PROFILE")
+                #set ($name = $applications.userApp.findUserResource($row[1]).formattedName)
+                #set ($isThisUser = $row[1].id == $userResource.userId)
+            #elseif ($dataSeriesObj.salesType == "SALES_ORG")
+                #set ($name = $row[1].title)
+                #set ($m = $userResource.memberships.filterByOrg($row[1].orgId))
+                #set ($isThisUser = $m.size() > 0)
+            #end
             #set ($amnt = $formatter.formatCurrency($row[0]))
-            #set ($isThisUser = $row[1].id == $userResource.userId)
-            #renderLeaderRow($foreach.count $name  $amnt $isThisUser)
+            #renderLeaderRow($foreach.count, $name, $amnt, $isThisUser)
             #end
         #end
     </tbody>
