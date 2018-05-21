@@ -44,11 +44,18 @@
         </tr>
     </thead>
     <tbody>
-        #foreach($row in $results)
-        #set ($name = $applications.userApp.findUserResource($row[1]).formattedName)
-        #set ($amnt = $formatter.formatCurrency($row[0]))
-        #set ($isThisUser = $row[1].id == $userResource.userId)
-        #renderLeaderRow($foreach.count $name  $amnt $isThisUser)
+        #if ($formatter.isNull($results) || $results.isEmpty())
+            #if (!$page)
+                #renderLeaderRow(1 "Please select data series"  4000 false)
+                #renderLeaderRow(2 "Please select data series"  3000 false)
+            #end
+        #else
+            #foreach($row in $results)
+            #set ($name = $applications.userApp.findUserResource($row[1]).formattedName)
+            #set ($amnt = $formatter.formatCurrency($row[0]))
+            #set ($isThisUser = $row[1].id == $userResource.userId)
+            #renderLeaderRow($foreach.count $name  $amnt $isThisUser)
+            #end
         #end
     </tbody>
 </table>
