@@ -1,4 +1,4 @@
-$services.catalogManager.shoppingCart(false).productOrders
+#set( $items = $services.catalogManager.shoppingCart(false).productOrders )
 
 <form id="cart-items" method="POST" action="/storeCheckout">
     <!-- TODO: Currency should be configurable -->
@@ -9,30 +9,30 @@ $services.catalogManager.shoppingCart(false).productOrders
             </div>
         </div>
 
-        
+
         <div class="items-list">
             #set($subTotal = 0)
             #set($totalTax = 0)
             #set($totalShipping = 0)
             #set($totalCost = 0)
-            #set( $items = $formatter.sortByProperty( $page.shoppingCartItemBeans, "itemPage.title" ) )
+            #set( $items = $formatter.sortByProperty( $items, "itemDescription" ) )
             #foreach($item in $items )
                 <div class="row item-row">
                     <div class="col-sm-3 item-photo">
                         #set ($photo = "/theme/img/photo_holder.png")
-                        #if( $item.itemPage.productImageHref )
-                            #set ($photo = $item.itemPage.productImageHref)
+                        #if( $item.productSku.imageHash )
+                            #set ($photo = "/_hashes/files/$item.productSku.imageHash")
                         #end
                         <div style="background-image: url($photo)"></div>
                     </div>
                     <div class="col-sm-3 item-title center-content">
                         <div>
-                            $item.title
-                            ##$item.itemPage
-                            #foreach( $opt in $item.itemPage.optionTitles( $item.selectedParameterOptions ).entrySet() )
+                            $item.itemDescription
+
+                            #foreach( $opt in $item.productSku.options )
                             <br />
                             <small class="text-muted">
-                                $opt.key: $opt.value
+                                $opt.productParameter.title : $opt.title
                             </small>
                             #end
                         </div>
@@ -47,11 +47,12 @@ $services.catalogManager.shoppingCart(false).productOrders
                                 <button class="btn btn-default btn-xs btn-increase-quantity" type="button">+</button>
                             </span>
                         </div>
-                        <input type="hidden" class="itemHref" name="item.${foreach.count}" value="$formatter.htmlAttEncode($item.href)" />
+                        <input type="hidden" class="productOrderId" name="item.${foreach.count}" value="$item.id" />
                     </div>
                     <div class="col-sm-2 item-price center-content">
                         <div>
-                            <span class="lead">$$formatter.formatCurrency($page.calcSubTotal($item.ItemPage.productSubTotalCost, $item.quantity))</span>
+                            #set( $itemisedPrice = $services.priceManager.itemisedPrice($item) )
+                            <span class="lead">$$formatter.formatCurrency($itemisedPrice.adjustedPriceExTax)</span>
                         </div>
                     </div>
                     <div class="col-sm-1 item-action text-right center-content">

@@ -57,8 +57,8 @@
 
             <div class="product-skus hide">
                 #foreach( $sku in $product.productSkus )
-                #set( $finalCost = $services.priceManager.finalCost($user, $page.attributes.productInStore, $sku) )
-                <div data-sku-id="$sku.id" data-price="$finalCost"
+                #set( $itemisedPrice = $services.priceManager.itemisedPrice($user, $page.attributes.productInStore, $sku, $formatter.toBigDecimal(1)) )
+                <div data-sku-id="$sku.id" data-price="$itemisedPrice.finalCost"
                     #foreach( $opt in $sku.options )
                     data-$opt.productParameter.name="$opt.name"
                     #end
@@ -68,12 +68,13 @@
                      #set( $prodInLocs = $services.criteriaBuilders.productInLocation.eq("product", $sku).execute(100) )
                      <ul>
                         #foreach( $prodInLoc in $prodInLocs )
-                        <li data-location="$prodInLoc.location.name" data-stock="$prodInLoc.stock">$prodInLoc.stock in $prodInLoc.location.title</li>
+                        <li data-location="$prodInLoc.location.name" data-stock="$prodInLoc.stock">$prodInLoc.stock in $prodInLoc.location.title - $itemisedPrice.finalCost - $itemisedPrice</li>
                         #end
                     </ul>
                 </div>
                 #end
             </div>
+
 
             <div class="caption product-actions">
                 <h3  class="text-center product-price bg-info">
