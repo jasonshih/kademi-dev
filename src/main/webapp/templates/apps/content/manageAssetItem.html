@@ -19,7 +19,8 @@
                 <label class="control-label col-md-3" for="name">Name</label>
 
                 <div class="col-md-8">
-                    <input type="text" name="name" id="name" value="$!page.asset.name" placeholder="" class="required form-control" required="true" />
+                    #set( $assetName = $formatter.ifNull( $page.asset.name, $formatter.randomGuid ) )
+                    <input type="text" name="name" id="name" value="$assetName" placeholder="" class="required form-control" required="true" />
                 </div>
             </div>
 

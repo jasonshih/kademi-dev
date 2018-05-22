@@ -78,11 +78,7 @@
 
             <div class="caption product-actions">
                 <h3  class="text-center product-price bg-info">
-                    #set( $opts = $page.selectedParameterOptions )
-                    #set( $price = $page.getPurchaseAmount($opts) )
-                    #if( $price )
-                    $$formatter.formatCurrency($price.amount, false)
-                    #end
+
                 </h3>
 
                 <input type="text" class="product-quantity form-content" />
