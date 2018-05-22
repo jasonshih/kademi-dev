@@ -336,7 +336,9 @@ function initCRUDModulePages() {
         });
     } else {
         initFuseModal(modal, function () {
-            initHtmlEditors(modal.find('.htmleditor'), getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
+            initHtmlEditors(modal.find('.htmleditor'), getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow', function (editor) {
+                editor.config.pagePath = window.location.pathname;
+            }); // disable autogrow
         });
     }
 
@@ -589,7 +591,9 @@ function initFormDetails() {
         }
     });
 
-    initHtmlEditors(formDetails.find('.htmleditor'), getStandardEditorHeight() + 'px', null, null, 'autogrow');
+    initHtmlEditors(formDetails.find('.htmleditor'), getStandardEditorHeight() + 'px', null, null, 'autogrow', function (editor) {
+        editor.config.pagePath = window.location.pathname;
+    });
 }
 
 function checkEditListsValid() {
@@ -763,7 +767,6 @@ function loadModalEditorContent(modal, name, isQuiz) {
             var data = resp.data;
             flog('set into', modal, modal.find('input[name=pageTitle]'));
             modal.find('input[name=pageTitle]').val(data.title);
-
             if (isQuiz) {
                 loadQuizEditor(modal, data);
             } else {
