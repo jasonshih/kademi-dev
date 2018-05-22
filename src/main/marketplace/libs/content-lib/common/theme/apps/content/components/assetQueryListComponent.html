@@ -5,7 +5,7 @@
 
 #set( $thumbProp = $!thumbnailField )
 #set( $captionProp = $!captionField )
-#set( $tileProp = $formatter.ifTrue($tileField, true, false) )
+#set( $tileProp = $formatter.isNotEmpty($tileField) )
 
 #if( $thumbProp || $captionProp || $tileProp )
     #set( $useDefault = false )
@@ -32,7 +32,8 @@
                 </p>
             </div>
             #elseif( $tileProp )
-                $assetRes.data.get($tileProp)
+
+                $assetRes.data.get($tileField)
 
             #else
 
