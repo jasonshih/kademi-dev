@@ -32,6 +32,7 @@ var cartMapping = controllerMappings
         .postPriviledge('READ_CONTENT')
         .addMethod('POST', 'setCartItem', 'quantity')
         .addMethod('POST', 'removeCartItem', 'removeLineId')
+        .addMethod('POST', 'setCartItemQuantity', 'newQuantity')
         .addMethod('POST', 'checkout', 'checkout');
 
 
@@ -54,7 +55,16 @@ controllerMappings
         .child(cartMapping)
         .build();
 
-
+function setCartItemQuantity(page, params, files, form) {
+    log.info("setCartItem: form={}", form);
+    var newQuantity = form.bigDecimalParam("newQuantity");
+    var changeItemId = form.longParam("changeItemId");
+    var cart = services.cartManager.shoppingCart(false);
+    var item = cart.item(changeItemId);
+    item.quantity = newQuantity;
+    services.criteriaBuilders.getBuilder("productOrder").save(item);
+    return views.jsonView(true, "Updated " + item.productSku.title + " to quantity " + item.quantity);
+}
 
 function setCartItem(page, params, files, form) {
     log.info("setCartItem: form={}", form);
@@ -63,9 +73,20 @@ function setCartItem(page, params, files, form) {
     var sku = services.criteriaBuilders.get("productSku").eq("id", skuId).executeSingle();
     var store = page.attributes.store;
 
-    var cart = services.catalogManager.shoppingCart(true);
-    services.catalogManager.addOrUpdateShoppingCartItem(cart, sku, quantity, store, true);
+    var cart = services.cartManager.shoppingCart(true);
+    services.cartManager.addOrUpdateItem(cart, sku, quantity, store, true);
     return views.jsonView(true, "Added " + sku.title);
+}
+
+function removeCartItem(page, params, files, form) {
+    log.info("removeCartItem: form={}", form);
+    var lineId = form.integerParam("removeLineId");
+    var didRemove = services.cartManager.removeItem(lineId);
+    if( didRemove ) {
+        return views.jsonView(true, "Removed " + lineId);
+    } else {
+        return views.jsonView(true, "Didnt find to remove " + lineId);
+    }
 
 }
 

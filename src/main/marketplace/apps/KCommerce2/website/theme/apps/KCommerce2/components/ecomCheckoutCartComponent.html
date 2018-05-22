@@ -1,4 +1,5 @@
-#set( $items = $services.catalogManager.shoppingCart(false).productOrders )
+#set( $checkoutItems = $services.cartManager.checkoutItems )
+#set( $items = $checkoutItems.items )
 
 <form id="cart-items" method="POST" action="/storeCheckout">
     <!-- TODO: Currency should be configurable -->
@@ -11,10 +12,6 @@
 
 
         <div class="items-list">
-            #set($subTotal = 0)
-            #set($totalTax = 0)
-            #set($totalShipping = 0)
-            #set($totalCost = 0)
             #set( $items = $formatter.sortByProperty( $items, "itemDescription" ) )
             #foreach($item in $items )
                 <div class="row item-row">
@@ -38,32 +35,32 @@
                         </div>
                     </div>
                     <div class="col-sm-3 ecom-item-quantity center-content">
+                        #if( $item.lineItemId )
                         <div class="input-group input-group-sm">
                             <span class="input-group-btn">
                                 <button class="btn btn-default btn-xs btn-decrease-quantity" type="button">-</button>
                             </span>
-                            <input type="text" value="$item.quantity" name="quantity.${foreach.count}" class="form-control ecom-txt-quantity text-center" />
+                            <input type="text" value="$item.quantity" data-item-id="$item.lineItemId" name="quantity.${foreach.count}" class="form-control ecom-txt-quantity text-center" />
                             <span class="input-group-btn">
                                 <button class="btn btn-default btn-xs btn-increase-quantity" type="button">+</button>
                             </span>
                         </div>
                         <input type="hidden" class="productOrderId" name="item.${foreach.count}" value="$item.id" />
+                        #end
                     </div>
                     <div class="col-sm-2 item-price center-content">
                         <div>
-                            #set( $itemisedPrice = $services.priceManager.itemisedPrice($item) )
-                            <span class="lead">$$formatter.formatCurrency($itemisedPrice.adjustedPriceExTax)</span>
+                            <span class="lead">$$formatter.formatCurrency($item.adjustedPriceExTax)</span>
                         </div>
                     </div>
                     <div class="col-sm-1 item-action text-right center-content">
                         <div>
-                            <a href="#" class="btn-ecom-remove-item"><i class="fa fa-times-circle fa-2x"></i></a>
+                            #if( $item.lineItemId )
+                            <a href="$page.href" data-item-id="$item.lineItemId" class="btn-ecom-remove-item"><i class="fa fa-times-circle fa-2x"></i></a>
+                            #end
                         </div>
                     </div>
                 </div>
-                #set($subTotal = $subTotal + $page.calcSubTotal($item.ItemPage.productSubTotalCost, $item.quantity))
-                #set($totalTax = $totalTax + $page.calcSubTotal($item.ItemPage.taxCost, $item.quantity))
-                #set($totalCost = $totalCost + $page.calcSubTotal($item.ItemPage.productPurchaseCost, $item.quantity))
             #end
         </div>
 
@@ -71,7 +68,7 @@
             <div class="row">
                 <div class="col-sm-6 col-sm-offset-6">
                     <span>Sub total</span>
-                    <strong class="pull-right">$$formatter.formatCurrency($subTotal)</strong>
+                    <strong class="pull-right">$$formatter.formatCurrency($checkoutItems.subTotal)</strong>
                 </div>
             </div>
         </div>
@@ -79,7 +76,7 @@
             <div class="row">
                 <div class="col-sm-6 col-sm-offset-6">
                     <span>Tax</span>
-                    <strong class="pull-right">$$formatter.formatCurrency($totalTax)</strong>
+                    <strong class="pull-right">$$formatter.formatCurrency($checkoutItems.totalTax)</strong>
                 </div>
             </div>
         </div>
@@ -87,7 +84,7 @@
             <div class="row">
                 <div class="col-sm-6 col-sm-offset-6">
                     <span><strong>Total</strong></span>
-                    <strong class="pull-right">$$formatter.formatCurrency($totalCost)</strong>
+                    <strong class="pull-right">$$formatter.formatCurrency($checkoutItems.totalCost)</strong>
                 </div>
             </div>
         </div>
@@ -96,7 +93,7 @@
     <div class="payment-select">
         #set($firstApp = false)
         #set($firstPo = false)
-        #set($paymentAps = $page.paymentProviders)
+        #set($paymentAps = $services.cartManager.paymentProviders)
         #foreach($pApp in $paymentAps)
             #set($f1 = $foreach)
             #foreach($po in $pApp.paymentOptions)
