@@ -1,6 +1,6 @@
 #set($firstApp = false)
 #set($firstPo = false)
-#set($paymentAps = $page.paymentProviders)
+#set($paymentAps = $services.cartManager.paymentProviders)
 #foreach($pApp in $paymentAps)
     #set($f1 = $foreach)
     #foreach($po in $pApp.paymentOptions)
@@ -10,9 +10,11 @@
         #end
     #end
 #end
-<form id="cart-form" method="POST" action="/storeCheckout">
-    <!-- TODO: Currency should be configurable -->
-    <input type="hidden" name="currencyCode" value="AUD" />
+
+#set( $checkoutItems = $services.cartManager.checkoutItems )
+
+<form id="cart-form" method="POST" action="$page.href">
+
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title">
@@ -37,9 +39,16 @@
                         $pApp.paymentForm
                     </div>
                 #end
-                <input type="hidden" name="paymentProvider" value="$firstApp.instanceId" />
-                <input type="hidden" name="paymentOption" value="$firstPo.id" />
-                <input type="hidden" name="processCart" value="processCart" />
+                <div id="cart-checkout-data">
+                    <!-- TODO: Currency should be configurable -->
+                    <input type="hidden" name="currencyCode" value="AUD" />
+                    <input type="hidden" name="processCartId" value="$checkoutItems.cartId" />
+                    <!-- This is to validate the re-calculated total server side -->
+                    <input type="hidden" name="cartTotal" value="$checkoutItems.totalCost" />
+                    <input type="hidden" name="paymentProvider" value="$firstApp.instanceId" />
+                    <input type="hidden" name="paymentOption" value="$firstPo.id" />
+                    <input type="hidden" name="processCart" value="processCart" />
+                </div>
                 <div class="form-group">
                     <div class="col-md-12">
                         <!--<div class="checkbox">

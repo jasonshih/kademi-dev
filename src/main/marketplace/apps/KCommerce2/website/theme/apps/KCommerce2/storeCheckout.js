@@ -196,7 +196,7 @@
             }, 500);
         });
     }
-    
+
 
     function doQuantityUpdate(cartHref, lineItemId, quantity) {
         flog("doQuantityUpdate", cartHref);
@@ -247,7 +247,7 @@
         flog('doRemoveFromCart', href);
         $.ajax({
             type: 'POST',
-            url: "/storeCheckout",
+            url: href,
             data: {
                 removeLineId : lineItemId
             },
@@ -255,7 +255,7 @@
             success: function (data) {
                 if( data.status ) {
                     callback();
-                    $("#ecomItemsTable, #cart-link").reloadFragment({
+                    $("#ecomItemsTable, #cart-link, #cart-checkout-data").reloadFragment({
                         whenComplete: function () {
                             Msg.info("Removed item from your shopping cart");
                         }

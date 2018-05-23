@@ -1,7 +1,7 @@
 #set( $checkoutItems = $services.cartManager.checkoutItems )
 #set( $items = $checkoutItems.items )
 
-<form id="cart-items" method="POST" action="/storeCheckout">
+<form id="cart-items" method="POST" action="$page.href">
     <!-- TODO: Currency should be configurable -->
     <div id="ecomItemsTable" class="panel panel-default">
         <div class="panel-heading">
@@ -9,7 +9,6 @@
                 <small>Order Summary</small>
             </div>
         </div>
-
 
         <div class="items-list">
             #set( $items = $formatter.sortByProperty( $items, "itemDescription" ) )
@@ -40,7 +39,7 @@
                             <span class="input-group-btn">
                                 <button class="btn btn-default btn-xs btn-decrease-quantity" type="button">-</button>
                             </span>
-                            <input type="text" value="$item.quantity" data-item-id="$item.lineItemId" name="quantity.${foreach.count}" class="form-control ecom-txt-quantity text-center" />
+                            <input type="text" value="$formatter.toInteger($item.quantity)" data-item-id="$item.lineItemId" name="quantity.${foreach.count}" class="form-control ecom-txt-quantity text-center"  autocomplete="off" />
                             <span class="input-group-btn">
                                 <button class="btn btn-default btn-xs btn-increase-quantity" type="button">+</button>
                             </span>

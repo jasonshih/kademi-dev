@@ -33,7 +33,7 @@ var cartMapping = controllerMappings
         .addMethod('POST', 'setCartItem', 'quantity')
         .addMethod('POST', 'removeCartItem', 'removeLineId')
         .addMethod('POST', 'setCartItemQuantity', 'newQuantity')
-        .addMethod('POST', 'checkout', 'checkout');
+        .addMethod('POST', 'checkout', 'processCartId');
 
 
 
@@ -55,6 +55,22 @@ controllerMappings
         .child(cartMapping)
         .build();
 
+function checkout(page, params, files, form) {
+    var processCartId = form.longParam("processCartId");
+    var totalAmountFromForm = form.bigDecimalParam("cartTotal");
+    var checkoutItems = services.cartManager.checkoutItems;
+    if( checkoutItems == null ) {
+        return views.jsonView(false, "No cart");
+    }
+    if( checkoutItems.cartId != processCartId ) {
+        return views.jsonView(false, "Cart is invalid, please refresh your page");
+    }
+    if( !checkoutItems.getTotalCost.equals(totalAmountFromForm) ) {
+        return views.jsonView(false, "The item prices have changed, please refresh your page");
+    }
+
+}
+
 function setCartItemQuantity(page, params, files, form) {
     log.info("setCartItem: form={}", form);
     var newQuantity = form.bigDecimalParam("newQuantity");
@@ -62,7 +78,9 @@ function setCartItemQuantity(page, params, files, form) {
     var cart = services.cartManager.shoppingCart(false);
     var item = cart.item(changeItemId);
     item.quantity = newQuantity;
-    services.criteriaBuilders.getBuilder("productOrder").save(item);
+    transactionManager.runInTransaction(function () {
+        services.criteriaBuilders.getBuilder("productOrder").save(item);
+    });
     return views.jsonView(true, "Updated " + item.productSku.title + " to quantity " + item.quantity);
 }
 
@@ -81,7 +99,11 @@ function setCartItem(page, params, files, form) {
 function removeCartItem(page, params, files, form) {
     log.info("removeCartItem: form={}", form);
     var lineId = form.integerParam("removeLineId");
-    var didRemove = services.cartManager.removeItem(lineId);
+    var didRemove;
+    transactionManager.runInTransaction(function () {
+        didRemove = services.cartManager.removeItem(lineId);
+    });
+
     if( didRemove ) {
         return views.jsonView(true, "Removed " + lineId);
     } else {
