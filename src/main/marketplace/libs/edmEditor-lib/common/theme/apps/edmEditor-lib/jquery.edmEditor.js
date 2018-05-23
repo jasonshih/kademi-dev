@@ -62,6 +62,11 @@
         EDITOR_PATH + 'jquery.edmEditor.css',
         '/static/bootstrap-colorpicker/2.5.1/css/bootstrap-colorpicker.min.css'
     ];
+
+    edmEditor.keditorStyles = [
+        '/theme/apps/keditor-lib/dist/css/keditor-0.0.0.min.css',
+        '/theme/apps/keditor-lib/dist/css/keditor-components-0.0.0.min.css'
+    ];
     
     edmEditor.checkDependencies = function (options, callback) {
         flog('[jquery.edmEditor] checkDependencies');
@@ -78,6 +83,11 @@
             }
             
             $.each(edmEditor.dependStyles, function (i, style) {
+                options.contentStyles.push({
+                    href: style
+                });
+            });
+            $.each(edmEditor.keditorStyles, function (i, style) {
                 options.contentStyles.push({
                     href: style
                 });
@@ -146,7 +156,6 @@
     
     edmEditor.processEdmContent = function (target, options) {
         flog('[jquery.edmEditor] processEdmContent', target, options);
-        
         var edmContent = target.is('textarea') ? target.val() : target.html();
         var fragment = $('<div />').html(edmContent);
         

@@ -166,5 +166,5 @@ function initContentForm() {
 }
 
 function initVoucherEditor() {
-    initIframeContentEditor($("#voucherContent").find('.contenteditor'));
+    initIframeEDMEditor($("#voucherContent").find('.contenteditor'));
 }

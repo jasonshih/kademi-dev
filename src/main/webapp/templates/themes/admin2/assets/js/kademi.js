@@ -1459,6 +1459,72 @@ function initImagePicker(target, basePath, pagePath) {
 })(jQuery, window);
 
 // ========================================================================
+// EDM Editor iframe mode
+// ========================================================================
+(function ($, window) {
+    var allGroups = null;
+
+    window.initIframeEDMEditor = function (target) {
+        if (allGroups === null) {
+            $.ajax({
+                url: '/groups/_DAV/PROPFIND?fields=name,milton:groupTitle',
+                dataType: 'json',
+                type: 'get',
+                success: function (resp) {
+                    allGroups = {};
+                    $.each(resp, function (i, group) {
+                        allGroups[group.name] = group.groupTitle || group.name;
+                    });
+                }, complete: function () {
+                    initEDMEditor(target, allGroups);
+                }
+            });
+        } else {
+            initEDMEditor(target, allGroups);
+        }
+    };
+
+    function initEDMEditor(target, allGroups) {
+        var wrapper = target.parent();
+        var editorLoading = wrapper.find('.editor-loading');
+
+        if (!wrapper.hasClass('editor-wrapper')) {
+            target.wrap('<div class="editor-wrapper"></div>');
+            wrapper = target.parent();
+            editorLoading = $(
+                '<div class="editor-loading">' +
+                '    <span>' +
+                '        <span class="loading-icon">' +
+                '            <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i>' +
+                '        </span>' +
+                '        <span class="loading-text">Initializing editor...</span>' +
+                '    </span>' +
+                '</div>'
+            );
+            wrapper.prepend(editorLoading);
+        }
+
+        var pageName = getFileName(window.location.href);
+        var pagePath = target.attr('data-page-path') || '';
+        var basePath = target.attr('data-base-path') || '';
+        target.edmEditor({
+            iframeMode: true,
+            snippetsUrl: './_components?fileName=' + pageName,
+            snippetsHandlersUrl: './_components?handlers&fileName=' + pageName,
+            basePath: basePath,
+            pagePath: pagePath,
+            allGroups: allGroups,
+            contentStyles: [{href: '/theme/apps/admin/edmEditor.css'}, {href: '/theme/apps/keditor-lib/dist/css/keditor-bootstrap-settings-0.0.0.min.css'}],
+            onReady: function () {
+                editorLoading.hide();
+            }
+        });
+    }
+
+})(jQuery, window);
+
+
+// ========================================================================
 // KEditor iframe mode
 // ========================================================================
 (function ($, window) {
