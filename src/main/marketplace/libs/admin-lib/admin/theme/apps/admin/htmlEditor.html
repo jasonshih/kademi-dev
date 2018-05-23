@@ -12,8 +12,10 @@
         <link rel="stylesheet" type="text/css" href="textEditor.css" />
     </head>
     <body class="html-editor-page">
+        #set( $fname = $page.editFile.href )
         #set($fname = $params.fileName)
-        #set($file = $folder.child($fname))
+        #set($file = $page.editFile )
+
 
         <div id="editor-wrapper">
             <div class="clearfix editor-toolbar">
@@ -28,7 +30,15 @@
                 </div>
                 <h3 class="editor-title" title="$file.name">$file.name</h3>
             </div>
-            <textarea id="editor" class="toolbar-Full" style="opacity: 0">$formatter.htmlEncode($file.body)</textarea>
+            #set($text = "")
+            #set($text = $file.textContent)
+            #set($text = $file.body)
+            #if( $request.params.content )
+                #set($text = $request.params.content)
+            #end
+            #set($text = $formatter.htmlEncode($text) )
+
+            <textarea id="editor" class="toolbar-Full" style="opacity: 0">$text</textarea>
         </div>
 
         #foreach($cssPath in $file.cssPaths)

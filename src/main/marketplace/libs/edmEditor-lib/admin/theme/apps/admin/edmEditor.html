@@ -15,19 +15,28 @@
         <script type="text/javascript" src="/theme/toolbars.js">//</script>
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-msg/0.4.0/dist/js/bootstrap-msg-0.4.0.min.js">//</script>
-        <script type="text/javascript" src="/static/js/init-theme.js">//</script>        
+        <script type="text/javascript" src="/static/js/init-theme.js">//</script>
         <script type="text/javascript" src="/theme/apps/edmEditor-lib/jquery.edmEditor.js" bottom="true">//</script>
         <script type="text/javascript" src="/theme/apps/admin/edmEditor.js" bottom="true">//</script>
     </head>
-    
+
     <body class="edm-editor-page">
-        
+
+
         #set($fname = $params.fileName)
-        #set($file = $folder.child($fname))
+        #if( $fname )
+            #set($file = $folder.child($fname))
+        #else
+            #set($file = $folder)
+            #set($fname = $file.href)
+        #end
+        #set( $fbody = $file.textContent )
+        #set( $fbody = $file.body )
+
         #set($useHash = $params.useHash)
 
         <nav class="edm-editor-nav">
-            <span class="edm-editor-file">$params.fileName</span>
+            <span class="edm-editor-file">$fname</span>
             <ul class="edm-editor-navbar">
                 #if (!$params.iframe)
                     <li><a href="./" title="Back to parent folder"><i class="fa fa-reply"></i></a></li>
@@ -43,7 +52,7 @@
             #set ($pagePath = "/repositories/" + $file.repository.name + "/" + $file.repository.liveBranch + "/")
         #end
 
-        <textarea id="edm-editor" autocomplete="off">$!file.body</textarea>
+        <textarea id="edm-editor" autocomplete="off">$!fbody</textarea>
 
         <div id="editor-loading">
             <span>
@@ -56,8 +65,8 @@
             $(function () {
                 initEdmEditorPage({
                     fileName: '$fname',
-                    snippetsUrl: '_components?fileName=$fname',
-                    snippetsHandlersUrl: '${page.parent.href}_components?handlers&fileName=${params.fileName}',
+                    snippetsUrl: '_components?fileName=$!params.fileName',
+                    snippetsHandlersUrl: '${page.parent.href}_components?handlers&fileName=$!params.fileName',
                     pagePath: '$!pagePath'
                 });
             });

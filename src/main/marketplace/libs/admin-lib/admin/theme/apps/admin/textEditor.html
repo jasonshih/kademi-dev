@@ -13,6 +13,7 @@
         <link rel="template" href="editorBase" />
     </head>
     <body class="text-editor-page">
+        #set( $fname = $page.editFile.href )
         #set($fname = $params.fileName)
         #set($file = $page.editFile )
 
