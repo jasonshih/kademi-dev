@@ -63,6 +63,7 @@
             #end
         </div>
 
+        #if( $checkoutItems )
         <div class="panel-footer cart-subtotal">
             <div class="row">
                 <div class="col-sm-6 col-sm-offset-6">
@@ -87,8 +88,14 @@
                 </div>
             </div>
         </div>
+        #else
+        <div class="panel-footer cart-subtotal">
+        <h3>Please add some items to your cart :)</h3>
+        </div>
+        #end
     </div>
 
+    #if( $checkoutItems )
     <div class="payment-select">
         #set($firstApp = false)
         #set($firstPo = false)
@@ -107,4 +114,5 @@
             #end
         #end
     </div>
+    #end
 </form>

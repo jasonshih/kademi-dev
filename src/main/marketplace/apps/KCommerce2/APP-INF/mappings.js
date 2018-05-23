@@ -58,17 +58,34 @@ controllerMappings
 function checkout(page, params, files, form) {
     var processCartId = form.longParam("processCartId");
     var totalAmountFromForm = form.bigDecimalParam("cartTotal");
+    var paymentProviderId = form.rawParam("paymentProvider");
+
     var checkoutItems = services.cartManager.checkoutItems;
+
     if( checkoutItems == null ) {
         return views.jsonView(false, "No cart");
     }
     if( checkoutItems.cartId != processCartId ) {
         return views.jsonView(false, "Cart is invalid, please refresh your page");
     }
-    if( !checkoutItems.getTotalCost.equals(totalAmountFromForm) ) {
+    if( !checkoutItems.totalCost.equals(totalAmountFromForm) ) {
         return views.jsonView(false, "The item prices have changed, please refresh your page");
     }
-
+    var paymentResult;
+    transactionManager.runInTransaction(function () {
+        var customerGroup = services.cartManager.getOrCreateCustomerGroup("customers"); // todo move to setting
+        var purchaser =  services.cartManager.getOrCreatePurchaser(form, customerGroup);
+        paymentResult = services.cartManager.doProcessCart(form, checkoutItems, purchaser, paymentProviderId);
+    });
+    if( paymentResult.paymentCompleted ) {
+        return views.jsonView(true, "Payment completed");
+    } else {
+        if( paymentResult.nextHref != null ) {
+            return views.jsonView(true, "Payment pending", paymentResult.nextHref);
+        } else {
+            return views.jsonView(false, "Payment failed: " + paymentResult.resultMessage);
+        }
+    }
 }
 
 function setCartItemQuantity(page, params, files, form) {

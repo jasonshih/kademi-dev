@@ -12,6 +12,7 @@
 #end
 
 #set( $checkoutItems = $services.cartManager.checkoutItems )
+#if( $checkoutItems )
 
 <form id="cart-form" method="POST" action="$page.href">
 
@@ -69,3 +70,7 @@
         </div>
     </div>
 </form>
+
+#else
+
+#end
