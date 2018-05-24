@@ -862,6 +862,18 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="alert alert-info">Below is a list of templates provided by applications currently enabled for this website. Click the link to override and customise the template. <b>Not all applications are integrated with template management</b>, and might not appear here</div>
+
+                            <div class="btn-group" role="group" aria-label="...">
+                                <a href="/pages/$page.parent.name/$page.name/theme/" class="btn btn-info">
+                                    <i class="fa fa-pencil"></i>
+                                    Edit templates
+                                </a>
+                                <a href="theme/" class="btn btn-info">
+                                    <i class="fa fa-file-o"></i>
+                                    Template files
+                                </a>
+                            </div>
+
                             #foreach($templateList in $page.allTemplates.entrySet() )
                             <table class="table table-hover">
                                 <colgroup>

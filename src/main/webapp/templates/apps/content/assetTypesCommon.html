@@ -6,19 +6,19 @@
         #macro (assetTypeHeader)
         <h1>$page.title</h1>
 
-        <div class="btn-group" role="group">            
+        <div class="btn-group" role="group">
             <a class="btn btn-info" href="/repositories/$page.parent.contentTypeRepo.name/version1/texteditor?fileName=${page.name}.type.xml">
                 <span class="fa fa-pencil"></span>
             </a>
             <a class="btn btn-info" href="/repositories/$page.parent.contentTypeRepo.name/version1/">
                 <span class="fa fa-folder"></span>
-            </a>            
+            </a>
             <a class="btn btn-info" href="/asset-manager/?q=category%3A$page.name">
                 <span class="fa fa-cogs"></span>
                 Asset manager
             </a>
-        </div>        
-        
+        </div>
+
         <br/>
 
         <div class="panel panel-default panel-no-icon">
@@ -50,10 +50,10 @@
                     #foreach( $view in $page.assetType.views )
                     <tr>
                         <td>
-                            <a href="$view.viewId">$view.text</a>
+                            <a href="$view.id">$view.text</a>
                         </td>
                         <td>
-                            <input type="checkbox" class="chk-view-id" value="$view.viewId" />
+                            <input type="checkbox" class="chk-view-id" value="$view.id" />
                         </td>
                     </tr>
                     #end
@@ -127,7 +127,7 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right new-action">
                             #foreach($actionType in $page.allActionTypes )
-                            <li><a href="$actionType.canonicalName" data-target="#modal-new-action" data-toggle="modal">$actionType.simpleName</a></li>                            
+                            <li><a href="$actionType.canonicalName" data-target="#modal-new-action" data-toggle="modal">$actionType.simpleName</a></li>
                             #end
                         </ul>
                     </div>
@@ -144,17 +144,17 @@
                     <thead>
                         <tr>
                             <th>Action</th>
-                            <th>Matcher</th>                            
+                            <th>Matcher</th>
                             <th>Priv</th>
-                            
+
                             <th><input type="checkbox" class="chk-all" /></th>
                         </tr>
                     </thead>
                     <tbody>
                         #foreach($action in $page.assetType.controllerMethods)
                         <tr>
-                            <td>$action.assetAction.description</td>                    
-                            <td>$!action.matcher.description</td>                            
+                            <td>$action.assetAction.description</td>
+                            <td>$!action.matcher.description</td>
                             <td>$!action.priv</td>
                             <td>
                                 <input type="checkbox" class="chk-action-id" value="$action.id" />
@@ -186,7 +186,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
                             <button class="btn btn-sm btn-primary" type="submit">Save</button>
@@ -195,8 +195,8 @@
                 </div>
             </div>
         </div>
-        
-        
+
+
         <div id="modal-new-asset-permission" class="modal fade" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -429,10 +429,10 @@
                         });
                     });
                 }
-                
+
                 function initActionsModal() {
                     $(".new-action a").click(function(e) {
-                        var href = $(e.target).attr("href");                        
+                        var href = $(e.target).attr("href");
                         $(".action-type-class").val(href);
                         flog("action click", href, $(".action-type-class"));
                     });
