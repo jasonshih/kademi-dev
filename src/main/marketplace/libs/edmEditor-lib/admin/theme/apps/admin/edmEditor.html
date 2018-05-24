@@ -63,19 +63,6 @@
 
         <script type="text/javascript">
             $(function () {
-                var uploadProviders = "$!uploadProviders";
-                if (uploadProviders){
-                    uploadProviders = uploadProviders.split(',');
-                    var mselectFiles = uploadProviders.indexOf("files") !== -1;
-                    var mselectAssets = uploadProviders.indexOf("assets") !== -1;
-                    
-                    $('.modal-mselect').on('shown.bs.modal', function () {
-                        var modal = $(this);
-                        if (mselectFiles){
-                            modal.find('')
-                        }
-                    })
-                }
                 initEdmEditorPage({
                     fileName: '$fname',
                     snippetsUrl: '_components?fileName=$!params.fileName',
