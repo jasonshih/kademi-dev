@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>Goal</title>
+        <title>Begin</title>
     </head>
     <body>
         <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
@@ -11,7 +11,7 @@
                             $formatter.checkbox("onePerProfile", $page.node.onePerProfile)
                             One per profile
                         </label>
-                    </div>                
+                    </div>
                     <small class="text-muted help-block">Set this if you want only one lead to be created for each profile</small>
                 </div>
             </div>
@@ -23,8 +23,21 @@
                             $formatter.checkbox("initialGoal", $page.node.initialGoal)
                             Initial Goal
                         </label>
-                    </div>                
-                    <small class="text-muted help-block">Set this to specify that this begin node is the initial goal</small>
+                    </div>
+                    <small class="text-muted help-block">Set this to specify that this begin node is the default starting point, for use
+                    when creating a lead manually or from a direct source like a group email</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="checkbox">
+                        <label>
+                            $formatter.checkbox("directOnly", $page.node.directOnly)
+                            Direct only
+                        </label>
+                    </div>
+                    <small class="text-muted help-block">Set this so the journey can only be started manually or from a group email with a selected journey.</small>
                 </div>
             </div>
 
