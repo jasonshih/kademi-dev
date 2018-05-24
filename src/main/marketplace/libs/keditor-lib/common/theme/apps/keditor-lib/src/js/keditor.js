@@ -1143,7 +1143,6 @@
             },
             receive: function (event, ui) {
                 flog('On received snippet', event, ui);
-
                 var helper = ui.helper;
                 var item = ui.item;
                 var container;
@@ -1177,8 +1176,12 @@
                     } else {
                         flog('Add component into container content', containerContent);
                         var dataAttributes = self.getDataAttributes(snippetContentElement, null, true);
+                        var tileClass = '';
+                        if (containerContent.hasClass('container-tile-layout')){
+                            tileClass = containerContent.attr('data-tile-class');
+                        }
                         var component = $(
-                            '<section class="keditor-ui keditor-component" data-type="' + snippetType + '" ' + dataAttributes.join(' ') + '>' +
+                            '<section class="keditor-ui keditor-component ' + tileClass + '" data-type="' + snippetType + '" ' + dataAttributes.join(' ') + '>' +
                             '   <section class="keditor-ui keditor-component-content">' + snippetContent + '</section>' +
                             '</section>'
                         );
@@ -1702,7 +1705,10 @@
         });
         content = tempDiv.html();
 
-        return '<section ' + dataAttributes.join(' ') + '>' + content + '</section>';
+        var cls = component.attr('class');
+
+
+        return '<section class="'+cls+'" ' + dataAttributes.join(' ') + '>' + content + '</section>';
     };
 
     KEditor.prototype.getContainerContent = function (container, isNested) {

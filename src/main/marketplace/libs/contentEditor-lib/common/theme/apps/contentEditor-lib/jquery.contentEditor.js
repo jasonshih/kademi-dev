@@ -452,6 +452,44 @@
                     txtHeight.prop('disabled', this.checked).val('');
                     containerBg[this.checked ? 'addClass' : 'removeClass']('container-full-height').css('min-height', this.checked ? win.height() : '');
                 });
+
+                form.find('.chk-tile-layout').on('click', function () {
+                    var container = keditor.getSettingContainer();
+                    var containerContent = container.find('[data-type="container-content"]');
+                    var tileClass = form.find('.select-tile-class').val();
+                    if (this.checked){
+                        containerContent.addClass('container-tile-layout');
+                        containerContent.attr('data-tile-class', tileClass);
+                        form.find('.select-tile-class').removeProp('disabled');
+                        containerContent.find('.keditor-component').each(function () {
+                            if (this.className.search(/col-sm-[2,3,4,6]{1}/) != -1){
+                                this.className = this.className.replace(/col-sm-[2,3,4,6]{1}/, tileClass)
+                            } else {
+                                this.className += ' ' + tileClass;
+                            }
+                        });
+                    } else {
+                        containerContent.removeClass('container-tile-layout');
+                        containerContent.attr('data-tile-class', '');
+                        form.find('.select-tile-class').prop('disabled', true);
+                        containerContent.find('.keditor-component').each(function () {
+                            this.className = this.className.replace(/col-sm-[2,3,4,6]{1}/, '')
+                        });
+                    }
+                });
+
+                form.find('.select-tile-class').on('change', function () {
+                    var container = keditor.getSettingContainer();
+                    var containerContent = container.find('[data-type="container-content"]');
+                    containerContent.attr('data-tile-class', this.value);
+                    var classes = containerContent.find('.keditor-component').first().attr('class');
+                    if (classes && classes.search(/col-sm-[2,3,4,6]{1}/) != -1){
+                        classes = classes.replace(/col-sm-[2,3,4,6]{1}/, this.value);
+                        containerContent.find('.keditor-component').attr('class', classes);
+                    } else {
+                        containerContent.find('.keditor-component').addClass(this.value);
+                    }
+                });
                 
                 form.find('.txt-padding').each(function () {
                     var txt = $(this);
@@ -744,7 +782,19 @@
             layout = 'container-fluid';
         }
         form.find('.select-layout').val(layout);
-        
+
+        var chkTileLayout = form.find('.chk-tile-layout');
+        var selectTileClass = form.find('.select-tile-class');
+        var containerContent = containerBg.find('[data-type="container-content"]');
+        var tileClass = containerContent.attr('data-tile-class') || selectTileClass.val();
+        if (containerContent.hasClass('container-tile-layout')) {
+            chkTileLayout.prop('checked', true);
+            selectTileClass.removeProp('disabled').val(tileClass);
+        } else {
+            chkTileLayout.prop('checked', false);
+            selectTileClass.prop('disabled', true);
+        }
+
         form.find('.txt-padding').each(function () {
             var txt = $(this);
             var styleName = txt.attr('data-style-name');
