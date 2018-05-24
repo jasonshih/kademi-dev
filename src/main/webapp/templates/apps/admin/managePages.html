@@ -109,7 +109,14 @@
                                     #foreach($page in $pages)
                                         <article class="page">
                                             <i class="clip-file-2"></i>
-                                            <span class="article-name">$page.title</span>
+                                            <span class="article-name">
+                                                #if( $page.title.length() > 0 )
+                                                $page.title
+                                                #else
+                                                No title
+                                                #end
+                                            </span>
+                                            <small class="text-muted" style="padding-left: 20px">$page.name</small>
                                             <aside class="article-action">
                                                 <div class="btn-group btn-group-sm">
                                                     #if ($isKEditor)
@@ -152,6 +159,16 @@
                         <hr />
                         <div class="alert alert-info">Below is a list of templates provided by applications currently enabled for this website. Click the link
                             to override and customise the template. <b>Not all applications are integrated with template management</b>, and might not appear here</div>
+                        <div class="btn-group" role="group" aria-label="...">
+                            <a href="theme/" class="btn btn-info">
+                                <i class="fa fa-pencil"></i>
+                                Edit templates
+                            </a>
+                            <a href="/websites/$page.closest('repository').name/$page.closest('branch').name/theme/" class="btn btn-info">
+                                <i class="fa fa-file-o"></i>
+                                Template files
+                            </a>
+                        </div>
 
 
                         #foreach($templateList in $page.allTemplates.entrySet() )
@@ -238,9 +255,15 @@
 
                                         <div class="col-md-9">
                                             <select name="template" id="template" class="form-control required">
+                                            #if( $page.name == "theme" )
+                                                #foreach($templateEntry in $page.closest("branch").getThemeTemplates($page).entrySet() )
+                                                    <option value="$templateEntry.key">$templateEntry.value</option>
+                                                #end
+                                            #else
                                                 #foreach($templateEntry in $page.closest("branch").getContentTemplates($page).entrySet() )
                                                     <option value="$templateEntry.key">$templateEntry.value</option>
                                                 #end
+                                            #end
                                             </select>
                                         </div>
                                     </div>

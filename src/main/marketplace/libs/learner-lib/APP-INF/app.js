@@ -38,18 +38,21 @@ function loadLearnersCompletedCourses(start, maxRows, rowsResult, rootFolder) {
         "size":10000
     }
             
-    if (queryManager.selectedOrgIds && queryManager.selectedOrgIds.length){
-        var arr = [];
-        queryManager.selectedOrgIds.forEach(function (item) {
-            arr.push(item);
-        });
-        profileQuery.query.bool.must.push({
-            "terms": {
-                "parentOrgs": arr
-            }
-        });
+    var searchOrgs = queryManager.selectedOrgIds;
+    
+    if (searchOrgs === undefined|| searchOrgs.length === 0){
+        searchOrgs = queryManager.availableOrgIds;
     }
     
+    var arr = [];
+    searchOrgs.forEach(function (item) {
+        arr.push(item);
+    });
+    profileQuery.query.bool.must.push({
+        "terms": {
+            "parentOrgs": arr
+        }
+    });
     
     var sm = applications.search.searchManager;
     var profileResp = sm.search(JSON.stringify(profileQuery), 'profile');
