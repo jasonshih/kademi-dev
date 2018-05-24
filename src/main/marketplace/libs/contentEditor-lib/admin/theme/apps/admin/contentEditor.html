@@ -22,6 +22,8 @@
         <script type="text/javascript" src="/theme/apps/admin/contentEditor.js">//</script>
     </head>
     <body class="content-editor-page">
+        <input type="hidden" class="uploadProviders" value="$!params.uploadProviders">
+
         #set($fname = $params.fileName)
         #set($file = $folder.child($fname))
         #set($useHash = $params.useHash)
