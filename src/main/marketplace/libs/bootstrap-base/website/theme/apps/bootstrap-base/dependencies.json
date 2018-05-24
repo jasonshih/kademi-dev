@@ -34,7 +34,7 @@
         },
         {
             "appId": "contentEditor-lib",
-            "branch": "1.2.0"
+            "branch": "1.2.1"
         },
         {
             "appId": "bootstrap-msg-lib",

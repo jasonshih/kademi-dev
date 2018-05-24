@@ -51,7 +51,28 @@
         var target = self.target;
         
         flog('[MSelect] Initializing mselect', target);
-        
+
+        var editorPageBody = $('.content-editor-page');
+        if (!editorPageBody.length){
+            editorPageBody = $('.edm-editor-page');
+        }
+        var uploadProviders = editorPageBody.find('>.uploadProviders').val();
+        if (uploadProviders){
+            options.showFiles = false;
+            options.showAssets = false;
+
+            uploadProviders = uploadProviders.split(',');
+            if (uploadProviders.indexOf('files') !== -1){
+                options.showFiles = true;
+            }
+            if (uploadProviders.indexOf('assets') !== -1){
+                options.showAssets = true;
+            }
+        } else {
+            options.showFiles = true;
+            options.showAssets = true;
+        }
+
         if (options.useModal) {
             flog('[MSelect] Initializing button and modal...', target);
             
