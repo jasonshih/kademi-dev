@@ -1180,6 +1180,9 @@
                         if (containerContent.hasClass('container-tile-layout')){
                             tileClass = containerContent.attr('data-tile-class');
                         }
+                        if (containerContent.hasClass('tile-layout-center')){
+                            tileClass += ' tile-component-center';
+                        }
                         var component = $(
                             '<section class="keditor-ui keditor-component ' + tileClass + '" data-type="' + snippetType + '" ' + dataAttributes.join(' ') + '>' +
                             '   <section class="keditor-ui keditor-component-content">' + snippetContent + '</section>' +

@@ -492,7 +492,20 @@
                         containerContent.find('.keditor-component').addClass(this.value);
                     }
                 });
-                
+
+                form.find('.chk-tile-layout-center').on('click', function () {
+                    var container = keditor.getSettingContainer();
+                    var containerContent = container.find('[data-type="container-content"]');
+
+                    if (this.checked) {
+                        containerContent.addClass('tile-layout-center');
+                        containerContent.find('.keditor-component').addClass('tile-component-center');
+                    } else {
+                        containerContent.removeClass('tile-layout-center');
+                        containerContent.find('.keditor-component').removeClass('tile-component-center');
+                    }
+                });
+
                 form.find('.txt-padding').each(function () {
                     var txt = $(this);
                     var styleName = txt.attr('data-style-name');
@@ -786,6 +799,7 @@
         form.find('.select-layout').val(layout);
 
         var chkTileLayout = form.find('.chk-tile-layout');
+        var chkTileCenter = form.find('.chk-tile-layout-center');
         var selectTileClass = form.find('.select-tile-class');
         var containerContent = containerBg.find('[data-type="container-content"]');
         var tileClass = containerContent.attr('data-tile-class') || selectTileClass.val();
@@ -795,6 +809,11 @@
         } else {
             chkTileLayout.prop('checked', false);
             selectTileClass.prop('disabled', true);
+        }
+        if (containerContent.hasClass('tile-layout-center')){
+            chkTileCenter.prop('checked', true);
+        } else {
+            chkTileCenter.prop('checked', false);
         }
 
         form.find('.txt-padding').each(function () {
