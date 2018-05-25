@@ -1,6 +1,15 @@
 (function ($) {
     $(document).ready(function(){
 
+        var ecomSearch = $(".ecom-search-input");
+        ecomSearch.each(function(i, n) {
+            var inp = $(n);
+            var href = inp.data("store-href");
+            inp.ecomSearch({
+                url : href
+            });
+        });
+
         if($('.ecom-store-category-products.grid-layout').length > 0) {
 
                 var win = $(window);
