@@ -53,7 +53,14 @@ controllerMappings
         .child(productInStoreMapping)
         .child(categoryMapping)
         .child(cartMapping)
+        .addMethod('GET', 'doEcomSearch', 'ecomSearch')
         .build();
+
+function doEcomSearch(page, params) {
+    var query = params.query;
+    log.info("doEcomSearch: {}", query);
+    return views.templateView("");
+}
 
 function checkout(page, params, files, form) {
     var processCartId = form.longParam("processCartId");

@@ -6,6 +6,7 @@ controllerMappings.addComponent("KCommerce2/components", "ecomProduct", "html", 
 controllerMappings.addComponent("KCommerce2/components", "ecomStoreCategories", "html", "List of categories from the ecom store", "E-commerce App component");
 controllerMappings.addComponent("KCommerce2/components", "ecomCheckoutCart", "html", "Shows the checkout cart", "E-commerce App component");
 controllerMappings.addComponent("KCommerce2/components", "ecomCheckoutForm", "html", "Shows the checkout form", "E-commerce App component");
+controllerMappings.addComponent("KCommerce2/components", "ecomSearchInput", "html", "A search input field with suggestions", "E-commerce App component");
 
 
 controllerMappings.addComponent("ecommerce/components", "ecomProduct", "html", "Display ecom product details", "E-commerce App component");

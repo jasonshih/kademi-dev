@@ -33,6 +33,18 @@
             }
         },
         {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/KCommerce2/assets/jquery.ecomSearch.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/KCommerce2/assets/jquery.ecomSearch.js"
+            }
+        },
+        {
             "js": {
                 "group": "main",
                 "path": "/static/dotdotdot/1.6.16/jquery.dotdotdot.min.js"
