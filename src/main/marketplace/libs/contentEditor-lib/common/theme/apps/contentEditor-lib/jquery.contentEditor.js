@@ -464,9 +464,9 @@
                         containerContent.find('.keditor-component').each(function () {
                             if (this.className.search(/col-(sm|lg|md)-[2,3,4,6]{1}/ig) != -1){
                                 this.className = this.className.replace(/col-(sm|lg|md)-[2,3,4,6]{1}/ig, '')
-                                this.className += ' ' + tileClass;
+                                this.className = this.className.trim() + ' ' + tileClass;
                             } else {
-                                this.className += ' ' + tileClass;
+                                this.className = this.className.trim() + ' ' + tileClass;
                             }
                         });
                     } else {
@@ -486,7 +486,7 @@
                     var classes = containerContent.find('.keditor-component').first().attr('class');
                     if (classes && classes.search(/col-(sm|lg|md)-[2,3,4,6]{1}/ig) != -1){
                         classes = classes.replace(/col-(sm|lg|md)-[2,3,4,6]{1}/ig, '');
-                        classes = classes + ' ' + this.value;
+                        classes = classes.trim() + ' ' + this.value;
                         containerContent.find('.keditor-component').attr('class', classes);
                     } else {
                         containerContent.find('.keditor-component').addClass(this.value);
