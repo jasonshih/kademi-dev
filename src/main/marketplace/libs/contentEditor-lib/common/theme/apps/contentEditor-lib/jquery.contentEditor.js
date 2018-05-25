@@ -462,8 +462,9 @@
                         containerContent.attr('data-tile-class', tileClass);
                         form.find('.select-tile-class').removeProp('disabled');
                         containerContent.find('.keditor-component').each(function () {
-                            if (this.className.search(/col-sm-[2,3,4,6]{1}/) != -1){
-                                this.className = this.className.replace(/col-sm-[2,3,4,6]{1}/, tileClass)
+                            if (this.className.search(/col-(sm|lg|md)-[2,3,4,6]{1}/ig) != -1){
+                                this.className = this.className.replace(/col-(sm|lg|md)-[2,3,4,6]{1}/ig, '')
+                                this.className += ' ' + tileClass;
                             } else {
                                 this.className += ' ' + tileClass;
                             }
@@ -473,7 +474,7 @@
                         containerContent.attr('data-tile-class', '');
                         form.find('.select-tile-class').prop('disabled', true);
                         containerContent.find('.keditor-component').each(function () {
-                            this.className = this.className.replace(/col-sm-[2,3,4,6]{1}/, '')
+                            this.className = this.className.replace(/col-(sm|lg|md)-[2,3,4,6]{1}/ig, '')
                         });
                     }
                 });
@@ -483,8 +484,9 @@
                     var containerContent = container.find('[data-type="container-content"]');
                     containerContent.attr('data-tile-class', this.value);
                     var classes = containerContent.find('.keditor-component').first().attr('class');
-                    if (classes && classes.search(/col-sm-[2,3,4,6]{1}/) != -1){
-                        classes = classes.replace(/col-sm-[2,3,4,6]{1}/, this.value);
+                    if (classes && classes.search(/col-(sm|lg|md)-[2,3,4,6]{1}/ig) != -1){
+                        classes = classes.replace(/col-(sm|lg|md)-[2,3,4,6]{1}/ig, '');
+                        classes = classes + ' ' + this.value;
                         containerContent.find('.keditor-component').attr('class', classes);
                     } else {
                         containerContent.find('.keditor-component').addClass(this.value);

@@ -81,6 +81,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/theme/apps/salesdata/salesLeaderboardWeb.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/salesdata/kpiPeriodPicker.js"
             }
         },
