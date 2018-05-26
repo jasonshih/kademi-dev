@@ -23,8 +23,8 @@ var categoryMapping = controllerMappings
         //.defaultView(views.templateView('/theme/apps/KCommerce2/viewCategory.html'))
         .addMethod('GET', 'doEcomSearch', 'q')
         .addMethod('GET', 'doSuggestionList', 'suggestions')
-        .addMethod('GET', 'doEcomList')        
-        
+        .addMethod('GET', 'doEcomList')
+
         .pathSegmentResolver('category', 'resolveCategory');
 
 var cartMapping = controllerMappings
@@ -47,7 +47,7 @@ controllerMappings
         .enabled(true)
         .isPublic(true)
         // .mountRepository(g._config.REPO_NAME)
-        .pathSegmentResolver('store', 'resolveStoreName')        
+        .pathSegmentResolver('store', 'resolveStoreName')
         .title(function (page) {
             return "TODO";
         })
@@ -72,13 +72,15 @@ function doSuggestionList(page, params) {
 
 function doEcomSearch(page, params) {
     var query = params.q;
-    if( formatter.isEmpty(query)) {
+    if (formatter.isEmpty(query)) {
         return doEcomList(page, params);
     }
     log.info("doEcomSearch: {}", query);
     var store = page.attributes.store;
     var searchResults = productSearch(store, page.attributes.category, query);
     page.attributes.searchResults = searchResults; // make available to templates
+    page.attributes.categories = listCategories(store, page.attributes.category);
+    findPriceRanges(page, store, searchResults);
     return views.templateView("KCommerce2/searchResults");
 }
 
@@ -87,11 +89,20 @@ function doEcomList(page, params) {
     var store = page.attributes.store;
     var searchResults = productSearch(store, page.attributes.category, null);
     page.attributes.searchResults = searchResults; // make available to templates
-    if( page.attributes.category) {
+    page.attributes.categories = listCategories(store, page.attributes.category);
+    findPriceRanges(page, store, searchResults);
+
+    if (page.attributes.category) {
         return views.templateView("KCommerce2/viewCategory");
     } else {
         return views.templateView("KCommerce2/viewStore");
     }
+}
+
+function findPriceRanges(page, store, searchResults) {
+    var minPrice = searchResults.aggregations.asMap.minPrice.value;
+    var maxPrice = searchResults.aggregations.asMap.maxPrice.value;
+    page.attributes.priceRangeSummary = priceRangeSummary(store, page.attributes.category, null, minPrice, maxPrice, 5);
 }
 
 function checkout(page, params, files, form) {
