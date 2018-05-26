@@ -20,7 +20,11 @@ var categoryMapping = controllerMappings
             return "TODO";
         })
         // .seoContent('_genDealSeoContent')
-        .defaultView(views.templateView('/theme/apps/KCommerce2/viewCategory.html'))
+        //.defaultView(views.templateView('/theme/apps/KCommerce2/viewCategory.html'))
+        .addMethod('GET', 'doEcomSearch', 'q')
+        .addMethod('GET', 'doSuggestionList', 'suggestions')
+        .addMethod('GET', 'doEcomList')        
+        
         .pathSegmentResolver('category', 'resolveCategory');
 
 var cartMapping = controllerMappings
@@ -43,8 +47,7 @@ controllerMappings
         .enabled(true)
         .isPublic(true)
         // .mountRepository(g._config.REPO_NAME)
-        .pathSegmentResolver('store', 'resolveStoreName')
-        .defaultView(views.templateView('/theme/apps/KCommerce2/viewStore.html'))
+        .pathSegmentResolver('store', 'resolveStoreName')        
         .title(function (page) {
             return "TODO";
         })
@@ -53,13 +56,42 @@ controllerMappings
         .child(productInStoreMapping)
         .child(categoryMapping)
         .child(cartMapping)
-        .addMethod('GET', 'doEcomSearch', 'ecomSearch')
+        .addMethod('GET', 'doEcomSearch', 'q')
+        .addMethod('GET', 'doSuggestionList', 'suggestions')
+        .addMethod('GET', 'doEcomList')
         .build();
 
+function doSuggestionList(page, params) {
+    var query = params.suggestions;
+    log.info("doSuggestionList: {}", query);
+    var store = page.attributes.store;
+    var searchResults = productInCategorySearch(store, page.attributes.category, query); // aggregation to find top cats with matching products
+    page.attributes.suggestionList = searchResults; // make available to templates
+    return views.templateView("KCommerce2/suggestionList");
+}
+
 function doEcomSearch(page, params) {
-    var query = params.query;
+    var query = params.q;
+    if( formatter.isEmpty(query)) {
+        return doEcomList(page, params);
+    }
     log.info("doEcomSearch: {}", query);
-    return views.templateView("");
+    var store = page.attributes.store;
+    var searchResults = productSearch(store, page.attributes.category, query);
+    page.attributes.searchResults = searchResults; // make available to templates
+    return views.templateView("KCommerce2/searchResults");
+}
+
+function doEcomList(page, params) {
+    log.info("doEcomList:");
+    var store = page.attributes.store;
+    var searchResults = productSearch(store, page.attributes.category, null);
+    page.attributes.searchResults = searchResults; // make available to templates
+    if( page.attributes.category) {
+        return views.templateView("KCommerce2/viewCategory");
+    } else {
+        return views.templateView("KCommerce2/viewStore");
+    }
 }
 
 function checkout(page, params, files, form) {
@@ -69,25 +101,25 @@ function checkout(page, params, files, form) {
 
     var checkoutItems = services.cartManager.checkoutItems;
 
-    if( checkoutItems == null ) {
+    if (checkoutItems == null) {
         return views.jsonView(false, "No cart");
     }
-    if( checkoutItems.cartId != processCartId ) {
+    if (checkoutItems.cartId != processCartId) {
         return views.jsonView(false, "Cart is invalid, please refresh your page");
     }
-    if( !checkoutItems.totalCost.equals(totalAmountFromForm) ) {
+    if (!checkoutItems.totalCost.equals(totalAmountFromForm)) {
         return views.jsonView(false, "The item prices have changed, please refresh your page");
     }
     var paymentResult;
     transactionManager.runInTransaction(function () {
         var customerGroup = services.cartManager.getOrCreateCustomerGroup("customers"); // todo move to setting
-        var purchaser =  services.cartManager.getOrCreatePurchaser(form, customerGroup);
+        var purchaser = services.cartManager.getOrCreatePurchaser(form, customerGroup);
         paymentResult = services.cartManager.doProcessCart(form, checkoutItems, purchaser, paymentProviderId);
     });
-    if( paymentResult.paymentCompleted ) {
+    if (paymentResult.paymentCompleted) {
         return views.jsonView(true, "Payment completed");
     } else {
-        if( paymentResult.nextHref != null ) {
+        if (paymentResult.nextHref != null) {
             return views.jsonView(true, "Payment pending", paymentResult.nextHref);
         } else {
             return views.jsonView(false, "Payment failed: " + paymentResult.resultMessage);
@@ -128,7 +160,7 @@ function removeCartItem(page, params, files, form) {
         didRemove = services.cartManager.removeItem(lineId);
     });
 
-    if( didRemove ) {
+    if (didRemove) {
         return views.jsonView(true, "Removed " + lineId);
     } else {
         return views.jsonView(true, "Didnt find to remove " + lineId);
@@ -153,24 +185,24 @@ function resolveProduct(rf, groupName, groupVal, mapOfGroups) {
             .eq("store", store)
             .executeSingle();
 
-    if( product === null ) {
+    if (product === null) {
         // Didnt find webname, so try product name
         var product = services.criteriaBuilders.get("productInEComStore")
-            .join("product", "p")
-            .eq("p.name", groupVal)
-            .eq("store", store)
-            .executeSingle();
-    }
-
-    if( product === null ) {
-        // Still nuttin, try using the segment as a product ID
-        var id = formatter.toLong(groupVal, true);
-        if( id !== null ) {
-            var product = services.criteriaBuilders.get("productInEComStore")
                 .join("product", "p")
-                .eq("p.id", id)
+                .eq("p.name", groupVal)
                 .eq("store", store)
                 .executeSingle();
+    }
+
+    if (product === null) {
+        // Still nuttin, try using the segment as a product ID
+        var id = formatter.toLong(groupVal, true);
+        if (id !== null) {
+            var product = services.criteriaBuilders.get("productInEComStore")
+                    .join("product", "p")
+                    .eq("p.id", id)
+                    .eq("store", store)
+                    .executeSingle();
         }
     }
     return product;

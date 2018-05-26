@@ -24,7 +24,6 @@
         onSelectSuggestion: function (suggestion) {
             flog(this, suggestion);
         },
-        overrideEnterButton: true,
         searchInFocus: false
     };
 
@@ -80,18 +79,9 @@
                         break;
 
                     case KEYMAP.ENTER:
-                        if (self.options.overrideEnterButton) {
                             e.preventDefault();
-
-                            if (self.suggestionsList.is(':visible')) {
-                                self.suggestionsList.find('.ecom-search-suggestion.active').trigger('click');
-                            } else {
-                                self.search(self.input.val());
-                            }
-                        } else {
-                            e.preventDefault();
-                            window.location.href = '/contentSearch?q=' + self.input.val();
-                        }
+                            window.location.href = self.options.url + '?q=' + self.input.val();
+                        
 
                         break;
 
@@ -151,7 +141,7 @@
             dataType: 'html',
             url: self.options.url,
             data: {
-                ecomSearch: query
+                suggestions : query
             },
             success: function (resp) {
                 flog('[EcomSearch] Get response from server', resp);

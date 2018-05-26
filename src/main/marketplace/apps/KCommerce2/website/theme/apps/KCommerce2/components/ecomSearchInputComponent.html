@@ -1,6 +1,6 @@
 <div class="input-group input-group-lg">
     #set( $store = $page.attributes.store )
-    <input type="text" class="form-control ecom-search-input" placeholder="I'm shopping for" data-store-href="/$store.name/" />
+    <input type="text" class="form-control ecom-search-input" placeholder="I'm shopping for" data-store-href="/$store.name/" value="$!request.params.q" />
     <span class="input-group-btn">
         <button class="btn btn-default" type="button">
             <i class="fa fa-search"></i>

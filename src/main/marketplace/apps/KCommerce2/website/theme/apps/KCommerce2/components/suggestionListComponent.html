@@ -1,0 +1,17 @@
+<ul class="list">   
+#if( $page.attributes.suggestionList.isEmpty() )
+<li>Sorry, we couldnt find anything related</li>
+#else
+#foreach( $suggestion in $page.attributes.suggestionList )
+<li>   
+    <a href="$suggestion.searchPath">
+        <span class="pull-right text-muted">$suggestion.count results</span>
+        $suggestion.product.title 
+        #if( $suggestion.category )
+        in $suggestion.category.title
+        #end
+    </a>
+</li>
+#end
+#end
+</ul>
