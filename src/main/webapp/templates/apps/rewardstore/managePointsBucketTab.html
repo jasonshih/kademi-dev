@@ -80,9 +80,9 @@
                             </td>
                             <td>
                                 #if( $p.txType == "C" )
-                                    <span class="label label-success">$formatter.toDecimal($p.numPoints,0)</span>
+                                    <span class="label label-success">$!formatter.formatCurrency($p.numPoints)</span>
                                 #else
-                                    <span class="label label-warning">- $formatter.toDecimal($p.numPoints,0)</span>
+                                    <span class="label label-warning">- $!formatter.formatCurrency($p.numPoints)</span>
                                 #end
                             </td>
                             <td>
