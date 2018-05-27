@@ -6,7 +6,9 @@
     <body>
         #macro(rightSidebar $store)
 
-        
+        <pre>
+            $page.attributes.attributesSummary
+        </pre>
             <div class="list-group list-group-root ecomStoreCategoriesList">
                 <span href="#" class="list-group-item heading-item">Browse by category</span>
                                 
@@ -25,13 +27,15 @@
             </div>
 
         
-            #set ($dataRanges = $page.attributes.priceRangeSummary.aggregations.asMap.priceRanges.buckets)
+            #set ($dataRanges = $page.attributes.attributesSummary.aggregations.asMap.priceRanges.buckets)
 
             <div class="list-group list-group-root pointsRangeList">
                 <span href="#" class="list-group-item heading-item">Browse by points range</span>
 
                 #foreach( $pointRange in $dataRanges )
+                    #if( $pointRange.docCount > 0 )
                     <a href="#" class="list-group-item" data-startprice="$pointRange.from" data-endprice="$pointRange.to">From $formatter.toLong($pointRange.from) to $formatter.toLong($pointRange.to) - $pointRange.docCount <i class="fa fa-angle-right  pull-right"></i></a>
+                    #end
                 #end
 
             </div>

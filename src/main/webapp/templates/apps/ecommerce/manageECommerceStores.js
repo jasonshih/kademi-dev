@@ -1,6 +1,17 @@
 function initManageECommerceStores() {
     initCreateModal();
     initDeleteStore();
+    
+    flog("init settings form", $("#settingsForm"));
+    $("#settingsForm").forms({
+        onSuccess : function(resp) {
+            if( resp.status ) {
+                Msg.info(resp.messages[0]);
+            } else {
+                Msg.error(resp.messages[0]);
+            }
+        }
+    });
 }
 
 function initCreateModal() {

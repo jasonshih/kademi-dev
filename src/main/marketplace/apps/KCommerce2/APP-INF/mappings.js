@@ -80,7 +80,7 @@ function doEcomSearch(page, params) {
     var searchResults = productSearch(store, page.attributes.category, query);
     page.attributes.searchResults = searchResults; // make available to templates
     page.attributes.categories = listCategories(store, page.attributes.category);
-    findPriceRanges(page, store, searchResults);
+    findAttributes(page, store, searchResults);
     return views.templateView("KCommerce2/searchResults");
 }
 
@@ -90,7 +90,7 @@ function doEcomList(page, params) {
     var searchResults = productSearch(store, page.attributes.category, null);
     page.attributes.searchResults = searchResults; // make available to templates
     page.attributes.categories = listCategories(store, page.attributes.category);
-    findPriceRanges(page, store, searchResults);
+    findAttributes(page, store, searchResults);
 
     if (page.attributes.category) {
         return views.templateView("KCommerce2/viewCategory");
@@ -99,10 +99,10 @@ function doEcomList(page, params) {
     }
 }
 
-function findPriceRanges(page, store, searchResults) {
+function findAttributes(page, store, searchResults) {
     var minPrice = searchResults.aggregations.asMap.minPrice.value;
     var maxPrice = searchResults.aggregations.asMap.maxPrice.value;
-    page.attributes.priceRangeSummary = priceRangeSummary(store, page.attributes.category, null, minPrice, maxPrice, 5);
+    page.attributes.attributesSummary = findAttributesQuery(store, page.attributes.category, null, minPrice, maxPrice, 5);
 }
 
 function checkout(page, params, files, form) {

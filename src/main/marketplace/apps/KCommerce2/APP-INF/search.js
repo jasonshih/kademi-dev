@@ -34,8 +34,8 @@ function productSearch(store, category, query) {
     return results;
 }
 
-function priceRangeSummary(store, category, query, minPrice, maxPrice, numBuckets) {
-    var width = ((maxPrice+10) - minPrice) / numBuckets;
+function findAttributesQuery(store, category, query, minPrice, maxPrice, numBuckets) {
+    var width = ((maxPrice + 10) - minPrice) / numBuckets;
 
     var ranges = [];
     for (var i = 1; i <= numBuckets; i++) {
@@ -56,7 +56,40 @@ function priceRangeSummary(store, category, query, minPrice, maxPrice, numBucket
                     "field": "finalCost",
                     "ranges": ranges
                 }
+            },
+            "attributes": {
+                "nested": {
+                    "path": "skus.params.opts"
+                },
+                "aggs": {
+                    "values": {
+                        "terms": {
+                            "field": "skus.params.opts.optName"
+                        }
+//                        ,
+//                        "aggs": {
+//                            "values": {
+//                                "terms": {
+//                                    "field": "skus.options.optName"
+//                                }
+//                            }
+//                        }
+
+                    }
+                }
             }
+//            "attributes" : {
+//                "terms" : {
+//                    "field" : "skus.options.paramName"
+//                },
+//                "aggs" : {
+//                    "values" : {
+//                        "terms" : {
+//                            "field" : "skus.options.optName"
+//                        }                        
+//                    }
+//                }
+//            }
         }
     };
 
@@ -69,7 +102,7 @@ function priceRangeSummary(store, category, query, minPrice, maxPrice, numBucket
 }
 
 function roundDownToNearestTen(num) {
-    num = formatter.toLong(num/10);
+    num = formatter.toLong(num / 10);
     return num * 10;
 }
 
