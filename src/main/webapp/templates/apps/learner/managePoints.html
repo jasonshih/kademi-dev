@@ -134,7 +134,7 @@
                                 <tr>
                                     <td>$!row[0].title</td>
                                     <td class="text-right">$!row[1]</td>
-                                    <td class="text-right">$!formatter.toDecimal($row[2],0)</td>
+                                    <td class="text-right">$!formatter.formatCurrency($row[2])</td>
                                 </tr>
                                 #end
                             </table>
@@ -157,7 +157,7 @@
                                 <tr>
                                     <td>$!row[0]</td>
                                     <td class="text-right">$!row[1]</td>
-                                    <td class="text-right">$!formatter.toDecimal($row[2],0)</td>
+                                    <td class="text-right">$!formatter.formatCurrency($row[2])</td>
                                 </tr>
                                 #end
                             </table>
@@ -218,9 +218,9 @@
                                 <td>$!formatter.formatDateTime($p.expiryDate, $page.organisation.timezone)</td>
                                 <td>
                                     #if($isDebit)
-                                    <span class="label label-warning">- $formatter.toDecimal($p.numPoints,0)</span>
+                                    <span class="label label-warning">- $!formatter.formatCurrency($p.numPoints)</span>
                                     #else
-                                    <span class="label label-success">$formatter.toDecimal($p.numPoints,0)</span>
+                                    <span class="label label-success">$!formatter.formatCurrency($p.numPoints)</span>
                                     #end
                                 </td>
                                 <td>$!p.reason</td>
