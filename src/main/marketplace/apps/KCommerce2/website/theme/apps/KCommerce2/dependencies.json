@@ -9,6 +9,12 @@
             }
         },
         {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/KCommerce2/kcom2.less"
+            }
+        },
+        {
             "css": {
                 "cssMedia": "all",
                 "path": "/theme/apps/KCommerce2/ecommerce-store.css"

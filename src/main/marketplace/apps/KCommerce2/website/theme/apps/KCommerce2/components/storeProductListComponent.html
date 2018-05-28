@@ -84,10 +84,10 @@
     <div class="$clsName product-item">
         <div class="thumbnail product">
             <div class="product-info">
-                <h3 class="product-title" ><a class="text-primary" href="/$prodUrl">$hit.fields.title.value</a>
+                <h3 class="product-title" ><a class="text-primary" href="$basePath">$hit.fields.title.value</a>
                 </h3>
                 <div class="embed-responsive embed-responsive-4by3">
-                    <a href="/$prodUrl" class="embed-responsive-item"
+                    <a href="$basePath/$hit.fields.webName.value" class="embed-responsive-item"
                        style="background-image: url($bg);"></a>
                 </div>
                 <div class="product-content">$!formatter.truncate( $formatter.encodeAsHtmlEntities($hit.fields.content.value), 65)</div>
@@ -97,7 +97,7 @@
                 <h3 class="text-center product-price bg-info"><span>$</span>$hit.fields.finalCost.value
                 </h3>
 
-                <a href="/$prodUrl" class="btn btn-info" role="button">
+                <a href="$basePath" class="btn btn-info" role="button">
                     <i class="fa fa-shopping-cart"></i>
                 </a>
             </div>

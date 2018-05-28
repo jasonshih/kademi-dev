@@ -13,7 +13,7 @@ controllerMappings.addComponent("ecommerce/components", "ecomProduct", "html", "
 controllerMappings.addComponent("ecommerce/components", "orderHistoryECom", "html", "Shows the current user's orders and status", "E-commerce App component");
 
 
-function initKCommerceApp(orgRoot, webRoot, enabled) {
+function initKCommerce2App(orgRoot, webRoot, enabled) {
     var catalogManager = services.catalogManager;
     log.info("initKCommerceApp: orgRoot={} app={}", orgRoot, catalogManager);
     var alertsApp = applications.alerts;

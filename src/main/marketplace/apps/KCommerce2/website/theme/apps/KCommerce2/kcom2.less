@@ -1,0 +1,63 @@
+
+
+
+
+.kcom2Product{
+    .product-price{
+        padding: 10px 0;
+    }
+    .slick-arrow {
+      position: absolute;
+      top: 0;
+      width: 20px;
+      height: 100%;
+      font-size: 26px;
+      color: #333333;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.6);
+      border: none;
+    }
+
+    //.slick-arrow i {
+    //  position: absolute;
+    //  width: 100%;
+    //  height: 30px;
+    //  line-height: 30px;
+    //  top: 50%;
+    //  margin-top: -15px;
+    //  text-align: center;
+    //}
+
+    .slick-arrow.slick-prev {
+      left: 1px;
+      border-width: 1px 0 1px 1px;
+    }
+
+    .slick-arrow.slick-next {
+      right: 1px;
+      border-width: 1px 1px 1px 0;
+    }
+
+    .slick-arrow.slick-disabled {
+      background: none;
+      color: transparent;
+      cursor: default;
+      width: 1px;
+      overflow: hidden;
+    }
+
+    .slick-arrow:focus{
+      outline: none;
+    }
+    .select-product-option img{
+        border: 2px solid transparent;
+    }
+    .select-product-option.active img{
+        border: 2px solid @brand-info;
+    }
+    .slickItem.slick-active a:focus,
+    .slickItem.slick-active:focus,
+    .slickItem.slick-active a div:focus{
+        outline: none;
+    }
+}
