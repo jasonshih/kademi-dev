@@ -27,7 +27,7 @@
             #set ($dataRanges = $page.attributes.attributesSummary.aggregations.asMap.priceRanges.buckets)
 
             <div class="list-group list-group-root pointsRangeList">
-                <span href="#" class="list-group-item heading-item">Browse by points range</span>
+                <span href="#" class="list-group-item heading-item">Browse by price</span>
 
                 #foreach( $pointRange in $dataRanges )
                     #if( $pointRange.docCount > 0 )

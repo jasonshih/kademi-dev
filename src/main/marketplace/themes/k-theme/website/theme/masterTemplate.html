@@ -25,7 +25,7 @@
         $!bodyContent
 
         #foreach( $lessSource in $templater.lessSources.entrySet())
-            <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
+            <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key"   />
         #end
 
         <!-- Injected CSS sources -->
@@ -49,6 +49,8 @@
         <![endif]-->
 
         #portlets("header")
+        
+        
     </head>
 
     #if ($page.getParam("pageBgColor") && $page.getParam("pageBgColor") != "")

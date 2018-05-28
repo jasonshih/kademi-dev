@@ -8,7 +8,8 @@
  * @param {type} query
  * @returns {unresolved}
  */
-function productSearch(store, category, query) {
+function productSearch(store, category, query, attributePairs) {
+    
     // TODO: Pagination
     var queryJson = {
         "stored_fields": [
@@ -29,9 +30,12 @@ function productSearch(store, category, query) {
         }
     };
 
-    appendCriteria(queryJson, store, category, query);
+    appendCriteria(queryJson, store, category, query, attributePairs);
 
-    var results = services.searchManager.search(JSON.stringify(queryJson), 'ecommercestore');
+    var queryText = JSON.stringify(queryJson);
+    log.info("query: {}", queryText);
+    var results = services.searchManager.search(queryText, 'ecommercestore');
+
     return results;
 }
 
@@ -155,12 +159,14 @@ function productInCategorySearch(store, category, query) {
 
     appendCriteria(queryJson, store, category, query);
 
-    var results = services.searchManager.search(JSON.stringify(queryJson), 'ecommercestore');
+    var queryText = JSON.stringify(queryJson);
+    log.info("query: {}", queryText);
+    var results = services.searchManager.search(queryText, 'ecommercestore');
 
-    log.info("cat results {} - {}", results, results.class);
+    //log.info("cat results {} - {}", results, results.class);
     // need to lookup cat id's to get titles
     var productsAgg = results.aggregations.asMap.prods;
-
+ 
     // log.info("prods results {}", productsAgg.buckets);
     var catBuilder = services.criteriaBuilders.getBuilder("category");
     var prodBuilder = services.criteriaBuilders.getBuilder("product");
@@ -201,7 +207,7 @@ function productInCategorySearch(store, category, query) {
 }
 
 
-function appendCriteria(queryJson, store, category, query) {
+function appendCriteria(queryJson, store, category, query, attributePairs) {
     // todo filter by store and category
     var must = [
         {"term": {"storeId": store.id}}
@@ -222,6 +228,17 @@ function appendCriteria(queryJson, store, category, query) {
                 "type": "phrase_prefix"
             }
         });
+    }
+    log.info("appendCriteria {}", attributePairs);
+    if( attributePairs != null ) {
+        log.info("appendCriteria {}", attributePairs.length);
+        for( var i=0; i<attributePairs.length; i++) {
+            var nvp = attributePairs[i];
+            log.info("appendCriteria {} {} {}", i, nvp.name, nvp.value);
+            var term = {};
+            term[nvp.name] = nvp.value;
+            must.push({"term": term});
+        }
     }
 }
 

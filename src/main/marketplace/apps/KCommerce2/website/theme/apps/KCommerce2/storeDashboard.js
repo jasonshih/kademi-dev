@@ -38,7 +38,6 @@ $(function () {
                 item.addClass('selected');
             }
 
-            window.history.pushState("", document.title, newUrl.toString());
             doProductSearch();
         });
     }
@@ -74,6 +73,7 @@ $(function () {
 
         var newUrl = new URI(window.location.href);
 
+        var input = $(".ecom-search-input");
         newUrl.setSearch('q', input.val().trim());
 
         $('.pointsRangeList a.list-group-item.selected').each(function(i, n) {
@@ -95,11 +95,13 @@ $(function () {
 
         window.history.pushState("", document.title, newUrl.toString());
 
+        flog("doing search1", window.location.href);
+        
         $.ajax({
             type: 'GET',
             url: window.location.href,
             success: function (data) {
-                // flog("success", data);
+                flog("success");
                 var breadcrumb = $(data).find(".breadcrumb");
                 $(".breadcrumb").replaceWith(breadcrumb);
 

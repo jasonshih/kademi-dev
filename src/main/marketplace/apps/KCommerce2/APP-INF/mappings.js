@@ -77,7 +77,8 @@ function doEcomSearch(page, params) {
     }
     log.info("doEcomSearch: {}", query);
     var store = page.attributes.store;
-    var searchResults = productSearch(store, page.attributes.category, query);
+    var attributePairs = findAttsInParams(params);
+    var searchResults = productSearch(store, page.attributes.category, query, attributePairs);
     page.attributes.searchResults = searchResults; // make available to templates
     page.attributes.categories = listCategories(store, page.attributes.category);
     findAttributes(page, store, searchResults);
@@ -87,8 +88,9 @@ function doEcomSearch(page, params) {
 function doEcomList(page, params) {
     log.info("doEcomList:");
     var store = page.attributes.store;
-    var searchResults = productSearch(store, page.attributes.category, null);
-    log.info("searchResults: " + searchResults);
+    var attributePairs = findAttsInParams(params);
+    var searchResults = productSearch(store, page.attributes.category, null, attributePairs);
+    //log.info("searchResults: " + searchResults);
     page.attributes.searchResults = searchResults; // make available to templates
     page.attributes.categories = listCategories(store, page.attributes.category);
     findAttributes(page, store, searchResults);
@@ -98,6 +100,31 @@ function doEcomList(page, params) {
     } else {
         return views.templateView("KCommerce2/viewStore");
     }
+}
+
+/**
+ * Look for request params with the same name as attribute names,
+ * and build a list of their names and values
+ * 
+ * @param {type} params
+ * @returns {undefined}
+ */
+function findAttsInParams(params) {
+    var cm = services.catalogManager;
+    var allAttNames = cm.attributeNames();
+    var atts = [];
+    for( var i=0; i<allAttNames.length; i++) {
+        var attName = allAttNames[i].object1;
+        var attValue = params.get(attName);
+        log.info("findAttsInParams: {} {}", attName, attValue);
+        if( !formatter.isEmpty(attValue) ) {
+            atts.push({
+                "name" : attName,
+                "value" : attValue
+            });
+        }
+    }
+    return atts;
 }
 
 function findAttributes(page, store, searchResults) {
