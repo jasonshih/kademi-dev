@@ -1,4 +1,6 @@
 
+YYYYYYYY
+
 #if($page)
     #set( $storeOb = $page.attributes.store )
     #set( $basePath = "/$storeOb.name/" )
@@ -50,7 +52,7 @@
 
 
 #macro( productRow $productHit $basePath )
-#set ($prodUrl = "/$basePath/$hit.fields.name.value")
+    #set ($prodUrl = "/$basePath/$hit.fields.name.value")
     #set($bg = "/static/images/photo_holder.png")
     #set($bg = $hit.fields.primaryImageHref.value)    
     <div class="media prod">
@@ -78,17 +80,18 @@
 
 
 #macro( productTile $productHit $basePath )  
+    #set ($prodUrl = "${basePath}$hit.fields.name.value")
     #set($bg = "/static/images/photo_holder.png")
     #set($bg = $hit.fields.primaryImageHref.value)
 
     <div class="$clsName product-item">
         <div class="thumbnail product">
             <div class="product-info">
-                <h3 class="product-title" ><a class="text-primary" href="/$prodUrl">$hit.fields.title.value</a>
+                <h3 class="product-title" >
+                    <a class="text-primary" href="$prodUrl">$hit.fields.title.value</a>
                 </h3>
                 <div class="embed-responsive embed-responsive-4by3">
-                    <a href="/$prodUrl" class="embed-responsive-item"
-                       style="background-image: url($bg);"></a>
+                    <a href="$prodUrl" class="embed-responsive-item" style="background-image: url($bg);"></a>
                 </div>
                 <div class="product-content">$!formatter.truncate( $formatter.encodeAsHtmlEntities($hit.fields.content.value), 65)</div>
             </div>
@@ -97,7 +100,7 @@
                 <h3 class="text-center product-price bg-info"><span>$</span>$hit.fields.finalCost.value
                 </h3>
 
-                <a href="/$prodUrl" class="btn btn-info" role="button">
+                <a href="$prodUrl" class="btn btn-info" role="button">
                     <i class="fa fa-shopping-cart"></i>
                 </a>
             </div>
