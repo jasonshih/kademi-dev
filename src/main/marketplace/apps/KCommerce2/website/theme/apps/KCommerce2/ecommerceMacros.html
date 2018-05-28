@@ -6,12 +6,9 @@
     <body>
         #macro(rightSidebar $store)
 
-        <pre>
-            $page.attributes.attributesSummary
-        </pre>
             <div class="list-group list-group-root ecomStoreCategoriesList">
                 <span href="#" class="list-group-item heading-item">Browse by category</span>
-                                
+
                 #foreach($cat in $page.attributes.categories)
                     #if ($cat.id == $page.attribute.category.id)
                         <a href="$cat.name/" class="list-group-item selected">
@@ -26,7 +23,7 @@
                 #end
             </div>
 
-        
+
             #set ($dataRanges = $page.attributes.attributesSummary.aggregations.asMap.priceRanges.buckets)
 
             <div class="list-group list-group-root pointsRangeList">
@@ -34,41 +31,29 @@
 
                 #foreach( $pointRange in $dataRanges )
                     #if( $pointRange.docCount > 0 )
-                    <a href="#" class="list-group-item" data-startprice="$pointRange.from" data-endprice="$pointRange.to">From $formatter.toLong($pointRange.from) to $formatter.toLong($pointRange.to) - $pointRange.docCount <i class="fa fa-angle-right  pull-right"></i></a>
+                    <a href="#" class="list-group-item" data-startprice="$pointRange.from" data-endprice="$pointRange.to">From $formatter.toLong($pointRange.from) to $formatter.toLong($pointRange.to) ($pointRange.docCount) <i class="fa fa-angle-right  pull-right"></i></a>
                     #end
                 #end
 
             </div>
-        #end
 
-        #macro (renderProductItem $p $store $isRelated)
-            #set ($cls = "col-sm-6 col-md-4")
-            #if ($isRelated)
-                #set ($cls = "col-sm-6 col-md-3")
-            #end
+                #foreach( $attNameBucket in $page.attributes.searchResults.aggregations.asMap.attNames.buckets)
+            <div class="list-group list-group-root pointsRangeList">
+                <span href="#" class="list-group-item heading-item">Refine by $services.catalogManager.attributeTitle($attNameBucket.key)</span>
 
-            <div class="$cls product-item">
-                <div class="thumbnail product">
-                    #set($bg = "/static/images/photo_holder.png")
-                    #if( $p.fields.primaryImageHref.value )
-                        #set($bg = $p.fields.primaryImageHref.value )
+                #foreach( $attAgg in $page.attributes.attributesSummary.aggregations.asMap.get("${attNameBucket.key}Att").buckets )
+                    #if( $attAgg.docCount > 0 )
+                    <a href="#" class="list-group-item" data-attname="$attNameBucket.key" data-attvalue="$attAgg.key">
+                        $services.catalogManager.attributeTitle($attAgg.key) ($attAgg.docCount)
+                        <i class="fa fa-angle-right  pull-right"></i>
+                    </a>
                     #end
-                    <span class="product-image-wrapper">
-                        <a href="$p.fields.path.value">
-                            <span style="background-image: url($bg)" class="product-image"></span>
-                        </a>
-                    </span>
-                    <div class="caption">
-                        <h3 class="product-title" title="$p.fields.title.value"><a href="$p.fields.path.value">$p.fields.title.value</a></h3>
-                        <span class="product-price label">$$p.fields.finalCost.value</span>
-                        <p class="product-content">$!p.fields.content.value</p>
-                        <div class="product-actions">
-                            <a href="$p.fields.path.value" class="btn btn-default btn-sm" role="button">View</a>
-                            <a href="$p.fields.path.value" class="btn btn-primary btn-sm" role="button">Add to Cart</a>
-                        </div>
-                    </div>
-                </div>
+                #end
+
             </div>
+                #end
+
         #end
+
     </body>
 </html>

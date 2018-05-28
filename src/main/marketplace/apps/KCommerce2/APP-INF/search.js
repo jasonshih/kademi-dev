@@ -2,7 +2,7 @@
 
 /**
  * Returns the ES result object
- * 
+ *
  * @param {type} store
  * @param {type} category
  * @param {type} query
@@ -24,7 +24,8 @@ function productSearch(store, category, query) {
         "size": 100,
         "aggregations": {
             "maxPrice": {"max": {"field": "finalCost"}},
-            "minPrice": {"min": {"field": "finalCost"}}
+            "minPrice": {"min": {"field": "finalCost"}},
+            "attNames": {"terms": {"field": "attributeNames"}},
         }
     };
 
@@ -34,7 +35,7 @@ function productSearch(store, category, query) {
     return results;
 }
 
-function findAttributesQuery(store, category, query, minPrice, maxPrice, numBuckets) {
+function findAttributesQuery(store, category, query, minPrice, maxPrice, numBuckets, attNameBuckets) {
     var width = ((maxPrice + 10) - minPrice) / numBuckets;
 
     var ranges = [];
@@ -56,28 +57,9 @@ function findAttributesQuery(store, category, query, minPrice, maxPrice, numBuck
                     "field": "finalCost",
                     "ranges": ranges
                 }
-            },
-            "attributes": {
-                "nested": {
-                    "path": "skus.params.opts"
-                },
-                "aggs": {
-                    "values": {
-                        "terms": {
-                            "field": "skus.params.opts.optName"
-                        }
-//                        ,
-//                        "aggs": {
-//                            "values": {
-//                                "terms": {
-//                                    "field": "skus.options.optName"
-//                                }
-//                            }
-//                        }
-
-                    }
-                }
             }
+        }
+    };
 //            "attributes" : {
 //                "terms" : {
 //                    "field" : "skus.options.paramName"
@@ -86,12 +68,23 @@ function findAttributesQuery(store, category, query, minPrice, maxPrice, numBuck
 //                    "values" : {
 //                        "terms" : {
 //                            "field" : "skus.options.optName"
-//                        }                        
+//                        }
 //                    }
 //                }
 //            }
-        }
-    };
+    // Add an aggregation for each attribute name
+    var aggs = queryJson.aggs;
+    for( var i=0; i<attNameBuckets.length; i++ ) {
+        var att = attNameBuckets[i].key;
+        log.info("Add att {}", att);
+        aggs[att + "Att"] = {
+                "terms" : {
+                    "field" : att
+                }
+        };
+    }
+
+
 
     appendCriteria(queryJson, store, category, query);
 
@@ -108,12 +101,12 @@ function roundDownToNearestTen(num) {
 
 /**
  * Get a list of categories
- * 
+ *
  * If no parent is given returns a list of top level cats, otherwise returns child cats
  * of the given cat
- * 
+ *
  * In either case only categories with products are returned
- * 
+ *
  * @param {type} store
  * @param {type} parentCategory
  * @returns {undefined}
@@ -135,7 +128,7 @@ function listCategories(store, parentCategory) {
 
 /**
  * Used for the suggestions list
- * 
+ *
  * @param {type} store
  * @param {type} category
  * @param {type} query

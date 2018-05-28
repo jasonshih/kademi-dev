@@ -12,9 +12,6 @@ $(function () {
 
             clearTimeout(timer);
             timer = setTimeout(function () {
-                var newUrl = new URI(window.location.href);
-                newUrl.setSearch('q', input.val().trim());
-                window.history.pushState("", document.title, newUrl.toString());
                 doProductSearch();
             }, 300);
         });
@@ -33,17 +30,12 @@ $(function () {
             e.preventDefault();
 
             var item = $(this);
-            var newUrl = new URI(window.location.href);
-            newUrl.removeSearch('startPrice');
-            newUrl.removeSearch('endPrice');
 
-            if (item.hasClass('selected')){
+            if (item.hasClass('selected')) {
                 item.removeClass('selected');
             } else {
                 pointRangeItems.filter('.selected').removeClass('selected');
                 item.addClass('selected');
-                newUrl.addSearch('startPrice', item.attr('data-startprice'));
-                newUrl.addSearch('endPrice', item.attr('data-endprice'));
             }
 
             window.history.pushState("", document.title, newUrl.toString());
@@ -73,11 +65,35 @@ $(function () {
 //        });
     }
 
+
     function doProductSearch() {
         flog('doProductSearch')
         $(".products-list").html('');
         var inifiniteLoader = $('#inifiniteLoader');
         inifiniteLoader.show();
+
+        var newUrl = new URI(window.location.href);
+
+        newUrl.setSearch('q', input.val().trim());
+
+        $('.pointsRangeList a.list-group-item.selected').each(function(i, n) {
+            var item = $(n);
+            var price = item.data('startprice');
+            if( !isEmpty(price)) {
+                newUrl.setSearch('startPrice', price);
+            }
+            price = item.data('endprice');
+            if( !isEmpty(price)) {
+                newUrl.setSearch('endprice', price);
+            }
+            var attName = item.data("attname");
+            if( !isEmpty(attName)) {
+                var attVal = item.data("attvalue");
+                newUrl.setSearch(attName, attVal);
+            }
+        });
+
+        window.history.pushState("", document.title, newUrl.toString());
 
         $.ajax({
             type: 'GET',
@@ -149,9 +165,9 @@ $(function () {
         var sortByItems = urlSort.find('li');
         var newUrl = new URI(window.location.href);
         var queries = newUrl.search(true);
-        if (queries.sort && queries.asc){
+        if (queries.sort && queries.asc) {
             sortByItems.removeClass('active');
-            var text = sortByItems.find('a[data-sort='+queries.sort+'][data-asc='+queries.asc+']').parent().addClass('active').text();
+            var text = sortByItems.find('a[data-sort=' + queries.sort + '][data-asc=' + queries.asc + ']').parent().addClass('active').text();
             urlSort.find('.selected-text').text(text);
         }
 
@@ -169,7 +185,7 @@ $(function () {
         });
     }
 
-    var init = function(){
+    var init = function () {
         var shouldLoadMore = $('.shouldLoadMore').length > 0;
         var $ecomStoreCategoriesList = $('.ecomStoreCategoriesList');
         var shouldInit = $ecomStoreCategoriesList.length > 0;
@@ -180,7 +196,7 @@ $(function () {
             initCategories();
             initProductSearch();
             initSortBy();
-            if (!shouldLoadMore){
+            if (!shouldLoadMore) {
                 $(window).scroll(function () {
                     if (!$('#inifiniteLoader').hasClass('limited') && $('#inifiniteLoader').is(':hidden') && $(window).scrollTop() == $(document).height() - $(window).height()) {
                         doPaginate();

@@ -88,6 +88,7 @@ function doEcomList(page, params) {
     log.info("doEcomList:");
     var store = page.attributes.store;
     var searchResults = productSearch(store, page.attributes.category, null);
+    log.info("searchResults: " + searchResults);
     page.attributes.searchResults = searchResults; // make available to templates
     page.attributes.categories = listCategories(store, page.attributes.category);
     findAttributes(page, store, searchResults);
@@ -102,7 +103,8 @@ function doEcomList(page, params) {
 function findAttributes(page, store, searchResults) {
     var minPrice = searchResults.aggregations.asMap.minPrice.value;
     var maxPrice = searchResults.aggregations.asMap.maxPrice.value;
-    page.attributes.attributesSummary = findAttributesQuery(store, page.attributes.category, null, minPrice, maxPrice, 5);
+    var attNameBuckets = searchResults.aggregations.asMap.attNames.buckets;
+    page.attributes.attributesSummary = findAttributesQuery(store, page.attributes.category, null, minPrice, maxPrice, 5, attNameBuckets);
 }
 
 function checkout(page, params, files, form) {

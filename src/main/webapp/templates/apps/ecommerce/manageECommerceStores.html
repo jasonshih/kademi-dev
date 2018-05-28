@@ -55,17 +55,20 @@
                                 #end
                             </tbody>
                         </table>
-                    </div>                    
+                    </div>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="settings">
+                    <div class="alert alert-danger">
+                        <p>
+                            <span class="fa fa-exclamation-circle"></span>
+                            You must reindex ecommerce products after any changes here. <a href="/manageSearch">Re-index here</a>
+                        </p>
+                    </div>
                     <form id="settingsForm" class="form form-horizontal" action="." method="POST">
                         <button class="btn btn-success" type="submit"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save</button>
                         <input type="hidden" name="saveSettings" value="true"/>
 
                         <textarea name="attributeNames" class="form-control" style="height: 400px">$!page.attributeNames</textarea>
-
-
-                      
                     </form>
                 </div>
 
