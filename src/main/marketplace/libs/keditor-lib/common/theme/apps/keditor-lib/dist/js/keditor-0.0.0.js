@@ -1715,6 +1715,8 @@
         });
         content = tempDiv.html();
 
+        component.removeClass('keditor-ui keditor-component keditor-initialized-component existing-component');
+
         var cls = component.attr('class');
 
 
