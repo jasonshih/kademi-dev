@@ -1,0 +1,27 @@
+{
+    "appDependencies": [
+        {
+            "appId": "KongoDB"
+        },
+        {
+            "appId": "email"
+        },
+        {
+            "appId": "userApp"
+        }
+    ],
+    "dependencies": [
+        {
+            "css": {
+                "path": "/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.css",
+                "cssMedia": "all"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.min.js"
+            }
+        }
+    ]
+}
