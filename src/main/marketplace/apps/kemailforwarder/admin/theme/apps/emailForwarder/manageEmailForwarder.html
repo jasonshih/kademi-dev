@@ -1,0 +1,145 @@
+<html>
+    <head>
+        <title>Email Forwarder</title>
+        <style>
+            .bootstrap-tagsinput {
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="alert alert-success" role="alert">Send a copy of any incoming email from one address to another. For example, forward joe@yourdomain.com to joseph@bloggs.com so that you only have one inbox to check.</div>
+        <button type="button" data-toggle="modal" data-target="#modal-add-forwarder" class="btn btn-success"><i class="fa fa-plus"></i> Add Forwarder</button>
+        <div class="clearfix">
+        </div>
+        <table class="table table-hover">
+            <colgroup>
+                <col />
+                <col />
+                <col />
+                <col width="100px"/>
+                <col width="100px"/>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Website</th>
+                    <th>Alias</th>
+                    <th>Forward To</th>
+                    <th>Emails</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tbody-forwarder">
+                #if($page.attributes.mappings.empty)
+                <tr class="text-center">
+                    <td colspan="3">You have no email forwarders, Create one now <button class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add Forwarder</button></td>
+                </tr>
+                #else
+                #foreach($m in $page.attributes.mappings)
+                #set($json = $m.jsonObject)
+                #set($website = false)
+                #set($website = $page.find("/websites/$json.websiteName"))
+                #set($currentWebsite = $website.current)
+                #set($webDomainName = false)
+                #if($currentWebsite)
+                #set($webDomainName = $formatter.getDomainName($currentWebsite.website))
+                #end
+                <tr data-json="$formatter.htmlEncode($m.json)" data-name="$m.name">
+                    <td>
+                        #if($website)
+                        <a href="$website.externalUrl" target="_blank">$formatter.firstNotNull($website.website.title, $website.website.name)</a>
+                        #else
+                        $json.websiteName
+                        #end
+                    </td>
+                    <td>$json.emailAlias#if($webDomainName)@$webDomainName#end</td>
+                    <td>
+                        #if($json.forwardTo)
+                        #foreach($e in $json.forwardTo)
+                        <span class="label label-default">$e</span>
+                        #end
+                        #end
+                    </td>
+                    <td>
+                        #if($json.emailItems.size())
+                        $json.emailItems.size()
+                        #else
+                        0
+                        #end
+                    </td>
+                    <td>
+                        <div class="visible-md visible-lg hidden-sm hidden-xs">
+                            <a href="#" class="btn btn-sm btn-teal tooltips btn-edit-forwarder" data-placement="top" data-original-title="Edit"><i class="fa fa-edit"></i></a>
+                            <a href="$m.name" data-title="$json.emailAlias" class="btn btn-sm btn-bricky tooltips btn-remove-forwarder" data-placement="top" data-original-title="Remove"><i class="fa fa-times fa fa-white"></i></a>
+                        </div>
+                        <div class="visible-xs visible-sm hidden-md hidden-lg">
+                            <div class="btn-group">
+                                <a class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+                                    <i class="fa fa-cog"></i> <span class="caret"></span>
+                                </a>
+                                <ul role="menu" class="dropdown-menu pull-right">
+                                    <li role="presentation">
+                                        <a role="menuitem" class="btn-edit-forwarder" tabindex="-1" href="#">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a>
+                                    </li>
+                                    <li role="presentation">
+                                        <a role="menuitem" class="btn-remove-forwarder" tabindex="-1" href="$m.name" data-title="$json.emailAlias">
+                                            <i class="fa fa-times"></i> Remove
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                #end
+                #end
+            </tbody>
+        </table>
+
+        <!-- Start Modal -->
+        <div id="modal-add-forwarder" class="modal modal-md fade" aria-hidden="true" tabindex="-1">
+            <form action="." method="POST" class="form-horizontal">
+                <input class="action" type="hidden" name="createNew" value="createNew"/>
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                    <h4 class="modal-title">Add an Email Forwarder</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="website">Website</label>
+                        <div class="col-md-8">
+                            <select id="website" name="website" class="form-control required">
+                                <option value="">[ Select One ]</option>
+                                #foreach($w in $page.find('/websites/').websiteFolders)
+                                <option value="$w.website.name">$w.title</option>
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="alias">Alias<small>an Email alias to capture or * to capture all</small></label>
+                        <div class="col-md-8">
+                            <input class="form-control required" type="text" id="alias" name="alias" placeholder="E.g. joe" minlength="1" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="forwardTo">Forward To<small>a Comma separated list of email addresses</small></label>
+                        <div class="col-md-8">
+                            <input id="forwardTo" name="forwardTo" type="text" class="form-control required">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button type="button" class="btn btn-sm btn-primary btn-create" data-type="form-submit">Create</button>
+                </div>
+            </form>
+        </div>
+        <!-- End Modal -->
+
+        <script src="/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.min.js?v=$controllers.modifiedDate.time" type="text/javascript">//</script>
+        <script src="/theme/apps/emailForwarder/manageEmailForwarder.js?v=$controllers.modifiedDate.time" type="text/javascript">//</script>
+    </body>
+</html>
