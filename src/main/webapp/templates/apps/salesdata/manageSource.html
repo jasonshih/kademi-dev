@@ -95,6 +95,14 @@
                                     $formatter.option("SUM", "Sum", $page.source.allocationType)
                                 </select>
                             </div>
+                            
+                            <label class="control-label col-md-2" for="reasonCode">
+                                Debit reason code
+                                <small>Used for identifying the type of debit</small>
+                            </label>
+                            <div class="col-md-4">
+                                <input type="text" name="reasonCode" id="reasonCode" value="$!page.source.reasonCode" placeholder="" class="form-control" />
+                            </div>
                         </div>
 
                         <hr/>
@@ -203,13 +211,24 @@
                                 #foreach($alloc in $page.history)
                                 <tr>
                                     <td>
-                                        #if( $alloc.points.issuedTo.name )
-                                        <a href="/manageUsers/$alloc.points.issuedTo.id/">$alloc.points.issuedTo.formattedName</a>
+                                        #if( $alloc.points )
+                                        #set( $awardedTo = $alloc.points.issuedTo )
                                         #else
-                                        <a href="/organisations/$alloc.points.issuedTo.id/edit/">$alloc.points.issuedTo.formattedName</a>
+                                        #set( $awardedTo = $alloc.pointsDebit.issuedTo )
+                                        #end
+                                        #if( $awardedTo.name )
+                                        <a href="/manageUsers/$awardedTo.id/">$awardedTo.formattedName</a>
+                                        #else
+                                        <a href="/organisations/$awardedTo.id/edit/">$awardedTo.formattedName</a>
                                         #end
                                     </td>
-                                    <td>$alloc.points.numPoints</td>
+                                    <td>
+                                        #if( $alloc.points.numPoints )
+                                        $alloc.points.numPoints
+                                        #else
+                                        <span class="label label-danger">($alloc.pointsDebit.numPoints)</span>
+                                        #end
+                                    </td>
                                     <td>$!alloc.points.pointsTag.name</td>
                                     <td>$!alloc.points.reason</td>
                                     <td>$alloc.createdDate</td>
