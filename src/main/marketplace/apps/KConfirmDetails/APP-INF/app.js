@@ -74,21 +74,29 @@
             status: true
         };
 
+        var group;
         try {
-            var orgData = page.closest("website").getOrgData();
-            var group = orgData.createGroup(groupName);
+            var rootFolder = page.closest("website");
+            group = rootFolder.group(groupName);
+            if( group == null ) {
+                group = orgData.createGroup(groupName);
+            }
         } catch (e) {
-            //Group exists
+            log.error('Error when looking for group: ' + groupName + ' - ' + e, e);
+            result.status = false;
+            result.messages = ['Error when finding group: ' + e];
+            return result;
         }
 
         try {
-            securityManager.addToGroup(userName, groupName);
+            securityManager.addToGroup(userName, group);
+            return views.jsonObjectView(JSON.stringify(result));
         } catch (e) {
-            log.error('Error when updating user: ' + e);
+            log.error('Error when updating user: ' + e, e);
             result.status = false;
             result.messages = ['Error when updating user: ' + e];
+            return result;
         }
-        return views.jsonObjectView(JSON.stringify(result));
     };
 
 })(this);
