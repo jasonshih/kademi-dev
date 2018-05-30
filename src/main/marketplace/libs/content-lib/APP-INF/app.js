@@ -6,7 +6,11 @@ controllerMappings.addComponent("content/components", "rating", "html", "Shows a
 controllerMappings.addComponent("content/components", "tile", "html", "Shows a tile which contains image, text and link", "Content App component");
 
 // Asset stuff
-controllerMappings.addComponent("content/components", "assetQueryList", "html", "Shows a list of assets from an asset query", "Content App component");
+var anyType = formatter.newArrayList();
+anyType.add("html");
+anyType.add("edm");
+
+controllerMappings.addComponent("content/components", "assetQueryList", anyType, "Shows a list of assets from an asset query", "Content App component");
 controllerMappings.addComponent("content/components", "assetEditForm", "html", "Shows a default edit form for assets");
 
 controllerMappings.addComponent("content/components", "photo")
@@ -26,7 +30,7 @@ controllerMappings.addComponent("content/components", "photo")
         .addDefaultAtt("photo-link-target", "")
         .build();
 
-controllerMappings.addComponent("content/components", "assetQueryText", "html", "Displays text assets from a query", "Content App component");
+controllerMappings.addComponent("content/components", "assetQueryText", anyType, "Displays text assets from a query", "Content App component");
 
 controllerMappings.addComponent("content/components", "video")
         .addType("html")
