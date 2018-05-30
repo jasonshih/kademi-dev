@@ -5,7 +5,9 @@
 
     #set ($prodsListId = $formatter.randomGuid)
 
+
     #if( $page.attributes.searchResults.hits.hits.size() > 0 )
+    <div class="kcom2ProductListHolder">
         #if ($layout == "grid")
             #set ($clsName = "col-sm-3")
             #if ($itemsPerRow == 1)
@@ -33,13 +35,16 @@
         </div>
         #end
 
-        <p id="inifiniteLoader" class="text-center" style="display: none; padding: 20px 0">
+        <p id="inifiniteLoader" class="text-center" style="display: none;">
             <i class="fa fa-circle-o-notch fa-spin fa-2x" aria-hidden="true"></i>
         </p>
-        
+    </div>
     #else
         <div class="row products-list">
-        <p>Sorry, we couldnt find any products for you</p>
+            <div class="col-sm-12">
+                <p>&nbsp;</p>
+                <p>Sorry, we couldnt find any products for you</p>
+            </div>
         </div>
 
     #end
@@ -80,14 +85,19 @@
 #macro( productTile $productHit $basePath )  
     #set($bg = "/static/images/photo_holder.png")
     #set($bg = $hit.fields.primaryImageHref.value)
+    #if( $hit.fields.webName.value )
+        #set( $prodHref = "${basePath}$hit.fields.webName.value" )
+    #else
+        #set( $prodHref = "${basePath}$hit.fields.name.value" )
+    #end
 
     <div class="$clsName product-item">
         <div class="thumbnail product">
             <div class="product-info">
-                <h3 class="product-title" ><a class="text-primary" href="$basePath">$hit.fields.title.value</a>
+                <h3 class="product-title" ><a class="text-primary" href="$prodHref">$hit.fields.title.value</a>
                 </h3>
                 <div class="embed-responsive embed-responsive-4by3">
-                    <a href="$basePath/$hit.fields.webName.value" class="embed-responsive-item"
+                    <a href="$prodHref" class="embed-responsive-item"
                        style="background-image: url($bg);"></a>
                 </div>
                 <div class="product-content">$!formatter.truncate( $formatter.encodeAsHtmlEntities($hit.fields.content.value), 65)</div>
@@ -97,7 +107,7 @@
                 <h3 class="text-center product-price bg-info"><span>$</span>$hit.fields.finalCost.value
                 </h3>
 
-                <a href="$basePath" class="btn btn-info" role="button">
+                <a href="$prodHref" class="btn btn-info" role="button">
                     <i class="fa fa-shopping-cart"></i>
                 </a>
             </div>

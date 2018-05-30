@@ -28,6 +28,21 @@ $(function () {
             var price = sku.data("price");
             container.find(".product-price").text(price);
             container.find(".btn-ecom-add-to-cart").data("sku-id", sku.data("sku-id"));
+            var lis = sku.find('ul').find('li');
+            var kcom2inventory = container.find('#kcom2inventory');
+            kcom2inventory.html('');
+            if (lis.length){
+                kcom2inventory.parent('').removeClass('hide');
+            }
+            lis.each(function () {
+                var location = $(this).attr('data-location');
+                var stock = $(this).attr('data-stock');
+                kcom2inventory.append('<option value="'+location+'">Inventory: '+location+', Quantity: '+stock+'</option>')
+            });
+
+            var slider =  $('#product-images.product-info');
+            var gotoSlide = slider.find('.slickItem[data-sku-id='+sku.data("sku-id")+']').index();
+            slider.slick('slickGoTo', gotoSlide);
         }
 
     }
@@ -56,9 +71,11 @@ $(function () {
     $(function () {
         function initSlickSlider(){
             var slider =  $('#product-images.product-info');
+            var items = slider.find('.slickItem');
             if (slider.length) {
                 slider.not('.slick-initialized').slick({
                     dots: false,
+                    arrows: items.length > 1,
                     draggable: false,
                     infinite: true,
                     speed: 300,

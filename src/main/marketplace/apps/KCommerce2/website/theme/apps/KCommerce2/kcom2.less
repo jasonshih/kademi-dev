@@ -1,21 +1,18 @@
 
-
-
-
-.kcom2Product{
-    .product-price{
+.kcom2Product {
+    .product-price {
         padding: 10px 0;
     }
     .slick-arrow {
-      position: absolute;
-      top: 0;
-      width: 20px;
-      height: 100%;
-      font-size: 26px;
-      color: #333333;
-      z-index: 1;
-      background: rgba(255, 255, 255, 0.6);
-      border: none;
+        position: absolute;
+        top: 0;
+        width: 20px;
+        height: 100%;
+        font-size: 26px;
+        color: #333333;
+        z-index: 1;
+        background: rgba(255, 255, 255, 0.6);
+        border: none;
     }
 
     //.slick-arrow i {
@@ -29,35 +26,56 @@
     //}
 
     .slick-arrow.slick-prev {
-      left: 1px;
-      border-width: 1px 0 1px 1px;
+        left: 1px;
+        border-width: 1px 0 1px 1px;
     }
 
     .slick-arrow.slick-next {
-      right: 1px;
-      border-width: 1px 1px 1px 0;
+        right: 1px;
+        border-width: 1px 1px 1px 0;
     }
 
     .slick-arrow.slick-disabled {
-      background: none;
-      color: transparent;
-      cursor: default;
-      width: 1px;
-      overflow: hidden;
+        background: none;
+        color: transparent;
+        cursor: default;
+        width: 1px;
+        overflow: hidden;
     }
 
-    .slick-arrow:focus{
-      outline: none;
+    .slick-arrow:focus {
+        outline: none;
     }
-    .select-product-option img{
+    .param-title {
+        display: inline-block;
+        float: left;
+        padding-top: 5px;
+        text-transform: capitalize;
+    }
+    .select-product-option {
         border: 2px solid transparent;
+        display: inline-block;
+        padding: 3px;
+        float: left;
+        margin-left: 5px;
+        img {
+            height: 25px;
+        }
+        &:hover{
+            text-decoration: none;
+        }
     }
-    .select-product-option.active img{
+    .select-product-option.active {
         border: 2px solid @brand-info;
+        text-decoration: none;
     }
     .slickItem.slick-active a:focus,
     .slickItem.slick-active:focus,
-    .slickItem.slick-active a div:focus{
+    .slickItem.slick-active a div:focus {
         outline: none;
     }
+}
+
+.kcom2ProductListHolder{
+    min-height: 500px;
 }

@@ -8,9 +8,19 @@
  * @param {type} query
  * @returns {unresolved}
  */
-function productSearch(store, category, query, attributePairs) {
+function productSearch(store, category, query, attributePairs, from, size) {
     
     // TODO: Pagination
+    if (!from || isNaN(from)){
+        from = 0;
+    } else {
+        from = parseInt(from);
+    }
+    if (!size || isNaN(size)){
+        size = 10;
+    } else {
+        size = parseInt(size);
+    }
     var queryJson = {
         "stored_fields": [
             "name",
@@ -22,7 +32,8 @@ function productSearch(store, category, query, attributePairs) {
             "primaryImageHref",
             "content"
         ],
-        "size": 100,
+        "from": from,
+        "size": size,
         "aggregations": {
             "maxPrice": {"max": {"field": "finalCost"}},
             "minPrice": {"min": {"field": "finalCost"}},

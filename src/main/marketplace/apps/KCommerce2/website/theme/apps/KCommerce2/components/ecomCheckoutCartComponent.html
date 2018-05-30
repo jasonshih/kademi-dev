@@ -10,6 +10,9 @@
             </div>
         </div>
 
+
+        SHIPPING - $services.priceManager.availableShippingProviders($checkoutItems.cart)
+        
         <div class="items-list">
             #set( $items = $formatter.sortByProperty( $items, "itemDescription" ) )
             #foreach($item in $items )

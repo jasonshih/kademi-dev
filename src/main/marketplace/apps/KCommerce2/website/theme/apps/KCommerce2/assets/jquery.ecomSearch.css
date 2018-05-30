@@ -30,6 +30,7 @@
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     left: 0;
+    width: 100%;
 }
 
 .ecom-search-wrapper .ecom-search-suggestions li a {

@@ -5,18 +5,6 @@ var startFrom = 12;
 var currentURI = new URI(window.location.href);
 
 $(function () {
-    function initProductSearch() {
-        var timer;
-        $('#searchBoxInput[data-type=RewardProducts]').on('keydown', function () {
-            var input = $(this);
-
-            clearTimeout(timer);
-            timer = setTimeout(function () {
-                doProductSearch();
-            }, 300);
-        });
-    }
-
     function initPointsRanges() {
         flog('initPointsRanges');
 
@@ -34,12 +22,37 @@ $(function () {
             if (item.hasClass('selected')) {
                 item.removeClass('selected');
             } else {
-                pointRangeItems.filter('.selected').removeClass('selected');
+                // pointRangeItems.filter('.selected').removeClass('selected');
                 item.addClass('selected');
             }
+            
+            doProductSearch();
+            persistAttributes();
+        });
+    }
+    
+    function persistAttributes() {
+        var arr = [];
+        $('.pointsRangeList a.list-group-item').each(function () {
+            if ($(this).hasClass('selected')){
+                arr.push($(this).attr('data-attvalue'));
+            }
+        });
+        $.cookie('kcom2att', arr.join(','));
+    }
+
+    function loadPersistenceAttributes() {
+        var att = $.cookie('kcom2att');
+        if (att) {
+            var arr = att.split(',');
+            $('.pointsRangeList a.list-group-item').each(function () {
+                if (arr.indexOf($(this).attr('data-attvalue')) != -1){
+                    $(this).addClass('selected');
+                }
+            });
 
             doProductSearch();
-        });
+        }
     }
 
     function initCategories() {
@@ -196,11 +209,11 @@ $(function () {
             $ecomStoreCategoriesList.data('ready-init-event', true);
             initPointsRanges();
             initCategories();
-            initProductSearch();
             initSortBy();
+            loadPersistenceAttributes();
             if (!shouldLoadMore) {
                 $(window).scroll(function () {
-                    if (!$('#inifiniteLoader').hasClass('limited') && $('#inifiniteLoader').is(':hidden') && $(window).scrollTop() == $(document).height() - $(window).height()) {
+                    if (!$('#inifiniteLoader').hasClass('limited') && $('#inifiniteLoader').is(':hidden') && $(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
                         doPaginate();
                     }
                 });

@@ -5,17 +5,27 @@
     <div class="product-item">
         <div class="product kcom2Product thumbnail">
             <div class="product-info" id="product-images">
-                    #foreach( $sku in $product.productSkus )
-                    #set ($productImage = "/theme/img/photo_holder.png")
-                    #if ($sku.imageHash)
-                    #set ($skuImage = "/_hashes/files/$!sku.imageHash")
-                    #end
-                    <li class="slickItem">
+                    #set ($productsImages = $product.images)
+                    #foreach($img in $productsImages)
+                    #set ($productImage = "/_hashes/files/$!img.imageHash")
+                    <li class="slickItem" data-sku-id="">
                         <a class="embed-responsive embed-responsive-4by3" href="javascript:void(0)" title="$!sku.title">
                             <div style="background-image: url('$!{productImage}'); background-repeat: no-repeat; background-size: contain; background-position: center" class="embed-responsive-item"></div>
                         </a>
                         <a href="$!prodUrl">$!p.title</a>
                     </li>
+                    #end
+
+                    #foreach( $sku in $product.productSkus )
+                        #if ($sku.imageHash)
+                            #set ($skuImage = "/_hashes/files/$!sku.imageHash")
+                            <li class="slickItem" data-sku-id="$!sku.id">
+                                <a class="embed-responsive embed-responsive-4by3" href="javascript:void(0)" title="$!sku.title">
+                                    <div style="background-image: url('$!{skuImage}'); background-repeat: no-repeat; background-size: contain; background-position: center" class="embed-responsive-item"></div>
+                                </a>
+                                <a href="$!prodUrl">$!p.title</a>
+                            </li>
+                        #end
                     #end
             </div>
 
@@ -31,22 +41,19 @@
             <div class="product-variants form-horizontal">
                     #foreach( $param in $product.productParameters)
                     #if( $param.parameterOptions.size() > 0 )
-                    <div class="row product-param" style="padding-bottom: 15px" data-param-name="$param.name">
-                        <div class="col-sm-2">
-                            ${param.title}:
-                        </div>
+                    <div class="caption product-param" style="padding-bottom: 15px" data-param-name="$param.name">
+                        <span class="param-title">${param.title}:</span>
                         #foreach( $opt in $param.parameterOptions)
-                        <div class="col-sm-2">
-                            <a href="$opt.name" class="select-product-option">
+                        <a href="$opt.name" class="select-product-option">
                             #if( $opt.imageHash )
-                            <img src="/_hashes/files/$opt.imageHash" style="height: 40px" />
+                            <img src="/_hashes/files/$opt.imageHash" />
                             #else
                             $opt.title
                             #end
-                            </a>
-                        </div>
+                        </a>
                         #end
                     </div>
+                    <br>
                     #end
                     #end
             </div>
@@ -54,8 +61,10 @@
 
 
             <div class="product-skus hide">
+                #set ($priceArray = [])
                 #foreach( $sku in $product.productSkus )
                 #set( $itemisedPrice = $services.priceManager.itemisedPrice($user, $page.attributes.productInStore, $sku, $formatter.toBigDecimal(1, 2)) )
+                #if ($priceArray.add($itemisedPrice.finalCost)) #end
                 <div data-sku-id="$sku.id" data-price="$$formatter.formatCurrency($itemisedPrice.finalCost)"
                     data-image="$sku.imageHash"
                     #foreach( $opt in $sku.options )
@@ -74,16 +83,31 @@
                 #end
             </div>
 
+            <div class="caption hide">
+                Inventory
+                <select name="" id="kcom2inventory" class="form-control">
 
+                </select>
+            </div>
             <div class="caption product-actions">
                 <h3  class="text-center product-price bg-info">
-                    Please select product SKU
+                    #set ($priceArraySize = $priceArray.size())
+                    #if ($priceArraySize > 0)
+                        #set ($priceArray = $formatter.sort($priceArray))
+                        #set ($priceArrayLastIndex = $priceArraySize - 1)
+                        #if ($priceArray.size() > 1)
+                            $$formatter.formatCurrency($priceArray[0]) -  $$formatter.formatCurrency($priceArray[$priceArrayLastIndex])
+                        #else
+                            $priceArray[0]
+                        #end
+                    #end
                 </h3>
 
                 <div class="input-group">
-                    <input type="text" class="product-quantity form-control" placeholder="Quantity" />
+                    <span class="input-group-addon" id="basic-addon1">Quantity</span>
+                    <input required min="0" type="number" class="product-quantity form-control required" placeholder="Quantity" value="1" />
                     <span class="input-group-btn">
-                        <a href="/$page.attributes.store.name/cart" class="btn btn-info btn-ecom-add-to-cart" role="button"><i class="fa fa-shopping-cart"></i></a>
+                        <a href="/$page.attributes.store.name/cart" class="btn btn-info btn-ecom-add-to-cart" role="button">Add to cart <i class="fa fa-shopping-cart"></i></a>
                       </span>
                 </div>
 
