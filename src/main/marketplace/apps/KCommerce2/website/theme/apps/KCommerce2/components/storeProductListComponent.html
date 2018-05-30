@@ -5,7 +5,9 @@
 
     #set ($prodsListId = $formatter.randomGuid)
 
+
     #if( $page.attributes.searchResults.hits.hits.size() > 0 )
+    <div class="kcom2ProductListHolder">
         #if ($layout == "grid")
             #set ($clsName = "col-sm-3")
             #if ($itemsPerRow == 1)
@@ -33,13 +35,16 @@
         </div>
         #end
 
-        <p id="inifiniteLoader" class="text-center" style="display: none; padding: 20px 0">
+        <p id="inifiniteLoader" class="text-center" style="display: none;">
             <i class="fa fa-circle-o-notch fa-spin fa-2x" aria-hidden="true"></i>
         </p>
-        
+    </div>
     #else
         <div class="row products-list">
-        <p>Sorry, we couldnt find any products for you</p>
+            <div class="col-sm-12">
+                <p>&nbsp;</p>
+                <p>Sorry, we couldnt find any products for you</p>
+            </div>
         </div>
 
     #end
