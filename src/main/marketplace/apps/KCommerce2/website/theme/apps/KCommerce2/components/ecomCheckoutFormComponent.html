@@ -15,8 +15,172 @@
 #if( $checkoutItems )
 
 
-<form id="cart-form" method="POST" action="$page.href">
+#if(!$user)
+<form action="$page.href" method="post" id="kcom2FindEmailForm">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <small>Please enter your email</small>
+            </div>
+        </div>
+        <div class="panel-body">
 
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input name="findProfileEmail" placeholder="Email" type="text" class="form-control required email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <!--<div class="col-md-6">-->
+                        <!--<button type="button" class="btn btn-info text-uppercase btn-prev hide" ><i class="fa fa-angle-left"></i> Previous</button>-->
+                    <!--</div>-->
+                    <div class="col-md-12 text-right">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-info text-uppercase btn-skip">Skip login <i class="fa fa-angle-right"></i></button>
+                            <button type="submit" class="btn btn-info text-uppercase btn-next">Next
+                            <i class="fa fa-angle-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div id="kcom2PasswordForm" class="hide">
+    <form action="." method="post">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <small>Please enter your password</small>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input type="hidden" name="kcom2Email">
+                            <input name="kcom2Password" placeholder="Enter your password" type="password" class="form-control required">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-info text-uppercase btn-prev" ><i class="fa fa-angle-left"></i> Previous</button>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <button type="submit" class="btn btn-info text-uppercase btn-next">Login
+                                <i class="fa fa-angle-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+#end
+
+#set ($shippingFormState = 'hide')
+#if ($user)
+#set ($shippingFormState = '')
+#end
+
+<div id="kcom2ShippingForm" class="$!shippingFormState">
+    <form action="." method="post">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <small>Shipping address</small>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input name="addressLine1" placeholder="Address line 1" type="text" class="form-control required">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input name="addressLine2" placeholder="Address line 2" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input name="state" placeholder="State" type="text" class="form-control required">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input name="postcode" placeholder="Postcode" type="text" class="form-control required">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input name="country" placeholder="Country" type="text" class="form-control required">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-info text-uppercase btn-prev" ><i class="fa fa-angle-left"></i> Previous</button>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <button type="submit" class="btn btn-info text-uppercase btn-next">Next
+                                <i class="fa fa-angle-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+#if ($services.cartManager.shoppingCartId)
+#set ($cart = $services.criteriaBuilders.cart.eq("cartId", $services.cartManager.shoppingCartId).executeSingle())
+#set ($shippingProviders = $services.priceManager.availableShippingProviders($cart))
+#end
+
+<div id="kcom2ShippingProvider" class="hide">
+    <form action="." method="post">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <small>Shipping providers</small>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <select name="shippingProvider" class="form-control required" id="">
+                                <option value="">Choose shipping provider</option>
+                                #foreach ($sp in $shippingProviders)
+                                <option value="$!sp.id">$sp.title</option>
+                                #end
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-info text-uppercase btn-prev" ><i class="fa fa-angle-left"></i> Previous</button>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <button type="submit" class="btn btn-info text-uppercase btn-next">Next
+                                <i class="fa fa-angle-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+#if ($shippingProviders)
+#end
+
+<form id="cart-form" method="POST" action="$page.href" class="hide">
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title">
@@ -25,15 +189,6 @@
         </div>
         <div class="panel-body">
             <div class="form-horizontal">
-                #if(!$user)
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <button type="button" class="btn btn-info text-uppercase btn-block btn-login" data-toggle="modal" data-target="#loginRegisterModal">Login for faster checkout
-                                <i class="fa fa-lock pull-right"></i></button>
-                        </div>
-                    </div>
-                #end
-
                 #foreach($pApp in $paymentAps)
                     #if($foreach.first)
                     #end
@@ -71,7 +226,5 @@
         </div>
     </div>
 </form>
-
-#else
 
 #end

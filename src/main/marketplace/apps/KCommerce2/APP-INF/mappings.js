@@ -37,7 +37,8 @@ var cartMapping = controllerMappings
         .addMethod('POST', 'setCartItem', 'quantity')
         .addMethod('POST', 'removeCartItem', 'removeLineId')
         .addMethod('POST', 'setCartItemQuantity', 'newQuantity')
-        .addMethod('POST', 'checkout', 'processCartId');
+        .addMethod('POST', 'checkout', 'processCartId')
+        .addMethod('POST', 'findProfile', 'findProfileEmail');
 
 
 
@@ -260,4 +261,14 @@ function resolveCategory(rf, groupName, groupVal, mapOfGroups) {
     return category;
 }
 
-
+function findProfile(page, params) {
+    log.info('findProfile {} {}', page, params);
+    if (params.findProfileEmail){
+        var ur = applications.userApp.findUserResource(params.findProfileEmail);
+        if (ur && ur.hasPassword){
+            return views.jsonView(true, "Profile with password exists");
+        } else {
+            return views.jsonView(false, "No profile found");
+        }
+    }
+}
