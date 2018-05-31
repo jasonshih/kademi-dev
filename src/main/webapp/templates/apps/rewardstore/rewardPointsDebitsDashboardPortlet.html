@@ -27,12 +27,12 @@
             $('.selected-range').text(text);
             $.get("/reporting/pointsDebit?startDate=" + startDate + '&finishDate=' + endDate, function (data) {
                 flog("pointsDebitActivityStats", data);
-                initActivityChart(data);
+                initPageActivityChart(data);
             }, "json");
         });
     });
 
-    function initActivityChart(resp) {
+    function initPageActivityChart(resp) {
         nv.addGraph(function () {
             var chart = nv.models.lineChart()
                     .margin({top: 0, right: 0, bottom: 0, left: 0})

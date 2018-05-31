@@ -34,12 +34,12 @@
             $('.selected-range').text(text);
             $.get("/moduleActivityStats?startDate=" + startDate + '&finishDate=' + endDate, function (data) {
                 flog("moduleActivityStats", data);
-                initActivityChart(data);
+                initModuleActivityChart(data);
             }, "json");
         });
     });
 
-    function initActivityChart(resp) {
+    function initModuleActivityChart(resp) {
         nv.addGraph(function () {
             var chart = nv.models.lineChart()
                     .margin({top: 0, right: 0, bottom: 0, left: 0})
