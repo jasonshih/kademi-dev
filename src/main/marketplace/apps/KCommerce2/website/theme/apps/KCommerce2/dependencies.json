@@ -121,6 +121,12 @@
                 "group": "main",
                 "path": "/theme/apps/KCommerce2/productDetails.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/KCommerce2/kcom2checkout.js"
+            }
         }
 
     ]
