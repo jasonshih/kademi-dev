@@ -8,19 +8,40 @@
             <p class="lead" id="leadsHeading">$page.totalLeads leads</p>
             <div class="row">
                 <div class="col-md-12">
-
-                    <a class="btn btn-success btn-sm" href="/tableUploaders/leadsUploader?funnelName=$page.funnel.name">
-                        <span class="glyphicon glyphicon-upload"></span>
-                        Upload File
-                    </a>
-                    <a class="btn btn-info btn-sm btn-export-points" href="../export-leads.csv">
-                        <span class="glyphicon glyphicon-download"></span>
-                        Export to CSV
-                    </a>
-                    <a class="btn btn-info btn-sm btn-refresh-leads" href="$page.href#leads-tab">
-                        <span class="fa fa-refresh"></span>
-                        Refresh leads
-                    </a>
+                    <div class="btn-group">
+                        <a class="btn btn-success btn-sm" href="/tableUploaders/leadsUploader?funnelName=$page.funnel.name">
+                            <span class="glyphicon glyphicon-upload"></span>
+                            Import
+                        </a>
+                        <a class="btn btn-info btn-sm btn-export-points" href="../export-leads.csv">
+                            <span class="glyphicon glyphicon-download"></span>
+                            Export
+                        </a>
+                        <a class="btn btn-info btn-sm btn-refresh-leads" href="$page.href#leads-tab">
+                            <span class="fa fa-refresh"></span>
+                            Refresh
+                        </a>
+                        <div class="btn-group" >
+                            <button type="button" class="btn btn-sm btn-info btn-remove-leads">
+                                <i class="fa fa-search"></i>
+                                Filter
+                            </button>
+                            <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                <li><a href="$page.href?filterGroup=">No filter</a></li>
+                                #foreach( $group in $rootFolder.groups)
+                                <li>
+                                    <a href="$page.href?filterGroup=$group.name">
+                                        $!group.title
+                                        <small class="text-muted">$group.name</small>
+                                    </a>
+                                </li>
+                                #end
+                            </ul>
+                        </div>
+                    </div>
 
                     <div class="btn-group" style="float:right">
                         <button type="button" class="btn btn-sm btn-danger btn-remove-leads">
