@@ -12,8 +12,14 @@
 #end
 
 #set( $checkoutItems = $services.cartManager.checkoutItems )
+
+
 #if( $checkoutItems )
 
+#set ($cart = $checkoutItems.cart)
+#set ($shippingProviders = $services.priceManager.availableShippingProviders($cart))
+
+$shippingProviders
 
 #if(!$user)
 <form action="$page.href" method="post" id="kcom2FindEmailForm">
@@ -137,11 +143,6 @@
 </div>
 
 
-#if ($services.cartManager.shoppingCartId)
-#set ($cart = $services.criteriaBuilders.cart.eq("cartId", $services.cartManager.shoppingCartId).executeSingle())
-#set ($shippingProviders = $services.priceManager.availableShippingProviders($cart))
-#end
-
 <div id="kcom2ShippingProvider" class="hide">
     <form action="." method="post">
         <div class="panel panel-default">
@@ -150,7 +151,7 @@
                     <small>Shipping providers</small>
                 </div>
             </div>
-            <div class="panel-body">
+            <div class="panel-body">                                
                 <div class="form-horizontal">
                     <div class="form-group">
                         <div class="col-md-12">
