@@ -23,6 +23,7 @@
                 <li class="active"><a data-toggle="tab" href="#products" aria-expanded="true">Products</a></li>
                 <li><a data-toggle="tab" href="#general">General</a></li>
                 <li><a data-toggle="tab" href="#pricing">Pricing rules</a></li>
+                <li><a data-toggle="tab" href="#shipping">Shipping</a></li>
             </ul>
             <div class="tab-content">
 
@@ -201,15 +202,18 @@
 
                     #set( $rulesDir = $rootFolder.find("/repositories/$page.storeWebsite.name/$page.storeWebsite.liveBranch/WEB-INF/") )
                     #set( $rulesFile = $rulesDir.child("pricing-rules.csv") )
+                    #set( $rules = $services.pricingRulesService.rules($page.storeWebsite) )
+                    
+                    rules - $rules
 
                     #if( $rulesFile )
                     <a href="/repositories/ecom1/version1/WEB-INF/"></a>
-
-                    #set( $rules = $services.pricingRulesService.rules($page.storeWebsite) )
+                    
+                    
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th colspan="9">$rules.size() rules</th>
+                                <th colspan="9">$rules.rules.size() rules</th>
                             </tr>
                             <tr>
                                 <th>Promotion</th>
@@ -224,7 +228,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            #foreach($rule in $rules)
+                            #foreach($rule in $rules.rules)
                             <tr>
                                 <td>$!rule.promotionName</td>
                                 <td>$!rule.userId</td>
@@ -288,6 +292,41 @@
 
                     <textarea class="form-control">promo1,admin,administrators,myorg,trade,,1,0.9,just an example</textarea>
                     </div>
+
+                    #end
+                </div>
+                <div id="shipping" class="tab-pane">
+                    <h2>Shipping providers</h2>
+
+                    #set( $rulesDir = $rootFolder.find("/repositories/$page.storeWebsite.name/$page.storeWebsite.liveBranch/WEB-INF/") )
+                    #set( $shippingFile = $rulesDir.child("shipping.settings.xml") )
+
+                    #if( $shippingFile )
+                    <a href="/repositories/ecom1/version1/WEB-INF/"></a>
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th colspan="9">$rules - $rules.shippingProviders.size() provider</th>
+                            </tr>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($provider in $rules.shippingProviders)
+                            <tr>
+                                <td>$provider.id</td>
+                                <td>$provider.title</td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                    #else
+                    <p class="lead">No shipping providers file exists for this website</p>
+
+                    <a href="${rulesDir.href}texteditor?fileName=shipping.settings.xml">Create and edit as a text file</a>
 
                     #end
                 </div>
