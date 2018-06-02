@@ -861,6 +861,7 @@
 
                     <div class="row">
                         <div class="col-lg-6">
+                            <h2>Templates</h2>
                             <div class="alert alert-info">Below is a list of templates provided by applications currently enabled for this website. Click the link to override and customise the template. <b>Not all applications are integrated with template management</b>, and might not appear here</div>
 
                             <div class="btn-group" role="group" aria-label="...">
@@ -905,7 +906,13 @@
                             #end
                         </div>
                         <div class="col-lg-6">
-                            <div class="alert alert-info">Below is a list of components provided by applications currently enabled for this website. Click the link to override and customise.</div>
+                            <h2>Components</h2>
+                            <div class="alert alert-info">
+                                <p>
+                                    Below is a list of components provided by applications currently enabled for this website. Click the link to override and customise.
+                                </p>
+                                <p>Components are edited as raw html and template code - <b>developers only</b></p>
+                            </div>
                             #foreach($compList in $page.allComponents.entrySet() )
                             <table class="table table-hover">
                                 <colgroup>
