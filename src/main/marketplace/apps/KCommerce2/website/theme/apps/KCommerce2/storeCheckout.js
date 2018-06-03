@@ -22,8 +22,19 @@
         initRemoveItem();
         initPaymentOptionSelect();
         initLoginForm();
+        initPromoCodes();
 
         $('.btn-decrease-quantity, .btn-increase-quantity, .ecom-txt-quantity, .btn-ecom-remove-item').prop('disabled', false);
+    }
+
+    function initPromoCodes() {
+        $("body").on("click", ".apply-promo-codes", function(e) {
+            e.preventDefault();
+            var cont = $(e.target).closest(".promo-codes-container");
+            var inp = cont.find("input[name=promoCodes]");
+            var codes = inp.val();
+            applyPromoCodes(codes, window.location.href);
+        });
     }
 
     function initCartForm() {
@@ -323,6 +334,30 @@
             valiationMessageSelector: "p.login.message"
         }); // setup login and logout
     }
+
+    function applyPromoCodes(codes, cartHref) {
+        flog("applyPromoCodes", codes, cartHref);
+        $.ajax({
+            type: 'POST',
+            url: cartHref,
+            data: {
+                promoCodes : codes // includes vouchers and promotion codes
+            },
+            datatype: "json",
+            success: function (data) {
+                $("#ecomItemsTable, #cart-link").reloadFragment({
+                    whenComplete: function (resp) {
+                        Msg.info("Updated item in your shopping cart");
+                        actors.prop('disabled', false);
+                    }
+                });
+            },
+            error: function (resp) {
+                Msg.error("An error occured applying your promotion codes");
+            }
+        });
+    }
+
 
 })(jQuery);
 

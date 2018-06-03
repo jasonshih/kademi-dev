@@ -38,6 +38,7 @@ var cartMapping = controllerMappings
         .addMethod('POST', 'removeCartItem', 'removeLineId')
         .addMethod('POST', 'setCartItemQuantity', 'newQuantity')
         .addMethod('POST', 'checkout', 'processCartId')
+        .addMethod('POST', 'applyPromoCodes', 'promoCodes')
         .addMethod('POST', 'findProfile', 'findProfileEmail');
 
 
@@ -106,7 +107,7 @@ function doEcomList(page, params) {
 /**
  * Look for request params with the same name as attribute names,
  * and build a list of their names and values
- * 
+ *
  * @param {type} params
  * @returns {undefined}
  */
@@ -195,7 +196,7 @@ function setCartItem(page, params, files, form) {
 
 function removeCartItem(page, params, files, form) {
     log.info("removeCartItem: form={}", form);
-    var lineId = form.integerParam("removeLineId");
+    var lineId = form.rawParam("removeLineId");
     var didRemove;
     transactionManager.runInTransaction(function () {
         didRemove = services.cartManager.removeItem(lineId);
@@ -209,44 +210,77 @@ function removeCartItem(page, params, files, form) {
 
 }
 
+function applyPromoCodes(page, params, files, form) {
+    log.info("applyPromoCodes:");
+    var promoCodes = form.rawParam("promoCodes");
+
+    var jsonResult;
+    transactionManager.runInTransaction(function () {
+        var codesArr = formatter.splitByAnything(promoCodes);
+        var codesList = formatter.newArrayList(codesArr);
+        if( formatter.isEmpty(codesList)) {
+            jsonResult = views.jsonView(false, "Please enter promotion or voucher codes");
+        } else {
+            var cart = services.cartManager.shoppingCart(true);
+            var store = page.attributes.store;
+            services.cartManager.applyPromoCodes(cart, store, codesList);
+            jsonResult = views.jsonView(true, "Applied codes " + promoCodes);
+        }
+    });
+
+    return jsonResult;
+}
+
 function resolveStoreName(rf, groupName, groupVal) {
     var store = services.criteriaBuilders.get("ecommerceStore")
             .eq("name", groupVal)
             .eq("website", rf.website)
             .executeSingle();
+    if( store !== null) {
+        log.info("resolveStoreName: found store: {}", store.name);
+    }
     return store;
 }
 
 function resolveProduct(rf, groupName, groupVal, mapOfGroups) {
     var store = mapOfGroups.get("store");
     // First try the webname
-    var product = services.criteriaBuilders.get("productInEComStore")
+    var productInEcom = services.criteriaBuilders.get("productInEComStore")
             .join("product", "p")
             .eq("p.webName", groupVal)
             .eq("store", store)
             .executeSingle();
 
-    if (product === null) {
+    if( productInEcom !== null ) {
+        log.info("found product from webName");
+    }
+
+    if (productInEcom === null) {
         // Didnt find webname, so try product name
-        var product = services.criteriaBuilders.get("productInEComStore")
+        productInEcom = services.criteriaBuilders.get("productInEComStore")
                 .join("product", "p")
                 .eq("p.name", groupVal)
                 .eq("store", store)
                 .executeSingle();
     }
 
-    if (product === null) {
+    if (productInEcom === null) {
         // Still nuttin, try using the segment as a product ID
         var id = formatter.toLong(groupVal, true);
         if (id !== null) {
-            var product = services.criteriaBuilders.get("productInEComStore")
+            productInEcom = services.criteriaBuilders.get("productInEComStore")
                     .join("product", "p")
                     .eq("p.id", id)
                     .eq("store", store)
                     .executeSingle();
         }
     }
-    return product;
+
+    if( productInEcom !== null) {
+        var product = productInEcom.product;
+        log.info("resolveProduct: found product: id={} name={} webname={} from search={}", product.id, product.name, product.webName, groupVal);
+    }
+    return productInEcom;
 }
 
 
@@ -257,7 +291,9 @@ function resolveCategory(rf, groupName, groupVal, mapOfGroups) {
     var category = services.criteriaBuilders.get("category")
             .eq("name", groupVal)
             .executeSingle();
-
+    if( category !== null) {
+        log.info("resolveCategory: found category: {}", category.name);
+    }
     return category;
 }
 
