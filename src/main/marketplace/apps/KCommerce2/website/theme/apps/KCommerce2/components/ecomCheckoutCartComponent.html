@@ -9,11 +9,17 @@
                 <small>Order Summary</small>
             </div>
         </div>
-
-
-        SHIPPING - $services.priceManager.availableShippingProviders($checkoutItems.cart)
         
         <div class="items-list">
+            <div class="promo-codes-container form-group">
+                <div class="input-group">
+                    <input type="text" class="promo-codes form-control" name="promoCodes" value="$formatter.toCsv($services.cartManager.userPromoCodes)" placeholder="Enter promotion codes" />
+                    <span class="input-group-btn">
+                        <button class="apply-promo-codes btn btn-success">Apply</button>
+                    </span>
+                </div>
+            </div>
+            
             #set( $items = $formatter.sortByProperty( $items, "itemDescription" ) )
             #foreach($item in $items )
                 <div class="row item-row">
