@@ -139,6 +139,7 @@ function findAttributes(page, store, searchResults) {
 
 function checkout(page, params, files, form) {
     var processCartId = form.longParam("processCartId");
+    log.info('kcom2 checkout checkout', processCartId);
     var totalAmountFromForm = form.bigDecimalParam("cartTotal");
     var paymentProviderId = form.rawParam("paymentProvider");
 

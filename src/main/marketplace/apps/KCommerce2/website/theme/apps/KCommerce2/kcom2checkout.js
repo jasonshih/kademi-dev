@@ -89,21 +89,25 @@ function initKcom2CheckoutForm() {
 }
 
 function initCountryList() {
-    // constructs the suggestion engine
     var countriesBH = new Bloodhound({
         datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.name); },
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        // identify: function(obj) { return obj.iso_code; },
         local: getCountries()
     });
 
     countriesBH.initialize();
 
     var kcom2ShippingForm = $('#kcom2ShippingForm');
-    kcom2ShippingForm.find('[name=country]').typeahead(null, {
-            displayKey: 'name',
-            source: countriesBH.ttAdapter()
-        });
+    kcom2ShippingForm.find('.country-typeahead').typeahead(null, {
+        displayKey: 'name',
+        valueKey: "iso_code",
+        source: countriesBH.ttAdapter()
+    });
+
+    kcom2ShippingForm.find('.country-typeahead').on("typeahead:selected", function(e, datum) {
+        debugger;
+        kcom2ShippingForm.find('[name=country]').val(datum.iso_code);
+    });
 }
 
 $(function () {
