@@ -39,6 +39,7 @@ var cartMapping = controllerMappings
         .addMethod('POST', 'setCartItemQuantity', 'newQuantity')
         .addMethod('POST', 'checkout', 'processCartId')
         .addMethod('POST', 'applyPromoCodes', 'promoCodes')
+        .addMethod('POST', 'createAccount', 'kcom2Firstname')
         .addMethod('POST', 'findProfile', 'findProfileEmail');
 
 
@@ -306,5 +307,18 @@ function findProfile(page, params) {
         } else {
             return views.jsonView(false, "No profile found");
         }
+    }
+}
+
+function createAccount(page, params) {
+    log.info('findProfile {} {}', page, params);
+    var rootOrg = page.find('/').organisation;
+    var orgData = page.find('/').orgData;
+    if (params.kcom2Firstname && params.kcom2Email && params.kcom2Password){
+        var p = securityManager.createProfile(rootOrg, params.kcom2Email, params.kcom2Firstname, params.kcom2Password);
+        orgData.createMembership(p.name, p.email, orgData, "ecommerce-users");
+        return views.jsonView(true, "Profile created");
+    } else {
+        return views.jsonView(false, "Fields are missing");
     }
 }

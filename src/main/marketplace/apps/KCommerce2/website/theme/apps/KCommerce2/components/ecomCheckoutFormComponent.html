@@ -41,7 +41,6 @@
                     <!--</div>-->
                     <div class="col-md-12 text-right">
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-info text-uppercase btn-skip">Skip login <i class="fa fa-angle-right"></i></button>
                             <button type="submit" class="btn btn-info text-uppercase btn-next">Next
                             <i class="fa fa-angle-right"></i></button>
                         </div>
@@ -53,7 +52,7 @@
 </form>
 
 <div id="kcom2PasswordForm" class="hide">
-    <form action="." method="post">
+    <form action="$page.href" method="post">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="panel-title">
@@ -83,6 +82,60 @@
     </form>
 </div>
 
+<div id="kcom2RegoForm" class="hide">
+    <form action="$page.href" method="post">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <small>Please enter your details to create new account</small>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input name="kcom2Firstname" placeholder="First name" type="text" class="form-control required">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input name="kcom2Surname" placeholder="Last name" type="text" class="form-control required">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input name="kcom2Email" placeholder="Email" type="text" readonly class="form-control required">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input name="kcom2Password" placeholder="Enter password" type="password" class="form-control required password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input placeholder="Confirm password" type="password" class="form-control required confirm-password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-info text-uppercase btn-prev" ><i class="fa fa-angle-left"></i> Previous</button>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <button type="submit" class="btn btn-info text-uppercase btn-next">Create account
+                                <i class="fa fa-angle-right"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12 text-right">
+                            <a href="javascipt:void(0)" class="btn-skip-rego">Skip creating account</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 #end
 
 #set ($shippingFormState = 'hide')
@@ -91,7 +144,7 @@
 #end
 
 <div id="kcom2ShippingForm" class="$!shippingFormState">
-    <form action="." method="post">
+    <form action="$page.href" method="post">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="panel-title">
@@ -127,7 +180,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-6">
-                            <button type="button" class="btn btn-info text-uppercase btn-prev" ><i class="fa fa-angle-left"></i> Previous</button>
+                            <!--<button type="button" class="btn btn-info text-uppercase btn-prev" ><i class="fa fa-angle-left"></i> Previous</button>-->
                         </div>
                         <div class="col-md-6 text-right">
                             <button type="submit" class="btn btn-info text-uppercase btn-next">Next

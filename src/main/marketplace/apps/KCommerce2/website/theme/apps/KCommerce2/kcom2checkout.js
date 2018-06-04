@@ -1,6 +1,7 @@
 function initKcom2CheckoutForm() {
     var findEmailForm = $('#kcom2FindEmailForm');
     var kcom2PasswordForm = $('#kcom2PasswordForm');
+    var kcom2RegoForm = $('#kcom2RegoForm');
     var kcom2ShippingForm = $('#kcom2ShippingForm');
     var kcom2ShippingProvider = $('#kcom2ShippingProvider');
     var kcom2CartForm = $('#cart-form');
@@ -11,11 +12,17 @@ function initKcom2CheckoutForm() {
                 kcom2PasswordForm.removeClass('hide');
                 kcom2PasswordForm.find('[name=kcom2Email]').val(findEmailForm.find('[name=findProfileEmail]').val());
             }
+        },
+        onError: function () {
+            // Show rego form with skip button
+            kcom2RegoForm.removeClass('hide');
+            findEmailForm.addClass('hide');
+            kcom2RegoForm.find('[name=kcom2Email]').val(findEmailForm.find('[name=findProfileEmail]').val());
         }
     });
 
-    findEmailForm.on('click', '.btn-skip', function () {
-        findEmailForm.addClass('hide');
+    kcom2RegoForm.on('click', '.btn-skip-rego', function () {
+        kcom2RegoForm.addClass('hide');
         kcom2ShippingForm.removeClass('hide');
     });
 
@@ -40,14 +47,22 @@ function initKcom2CheckoutForm() {
         }
     });
 
+    kcom2RegoForm.find('form').forms({
+        onSuccess: function (resp) {
+            if (resp && resp.status){
+                kcom2RegoForm.addClass('hide');
+                kcom2ShippingForm.removeClass('hide');
+            }
+        }
+    });
+
     kcom2ShippingProvider.on('click', '.btn-prev', function () {
         kcom2PasswordForm.removeClass('hide');
         kcom2ShippingForm.addClass('hide');
     });
 
     kcom2ShippingForm.forms({
-        allowPostForm: false,
-        onValid: function () {
+        onSuccess: function () {
             kcom2ShippingForm.addClass('hide');
             kcom2ShippingProvider.removeClass('hide');
         }
