@@ -1,5 +1,9 @@
 {
     "appDependencies": [
+        {
+            "appId": "handlebar-lib",
+            "branch": "3.0.3.1"
+        }
     ],
     "dependencies": [
         {
@@ -83,6 +87,18 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/typeahead/0.10.2/typeahead.bundle.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/KCommerce2/countries_states.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/KCommerce2/storeDashboard.js"
             }
         },
@@ -114,12 +130,6 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/KCommerce2/ecomCategoryProducts.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/KCommerce2/productDetails.js"
             }
         },
         {

@@ -24,6 +24,7 @@ function initKcom2CheckoutForm() {
     kcom2RegoForm.on('click', '.btn-skip-rego', function () {
         kcom2RegoForm.addClass('hide');
         kcom2ShippingForm.removeClass('hide');
+        initCountryList();
     });
 
     kcom2PasswordForm.on('click', '.btn-prev', function () {
@@ -87,6 +88,25 @@ function initKcom2CheckoutForm() {
     });
 }
 
+function initCountryList() {
+    // constructs the suggestion engine
+    var countriesBH = new Bloodhound({
+        datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.name); },
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        // identify: function(obj) { return obj.iso_code; },
+        local: getCountries()
+    });
+
+    countriesBH.initialize();
+
+    var kcom2ShippingForm = $('#kcom2ShippingForm');
+    kcom2ShippingForm.find('[name=country]').typeahead(null, {
+            displayKey: 'name',
+            source: countriesBH.ttAdapter()
+        });
+}
+
 $(function () {
     initKcom2CheckoutForm();
+    initCountryList();
 });
