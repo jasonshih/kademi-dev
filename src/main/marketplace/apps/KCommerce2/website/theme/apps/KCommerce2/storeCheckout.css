@@ -33,10 +33,6 @@
     width: 40px !important;
 }
 
-#ecomItemsTable .item-row .item-price {
-    width: 135px !important;
-}
-
 #ecomItemsTable .item-row .item-title {
     width: calc(100% - 90px - 100px - 40px - 135px) !important;
 }
@@ -67,7 +63,7 @@
     }
 
     #ecomItemsTable .item-row .item-price {
-        width: calc(100% - 100px - 40px) !important;
+
     }
 }
 

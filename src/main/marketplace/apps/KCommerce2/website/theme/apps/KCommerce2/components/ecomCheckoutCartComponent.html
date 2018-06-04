@@ -9,7 +9,7 @@
                 <small>Order Summary</small>
             </div>
         </div>
-        
+
         <div class="items-list">
             <div class="promo-codes-container form-group">
                 <div class="input-group">
@@ -19,7 +19,7 @@
                     </span>
                 </div>
             </div>
-            
+
             #set( $items = $formatter.sortByProperty( $items, "itemDescription" ) )
             #foreach($item in $items )
                 <div class="row item-row">
@@ -56,9 +56,15 @@
                         <input type="hidden" class="productOrderId" name="item.${foreach.count}" value="$item.id" />
                         #end
                     </div>
-                    <div class="col-sm-2 item-price center-content">
+                    <div class="col-sm-4 item-price center-content">
                         <div>
-                            <span class="lead">$$formatter.formatCurrency($item.adjustedPriceExTax)</span>
+                            <span class="lead">
+                                $$formatter.formatCurrency($item.adjustedPriceExTax)
+
+                                #if( $item.adjustedPriceExTax < $item.listUnitPriceExTax )
+                                <small><s><i class="text-muted text-sm">( $formatter.formatCurrency($item.listUnitPriceExTax) )</i></s></small>
+                                #end
+                            </span>
                         </div>
                     </div>
                     <div class="col-sm-1 item-action text-right center-content">

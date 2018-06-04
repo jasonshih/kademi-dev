@@ -340,59 +340,24 @@
 
                     <div class="tab-pane" id="checkout">
                         <h2>Checkout promotion</h2>
+
+                        <hr/>
+
+                        <h3>Promotion codes</h3>
+
+                        <div class="form-group">
+                            <label for="promoEntryCodes" class="col-sm-2 control-label">Codes</label>
+
+                            <div class="col-sm-10">
+                                <textarea name="promoEntryCodes" class="form-control">$!page.promoEntryCodes</textarea>
+                                <i>If provided, users will be required to enter a code to activate the promotion</i>
+                            </div>
+                        </div>
+
+
+                        <h3>Gift with purchase</h3>
+                        
                         <p>Allow customers to get discounts and free gifts when they checkout from your store</p>
-
-                        <div class="form-group">
-                            <label for="" class="col-sm-2 control-label">Select your store</label>
-
-                            <div class="col-sm-10">
-                                <select name="storeName" class="form-control">
-                                    <option value="">No store</option>
-                                    #foreach( $store in $page.stores )
-                                    $formatter.option($store.name, $store.title, $page.storeName)
-                                    #end
-                                </select>
-                                <i>If selected, this checkout promotion will be active for the selected store. Manage <a href="/reward-store/">stores here</a></i>
-                            </div>
-                        </div>
-
-                        <h3>Choose which products and categories to include</h3>
-                        <div class="form-group">
-                            <label for="promoProductCodes" class="col-sm-2 control-label">Product codes</label>
-
-                            <div class="col-sm-10">
-                                <textarea name="promoProductCodes" class="form-control">$!page.promoProductCodes</textarea>
-                                <i>Note that these are <a href="/products/">product codes</a>, not <a href="/skus/">SKUs</a>.</i>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="promoCategoryCodes" class="col-sm-2 control-label">Category codes</label>
-
-                            <div class="col-sm-10">
-                                <textarea name="promoCategoryCodes" class="form-control">$!page.promoCategoryCodes</textarea>
-                                <i>Manage <a href="/categories/">product categories here</a></i>
-                            </div>
-                        </div>
-
-                        <hr />
-
-                        <h3>Promotion offer:</h3>
-
-                        <p>
-                            <label for="" class="control-label">
-                                $formatter.checkbox("promoDiscountEnabled", $page.promoDiscountEnabled)
-                                Discount
-                            </label>
-                        </p>
-
-                        <div class="form-group">
-                            <label for="promoDiscountAmount" class="col-sm-2 control-label">Discount amount</label>
-
-                            <div class="col-sm-4">
-                                <input name="promoDiscountAmount" class="form-control" value="$!page.promoDiscountAmount" />
-                            </div>
-                        </div>
 
                         <p>
                             <label for="" class="control-label">
@@ -406,17 +371,6 @@
 
                             <div class="col-sm-4">
                                 <input name="promoGiftSku" class="form-control" value="$!page.promoGiftSku" />
-                            </div>
-                        </div>
-
-                        <h3>Promotion codes</h3>
-
-                        <div class="form-group">
-                            <label for="promoEntryCodes" class="col-sm-2 control-label">Codes</label>
-
-                            <div class="col-sm-10">
-                                <textarea name="promoEntryCodes" class="form-control">$!page.promoEntryCodes</textarea>
-                                <i>If provided, users will be required to enter a code to activate the promotion</i>
                             </div>
                         </div>
 
