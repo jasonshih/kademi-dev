@@ -105,7 +105,6 @@ function initCountryList() {
     });
 
     kcom2ShippingForm.find('.country-typeahead').on("typeahead:selected", function(e, datum) {
-        debugger;
         kcom2ShippingForm.find('[name=country]').val(datum.iso_code);
     });
 }
