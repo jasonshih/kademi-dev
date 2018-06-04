@@ -4,9 +4,8 @@
     </head>
     <body>
         #macro (assetTypeHeader)
-        <h1>$page.title</h1>
 
-        <div class="btn-group" role="group">
+        <div class="btn-group pull-right" role="group">
             <a class="btn btn-info" href="/repositories/$page.parent.contentTypeRepo.name/version1/texteditor?fileName=${page.name}.type.xml">
                 <span class="fa fa-pencil"></span>
             </a>
@@ -18,6 +17,26 @@
                 Asset manager
             </a>
         </div>
+
+
+        <h1>$page.title</h1>
+
+        <div class="memberships-wrapper" id="membershipsContainer">
+            <div id="asset-types" class="blocks-wrapper memberships-list membershipsDiv">
+
+                #foreach( $type in $page.assetType.mixinTypes )
+                <div class="label label-info" style="margin: 5px">
+                    $type
+                    <a href="../$type" class="btn btn-xs text-muted btn-edit-type" title="Edit type" style="padding-left: 5px">
+                        <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                </div>
+                #end
+            </div>
+            <div style="clear: both"></div>
+        </div>
+
+        <hr/>
 
         <br/>
 

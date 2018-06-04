@@ -10,12 +10,22 @@ function initProductDetails(editorType) {
     initProductVariantImgUpload();
     initProductVariantImgSelector();
     initCategoryManagment();
-    
+
     $(document).on('change', '#relatedAppIdSelect', function (e) {
         $('form.updateProduct').trigger('submit');
     });
     $(document).on('change', '[name=relatedItemId]', function (e) {
         $('form.updateProduct').trigger('submit');
+    });
+    $("#create-asset-form").forms({
+        onSuccess: function (resp) {
+            if( resp.status ) {
+                Msg.info("Created asset, reloading ..");
+                window.location.reload();
+            } else {
+                Msg.error("An error occurred creating the linked asset " + resp.messages);
+            }
+        }
     });
 }
 
@@ -26,13 +36,13 @@ function initProductContentsTab(editorType) {
         initFullscreenEditor($('#brief'));
         initFullscreenEditor($('#notes'));
     }
-    
+
     $('.updateProductBrief').forms({
         onSuccess: function () {
             Msg.success('Successfully updated product\'s brief!', 'saveProduct');
         }
     });
-    
+
     $('.updateProductContent').forms({
         onSuccess: function () {
             Msg.success('Successfully updated product\'s content!', 'saveProduct');
@@ -49,17 +59,17 @@ function initProductDetailsForm() {
                 }
             });
             Msg.success('Successfully updated product!', 'saveProduct');
-            
+
             var webNameInput = $('form.updateProduct [name=webName]');
             var origWebname = webNameInput.data('orig')
             var newWebname = webNameInput.val();
-            
+
             if (origWebname != newWebname && resp.status) {
                 window.location.href = resp.nextHref;
             }
         }
     });
-    
+
 }
 
 function initProductVariants() {
@@ -76,9 +86,9 @@ function initProductVariants() {
             }
         }
     });
-    
+
     var variantsWrapper = $('#variants');
-    
+
     variantsWrapper.on('click', '.btn-add-variant', function (e) {
         e.preventDefault();
         var target = $(e.target);
@@ -89,10 +99,10 @@ function initProductVariants() {
         modal.find('input[name=title]').val('');
         modal.find('input[name=cost]').val('');
         flog('add variant for', ppId, modal.find('input[name=productParameterId]'));
-        
+
         modal.modal('show');
     });
-    
+
     variantsWrapper.on('click', '.add-variant-type', function (e) {
         e.preventDefault();
         var title = prompt('Please enter a name for the variant type, eg Colour or Size ');
@@ -100,7 +110,7 @@ function initProductVariants() {
             doCreateProductParameter(title);
         }
     });
-    
+
     variantsWrapper.on('click', '.add-field', function (e) {
         e.preventDefault();
         var title = prompt('Please enter a name for the field, eg Height');
@@ -108,7 +118,7 @@ function initProductVariants() {
             doCreateProductField(title);
         }
     });
-    
+
     variantsWrapper.on('click', '.btn-edit-variant', function (e) {
         e.preventDefault();
         var target = $(e.target);
@@ -122,13 +132,13 @@ function initProductVariants() {
         modal.find('input[name=cost]').val(tr.find('.variant-cost').text());
         modal.modal('show');
     });
-    
+
     variantsWrapper.on('click', '.btn-option-img-del', function (e) {
         e.preventDefault();
-        
+
         var btn = $(this);
         var optid = btn.data('optid');
-        
+
         $.ajax({
             type: 'POST',
             dataType: 'json',
@@ -141,7 +151,7 @@ function initProductVariants() {
             }
         });
     });
-    
+
     $(document.body).on('click', '.btn-delete-variant-type', function (e) {
         e.preventDefault();
         var id = $(this).attr('href');
@@ -151,7 +161,7 @@ function initProductVariants() {
             reloadVariantList();
         });
     });
-    
+
     $(document.body).on('click', '.btn-delete-variant', function (e) {
         e.preventDefault();
         var id = $(this).attr('href');
@@ -173,49 +183,49 @@ function reloadVariantList() {
 
 function initProductVariantImgSelector() {
     var modal = $('#modal-option-img');
-    
+
     $(document.body).on('click', '.btn-option-img', function (e) {
         e.preventDefault();
-        
+
         var btn = $(this);
         var optid = btn.data('optid');
-        
+
         modal.find('input[name=productOptionId]').val(optid);
-        
+
         modal.modal('show');
     });
-    
+
     $(document.body).on('click', '.select-opt-img', function (e) {
         e.preventDefault();
-        
+
         modal.find('.btn-image-selected ').removeClass('image-selected');
-        
+
         var img = $(this);
         img.closest('div').find('.btn-image-selected ').addClass('image-selected');
         var href = img.attr('href');
-        
+
         var form = img.closest('form');
         form.find('input[name=productOptionImgUrl]').val(href);
     });
-    
+
     $(document.body).on('click', '.image-change', function (e) {
         e.preventDefault();
-        
+
         var btn = $(this);
         var optid = btn.data('optid');
-        
+
         modal.find('input[name=productOptionId]').val(optid);
-        
+
         modal.modal('show');
     });
-    
+
     modal.find('form').forms({
         onSuccess: function (resp) {
             modal.modal('hide');
             reloadVariantList();
         }
     });
-    
+
     $(document.body).on('hidden.bs.modal', '#modal-option-img', function () {
         modal.find('input[name=productOptionId]').val(null);
         modal.find('.btn-image-selected ').removeClass('image-selected');
@@ -226,7 +236,7 @@ function initProductVariantImgUpload() {
     $('.btn-option-img-upload').each(function (i, item) {
         var btn = $(item);
         var optid = btn.data('optid');
-        
+
         btn.upcropImage({
             buttonContinueText: 'Save',
             url: window.location.pathname + '?productOptionId=' + optid,
@@ -374,7 +384,7 @@ function initCategoryManagment() {
             doRemoveFromCategory(categoryName);
         }
     });
-    
+
     $('.categories-wrapper').on('click', '.addCategory a', function (e) {
         flog('click', this);
         e.preventDefault();
@@ -382,7 +392,7 @@ function initCategoryManagment() {
         var categoryName = $(e.target).closest('a').attr('href');
         doAddToCategory(categoryName);
     });
-    
+
 }
 
 function doAddToCategory(categoryName) {
@@ -403,7 +413,7 @@ function doAddToCategory(categoryName) {
             Msg.error(e.status + ': ' + e.statusText, 'addToCategory');
         }
     })
-    
+
 }
 
 function doRemoveFromCategory(categoryName) {
@@ -424,7 +434,7 @@ function doRemoveFromCategory(categoryName) {
             Msg.error(e.status + ': ' + e.statusText, 'removeCategory');
         }
     })
-    
+
 }
 
 function reloadCategories() {
