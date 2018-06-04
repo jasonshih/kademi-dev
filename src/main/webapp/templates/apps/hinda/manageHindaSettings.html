@@ -143,11 +143,7 @@
 
                 #macro(genCategories $categories)
                 #foreach($cat in $categories)
-                #set( $size = $cat.childCategories.size())
                 $formatter.option($cat.name, "$formatter.padWith('-', '', $cat.level) $cat.title", $page.category)
-                #if( $size > 0 )
-                #genCategories($cat.childCategories)
-                #end
                 #end
                 #end
 
