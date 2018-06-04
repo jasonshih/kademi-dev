@@ -198,15 +198,19 @@
                     </div>
                 </div>
                 <div id="pricing" class="tab-pane">
-                    <h2>Pricing rules</h2>
 
                     #set( $rulesDir = $rootFolder.find("/repositories/$page.storeWebsite.name/$page.storeWebsite.liveBranch/WEB-INF/") )
                     #set( $rulesFile = $rulesDir.child("pricing-rules.csv") )
                     #set( $rules = $services.pricingRulesService.rules($page.storeWebsite) )
 
                     #if( $rulesFile )
-                    <a href="/repositories/ecom1/version1/WEB-INF/"></a>
+                    <a href="$rulesDir.href" class="btn btn-info pull-right">Edit files</a>
+                    #end
 
+                    <h2>Pricing rules</h2>
+
+
+                    #if( $rulesFile )
 
                     <table class="table table-striped">
                         <thead>
