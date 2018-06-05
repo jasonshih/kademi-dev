@@ -3,6 +3,10 @@
         {
             "appId": "productsApp",
             "branch": ""
+        },
+        {
+            "appId": "ecommerce",
+            "branch": ""
         }
     ]
 }
