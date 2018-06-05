@@ -207,10 +207,10 @@
                 <div class="form-horizontal">
                     <div class="form-group">
                         <div class="col-md-12">
-                            <select name="shippingProvider" class="form-control required" id="">
+                            <select name="shippingProvider" class="form-control required" id="shipping-provide-select">
                                 <option value="">Choose shipping provider</option>
                                 #foreach ($sp in $shippingProviders)
-                                <option value="$!sp.id">$sp.title</option>
+                                $formatter.option($sp.id, $sp.title, $cart.shippingProviderId)
                                 #end
                             </select>
                         </div>

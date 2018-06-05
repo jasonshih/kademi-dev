@@ -1,4 +1,5 @@
 #set( $checkoutItems = $services.cartManager.checkoutItems )
+#set( $cart = $checkoutItems.cart )
 #set( $items = $checkoutItems.items )
 
 <form id="cart-items" method="POST" action="$page.href">
@@ -92,6 +93,21 @@
                 <div class="col-sm-6 col-sm-offset-6">
                     <span>Tax</span>
                     <strong class="pull-right">$$formatter.formatCurrency($checkoutItems.totalTax)</strong>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer cart-tax">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-6">
+                    <span>
+                        Freight
+                    </span>
+                    <strong class="pull-right">$$formatter.formatCurrency($checkoutItems.freightCost)</strong>
+                    #if( $checkoutItems.shippingProvider )
+                    <p>
+                    <span>( $checkoutItems.shippingProvider.title )</span>
+                    </p>
+                    #end
                 </div>
             </div>
         </div>

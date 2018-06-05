@@ -5,6 +5,8 @@ function initKcom2CheckoutForm() {
     var kcom2ShippingForm = $('#kcom2ShippingForm');
     var kcom2ShippingProvider = $('#kcom2ShippingProvider');
     var kcom2CartForm = $('#cart-form');
+    var shippingSelect = $("#shipping-provide-select");
+
     findEmailForm.forms({
         onSuccess: function (resp) {
             if (resp && resp.status){
@@ -31,6 +33,29 @@ function initKcom2CheckoutForm() {
         findEmailForm.removeClass('hide');
         kcom2PasswordForm.addClass('hide');
     });
+
+    shippingSelect.click( function(e) {
+        // selected shipping provider, so save it and then reload the prices panel
+        var target = $(e.target);
+        var selectedId = target.val();
+        $.ajax({
+            type: 'POST',
+            url: window.location.pathname,
+            data: {
+                shippingProviderId : selectedId
+            },
+            datatype: 'json',
+            success: function (data) {
+                Msg.info('Saved shipping details');
+                $('#cart-form, #cart-link').reloadFragment();
+            },
+            error: function (resp) {
+                Msg.error('An error occured adding the product to your shopping cart. Please check your internet connection and try again');
+            }
+        });
+    });
+
+
 
     kcom2PasswordForm.user({
         afterLoginUrl: 'none',

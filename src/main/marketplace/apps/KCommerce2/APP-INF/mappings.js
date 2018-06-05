@@ -42,6 +42,7 @@ var cartMapping = controllerMappings
         .addMethod('POST', 'createAccount', 'kcom2Firstname')
         .addMethod('POST', 'findProfile', 'findProfileEmail')
         .addMethod('POST', 'saveAddress', 'addressLine1')
+        .addMethod('POST', 'saveShippingProfider', 'shippingProviderId')
 ;
 
 
@@ -185,6 +186,16 @@ function saveAddress(page, params, files, form) {
         services.criteriaBuilders.getBuilder("cart").save(cart);
     });
     return views.jsonView(true, "Updated cart ");
+}
+
+function saveShippingProfider(page, params, files, form) {
+    log.info("saveAddress: form={}", form);
+    transactionManager.runInTransaction(function () {
+        var cart = services.cartManager.shoppingCart(false);
+        cart.shippingProviderId = form.cleanedParam("shippingProviderId");
+        services.criteriaBuilders.getBuilder("cart").save(cart);
+    });
+    return views.jsonView(true, "Updated shipping provider");
 }
 
 function setCartItemQuantity(page, params, files, form) {
