@@ -21,24 +21,6 @@
         {
             "css": {
                 "cssMedia": "all",
-                "path": "/theme/apps/KCommerce2/ecommerce-store.css"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/theme/apps/KCommerce2/storeCategory.css"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/theme/apps/KCommerce2/storeCheckout.css"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
                 "path": "/static/slick/1.5.7/slick/slick.css"
             }
         },
@@ -130,12 +112,6 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/KCommerce2/ecomCategoryProducts.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/KCommerce2/kcom2checkout.js"
             }
         }
 

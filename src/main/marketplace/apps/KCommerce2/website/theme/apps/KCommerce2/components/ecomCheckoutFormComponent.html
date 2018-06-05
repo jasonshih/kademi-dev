@@ -12,13 +12,10 @@
 #end
 
 #set( $checkoutItems = $services.cartManager.checkoutItems )
-
-
 #if( $checkoutItems )
 
 #set ($cart = $checkoutItems.cart)
 #set ($shippingProviders = $services.priceManager.availableShippingProviders($cart))
-
 #if(!$user)
 <form action="$page.href" method="post" id="kcom2FindEmailForm">
     <div class="panel panel-default">
@@ -173,9 +170,11 @@
                             <input name="postcode" placeholder="Postcode" type="text" class="form-control required"  value="$!cart.postcode" />
                         </div>
                     </div>
+
                     <div class="form-group">
+                        <input type="hidden" name="country" value="$!cart.country" /> <!-- todo: prepopulate typeahead -->
                         <div class="col-md-12">
-                            <input type="hidden" name="country" value="$!cart.country" /> <!-- todo: prepopulate typeahead -->
+
                             <input autocomplete="off" placeholder="Country" type="text" class="form-control country-typeahead required" />
                         </div>
                     </div>
