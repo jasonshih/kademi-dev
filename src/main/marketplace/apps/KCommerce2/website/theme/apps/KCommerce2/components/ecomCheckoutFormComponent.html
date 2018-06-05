@@ -172,9 +172,8 @@
                     </div>
 
                     <div class="form-group">
-                        <input type="hidden" name="country" value="$!cart.country" /> <!-- todo: prepopulate typeahead -->
+                        <input type="hidden" name="country" value="$!cart.country" />
                         <div class="col-md-12">
-
                             <input autocomplete="off" placeholder="Country" type="text" class="form-control country-typeahead required" />
                         </div>
                     </div>
@@ -273,7 +272,15 @@
                         -->
                     </div>
                 </div>
-                <button type="submit" class="btn btn-block btn-danger"><i class="fa fa-spinner fa-spin" style="display:none;"></i> SUBMIT MY ORDER</button>
+
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-info text-uppercase btn-prev" ><i class="fa fa-angle-left"></i> Previous</button>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <button type="submit" class="btn btn-block btn-danger"><i class="fa fa-spinner fa-spin" style="display:none;"></i> SUBMIT MY ORDER</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

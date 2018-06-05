@@ -24,16 +24,17 @@
             #set( $items = $formatter.sortByProperty( $items, "itemDescription" ) )
             #foreach($item in $items )
                 <div class="row item-row">
-                    <div class="col-sm-3 item-photo">
-                        #set ($photo = "/theme/img/photo_holder.png")
-                        #if( $item.productSku.imageHash )
-                            #set ($photo = "/_hashes/files/$item.productSku.imageHash")
-                        #else
-                            <!-- todo -->
-                        #end
-                        <div style="background-image: url($photo)"></div>
-                    </div>
-                    <div class="col-sm-3 item-title center-content">
+                    <div class="col-sm-6 item-title center-content">
+                        <span class="item-photo">
+                            #set ($photo = "/theme/img/photo_holder.png")
+                            #if( $item.productSku.imageHash )
+                                #set ($photo = "/_hashes/files/$item.productSku.imageHash")
+                            #elseif ($item.product.images.size() > 0)
+                                #set ($photo = "/_hashes/files/$item.product.images[0].imageHash")
+                            #end
+
+                            <div style="background-image: url($photo)"></div>
+                        </span>
                         <div>
                             $item.itemDescription
 
@@ -45,7 +46,7 @@
                             #end
                         </div>
                     </div>
-                    <div class="col-sm-3 ecom-item-quantity center-content">
+                    <div class="col-sm-2 ecom-item-quantity center-content">
                         #if( $item.lineItemId )
                         <div class="input-group input-group-sm">
                             <span class="input-group-btn">
@@ -59,7 +60,7 @@
                         <input type="hidden" class="productOrderId" name="item.${foreach.count}" value="$item.id" />
                         #end
                     </div>
-                    <div class="col-sm-4 item-price center-content">
+                    <div class="col-sm-3 item-price center-content">
                         <div>
                             <span class="lead">
                                 $$formatter.formatCurrency($item.adjustedPriceExTax)
