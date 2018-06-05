@@ -29,8 +29,7 @@
                         #if( $item.productSku.imageHash )
                             #set ($photo = "/_hashes/files/$item.productSku.imageHash")
                         #else
-                        $item.productSku.product
-                            #set ($photo = $item.productSku.product)
+                            <!-- todo -->
                         #end
                         <div style="background-image: url($photo)"></div>
                     </div>
