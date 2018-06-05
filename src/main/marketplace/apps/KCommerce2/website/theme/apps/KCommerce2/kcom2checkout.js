@@ -62,7 +62,7 @@ function initKcom2CheckoutForm() {
         kcom2ShippingForm.addClass('hide');
     });
 
-    kcom2ShippingForm.forms({
+    kcom2ShippingForm.find('form').forms({
         onSuccess: function () {
             kcom2ShippingForm.addClass('hide');
             kcom2ShippingProvider.removeClass('hide');

@@ -40,7 +40,9 @@ var cartMapping = controllerMappings
         .addMethod('POST', 'checkout', 'processCartId')
         .addMethod('POST', 'applyPromoCodes', 'promoCodes')
         .addMethod('POST', 'createAccount', 'kcom2Firstname')
-        .addMethod('POST', 'findProfile', 'findProfileEmail');
+        .addMethod('POST', 'findProfile', 'findProfileEmail')
+        .addMethod('POST', 'saveAddress', 'addressLine1')
+;
 
 
 
@@ -169,6 +171,20 @@ function checkout(page, params, files, form) {
             return views.jsonView(false, "Payment failed: " + paymentResult.resultMessage);
         }
     }
+}
+
+function saveAddress(page, params, files, form) {
+    log.info("saveAddress: form={}", form);
+    transactionManager.runInTransaction(function () {
+        var cart = services.cartManager.shoppingCart(false);
+        cart.addressLine1 = form.cleanedParam("addressLine1");
+        cart.addressLine2 = form.cleanedParam("addressLine2");
+        cart.addressState = form.cleanedParam("state");
+        cart.country = form.cleanedParam("country");
+        cart.postcode = form.cleanedParam("postcode");
+        services.criteriaBuilders.getBuilder("cart").save(cart);
+    });
+    return views.jsonView(true, "Updated cart ");
 }
 
 function setCartItemQuantity(page, params, files, form) {
