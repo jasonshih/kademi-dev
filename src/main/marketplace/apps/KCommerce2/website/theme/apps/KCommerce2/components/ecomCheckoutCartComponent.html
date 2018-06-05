@@ -11,7 +11,7 @@
             </div>
         </div>
 
-        <div class="items-list">
+        <div class="items-list" id="kcom2-cart-items">
             <div class="promo-codes-container form-group">
                 <div class="input-group">
                     <input type="text" class="promo-codes form-control" name="promoCodes" value="$formatter.toCsv($services.cartManager.userPromoCodes)" placeholder="Enter promotion codes" />
@@ -28,6 +28,9 @@
                         #set ($photo = "/theme/img/photo_holder.png")
                         #if( $item.productSku.imageHash )
                             #set ($photo = "/_hashes/files/$item.productSku.imageHash")
+                        #else
+                        $item.productSku.product
+                            #set ($photo = $item.productSku.product)
                         #end
                         <div style="background-image: url($photo)"></div>
                     </div>

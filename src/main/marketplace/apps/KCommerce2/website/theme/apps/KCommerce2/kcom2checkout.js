@@ -34,6 +34,7 @@ function initKcom2CheckoutForm() {
         kcom2PasswordForm.addClass('hide');
     });
 
+
     shippingSelect.click( function(e) {
         // selected shipping provider, so save it and then reload the prices panel
         var target = $(e.target);
@@ -47,7 +48,7 @@ function initKcom2CheckoutForm() {
             datatype: 'json',
             success: function (data) {
                 Msg.info('Saved shipping details');
-                $('#cart-form, #cart-link').reloadFragment();
+                $('#ecomItemsTable').reloadFragment();
             },
             error: function (resp) {
                 Msg.error('An error occured adding the product to your shopping cart. Please check your internet connection and try again');
@@ -91,6 +92,7 @@ function initKcom2CheckoutForm() {
         onSuccess: function () {
             kcom2ShippingForm.addClass('hide');
             kcom2ShippingProvider.removeClass('hide');
+            $('#ecomItemsTable').reloadFragment();
         }
     });
 
