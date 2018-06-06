@@ -155,7 +155,7 @@ function checkout(page, params, files, form) {
         return views.jsonView(false, "Cart is invalid, please refresh your page");
     }
     if (!checkoutItems.totalCost.equals(totalAmountFromForm)) {
-        return views.jsonView(false, "The item prices have changed, please refresh your page");
+        return views.jsonView(false, "The item prices have changed, please refresh your page. " + totalAmountFromForm + " was submitted, current price is " + checkoutItems.totalCost);
     }
     var paymentResult;
     transactionManager.runInTransaction(function () {
