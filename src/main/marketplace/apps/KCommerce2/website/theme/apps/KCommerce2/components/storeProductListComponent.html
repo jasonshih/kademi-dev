@@ -28,11 +28,11 @@
             </div>
 
         #else
-        <div class="products-list ecom-store-category-products" id="products-list-$!prodsListId">
-            #foreach( $hit in $page.attributes.searchResults.hits.hits )
-                productRow($hit $basePath $storeOb)
-            #end
-        </div>
+            <div class="products-list ecom-store-category-products" id="products-list-$!prodsListId">
+                #foreach( $hit in $page.attributes.searchResults.hits.hits )
+                    productRow($hit $basePath $storeOb)
+                #end
+            </div>
         #end
 
         <p id="inifiniteLoader" class="text-center" style="display: none;">
@@ -70,8 +70,12 @@
             <h4 class="media-heading" style="margin-bottom: 10px;">
                 <a href="$prodUrl">$hit.fields.title.value</a>
             </h4>
-            <p><label class="label label-success" style="font-size: 14px;"><i class="fa fa-usd"></i>
-                $hit.fields.finalCost.value</label></p>
+            <p><label class="label label-success" style="font-size: 14px;">
+                #if ($hit.fields.finalCost.value)
+                $$!hit.fields.finalCost.value
+                #else
+                N/A
+                #end</label></p>
             <div class="media-content clearfix">
                 <p>$!formatter.truncate( $formatter.toPlain( $hit.fields.content.value ), 200 )</p>
                 <div>
@@ -108,7 +112,12 @@
             </div>
             <div class="caption">
 
-                <h3 class="text-center product-price bg-info"><span>$</span>$hit.fields.finalCost.value
+                <h3 class="text-center product-price bg-info">
+                    #if ($hit.fields.finalCost.value)
+                    $$!hit.fields.finalCost.value
+                    #else
+                    N/A
+                    #end
                 </h3>
 
                 <a href="$prodHref" class="btn btn-info" role="button">
@@ -178,7 +187,7 @@
                     <h4 class="media-heading" style="margin-bottom: 10px;">
                         <a href="$prodUrl">Example Title</a>
                     </h4>
-                    <p><label class="label label-success" style="font-size: 14px;"><i class="fa fa-usd"></i> 100</label>
+                    <p><label class="label label-success" style="font-size: 14px;">$100</label>
                     </p>
                     <div class="media-content clearfix">
                         <p>$!formatter.truncate( $formatter.toPlain( $p.notes ), 200 )</p>

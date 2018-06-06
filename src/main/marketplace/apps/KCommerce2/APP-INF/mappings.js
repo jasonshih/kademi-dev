@@ -81,10 +81,10 @@ function doEcomSearch(page, params) {
     if (formatter.isEmpty(query)) {
         return doEcomList(page, params);
     }
-    log.info("doEcomSearch: {} from {} size {}", query, params.from, params.size);
+    log.info("doEcomSearch: {} from {} size {}", query, params.pageFrom, params.pageSize);
     var store = page.attributes.store;
     var attributePairs = findAttsInParams(params);
-    var searchResults = productSearch(store, page.attributes.category, query, attributePairs, params.pfrom, params.psize);
+    var searchResults = productSearch(store, page.attributes.category, query, attributePairs, params.pageFrom, params.pageSize);
     page.attributes.searchResults = searchResults; // make available to templates
     page.attributes.categories = listCategories(store, page.attributes.category);
     findAttributes(page, store, searchResults);
@@ -95,7 +95,7 @@ function doEcomList(page, params) {
     log.info("doEcomList:");
     var store = page.attributes.store;
     var attributePairs = findAttsInParams(params);
-    var searchResults = productSearch(store, page.attributes.category, null, attributePairs, params.pfrom, params.psize);
+    var searchResults = productSearch(store, page.attributes.category, null, attributePairs, params.pageFrom, params.pageSize);
     //log.info("searchResults: " + searchResults);
     page.attributes.searchResults = searchResults; // make available to templates
     page.attributes.categories = listCategories(store, page.attributes.category);

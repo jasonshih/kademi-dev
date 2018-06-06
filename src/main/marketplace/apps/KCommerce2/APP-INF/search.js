@@ -8,18 +8,18 @@
  * @param {type} query
  * @returns {unresolved}
  */
-function productSearch(store, category, query, attributePairs, from, size) {
+function productSearch(store, category, query, attributePairs, pageFrom, pageSize) {
     
     // TODO: Pagination
-    if (!from || isNaN(from)){
-        from = 0;
+    if (!pageFrom || isNaN(pageFrom)){
+        pageFrom = 0;
     } else {
-        from = parseInt(from);
+        pageFrom = parseInt(pageFrom);
     }
-    if (!size || isNaN(size)){
-        size = 10;
+    if (!pageSize || isNaN(pageSize)){
+        pageSize = 12;
     } else {
-        size = parseInt(size);
+        pageSize = parseInt(pageSize);
     }
     var queryJson = {
         "stored_fields": [
@@ -32,8 +32,8 @@ function productSearch(store, category, query, attributePairs, from, size) {
             "primaryImageHref",
             "content"
         ],
-        "from": from,
-        "size": size,
+        "from": pageFrom,
+        "size": pageSize,
         "aggregations": {
             "maxPrice": {"max": {"field": "finalCost"}},
             "minPrice": {"min": {"field": "finalCost"}},
