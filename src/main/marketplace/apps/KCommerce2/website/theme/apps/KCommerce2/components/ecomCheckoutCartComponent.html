@@ -105,7 +105,11 @@
                     <span>
                         Freight
                     </span>
-                    <strong class="pull-right">$$formatter.formatCurrency($checkoutItems.freightCost)</strong>
+                    <strong class="pull-right">
+                        #if( $checkoutItems.freightCost )
+                        $$formatter.formatCurrency($checkoutItems.freightCost)
+                        #end
+                    </strong>
                     #if( $checkoutItems.shippingProvider )
                     <p>
                     <span>( $checkoutItems.shippingProvider.title )</span>
