@@ -110,8 +110,8 @@
                 return $.param(newData);
             },
             onSuccess: function (resp) {
-                if (resp.status) {
-                    $('#cart-form, #cart-link').reloadFragment({
+                if (resp.status) {                    
+                    $('#cart-form, #cart-link, #cart-checkout-data').reloadFragment({
                         whenComplete: function () {
                             $('#cart-form').hide('fast');
                             $('#cart-items').hide('fast');
@@ -224,7 +224,7 @@
             },
             datatype: "json",
             success: function (data) {
-                $("#ecomItemsTable, #cart-link").reloadFragment({
+                $("#ecomItemsTable, #cart-link, #cart-checkout-data").reloadFragment({
                     whenComplete: function (resp) {
                         Msg.info("Updated item in your shopping cart");
                         actors.prop('disabled', false);
@@ -345,7 +345,7 @@
             },
             datatype: "json",
             success: function (data) {
-                $("#ecomItemsTable, #cart-link").reloadFragment({
+                $("#ecomItemsTable, #cart-link, #cart-checkout-data").reloadFragment({
                     whenComplete: function (resp) {
                         Msg.info("Updated item in your shopping cart");
                         actors.prop('disabled', false);
@@ -411,7 +411,7 @@ function initKcom2CheckoutForm() {
             datatype: 'json',
             success: function (data) {
                 Msg.info('Saved shipping details');
-                $('#ecomItemsTable').reloadFragment();
+                $('#ecomItemsTable, #cart-checkout-data').reloadFragment();
             },
             error: function (resp) {
                 Msg.error('An error occured adding the product to your shopping cart. Please check your internet connection and try again');
@@ -455,7 +455,7 @@ function initKcom2CheckoutForm() {
         onSuccess: function () {
             kcom2ShippingForm.addClass('hide');
             kcom2ShippingProvider.removeClass('hide');
-            $('#ecomItemsTable').reloadFragment();
+            $('#ecomItemsTable, #cart-checkout-data').reloadFragment();
         }
     });
 

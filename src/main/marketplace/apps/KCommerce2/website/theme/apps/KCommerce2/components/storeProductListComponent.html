@@ -57,7 +57,9 @@
 #macro( productRow $productHit $basePath )
 #set ($prodUrl = "/$basePath/$hit.fields.name.value")
     #set($bg = "/static/images/photo_holder.png")
-    #set($bg = $hit.fields.primaryImageHref.value)    
+    #if ($hit.fields.primaryImageHref)
+    #set($bg = $hit.fields.primaryImageHref.value)
+    #end
     <div class="media prod">
         <div class="media-left hidden-sm hidden-xs">
             <a href="$prodUrl">
@@ -82,9 +84,11 @@
 #end
 
 
-#macro( productTile $productHit $basePath )  
+#macro( productTile $productHit $basePath )
     #set($bg = "/static/images/photo_holder.png")
+    #if ($hit.fields.primaryImageHref)
     #set($bg = $hit.fields.primaryImageHref.value)
+    #end
     #if( $hit.fields.webName.value )
         #set( $prodHref = "${basePath}$hit.fields.webName.value" )
     #else

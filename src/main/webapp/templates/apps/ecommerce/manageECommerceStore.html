@@ -24,6 +24,7 @@
                 <li><a data-toggle="tab" href="#general">General</a></li>
                 <li><a data-toggle="tab" href="#pricing">Pricing rules</a></li>
                 <li><a data-toggle="tab" href="#shipping">Shipping</a></li>
+                <li><a data-toggle="tab" href="#tax">Tax</a></li>
             </ul>
             <div class="tab-content">
 
@@ -322,6 +323,10 @@
                                 <td>$provider.id</td>
                                 <td>$provider.title</td>
                             </tr>
+                            <tr>
+                                <td></td>
+                                <td>$provider.detailedDescription</td>
+                            </tr>
                             #end
                         </tbody>
                     </table>
@@ -332,7 +337,42 @@
 
                     #end
                 </div>
-                <!-- End content of pricing tab -->
+                <div id="tax" class="tab-pane">
+                    <h2>Tax providers</h2>
+
+                    #if( $shippingFile )
+                    <a href="/repositories/ecom1/version1/WEB-INF/"></a>
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th colspan="9">$rules.shippingProviders.size() tax providers</th>
+                            </tr>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($provider in $rules.taxCalcProviders)
+                            <tr>
+                                <td>$provider.id</td>
+                                <td>$provider.title</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>$provider.detailedDescription</td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                    #else
+                    <p class="lead">No shipping providers file exists for this website</p>
+
+                    <a href="${rulesDir.href}texteditor?fileName=shipping.settings.xml">Create and edit as a text file</a>
+
+                    #end
+                </div>
             </div>
         </div>
 

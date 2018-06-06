@@ -172,9 +172,8 @@
                     </div>
 
                     <div class="form-group">
-                        <input type="hidden" name="country" value="$!cart.country" /> <!-- todo: prepopulate typeahead -->
+                        <input type="hidden" name="country" value="$!cart.country" />
                         <div class="col-md-12">
-
                             <input autocomplete="off" placeholder="Country" type="text" class="form-control country-typeahead required" />
                         </div>
                     </div>
@@ -240,6 +239,25 @@
             </div>
         </div>
         <div class="panel-body">
+            <div class="payment-select">
+                #set($firstApp = false)
+                #set($firstPo = false)
+                #set($paymentAps = $services.cartManager.paymentProviders)
+                #foreach($pApp in $paymentAps)
+                    #set($f1 = $foreach)
+                    #foreach($po in $pApp.paymentOptions)
+                        #if($f1.first && $foreach.first)
+                            #set($firstApp = $pApp)
+                            #set($firstPo = $po)
+                        #end
+                        <a href="#" data-pid="$pApp.instanceId" data-option="$po.id" class="payment-option">
+                            <i class="fa fa-check fa-3x #if($f1.first && $foreach.first)active#end"></i>
+                            <img src="$po.logo" alt="$po.title" />
+                        </a>
+                    #end
+                #end
+            </div>
+
             <div class="form-horizontal">
                 #foreach($pApp in $paymentAps)
                     #if($foreach.first)
@@ -273,7 +291,15 @@
                         -->
                     </div>
                 </div>
-                <button type="submit" class="btn btn-block btn-danger"><i class="fa fa-spinner fa-spin" style="display:none;"></i> SUBMIT MY ORDER</button>
+
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-info text-uppercase btn-prev" ><i class="fa fa-angle-left"></i> Previous</button>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <button type="submit" class="btn btn-block btn-danger"><i class="fa fa-spinner fa-spin" style="display:none;"></i> SUBMIT MY ORDER</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
