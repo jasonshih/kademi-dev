@@ -16,7 +16,7 @@
                         <a href="$!prodUrl">$!p.title</a>
                     </li>
                     #end
-
+                    #set ($foundSkuImage = false)
                     #foreach( $sku in $product.productSkus )
                         #if ($sku.imageHash)
                             #set ($skuImage = "/_hashes/files/$!sku.imageHash")
@@ -26,7 +26,16 @@
                                 </a>
                                 <a href="$!prodUrl">$!p.title</a>
                             </li>
+                            #set ($foundSkuImage = true)
                         #end
+                    #end
+                    #if ($productsImages.size() < 1 && !$foundSkuImage)
+                        <li class="slickItem" data-sku-id="">
+                            <a class="embed-responsive embed-responsive-4by3" href="javascript:void(0)" title="$!product.title">
+                                <div style="background-image: url('/static/images/photo_holder.png'); background-repeat: no-repeat; background-size: contain; background-position: center" class="embed-responsive-item"></div>
+                            </a>
+                            <a href="$!prodUrl">$!p.title</a>
+                        </li>
                     #end
             </div>
 
@@ -104,6 +113,8 @@
                         #else
                             $priceArray[0]
                         #end
+                    #else
+                        N/A
                     #end
                 </h3>
 
