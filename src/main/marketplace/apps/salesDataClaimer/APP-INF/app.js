@@ -15,17 +15,26 @@ controllerMappings.addComponent("salesDataClaimer/components", "claimTracking", 
 controllerMappings.addGoalNodeType("claimSubmittedGoal", "salesDataClaimer/claimSubmittedGoalNode.js", "checkSubmittedGoal");
 
 function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
-    log.info('checkSubmittedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);
+    log.info('checkSubmittedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);    
+    
+    if(customSettings.claimType && eventParams.claimType != customSettings.claimType){        
+        return false;
+    }
+    
+    if(eventParams.claimType){
+        attributes.put(CLAIM_TYPE, eventParams.claimType);
+    }
+    
     if (!lead) {
         return true;
     }
 
-    var claimId = attributes.get(LEAD_CLAIM_ID);
-
-    if (isNotBlank(claimId)) {
+    var claimId = attributes.get(LEAD_CLAIM_ID);        
+   
+    if (isNotBlank(claimId)) {       
         // Process only for this claim ID
         return safeString(eventParams.claim) === safeString(claimId);
-    } else {
+    } else {        
         attributes.put(LEAD_CLAIM_ID, eventParams.claim);
 
         return true;
@@ -174,7 +183,12 @@ function saveSettings(page, params) {
             var dataSeries = params.dataSeries || '';
             page.setAppSetting(APP_NAME, 'dataSeries', dataSeries);
         }
-
+        
+        if (params.claimTypes) {
+            var claimTypes = params.claimTypes || '';
+            page.setAppSetting(APP_NAME, 'claimTypes', claimTypes);
+        }
+        
         if (params.dataSeries) {
             var allowAnonymous = params.allowAnonymous || '';
             page.setAppSetting(APP_NAME, 'allowAnonymous', allowAnonymous);

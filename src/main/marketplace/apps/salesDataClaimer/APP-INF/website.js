@@ -258,8 +258,8 @@ function createClaim(page, params, files) {
         var soldDateTmp = formatter.parseDate(tempDateTime);
         var soldDate = formatter.formatDateISO8601(soldDateTmp, org.timezone);
         log.info('createClaim > soldDate={}', soldDate);
-        var now = formatter.formatDateISO8601(formatter.now, org.timezone);
-
+        var now = formatter.formatDateISO8601(formatter.now, org.timezone);                    
+        
         var obj = {
             recordId: id,
             soldBy: params.soldBy,
@@ -271,6 +271,10 @@ function createClaim(page, params, files) {
             productSku: params.productSku || '',
             status: RECORD_STATUS.NEW
         };
+        
+        if(params.claimType){
+            obj["claimType"] = params.claimType
+        }
 
         // Parse extra fields
         var extraFields = getSalesDataExtreFields(page);
@@ -311,7 +315,7 @@ function createClaim(page, params, files) {
 
             securityManager.runAsUser(enteredUser, function () {
                 db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
-                eventManager.goalAchieved("claimSubmittedGoal", {"claim": id});
+                eventManager.goalAchieved("claimSubmittedGoal", {"claim": id, "claimType": params.claimType});
             });
         });
     } catch (e) {

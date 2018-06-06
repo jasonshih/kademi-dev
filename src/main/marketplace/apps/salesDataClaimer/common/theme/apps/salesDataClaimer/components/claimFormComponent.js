@@ -34,6 +34,13 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
+                    form.find('.select-claim-type').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-claim-type', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                     
                     var colorPicker = form.find('.txt-bg-color');
                     contentEditor.initSimpleColorPicker(colorPicker, function (color) {
@@ -70,6 +77,7 @@
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.txt-form-title').val(dataAttributes['data-form-title']);
             form.find('.txt-form-description').val(dataAttributes['data-form-description']);
+            form.find('.select-claim-type').val(dataAttributes['data-claim-type']);
             form.find('.txt-bg-color').prop('disabled', dataAttributes['data-bg-transparent'] === 'true').val(dataAttributes['data-form-bg-color'] || '').trigger('update');
             form.find('.chk-bg-transparent').prop('checked', dataAttributes['data-bg-transparent'] === 'true');
             form.find('.chk-hide-preview-receipt').prop('checked', dataAttributes['data-hide-preview-receipt'] === 'true');

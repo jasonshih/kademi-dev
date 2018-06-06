@@ -239,6 +239,25 @@
             </div>
         </div>
         <div class="panel-body">
+            <div class="payment-select">
+                #set($firstApp = false)
+                #set($firstPo = false)
+                #set($paymentAps = $services.cartManager.paymentProviders)
+                #foreach($pApp in $paymentAps)
+                    #set($f1 = $foreach)
+                    #foreach($po in $pApp.paymentOptions)
+                        #if($f1.first && $foreach.first)
+                            #set($firstApp = $pApp)
+                            #set($firstPo = $po)
+                        #end
+                        <a href="#" data-pid="$pApp.instanceId" data-option="$po.id" class="payment-option">
+                            <i class="fa fa-check fa-3x #if($f1.first && $foreach.first)active#end"></i>
+                            <img src="$po.logo" alt="$po.title" />
+                        </a>
+                    #end
+                #end
+            </div>
+
             <div class="form-horizontal">
                 #foreach($pApp in $paymentAps)
                     #if($foreach.first)
