@@ -6,6 +6,7 @@ var TYPE_RECORD = 'record';
 var TYPE_CLAIM_GROUP = 'claim_group';
 var LEAD_CLAIM_ID = 'claim_recordId';
 var LEAD_CLAIM_GROUP_ID = 'claim_group_recordId';
+var CLAIM_TYPE = 'claim_type';
 var DB_MAPPINGS = {
     record: recordMapping,
     claim_group: claimGroupMapping
