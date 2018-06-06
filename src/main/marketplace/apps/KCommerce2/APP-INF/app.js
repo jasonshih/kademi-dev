@@ -12,6 +12,12 @@ controllerMappings.addComponent("KCommerce2/components", "suggestionList", "html
 controllerMappings.addComponent("ecommerce/components", "ecomProduct", "html", "Display ecom product details", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "orderHistoryECom", "html", "Shows the current user's orders and status", "E-commerce App component");
 
+controllerMappings.addTemplate("theme/apps/KCommerce2/","viewStore","Home page for an ecom store", false);
+controllerMappings.addTemplate("theme/apps/KCommerce2/","viewCategory","Category home page for an ecom store", false);
+controllerMappings.addTemplate("theme/apps/KCommerce2/","viewProduct","Product detail page for an ecom store", false);
+controllerMappings.addTemplate("theme/apps/KCommerce2/","viewProduct","Product detail page for an ecom store", false);
+controllerMappings.addTemplate("theme/apps/KCommerce2/","storeCheckout","Checkout page for an ecom store", false);
+
 
 function initKCommerce2App(orgRoot, webRoot, enabled) {
     var catalogManager = services.catalogManager;
