@@ -145,7 +145,7 @@ $(function () {
 
     function doPaginate() {
         var newUrl = new URI(window.location.href);
-        newUrl.addSearch('fromRange', startFrom);
+        newUrl.addSearch('pageFrom', startFrom);
         var inifiniteLoader = $('#inifiniteLoader');
         inifiniteLoader.show();
 
@@ -153,12 +153,11 @@ $(function () {
             type: 'GET',
             url: newUrl.toString(),
             success: function (data) {
-                flog("success");
-                var fragment = $(data).find("#products-list");
-                var products = fragment.find('.product-item');
+                var kcom2ProductListHolder = $(data).find('.kcom2ProductListHolder');
+                var products = kcom2ProductListHolder.find('.product-item');
 
                 if (products.length > 0) {
-                    $("#products-list .row").append(products);
+                    $('.kcom2ProductListHolder').find('.products-list').append(products);
                     startFrom = startFrom + 12;
                 } else {
                     inifiniteLoader.addClass('limited');

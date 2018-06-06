@@ -28,11 +28,11 @@
             </div>
 
         #else
-        <div class="products-list ecom-store-category-products" id="products-list-$!prodsListId">
-            #foreach( $hit in $page.attributes.searchResults.hits.hits )
-                productRow($hit $basePath $storeOb)
-            #end
-        </div>
+            <div class="products-list ecom-store-category-products" id="products-list-$!prodsListId">
+                #foreach( $hit in $page.attributes.searchResults.hits.hits )
+                    productRow($hit $basePath $storeOb)
+                #end
+            </div>
         #end
 
         <p id="inifiniteLoader" class="text-center" style="display: none;">
