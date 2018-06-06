@@ -19,7 +19,7 @@ function productSearch(store, category, query, attributePairs, pageFrom, pageSiz
     if (!pageSize || isNaN(pageSize)){
         pageSize = 12;
     } else {
-        size = parseInt(size);
+        pageSize = parseInt(pageSize);
     }
     var queryJson = {
         "stored_fields": [
