@@ -207,7 +207,6 @@
                                 <div class="panel-body">
                                     #if( $page.inHomeOrg )
                                     <fieldset class="name">
-                                        <div><b>Please update your details below then click the 'Save' button.</b></div>
                                         <hr />
                                         <form action="." method="POST" enctype="multipart/form-data" class="form-horizontal initProfileForm" charset="utf-8">
                                             <div class="form-group">
@@ -279,7 +278,7 @@
                                             #set($fields = $page.extraFields)
                                             #foreach($field in $fields.keySet())
                                             <div class="form-group">
-                                                <label for="surName" title="From group $!field.group.name" class="control-label col-md-3">$!field.text</label>
+                                                <label title="From group $!field.group.name" class="control-label col-md-3">$!field.text</label>
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"> <i class="fa fa-star-o"></i> </span>
