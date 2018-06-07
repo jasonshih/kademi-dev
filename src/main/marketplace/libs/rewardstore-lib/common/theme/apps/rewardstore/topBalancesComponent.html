@@ -35,7 +35,7 @@
                 <tbody>
                 #foreach( $pt in $topBalances )
                 <tr>
-                    <td>$formatter.formatCurrency($pt.balance, false)</td>
+                    <td>$formatter.formatCurrency($pt.balance)</td>
                     <td>
                         #if( $pt.participant.orgId )
                         $pt.participant.title
