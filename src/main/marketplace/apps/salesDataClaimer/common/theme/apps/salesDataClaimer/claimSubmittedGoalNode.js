@@ -51,7 +51,7 @@ JBNodes['claimSubmittedGoal'] = {
     },
     
     showSettingForm: function (form, node) {
-        var customSettings = node.customSettings === undefined ? {} : node.customSettings;
+        var customSettings = node.customSettings === undefined || node.customSettings === null ? {} : node.customSettings;
         
         JBApp.showStandardGoalSettingControls(form, node);
         form.find('.claim-type').val(customSettings.claimType !== null ? customSettings.claimType : '');
