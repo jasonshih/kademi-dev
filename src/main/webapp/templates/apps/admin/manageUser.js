@@ -12,6 +12,64 @@ function initManageUsers() {
     initSort();
     initSaveAsDynamicGroup();
     //initUploadUsersFile();
+    initMergeProfiles();
+}
+
+
+function initMergeProfiles() {
+    var modal = $("#modal-merge-profiles");
+
+    modal.find("form").forms({
+        onSuccess: function (resp) {
+            if (resp.status) {
+                Msg.info("Merge complete");
+                modal.modal("hide");
+                window.location.reload();
+            } else {
+                Msg.warning("Merge failed. " + resp.messages);
+            }
+        }
+    });
+
+    $("body").on("click", ".btn-profiles-merge", function (e) {
+        e.preventDefault();
+        var checkBoxes = $('#table-users-body').find('input[name=toRemoveId]:checked');
+        if (checkBoxes.length === 0) {
+            Msg.error("Please select the profiles you want to merge by clicking the checkboxs to the right");
+        }
+
+        var tbody = modal.find(".profilesMergeTableBody");
+        var destSelect = modal.find("select[name=mergeDest]");
+        tbody.html("");
+        var mergeIds = "";
+        checkBoxes.each(function (i, n) {
+            var tr = $("<tr>");
+            var chk = $(n);
+            var selected = chk.closest("tr");
+            var profileid = chk.val();
+            var title = selected.find(".profile-title").text();
+            var internalId = profileid;
+            mergeIds += internalId + ",";
+
+            var td = $("<td>");
+            td.text(profileid);
+            tr.append(td);
+
+            td = $("<td>");
+            td.text(title);
+            tr.append(td);
+
+            tbody.append(tr);
+
+            var opt = $("<option>");
+            opt.attr("value", internalId);
+            opt.text(internalId + " - " + title);
+            destSelect.append(opt);
+        });
+        modal.find("textarea").val(mergeIds);
+
+        modal.modal("show");
+    });
 }
 
 function initSaveAsDynamicGroup() {

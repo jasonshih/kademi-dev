@@ -153,6 +153,7 @@
                                                     <li class="divider"></li>
                                                     <li><a href="#" class="btn-remove-users">Remove</a></li>
                                                     <li><a href="#" class="btn-unsubscribe-users">Unsubcribe</a></li>
+                                                    <li><a href="#" class="btn-profiles-merge">Merge selected..</a></li>
                                                 </ul>
                                             </div>
                                             <input type="checkbox" name="toRemoveId" class="chk-all" />
@@ -168,9 +169,9 @@
                                         #foreach($p in $page.paginator.records)
                                             <tr>
                                                 <td class="text">
-                                                    <span title="$formatter.htmlEncode($p.firstName) $formatter.htmlEncode($p.surName)">
+                                                    <span title="$formatter.htmlEncode($p.firstName) $formatter.htmlEncode($p.surName)" class="profile-title">
                                                         $formatter.htmlEncode($p.firstName)
-                                                $formatter.htmlEncode($p.surName)
+                                                        $formatter.htmlEncode($p.surName)
                                                     </span>
                                                 </td>
                                                 <td class="text">
@@ -495,6 +496,53 @@
                         <button class="btn btn-sm btn-primary btnSaveGroup" type="button">Add users</button>
                         <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-merge-profiles" tabindex="-1" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Merge Profiles</h4>
+                    </div>
+                    <form method="post" action="" class="form-horizontal">
+                        <div class="modal-body">
+                            <p>The profiles will be merged into the one selected here. This will move user data to the merge destination, and the other profiles will be deleted</p>
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <div class="form-group">
+                                <label for="mergeDest" class="control-label col-md-3">Merge to</label>
+
+                                <div class="col-md-9">
+                                    <select name="mergeDest" class="form-control required">
+                                        <option value="">[None]</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>UserID</th>
+                                        <th>Title</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="profilesMergeTableBody">
+                                    <tr>
+                                        <td colspan="2">Please wait..</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <i>Internal ID's to merge</i>
+                            <textarea name="mergeIds" class="form-control required"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Merge</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
