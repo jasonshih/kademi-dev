@@ -17,7 +17,7 @@ controllerMappings.addGoalNodeType("claimSubmittedGoal", "salesDataClaimer/claim
 function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
     log.info('checkSubmittedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);    
     
-    if(customSettings.claimType && eventParams.claimType != customSettings.claimType){        
+    if(customSettings && customSettings.claimType && eventParams.claimType != customSettings.claimType){        
         return false;
     }
     

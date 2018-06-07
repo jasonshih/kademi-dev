@@ -273,9 +273,25 @@ function createClaim(page, params, files) {
         };
         
         if(params.claimType){
-            obj["claimType"] = params.claimType
+            obj["claimType"] = params.claimType;
         }
-
+        
+        if(params.claimField1){
+            obj["claimField1"] = params.claimField1;
+        }
+        if(params.claimField2){
+            obj["claimField2"] = params.claimField2;
+        }
+        if(params.claimField3){
+            obj["claimField3"] = params.claimField3;
+        }
+        if(params.claimField4){
+            obj["claimField4"] = params.claimField4;
+        }
+        if(params.claimField5){
+            obj["claimField5"] = params.claimField5;
+        }
+        
         // Parse extra fields
         var extraFields = getSalesDataExtreFields(page);
         for (var i = 0; i < extraFields.length; i++) {
