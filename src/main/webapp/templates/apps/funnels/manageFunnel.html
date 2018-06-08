@@ -9,7 +9,6 @@
         #set($currentBranch = $page.find("/repositories/${folder.name}/${page.name}"))
 
         <div class="btn-group publishing pull-right">
-            <a href="leads/" class="btn btn-sm btn-info">View journeys</a>
 
             <a href="${currentBranch.href}commits" class="publish btn btn-sm btn-info" title="View repository history and revert changes">
                 <i class="fa fa-clock-o"></i>
@@ -60,7 +59,33 @@
             </ul>
         </div>
 
+        <div class="btn-group" id="status-info">
+            <button class="btn btn-success" data-toggle="modal" data-target="#start-modal">
+                <i class="fa fa-play-circle"></i>
+                Start
+            </button>
+            <a href="leads/" class="btn btn-info">
+                <i class="fa fa-users"></i>
+                $!page.numLeads journeys
+            </a>
+            <!--
+            #if( $page.funnel.isDisabled() )
+            <button class="btn btn-danger btn-do-enable" >
+                <i class="fa fa-stop-circle"></i>
+                Disabled
+            </button>
+            #else
+            <button class="btn btn-info btn-do-disable" >
+                <i class="fa fa-check-circle"></i>
+                Enabled
+            </button>
+            #end
+            -->
+        </div>
+
+
         <div class="clearfix"></div>
+        <br/>
 
         <div class="tabbable clearfix">
             <div class="clearfix">
@@ -145,9 +170,9 @@
                             <label class="control-label col-sm-3">Title</label>
                             #set ($funnel = $page.funnel)
                             #if ($funnel && $funnel.title && $funnel.title != "")
-                                #set ($funnelTitle = $funnel.title)
+                            #set ($funnelTitle = $funnel.title)
                             #else
-                                #set ($funnelTitle = $page.funnelRepository.title)
+                            #set ($funnelTitle = $page.funnelRepository.title)
                             #end
                             <div class="col-sm-6">
                                 <input type="text" class="form-control required" name="title" value="$!funnelTitle" />
@@ -460,7 +485,7 @@
                     <div class="col-sm-6">
                         <p>
                             <div class="btn-group">
-                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-plus"></i> Add engagement scoring factor
                                     <span class="caret"></span>
                                 </button>
@@ -475,27 +500,27 @@
                             #if ($params.addNewScoringFactor)
                             <div class="scoringFactor panel panel-default">
                                 <input type="hidden" class="leadScoringFactorTypeId" value="$!params.addNewScoringFactor">
-                                #set( $scoringType = $page.engagementScoringFactorType($params.addNewScoringFactor) )
-                                <div class="panel-heading">
-                                    <i class="fa fa-list"></i> $scoringType.label <a href="javascript:void(0)" class="pull-right deleteScoringFactor"><i class="fa fa-trash"></i></a>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="form-group">
-                                        <label class="col-sm-12">Boost</label>
-                                        <div class="col-sm-12">
-                                            <input class="form-control boost" step="0.5" type="number" name="boost" value="">
-                                        </div>
+                                    #set( $scoringType = $page.engagementScoringFactorType($params.addNewScoringFactor) )
+                                    <div class="panel-heading">
+                                        <i class="fa fa-list"></i> $scoringType.label <a href="javascript:void(0)" class="pull-right deleteScoringFactor"><i class="fa fa-trash"></i></a>
                                     </div>
-                                    <h5>Properties:</h5>
-                                    #foreach( $prop in $scoringType.properties)
-                                    <div class="form-group">
-                                        <label class="col-sm-12">$prop.text</label>
-                                        <div class="col-sm-12">
-                                            <input class="form-control scoringTypeProp" type="text" name="$prop.name" value="">
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-sm-12">Boost</label>
+                                            <div class="col-sm-12">
+                                                <input class="form-control boost" step="0.5" type="number" name="boost" value="">
+                                            </div>
                                         </div>
+                                        <h5>Properties:</h5>
+                                        #foreach( $prop in $scoringType.properties)
+                                        <div class="form-group">
+                                            <label class="col-sm-12">$prop.text</label>
+                                            <div class="col-sm-12">
+                                                <input class="form-control scoringTypeProp" type="text" name="$prop.name" value="">
+                                            </div>
+                                        </div>
+                                        #end
                                     </div>
-                                    #end
-                                </div>
                             </div>
                             #end
                         </div>
@@ -504,27 +529,27 @@
                             #foreach ($sf in $page.funnel.scoringFactors)
                             <div class="scoringFactor panel panel-default">
                                 <input type="hidden" class="leadScoringFactorTypeId" value="$!sf.leadScoringFactorTypeId">
-                                #set( $scoringType = $page.engagementScoringFactorType($sf.leadScoringFactorTypeId) )
-                                <div class="panel-heading">
-                                    <i class="fa fa-list"></i> $scoringType.label <a href="javascript:void(0)" class="pull-right deleteScoringFactor"><i class="fa fa-trash"></i></a>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="form-group">
-                                        <label class="col-sm-12">Boost</label>
-                                        <div class="col-sm-12">
-                                            <input class="form-control boost" step="0.5" type="number" name="boost" value="$!sf.boost">
-                                        </div>
+                                    #set( $scoringType = $page.engagementScoringFactorType($sf.leadScoringFactorTypeId) )
+                                    <div class="panel-heading">
+                                        <i class="fa fa-list"></i> $scoringType.label <a href="javascript:void(0)" class="pull-right deleteScoringFactor"><i class="fa fa-trash"></i></a>
                                     </div>
-                                    <h5>Properties:</h5>
-                                    #foreach( $prop in $scoringType.properties)
-                                    <div class="form-group">
-                                        <label class="col-sm-12">$prop.text</label>
-                                        <div class="col-sm-12">
-                                            <input class="form-control scoringTypeProp" type="text" name="$prop.name" value="$!sf.properties.get($prop.name)">
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-sm-12">Boost</label>
+                                            <div class="col-sm-12">
+                                                <input class="form-control boost" step="0.5" type="number" name="boost" value="$!sf.boost">
+                                            </div>
                                         </div>
+                                        <h5>Properties:</h5>
+                                        #foreach( $prop in $scoringType.properties)
+                                        <div class="form-group">
+                                            <label class="col-sm-12">$prop.text</label>
+                                            <div class="col-sm-12">
+                                                <input class="form-control scoringTypeProp" type="text" name="$prop.name" value="$!sf.properties.get($prop.name)">
+                                            </div>
+                                        </div>
+                                        #end
                                     </div>
-                                    #end
-                                </div>
                             </div>
                             #end
                             <div id="scoringFactorEnd" style="height: 1px"></div>
@@ -684,7 +709,39 @@
     </div>
 </div>
 
-    <link rel="stylesheet" href="/theme/apps/funnels/journeyBuilder.css?v=10">
+<div id="start-modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="$page.href" method="post" id="start-journeys-form">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Start journeys</h4>
+                </div>
+                <div class="modal-body">
+                    <p>This will start journeys for any profiles matching the start criteria of the selected start point.</p>
+                    <p>Please select the starting point for the new journeys</p>
+                    <select name='startJourneysBegin'>
+                        <option value="">[Please select]</option>
+                        #foreach( $node in $page.funnel.entryPoints )
+                        $formatter.option( $node.nodeId, "$!node.title - $node.nodeId", "" )
+                        #end
+                    </select>
+                    <hr/>
+                    <p class="lead">Journeys to start: <b class="num-journeys"></b></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-sm btn-success" type="submit" >
+                        <i class="fa fa-play-circle"></i>
+                        Start
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="/theme/apps/funnels/journeyBuilder.css?v=10">
     <script src="/static/jsplump/2.1.4/jsPlumb-2.1.4.js">//</script>
     <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
     <script src="jb-handlers.js?v=28072016" type="text/javascript">//</script>
@@ -701,6 +758,24 @@
             $("body").on("click", ".btn-refresh-leads", function (e) {
                 e.preventDefault();
                 $("#lead-tbody").reloadFragment();
+            });
+
+            $("#start-journeys-form").forms({
+                onSuccess: function () {
+                    Msg.info("Started..");
+                    $("#start-modal").modal("hide");
+                    $("#status-info").reloadFragment();
+
+                }
+            });
+
+            $("#start-journeys-form").find("select").click(function (e) {
+                var val = $(e.target).closest("select").val();
+                flog("val", val);
+                $.get(window.location.pathname + "?startNode=" + val, function (resp) {
+                    flog("resop", resp);
+                    $(".num-journeys").text(resp.data);
+                });
             });
         });
     </script>
