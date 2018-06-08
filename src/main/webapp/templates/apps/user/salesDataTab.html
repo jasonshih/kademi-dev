@@ -1,16 +1,22 @@
 #foreach($entry in $dataSeries.recordsMap.entrySet())
-<h3>$entry.key</h3>
+<h3>
+    <a href="/sales/$entry.key/?query=$page.thisProfile.name#history-tab">
+        $entry.key
+    </a>
+</h3>
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>From</th>
             <th>To</th>
             <th>Amount</th>
-            #if ($dataSeries.usersSeries.get($entry.key).fieldset.pairsOrdered)
-            #foreach ($field in $dataSeries.usersSeries.get($entry.key).fieldset.pairsOrdered)
+            <th>SKU</th>
+            #if ($dataSeries.userSeries.get($entry.key).fieldset.pairsOrdered)
+            #foreach ($field in $dataSeries.userSeries.get($entry.key).fieldset.pairsOrdered)
             <th>$field.name</th>
             #end
             #end
+            <th></th>
         </tr>
     </thead>
 	<tbody>
@@ -18,12 +24,18 @@
 		<tr>
     		<td>$formatter.formatDate($record.periodFrom, $page.organisation.timezone)</td>
     		<td>$formatter.formatDate($record.periodTo, $page.organisation.timezone)</td>
-    		<td>$record.amount</td>
+            <td>$!record.productSku</td>
+    		<td>$!record.amount</td>
             #if ($dataSeries.userSeries.get($entry.key).fieldset.pairsOrdered)
-	            #foreach ($field in $dataSeries.usersSeries.get($entry.key).fieldset.pairsOrdered)
-		    		<td>$!record.fields.get($field.name)</td>
+	            #foreach ($field in $dataSeries.userSeries.get($entry.key).fieldset.pairsOrdered)
+		    		<td>$!record.fieldValue($field.name)</td>
 	            #end
             #end
+            <td>
+                <a href="/sales/$record.series.name/$record.id" class="btn btn-info">
+                    <i class="fa fa-pencil"></i>
+                </a>
+            </td>
 		</tr>
 		#end
 	</tbody>

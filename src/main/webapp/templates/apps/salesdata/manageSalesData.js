@@ -1,15 +1,10 @@
-var searchOptions = {
-    startDate: null,
-    endDate: null,
-    query: ''
-};
 
 Msg.singletonForCategory = true;
 
 function initManageSalesData() {
     setRecentItem(document.title, window.location.pathname);
     initManageExtraField();
-    
+
     var addRecordModal = $("#addRecordModal");
     addRecordModal.find("form").forms({
         onSuccess: function (resp) {
@@ -22,7 +17,7 @@ function initManageSalesData() {
             }
         }
     });
-    
+
     $(".refresh-history").click(function (e) {
         e.preventDefault();
         $("#history-table-body").reloadFragment({
@@ -31,7 +26,7 @@ function initManageSalesData() {
             }
         });
     });
-    
+
     $("form.series-form").forms({
         onSuccess: function (resp) {
             if (resp.status) {
@@ -44,13 +39,13 @@ function initManageSalesData() {
             }
         }
     });
-    
+
     initHistorySearch();
     initRemoveSalesData();
     initClearHistory();
     initSelectAll();
     initUploads();
-    
+
     $("#addKpiModal").find("form").forms({
         onSuccess: function (resp, form) {
             flog("form", form);
@@ -59,7 +54,7 @@ function initManageSalesData() {
             $("#addKpiModal").modal("hide");
         }
     });
-    
+
     $("#addSourceModal").find("form").forms({
         onSuccess: function (resp, form) {
             form.find("input, select").val("");
@@ -73,7 +68,7 @@ function initManageSalesData() {
             Msg.info("Created test data");
         }
     });
-    
+
     initDelKpi();
     initDelpoints();
     initDupKpi();
@@ -82,12 +77,12 @@ function initManageSalesData() {
     $("#series-tab-general").on('shown.bs.tab', function (e) {
         $("#seriesHistogram").seriesVis();
     });
-    
+
     $("#seriesHistogram").seriesVis();
 }
 
 function initDataQuery() {
-    $(document.body).on('keypress', '#data-query', function (e) {
+    $(document.body).on('keypress', '.search-input', function (e) {
         var code = e.keyCode || e.which;
         if (code == 13) {
             e.preventDefault();
@@ -95,11 +90,10 @@ function initDataQuery() {
             return false;
         }
     });
-    
-    $(document.body).on('change', '#data-query', function (e) {
+
+    $(document.body).on('change', '.search-input', function (e) {
         e.preventDefault();
-        
-        searchOptions.query = $(this).val();
+
         doHistorySearch();
     });
 }
@@ -172,8 +166,6 @@ function reloadPointsFragment() {
 
 function initHistorySearch() {
     $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
-        searchOptions.startDate = startDate;
-        searchOptions.endDate = endDate;
         doHistorySearch();
     });
 }
@@ -248,27 +240,25 @@ function doRemoveSalesData(checkBoxes) {
 }
 
 function doHistorySearch() {
-    flog('doHistorySearch', searchOptions.startDate, searchOptions.endDate, searchOptions.query);
     Msg.info("Doing search...", "sales-cat");
-    
-    flog("data", searchOptions);
 
-    var target = $("#history-table-body");
-    target.load();
+    var uri = URI(window.location);
+    uri.setSearch("query", $("#data-query").val());
+    uri.setSearch("minValue", $("#data-min-value").val());
+    uri.setSearch("maxValue", $("#data-max-value").val());
+    history.pushState(null, null, uri.toString());
 
-    $.ajax({
-        type: "GET",
-        url: window.location.pathname,
-        dataType: 'html',
-        data: searchOptions,
-        success: function (content) {
+    flog('doHistorySearch', uri.toString());
+
+
+    $("#history-table-body, #search-summary").reloadFragment({
+        url : uri.toString(),
+        whenComplete: function () {
             Msg.success("Search complete", "sales-cat");
-            var newBody = $(content).find("#history-table-body");
-            target.replaceWith(newBody);
-            $("abbr.timeago").timeago();
-            flog("done insert and timeago", $("abbr.timeago"));
+            $(".timeago").timeago();
         }
     });
+
 }
 function initUploads() {
     var modalUploadCsv = $("#modal-upload-csv");
