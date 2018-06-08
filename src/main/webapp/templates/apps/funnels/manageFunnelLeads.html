@@ -22,20 +22,38 @@
                             Refresh
                         </a>
                         <div class="btn-group" >
-
                             <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                 <i class="fa fa-search"></i>
-                                Filter
+                                Group Filter
 
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                <li><a href="$page.href?filterGroup=">No filter</a></li>
+                                <li><a href="$page.href?filterGroup=&filterNode=$!params.filterNode">No filter</a></li>
                                 #foreach( $group in $rootFolder.groups)
                                 <li>
-                                    <a href="$page.href?filterGroup=$group.name">
+                                    <a href="$page.href?filterGroup=$group.name&filterNode=$!params.filterNode">
                                         $!group.title
                                         <small class="text-muted">$group.name</small>
+                                    </a>
+                                </li>
+                                #end
+                            </ul>
+                        </div>
+                        <div class="btn-group" >
+                            <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-search"></i>
+                                Goal Filter
+
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                <li><a href="$page.href?filterGroup=$!params.filterGroup&filterNode=">No filter</a></li>
+                                #foreach( $node in $page.nodes)
+                                <li>
+                                    <a href="$page.href?filterGroup=$!params.filterGroup&filterNode=$node.nodeId">
+                                        $!node.title
+                                        <small class="text-muted">$node.nodeId</small>
                                     </a>
                                 </li>
                                 #end
@@ -53,6 +71,7 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
                             <li><a href="#" class="btn-remove-leads-contacts">Delete lead & contact</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#trigger-leads-modal">Trigger goals</a></li>
                         </ul>
                     </div>
                 </div>
@@ -110,13 +129,12 @@
                             </td>
                             <td>
                                 #if( $lead.lastAttainedGoal)
-                                <a href="../$lead.lastAttainedGoal">$page.nodeTitle($lead.lastAttainedGoal)</a>
+                                <a href="../$lead.lastAttainedGoal">$!page.nodeTitle ($lead.lastAttainedGoal)</a>
                                 #end
                             </td>
                             <td>
                                 #if( $lead.currentGoal )
-                                <a href="../$lead.currentGoal">$page.nodeTitle($lead.currentGoal)</a>
-                                ($lead.currentGoal)
+                                <a href="../$lead.currentGoal">$!page.nodeTitle ($lead.currentGoal)</a>
                                 #end
                             </td>
                             <td><abbr class="timeago" title="$lead.timerDate">$formatter.formatDateTime( $lead.timerDate )</abbr></td>
@@ -227,11 +245,31 @@
             </div>
         </div>
 
-        <!--div class="">
-            <pre>
-                $page.leadsRanked
-            </pre>
-        </div -->
+
+        <div id="trigger-leads-modal" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Trigger goals</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>This will mark the current node as completed/achieved and push the journey to the next node</p>
+                        <p>Please select the next node:</p>
+                        <select id='nextNodeId'>
+                            #foreach( $node in $page.nodes )
+                            $formatter.option( $node.nodeId, "$!node.title - $node.nodeId", "" )
+                            #end
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                        <button class="btn btn-sm btn-primary" type="button" id="do-trigger-goal">Trigger</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script type="text/javascript">
             $(function () {
@@ -239,7 +277,52 @@
                     e.preventDefault();
                     $("#lead-tbody").reloadFragment();
                 });
+                $("#do-trigger-goal").click(function(e) {
+                    var nodeId = $(e.target).closest(".modal-content").find("select").val();
+                    flog("triggger", $(e.target).closest(".modal-content").find("select"), nodeId);
+                    triggerGoal(nodeId);
+                });
             });
+
+            function triggerGoal(nextNodeId) {
+                flog("triggerGoal", nextNodeId);
+                var ids = [];
+
+                $("#lead-tbody").find('.lead-check:checked').each(function (i, item) {
+                    var id = $(item).val();
+                    ids.push(id);
+                });
+
+                if (ids.length < 1) {
+                    Msg.info('Please select at least one lead to trigger');
+                } else {
+                    Kalert.confirm('Are you sure you want to trigger ' + ids.length + ' lead' + (ids.length > 1 ? 's' : '') + '? This will indicate the current goal is completed, and the journey will advance.', 'Trigger', function () {
+                        $.ajax({
+                            url: window.location.pathname,
+                            type: 'POST',
+                            dataType: 'JSON',
+                            data: {
+                                nextNodeId : nextNodeId,
+                                triggerLeads: ids,
+                            },
+                            success: function (resp) {
+                                Kalert.close();
+
+                                if (resp.status) {
+                                    Msg.success(resp.messages);
+                                } else {
+                                    Msg.warning(resp.messages);
+                                }
+                            },
+                            error: function () {
+                                Kalert.close();
+                                Msg.error('Oh No! Something went wrong!');
+                            }
+                        });
+                    });
+                }
+
+            }
         </script>
     </body>
 </html>
