@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalVariableEntities>
+   <description></description>
+   <tag></tag>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'adminqa@mailinator.com'</initValue>
+      <name>admin</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'Pa$$w0rd'</initValue>
+      <name>admin_password</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'vladtest49j'</initValue>
+      <name>orgname</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'enterhere'</initValue>
+      <name>bigadmin</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'enterhere'</initValue>
+      <name>bigadminpass</name>
+   </GlobalVariableEntity>
+</GlobalVariableEntities>

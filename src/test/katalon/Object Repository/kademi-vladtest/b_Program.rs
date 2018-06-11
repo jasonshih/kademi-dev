@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebElementEntity>
+   <description></description>
+   <name>b_Program</name>
+   <tag></tag>
+   <elementGuidId>b8d4f99e-58a8-4b32-ac63-5c8b9cad4e6a</elementGuidId>
+   <selectorMethod>BASIC</selectorMethod>
+   <useRalativeImagePath>false</useRalativeImagePath>
+   <webElementProperties>
+      <isSelected>true</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>tag</name>
+      <type>Main</type>
+      <value>b</value>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>true</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>text</name>
+      <type>Main</type>
+      <value>Program:</value>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath</name>
+      <type>Main</type>
+      <value>id(&quot;kademi-container&quot;)/div[@class=&quot;main-container&quot;]/div[@class=&quot;main-content&quot;]/div[@class=&quot;container&quot;]/div[@class=&quot;main-content-inner&quot;]/div[@class=&quot;btn-group programs-wrapper&quot;]/button[@class=&quot;btn btn-sm btn-default dropdown-toggle&quot;]/span[1]/b[1]</value>
+   </webElementProperties>
+</WebElementEntity>
