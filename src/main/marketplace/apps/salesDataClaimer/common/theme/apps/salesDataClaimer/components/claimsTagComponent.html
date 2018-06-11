@@ -1,0 +1,36 @@
+#if ($bgTransparent == "true")
+    #set ($formBgColor = "transparent")
+#end
+
+#if ($page)
+    #set($app = $applications.salesDataClaimer )
+    #set($salesRecords = $app.call('getUnclaimedSales', $page, 'sales-transactions', ['type', 'accountName', 'distributor']))
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Customer name</th>
+                <th>Close date</th>
+                <th>Claim type</th>
+                <th>Distributor</th>
+                <th>Claim expire date</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+    #foreach($record in $salesRecords)
+        #set($dealDate = $formatter.toDate($record.periodFrom))
+        <tr>
+            <td>$record.accountName</td>
+            <td>$formatter.formatDate($dealDate)</td>
+            <td>$record.distributor</td>
+            <td>$record.type</td>
+            <td>-</td>
+            <td><button class="btn btn-primary">Claim</button></td>
+        </tr>
+    #end
+        </tbody>
+    </table>
+#else
+    Preview shall go here
+#end

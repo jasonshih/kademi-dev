@@ -603,3 +603,65 @@ function findClaimGroupById(rf, claimGroupId) {
     
     return claimGroup;
 }
+
+function getUnclaimedSales(rf, dataSeriesName, extraFields) {
+    var salesQuery = {
+            "stored_fields": [
+                "periodFrom",
+            ],
+            "query": { 
+                        "bool": {
+                            "must": [
+                                {
+                                    "term": {
+                                        "dataSeriesName": dataSeriesName
+                                    }
+                                },
+                                {
+                                    "term": {
+                                        "assignedToOrg": securityManager.currentUser.primaryMembership.org.id
+                                    }
+                                }/*,
+                                {
+                                    "range": {
+                                        "periodFrom": {
+                                            "gte": formatter.formatDate(queryManager.commonStartDate),
+                                            "lte": formatter.formatDate(queryManager.commonFinishDate),
+                                            "format":"dd/MM/yyyy"
+                                        }
+                                    }
+                                }*/
+                            ]
+                        }
+                    },
+            "size": 10000
+        };
+    
+    if (extraFields != null) {
+        for (var fieldIndex in extraFields) {
+            salesQuery.stored_fields.push(extraFields[fieldIndex]);
+        }
+    }
+        
+    var sm = applications.search.searchManager;
+    var salesDataResp = sm.search(JSON.stringify(salesQuery), 'dataseries');
+
+    var data = [];
+
+    for (var index in salesDataResp.hits.hits) {  
+        var hit = salesDataResp.hits.hits[index];
+        var record = {
+            "periodFrom": hit.fields.periodFrom.value
+        };
+        
+        if (extraFields != null) {
+            for (var fieldIndex in extraFields) {
+                record[extraFields[fieldIndex]] = hit.fields[extraFields[fieldIndex]].value;
+            }
+        }
+          
+        data.push(record);
+    }
+    
+    return data;
+}

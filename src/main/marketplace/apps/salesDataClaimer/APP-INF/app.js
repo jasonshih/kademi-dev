@@ -12,6 +12,8 @@ controllerMappings.addComponent("salesDataClaimer/components", "claimRegisterPro
 
 controllerMappings.addComponent("salesDataClaimer/components", "claimTracking", "html", "Enables check claim status", "Sales Data Claimer");
 
+controllerMappings.addComponent("salesDataClaimer/components", "claimsTag", "html", "Display untagged claims for tagging", "Sales Data Claimer");
+
 controllerMappings.addGoalNodeType("claimSubmittedGoal", "salesDataClaimer/claimSubmittedGoalNode.js", "checkSubmittedGoal");
 
 function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
@@ -26,6 +28,8 @@ function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNod
     }
     
     if (!lead) {
+        attributes.put(LEAD_CLAIM_ID, eventParams.claim);
+        
         return true;
     }
 
@@ -52,7 +56,12 @@ function checkProcessedGoal(rootFolder, lead, funnel, eventParams, customNextNod
     }
 
     var claimId = attributes.get(LEAD_CLAIM_ID);
+    var claimType = attributes.get(CLAIM_TYPE);
 
+    if(customSettings && customSettings.claimType && claimType != customSettings.claimType){        
+        return false;
+    }
+    
     if (isNotBlank(claimId)) {
         // Process only for this claim ID
         return safeString(eventParams.claim) === safeString(claimId);
