@@ -60,6 +60,7 @@
                         <input type="hidden" class="productOrderId" name="item.${foreach.count}" value="$item.id" />
                         #end
                     </div>
+                    
                     <div class="col-sm-3 item-price center-content">
                         <div>
                             <span class="lead">
@@ -68,6 +69,8 @@
                                 #if( $item.adjustedPriceExTax > 0 && $item.adjustedPriceExTax < $item.listUnitPriceExTax )
                                 <small><s><i class="text-muted text-sm">( $formatter.formatCurrency($item.listUnitPriceExTax) )</i></s></small>
                                 #end
+
+                                | $$formatter.formatCurrency($item.finalCost)
                             </span>
                         </div>
                     </div>
