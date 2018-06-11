@@ -37,7 +37,7 @@ $(function () {
             lis.each(function () {
                 var location = $(this).attr('data-location');
                 var stock = $(this).attr('data-stock');
-                kcom2inventory.append('<option value="'+location+'">Inventory: '+location+', Quantity: '+stock+'</option>')
+                kcom2inventory.append('<option value="'+location+'">'+location+', quantity available: '+stock+'</option>')
             });
 
             var slider =  $('#product-images.product-info');

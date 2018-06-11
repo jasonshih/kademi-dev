@@ -65,7 +65,7 @@
                             <span class="lead">
                                 $$formatter.formatCurrency($item.adjustedPriceExTax)
 
-                                #if( $item.adjustedPriceExTax < $item.listUnitPriceExTax )
+                                #if( $item.adjustedPriceExTax > 0 && $item.adjustedPriceExTax < $item.listUnitPriceExTax )
                                 <small><s><i class="text-muted text-sm">( $formatter.formatCurrency($item.listUnitPriceExTax) )</i></s></small>
                                 #end
                             </span>
