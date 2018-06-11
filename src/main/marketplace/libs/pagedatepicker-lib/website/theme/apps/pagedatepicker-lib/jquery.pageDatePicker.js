@@ -210,7 +210,7 @@
 
             var rangeItems = self.rangeItems = rangeWrapper.find('.pageDatePicker-range');
             var totalItems = rangeItems.length;
-            rangeItems.css('width', 'calc(100% / ' + totalItems + ')').on('click', function (e) {
+            rangeItems.css('width', 'calc(100% / ' + totalItems + ' - 0.2%)').on('click', function (e) {
                 e.preventDefault();
 
                 var item = $(this);
