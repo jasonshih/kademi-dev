@@ -28,7 +28,9 @@ def usertestname = WebUI.concatenate(((['autouserqa', randomdigit]) as String[])
 
 WebUI.openBrowser('http://vladtest52m.admin.kademi-ci.co')
 
-WebUI.maximizeWindow()
+WebUI.setViewPortSize(1920, 1080)
+
+not_run: WebUI.maximizeWindow()
 
 WebUI.setText(findTestObject('kademi-vladtest/input_email'), GlobalVariable.admin)
 
