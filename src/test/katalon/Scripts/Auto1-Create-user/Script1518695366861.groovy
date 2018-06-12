@@ -36,7 +36,7 @@ WebUI.setText(findTestObject('kademi-vladtest/input_password'), GlobalVariable.a
 
 WebUI.sendKeys(findTestObject('kademi-vladtest/input_password'), Keys.chord(Keys.ENTER))
 
-WebUI.delay(15)
+WebUI.delay(25)
 
 WebUI.click(findTestObject('Kademi-vladtest22/span_Groups  users (1)'))
 
