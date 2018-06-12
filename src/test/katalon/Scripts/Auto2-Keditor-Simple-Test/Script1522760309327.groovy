@@ -28,7 +28,9 @@ def pagetestname = WebUI.concatenate(((['pagetest', randomdigit]) as String[]))
 
 WebUI.openBrowser('http://vladtest52m.admin.kademi-ci.co')
 
-WebUI.maximizeWindow()
+not_run: WebUI.maximizeWindow()
+	
+WebUI.setViewPortSize(1920, 1080)
 
 WebUI.setText(findTestObject('kademi-vladtest/input_email'), GlobalVariable.admin)
 

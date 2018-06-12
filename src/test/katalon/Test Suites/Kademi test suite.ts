@@ -20,7 +20,7 @@
    <testCaseLink>
       <guid>04929fb2-85a6-41e1-915b-43c802a162eb</guid>
       <isReuseDriver>false</isReuseDriver>
-      <isRun>false</isRun>
+      <isRun>true</isRun>
       <testCaseId>Test Cases/Auto2-Keditor-Simple-Test</testCaseId>
    </testCaseLink>
    <testCaseLink>
@@ -50,7 +50,7 @@
    <testCaseLink>
       <guid>d606c71a-5448-417f-878d-d4fed5782d2a</guid>
       <isReuseDriver>false</isReuseDriver>
-      <isRun>false</isRun>
+      <isRun>true</isRun>
       <testCaseId>Test Cases/Auto6-Create-users-send-email</testCaseId>
    </testCaseLink>
 </TestSuiteEntity>

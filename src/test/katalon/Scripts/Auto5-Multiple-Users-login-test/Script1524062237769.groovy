@@ -39,7 +39,9 @@ for (def index : (1..data.getRowNumbers())) {
 
     WebUI.openBrowser('http://vladtest51hleads-vladtest51h.kademi-ci.co/dashboard')
 
-    WebUI.maximizeWindow()
+    not_run: WebUI.maximizeWindow()
+	
+	WebUI.setViewPortSize(1920, 1080)
 
     WebUI.setText(findTestObject('frontend/frontend-input_email_lead'), varUsername)
 
