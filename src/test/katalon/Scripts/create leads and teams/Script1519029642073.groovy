@@ -62,11 +62,27 @@ WebUI.delay(20)
 
 WebUI.click(findTestObject('kademi-vladtest/a_Back to website manager - correct'))
 
-WebUI.click(findTestObject('kademi-vladtest/a_Details (1)'))
+WebUI.click(findTestObject('kademi-vladtest/Details-tab-for-website-properties'))
 
 WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cogs'))
 
 WebUI.click(findTestObject('kademi-vladtest/div_KTeam'))
+
+WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cloud-download'))
+
+WebUI.delay(1)
+
+WebUI.click(findTestObject('kademi-vladtest/button_Install (1)'))
+
+WebUI.delay(10)
+
+WebUI.click(findTestObject('kademi-vladtest/a_Back to website manager - correct'))
+
+WebUI.click(findTestObject('kademi-vladtest/Details-tab-for-website-properties'))
+
+WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cogs'))
+
+WebUI.click(findTestObject('kademi-vladtest/div_KTimesheets'))
 
 WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cloud-download'))
 

@@ -58,13 +58,13 @@ WebUI.delay(1)
 
 WebUI.click(findTestObject('kademi-vladtest/button_Install (1)'))
 
-WebUI.delay(15)
+WebUI.delay(20)
 
 WebUI.click(findTestObject('kademi-vladtest/a_Back to website manager - correct'))
 
 WebUI.delay(2)
 
-WebUI.click(findTestObject('kademi-vladtest/a_Details (1)'))
+WebUI.click(findTestObject('kademi-vladtest/Details-tab-for-website-properties'))
 
 WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cogs'))
 

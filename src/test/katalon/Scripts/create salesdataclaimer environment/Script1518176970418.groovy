@@ -62,7 +62,7 @@ WebUI.delay(10)
 
 WebUI.click(findTestObject('kademi-vladtest/a_Back to website manager - correct'))
 
-WebUI.click(findTestObject('kademi-vladtest/a_Details (1)'))
+WebUI.click(findTestObject('kademi-vladtest/Details-tab-for-website-properties'))
 
 WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cogs'))
 

@@ -19,24 +19,25 @@ import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUiBuiltInKe
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 import internal.GlobalVariable as GlobalVariable
 import org.openqa.selenium.Keys as Keys
-import com.kms.katalon.core.testdata.CSVData
-import com.kms.katalon.core.logging.KeywordLogger
+import com.kms.katalon.core.testdata.CSVData as CSVData
+import com.kms.katalon.core.logging.KeywordLogger as KeywordLogger
 
 CSVData data = findTestData('Usernames_passwords')
 
 KeywordLogger log = new KeywordLogger()
-not_run: def rownum = data.getRowNumbers()
-not_run: def test = data.getValue(1, 6)
-not_run: log.logInfo("yourMsg "+test)
 
+not_run: def rownum = data.getRowNumbers()
+
+not_run: def test = data.getValue(1, 6)
+
+not_run: log.logInfo('yourMsg ' + test)
 
 for (def index : (1..data.getRowNumbers())) {
-	
-	varUsername = data.getValue(1, index)
-	varPassword = data.getValue(6, index)
-	
-	
-    WebUI.openBrowser('http://vladtest49dleads-vladtest49d.kademi-ci.co/dashboard')
+    varUsername = data.getValue(1, index)
+
+    varPassword = data.getValue(6, index)
+
+    WebUI.openBrowser('http://vladtest51hleads-vladtest51h.kademi-ci.co/dashboard')
 
     WebUI.maximizeWindow()
 
@@ -49,12 +50,12 @@ for (def index : (1..data.getRowNumbers())) {
     WebUI.delay(20)
 
     WebUI.click(findTestObject('frontend/frontend_profile_dropdown'))
-	
-	WebUI.delay(1)
+
+    WebUI.delay(1)
 
     not_run: WebUI.click(findTestObject('frontend/frontend_Profile-button'))
 
-    not_run:WebUI.delay(5)
+    not_run: WebUI.delay(5)
 
     WebUI.click(findTestObject('frontend/frontend_Logout-button'))
 

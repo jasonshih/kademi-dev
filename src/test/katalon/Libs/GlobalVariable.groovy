@@ -29,7 +29,7 @@ public class GlobalVariable {
     /**
      * <p></p>
      */
-	public static Object orgname = 'vladtest49j'
+	public static Object orgname = 'vladtest52m'
 	 
     /**
      * <p></p>

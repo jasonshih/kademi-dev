@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Kademi test suite - test" time="110" tests="0" failures="1" errors="0">
+   <testsuite name="Kademi test suite - test" tests="0" failures="1" errors="0" time="110" timestamp="2018-04-24 13:14:56" hostname="CI0-000-6057N$ - ci0-000-6057N" id="Test Suites/Kademi test suite - test">
+      <properties>
+         <property name="deviceName" value=""/>
+         <property name="devicePlatform" value=""/>
+         <property name="logFolder" value="D:\\kademi\\Katalon\\Kademi_next\\Kademi\\Reports\\Kademi test suite - test\\20180424_131450"/>
+         <property name="logFiles" value="D:\\kademi\\Katalon\\Kademi_next\\Kademi\\Reports\\Kademi test suite - test\\20180424_131450\\execution0.log"/>
+         <property name="attachments" value="D:\\kademi\\Katalon\\Kademi_next\\Kademi\\Reports\\Kademi test suite - test\\20180424_131450\\1524565006754.png"/>
+         <property name="hostName" value="CI0-000-6057N$ - ci0-000-6057N"/>
+         <property name="os" value="Windows 10 64bit"/>
+         <property name="katalonVersion" value="5.3.0.1"/>
+         <property name="browser" value="Chrome 65.0.3325.181"/>
+         <property name="hostAddress" value="192.168.248.1"/>
+         <property name="sessionId" value="6ed9b8fb09f843d7e0db2bc08e498cae"/>
+         <property name="seleniumVersion" value="3.7.1"/>
+         <property name="proxyInformation" value="ProxyInformation{proxyOption=NO_PROXY, proxyServerType=HTTP, password=, proxyServerAddress=, proxyServerPort=0}"/>
+         <property name="platform" value="Windows 10"/>
+      </properties>
+      <testcase name="Test Cases/Auto4-products-add-remove-upload" classname="Test Cases/Auto4-products-add-remove-upload" status="FAILED">
+         <failure type="FAILED" message="Unable to click on object 'Object Repository/products-add-upload/Page_pr/button_Save_product_image_after upload' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/products-add-upload/Page_pr/button_Save_product_image_after upload' located by 'By.xpath: //button[@class = 'btn btn-info btn-continue' and @type = 'button' and (text() = 'Save' or . = 'Save')]' not found)"/>
+         <system-out><![CDATA[2018-04-24 13:14:57 - [TEST_CASE][FAILED] - Test Cases/Auto4-products-add-remove-upload: Test Cases/Auto4-products-add-remove-upload FAILED because (of) Unable to click on object 'Object Repository/products-add-upload/Page_pr/button_Save_product_image_after upload' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/products-add-upload/Page_pr/button_Save_product_image_after upload' located by 'By.xpath: //button[@class = 'btn btn-info btn-continue' and @type = 'button' and (text() = 'Save' or . = 'Save')]' not found)
+
+2018-04-24 13:14:58 - [TEST_STEP][PASSED] - Statement - rnd = new java.util.Random(): null
+
+2018-04-24 13:14:58 - [TEST_STEP][PASSED] - Statement - randomdigit = rnd.nextInt(99999): null
+
+2018-04-24 13:14:58 - [TEST_STEP][PASSED] - Statement - prdtestname = com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords.concatenate(["prod", randomdigit]): Concatenated string array: '['prod','52811']' into 'prod52811'
+
+2018-04-24 13:14:58 - [MESSAGE][PASSED] - Concatenated string array: '['prod','52811']' into 'prod52811'
+
+2018-04-24 13:14:58 - [TEST_STEP][PASSED] - openBrowser: Browser is opened with url: 'http://vladtest49e.admin.kademi-ci.co/'
+
+2018-04-24 13:15:13 - [MESSAGE][PASSED] - Browser is opened with url: 'http://vladtest49e.admin.kademi-ci.co/'
+
+2018-04-24 13:15:13 - [TEST_STEP][PASSED] - maximizeWindow: Current window maximized
+
+2018-04-24 13:15:14 - [MESSAGE][PASSED] - Current window maximized
+
+2018-04-24 13:15:14 - [TEST_STEP][PASSED] - setText: Text 'adminqa@mailinator.com' is set on object 'Object Repository/kademi-vladtest/input_email'
+
+2018-04-24 13:15:14 - [MESSAGE][PASSED] - Text 'adminqa@mailinator.com' is set on object 'Object Repository/kademi-vladtest/input_email'
+
+2018-04-24 13:15:14 - [TEST_STEP][PASSED] - setText: Text 'Pa$$w0rd' is set on object 'Object Repository/kademi-vladtest/input_password'
+
+2018-04-24 13:15:14 - [MESSAGE][PASSED] - Text 'Pa$$w0rd' is set on object 'Object Repository/kademi-vladtest/input_password'
+
+2018-04-24 13:15:14 - [TEST_STEP][PASSED] - sendKeys: Keys 'ENTER + ' sent to object: 'Object Repository/kademi-vladtest/input_password'
+
+2018-04-24 13:15:14 - [MESSAGE][PASSED] - Keys 'ENTER + ' sent to object: 'Object Repository/kademi-vladtest/input_password'
+
+2018-04-24 13:15:14 - [TEST_STEP][PASSED] - delay: Delayed 20 second(s)
+
+2018-04-24 13:15:34 - [MESSAGE][PASSED] - Delayed 20 second(s)
+
+2018-04-24 13:15:34 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_vladtest49c Dashboard/span_Products  Stores' is clicked on
+
+2018-04-24 13:15:34 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_vladtest49c Dashboard/span_Products  Stores' is clicked on
+
+2018-04-24 13:15:34 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-04-24 13:15:35 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-04-24 13:15:35 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_vladtest49c Dashboard/span_Products' is clicked on
+
+2018-04-24 13:15:38 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_vladtest49c Dashboard/span_Products' is clicked on
+
+2018-04-24 13:15:38 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-04-24 13:15:39 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-04-24 13:15:39 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Manage Products/button_Add New Product' is clicked on
+
+2018-04-24 13:15:39 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Manage Products/button_Add New Product' is clicked on
+
+2018-04-24 13:15:39 - [TEST_STEP][PASSED] - delay: Delayed 5 second(s)
+
+2018-04-24 13:15:44 - [MESSAGE][PASSED] - Delayed 5 second(s)
+
+2018-04-24 13:15:44 - [TEST_STEP][PASSED] - focus: Object: 'Object Repository/products-add-upload/Page_Manage Products/Add new product modal' is focused
+
+2018-04-24 13:15:44 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Manage Products/Add new product modal' is focused
+
+2018-04-24 13:15:44 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Manage Products/input_name_product' is clicked on
+
+2018-04-24 13:15:45 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Manage Products/input_name_product' is clicked on
+
+2018-04-24 13:15:45 - [TEST_STEP][PASSED] - sendKeys: Keys 'prod52811' sent to object: 'Object Repository/products-add-upload/Page_Manage Products/input_name_product'
+
+2018-04-24 13:15:45 - [MESSAGE][PASSED] - Keys 'prod52811' sent to object: 'Object Repository/products-add-upload/Page_Manage Products/input_name_product'
+
+2018-04-24 13:15:45 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Manage Products/input_title_product' is clicked on
+
+2018-04-24 13:15:45 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Manage Products/input_title_product' is clicked on
+
+2018-04-24 13:15:45 - [TEST_STEP][PASSED] - sendKeys: Keys 'prod52811' sent to object: 'Object Repository/products-add-upload/Page_Manage Products/input_title_product'
+
+2018-04-24 13:15:45 - [MESSAGE][PASSED] - Keys 'prod52811' sent to object: 'Object Repository/products-add-upload/Page_Manage Products/input_title_product'
+
+2018-04-24 13:15:45 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Manage Products/input_baseCost_product' is clicked on
+
+2018-04-24 13:15:45 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Manage Products/input_baseCost_product' is clicked on
+
+2018-04-24 13:15:45 - [TEST_STEP][PASSED] - sendKeys: Keys '100' sent to object: 'Object Repository/products-add-upload/Page_Manage Products/input_baseCost_product'
+
+2018-04-24 13:15:45 - [MESSAGE][PASSED] - Keys '100' sent to object: 'Object Repository/products-add-upload/Page_Manage Products/input_baseCost_product'
+
+2018-04-24 13:15:45 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Manage Products/button_Create product' is clicked on
+
+2018-04-24 13:15:45 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Manage Products/button_Create product' is clicked on
+
+2018-04-24 13:15:45 - [TEST_STEP][PASSED] - delay: Delayed 5 second(s)
+
+2018-04-24 13:15:50 - [MESSAGE][PASSED] - Delayed 5 second(s)
+
+2018-04-24 13:15:50 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Manage Products/input_data-query_products_serach' is clicked on
+
+2018-04-24 13:15:51 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Manage Products/input_data-query_products_serach' is clicked on
+
+2018-04-24 13:15:51 - [TEST_STEP][PASSED] - sendKeys: Keys 'prod52811' sent to object: 'Object Repository/products-add-upload/Page_Manage Products/input_data-query_products_serach'
+
+2018-04-24 13:15:51 - [MESSAGE][PASSED] - Keys 'prod52811' sent to object: 'Object Repository/products-add-upload/Page_Manage Products/input_data-query_products_serach'
+
+2018-04-24 13:15:51 - [TEST_STEP][PASSED] - delay: Delayed 5 second(s)
+
+2018-04-24 13:15:56 - [MESSAGE][PASSED] - Delayed 5 second(s)
+
+2018-04-24 13:15:56 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Manage Products/a_btn btn-info_product_edit' is clicked on
+
+2018-04-24 13:15:59 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Manage Products/a_btn btn-info_product_edit' is clicked on
+
+2018-04-24 13:15:59 - [TEST_STEP][PASSED] - delay: Delayed 4 second(s)
+
+2018-04-24 13:16:03 - [MESSAGE][PASSED] - Delayed 4 second(s)
+
+2018-04-24 13:16:03 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_pr/button_Add image_to_product' is clicked on
+
+2018-04-24 13:16:03 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_pr/button_Add image_to_product' is clicked on
+
+2018-04-24 13:16:03 - [TEST_STEP][PASSED] - delay: Delayed 4 second(s)
+
+2018-04-24 13:16:07 - [MESSAGE][PASSED] - Delayed 4 second(s)
+
+2018-04-24 13:16:07 - [TEST_STEP][PASSED] - focus: Object: 'Object Repository/products-add-upload/Page_pr/Upload-image-product-modal' is focused
+
+2018-04-24 13:16:07 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_pr/Upload-image-product-modal' is focused
+
+2018-04-24 13:16:07 - [TEST_STEP][PASSED] - upload.Uploader.uploadFile: upload.Uploader.uploadFile is PASSED
+
+2018-04-24 13:16:07 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_pr/form_Drop files here to upload_product_image' is clicked on
+
+2018-04-24 13:16:10 - [MESSAGE][PASSED] - upload.Uploader.uploadFile is PASSED
+
+2018-04-24 13:16:10 - [TEST_STEP][PASSED] - delay: Delayed 5 second(s)
+
+2018-04-24 13:16:15 - [MESSAGE][PASSED] - Delayed 5 second(s)
+
+2018-04-24 13:16:15 - [TEST_STEP][FAILED] - click: Unable to click on object 'Object Repository/products-add-upload/Page_pr/button_Save_product_image_after upload' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/products-add-upload/Page_pr/button_Save_product_image_after upload' located by 'By.xpath: //button[@class = 'btn btn-info btn-continue' and @type = 'button' and (text() = 'Save' or . = 'Save')]' not found)
+
+2018-04-24 13:16:47 - [MESSAGE][FAILED] - Unable to click on object 'Object Repository/products-add-upload/Page_pr/button_Save_product_image_after upload' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/products-add-upload/Page_pr/button_Save_product_image_after upload' located by 'By.xpath: //button[@class = 'btn btn-info btn-continue' and @type = 'button' and (text() = 'Save' or . = 'Save')]' not found)
+[[ATTACHMENT|D:\\kademi\\Katalon\\Kademi_next\\Kademi\\Reports\\Kademi test suite - test\\20180424_131450\\1524565006754.png]]]]></system-out>
+         <system-err><![CDATA[2018-04-24 13:14:57 - [TEST_CASE][FAILED] - Test Cases/Auto4-products-add-remove-upload: Test Cases/Auto4-products-add-remove-upload FAILED because (of) Unable to click on object 'Object Repository/products-add-upload/Page_pr/button_Save_product_image_after upload' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/products-add-upload/Page_pr/button_Save_product_image_after upload' located by 'By.xpath: //button[@class = 'btn btn-info btn-continue' and @type = 'button' and (text() = 'Save' or . = 'Save')]' not found)]]></system-err>
+      </testcase>
+      <system-out><![CDATA[2018-04-24 13:14:56 - [TEST_SUITE][FAILED] - Kademi test suite - test: Test Cases/Auto4-products-add-remove-upload FAILED because (of) Unable to click on object 'Object Repository/products-add-upload/Page_pr/button_Save_product_image_after upload' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/products-add-upload/Page_pr/button_Save_product_image_after upload' located by 'By.xpath: //button[@class = 'btn btn-info btn-continue' and @type = 'button' and (text() = 'Save' or . = 'Save')]' not found)]]></system-out>
+      <system-err><![CDATA[2018-04-24 13:14:56 - [TEST_SUITE][FAILED] - Kademi test suite - test: Test Cases/Auto4-products-add-remove-upload FAILED because (of) Unable to click on object 'Object Repository/products-add-upload/Page_pr/button_Save_product_image_after upload' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/products-add-upload/Page_pr/button_Save_product_image_after upload' located by 'By.xpath: //button[@class = 'btn btn-info btn-continue' and @type = 'button' and (text() = 'Save' or . = 'Save')]' not found)]]></system-err>
+   </testsuite>
+</testsuites>

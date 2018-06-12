@@ -66,15 +66,15 @@ WebUI.focus(findTestObject('kademi-vladtest/div_modal-new-user'))
 
 WebUI.click(findTestObject('Kademi-vladtest22/input_nickName'), FailureHandling.STOP_ON_FAILURE)
 
-WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_nickName'), (GlobalVariable.admin).split('@')[0])
+WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_nickName'), GlobalVariable.admin.split('@')[0])
 
 WebUI.click(findTestObject('Kademi-vladtest22/input_firstName'), FailureHandling.STOP_ON_FAILURE)
 
-WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_firstName'), (GlobalVariable.admin).split('@')[0])
+WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_firstName'), GlobalVariable.admin.split('@')[0])
 
 WebUI.click(findTestObject('Kademi-vladtest22/input_surName'), FailureHandling.STOP_ON_FAILURE)
 
-WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_surName'), (GlobalVariable.admin).split('@')[0])
+WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_surName'), GlobalVariable.admin.split('@')[0])
 
 WebUI.click(findTestObject('Kademi-vladtest22/input_email (1)'), FailureHandling.STOP_ON_FAILURE)
 
@@ -100,7 +100,7 @@ WebUI.click(findTestObject('Kademi-vladtest22/input_confirmPassword'), FailureHa
 
 WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_confirmPassword'), GlobalVariable.admin_password)
 
-WebUI.click(findTestObject('Kademi-vladtest22/button_Save'))
+WebUI.click(findTestObject('Email-job-case/Page_Manage users/button_Save-user_edit_page'))
 
 WebUI.click(findTestObject('Kademi-vladtest22/span_adminqa'))
 
@@ -111,4 +111,24 @@ WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_email'), GlobalVariable.a
 WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_password'), GlobalVariable.admin_password)
 
 WebUI.click(findTestObject('Kademi-vladtest22/button_Log in'))
+
+WebUI.delay(15, FailureHandling.STOP_ON_FAILURE)
+
+WebUI.click(findTestObject('kademi-vladtest/span_Website Manager'))
+
+WebUI.click(findTestObject('kademi-vladtest/span_Websites'))
+
+WebUI.click(findTestObject('kademi-vladtest/i_fa fa-plus (3)'))
+
+WebUI.focus(findTestObject('kademi-vladtest/div_                        Ad'))
+
+WebUI.delay(1)
+
+WebUI.click(findTestObject('kademi-vladtest/input_newName'))
+
+WebUI.sendKeys(findTestObject('kademi-vladtest/input_newName'), WebUI.concatenate((([GlobalVariable.orgname, 'web']) as String[])))
+
+WebUI.click(findTestObject('kademi-vladtest/button_Create website'))
+
+WebUI.delay(10)
 

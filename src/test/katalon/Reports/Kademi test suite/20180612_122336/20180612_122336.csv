@@ -1,0 +1,50 @@
+Suite/Test/Step Name,Browser,Description,Start time,End time,Duration,Status
+Kademi test suite,Chrome 66.0.3359.181,,2018-06-12 12:23:39,2018-06-12 12:30:16,6m - 36.709s,FAILED
+,,,,,,
+Test Cases/Auto1-Create-user,Chrome 66.0.3359.181,,2018-06-12 12:23:40,2018-06-12 12:24:47,1m - 7.122s,FAILED
+Statement - rnd = new java.util.Random(),Chrome 66.0.3359.181,,2018-06-12 12:23:40,2018-06-12 12:23:40,0.007s,PASSED
+Statement - randomdigit = rnd.nextInt(9999),Chrome 66.0.3359.181,,2018-06-12 12:23:40,2018-06-12 12:23:40,0.003s,PASSED
+"Statement - usertestname = com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords.concatenate([""autouserqa"", randomdigit])",Chrome 66.0.3359.181,,2018-06-12 12:23:40,2018-06-12 12:23:40,0.055s,PASSED
+openBrowser,Chrome 66.0.3359.181,,2018-06-12 12:23:40,2018-06-12 12:23:58,17.903s,PASSED
+maximizeWindow,Chrome 66.0.3359.181,,2018-06-12 12:23:58,2018-06-12 12:23:59,1.201s,PASSED
+setText,Chrome 66.0.3359.181,,2018-06-12 12:23:59,2018-06-12 12:24:00,0.401s,PASSED
+setText,Chrome 66.0.3359.181,,2018-06-12 12:24:00,2018-06-12 12:24:00,0.182s,PASSED
+sendKeys,Chrome 66.0.3359.181,,2018-06-12 12:24:00,2018-06-12 12:24:01,0.920s,PASSED
+delay,Chrome 66.0.3359.181,,2018-06-12 12:24:01,2018-06-12 12:24:16,15.011s,PASSED
+click,Chrome 66.0.3359.181,,2018-06-12 12:24:16,2018-06-12 12:24:47,30.961s,FAILED
+,,,,,,
+Test Cases/Auto2-Keditor-Simple-Test,Chrome 66.0.3359.181,,2018-06-12 12:24:47,2018-06-12 12:25:49,1m - 1.954s,FAILED
+Statement - rnd = new java.util.Random(),Chrome 66.0.3359.181,,2018-06-12 12:24:47,2018-06-12 12:24:47,0.002s,PASSED
+Statement - randomdigit = rnd.nextInt(9999),Chrome 66.0.3359.181,,2018-06-12 12:24:47,2018-06-12 12:24:47,0.002s,PASSED
+"Statement - pagetestname = com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords.concatenate([""pagetest"", randomdigit])",Chrome 66.0.3359.181,,2018-06-12 12:24:47,2018-06-12 12:24:47,0.004s,PASSED
+openBrowser,Chrome 66.0.3359.181,,2018-06-12 12:24:47,2018-06-12 12:25:01,13.785s,PASSED
+maximizeWindow,Chrome 66.0.3359.181,,2018-06-12 12:25:01,2018-06-12 12:25:02,1.128s,PASSED
+setText,Chrome 66.0.3359.181,,2018-06-12 12:25:02,2018-06-12 12:25:02,0.240s,PASSED
+setText,Chrome 66.0.3359.181,,2018-06-12 12:25:02,2018-06-12 12:25:02,0.164s,PASSED
+sendKeys,Chrome 66.0.3359.181,,2018-06-12 12:25:02,2018-06-12 12:25:03,0.444s,PASSED
+delay,Chrome 66.0.3359.181,,2018-06-12 12:25:03,2018-06-12 12:25:18,15.002s,PASSED
+click,Chrome 66.0.3359.181,,2018-06-12 12:25:18,2018-06-12 12:25:49,30.872s,FAILED
+,,,,,,
+Test Cases/Auto5-Multiple-Users-login-test,Chrome 66.0.3359.181,,2018-06-12 12:25:49,2018-06-12 12:29:36,3m - 47.086s,PASSED
+Statement - data = com.kms.katalon.core.testdata.TestDataFactory.findTestData(Usernames_passwords),Chrome 66.0.3359.181,,2018-06-12 12:25:49,2018-06-12 12:25:49,0.014s,PASSED
+Statement - log = new com.kms.katalon.core.logging.KeywordLogger(),Chrome 66.0.3359.181,,2018-06-12 12:25:49,2018-06-12 12:25:49,0.001s,PASSED
+Statement - rownum = data.getRowNumbers(),Chrome 66.0.3359.181,,2018-06-12 12:25:49,2018-06-12 12:25:49,0.003s,NOT_RUN
+"Statement - test = data.getValue(1, 6)",Chrome 66.0.3359.181,,2018-06-12 12:25:49,2018-06-12 12:25:49,0.003s,NOT_RUN
+"Statement - log.logInfo(""yourMsg "" + test)",Chrome 66.0.3359.181,,2018-06-12 12:25:49,2018-06-12 12:25:49,0.002s,NOT_RUN
+Statement - For (def index : (1..data.getRowNumbers())),Chrome 66.0.3359.181,,2018-06-12 12:25:49,2018-06-12 12:29:36,3m - 46.760s,PASSED
+,,,,,,
+Test Cases/Auto6-Create-users-send-email,Chrome 66.0.3359.181,,2018-06-12 12:29:36,2018-06-12 12:30:15,39.432s,FAILED
+Statement - rnd = new java.util.Random(),Chrome 66.0.3359.181,,2018-06-12 12:29:36,2018-06-12 12:29:36,0.001s,PASSED
+Statement - randomdigit = rnd.nextInt(9999),Chrome 66.0.3359.181,,2018-06-12 12:29:36,2018-06-12 12:29:36,0.000s,PASSED
+"Statement - emailtestname = com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords.concatenate([""emailjob"", randomdigit])",Chrome 66.0.3359.181,,2018-06-12 12:29:36,2018-06-12 12:29:36,0.002s,PASSED
+openBrowser,Chrome 66.0.3359.181,,2018-06-12 12:29:36,2018-06-12 12:29:45,8.909s,PASSED
+maximizeWindow,Chrome 66.0.3359.181,,2018-06-12 12:29:45,2018-06-12 12:29:46,1.125s,PASSED
+setText,Chrome 66.0.3359.181,,2018-06-12 12:29:46,2018-06-12 12:29:46,0.208s,PASSED
+setText,Chrome 66.0.3359.181,,2018-06-12 12:29:46,2018-06-12 12:29:47,0.178s,PASSED
+sendKeys,Chrome 66.0.3359.181,,2018-06-12 12:29:47,2018-06-12 12:29:47,0.056s,PASSED
+delay,Chrome 66.0.3359.181,,2018-06-12 12:29:47,2018-06-12 12:30:07,20.002s,PASSED
+click,Chrome 66.0.3359.181,,2018-06-12 12:30:07,2018-06-12 12:30:07,0.172s,PASSED
+delay,Chrome 66.0.3359.181,,2018-06-12 12:30:07,2018-06-12 12:30:08,1.002s,PASSED
+click,Chrome 66.0.3359.181,,2018-06-12 12:30:08,2018-06-12 12:30:12,4.054s,PASSED
+Statement - usertestname = <not implemented yet for class: org.codehaus.groovy.ast.expr.EmptyExpression>,Chrome 66.0.3359.181,,2018-06-12 12:30:12,2018-06-12 12:30:12,0.000s,PASSED
+Statement - For (def index : (1..10)),Chrome 66.0.3359.181,,2018-06-12 12:30:12,2018-06-12 12:30:15,3.457s,FAILED

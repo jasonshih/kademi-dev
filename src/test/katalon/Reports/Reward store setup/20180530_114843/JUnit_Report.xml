@@ -1,0 +1,955 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Reward store setup" time="519" tests="3" failures="1" errors="0">
+   <testsuite name="Reward store setup" tests="3" failures="1" errors="0" time="519" timestamp="2018-05-30 11:48:54" hostname="spiblin - ci0-000-6057N" id="Test Suites/Reward store setup">
+      <properties>
+         <property name="deviceName" value=""/>
+         <property name="devicePlatform" value=""/>
+         <property name="logFolder" value="D:\\kademi\\Katalon\\Kademi_next\\Kademi\\Reports\\Reward store setup\\20180530_114843"/>
+         <property name="logFiles" value="D:\\kademi\\Katalon\\Kademi_next\\Kademi\\Reports\\Reward store setup\\20180530_114843\\execution0.log"/>
+         <property name="attachments" value="D:\\kademi\\Katalon\\Kademi_next\\Kademi\\Reports\\Reward store setup\\20180530_114843\\1527670653005.png"/>
+         <property name="hostName" value="spiblin - ci0-000-6057N"/>
+         <property name="os" value="Windows 10 64bit"/>
+         <property name="katalonVersion" value="5.3.0.1"/>
+         <property name="browser" value="Chrome 66.0.3359.181"/>
+         <property name="hostAddress" value="192.168.248.1"/>
+         <property name="sessionId" value="c418ecec07b5195a6e998dcb908356d6"/>
+         <property name="seleniumVersion" value="3.7.1"/>
+         <property name="proxyInformation" value="ProxyInformation{proxyOption=NO_PROXY, proxyServerType=HTTP, password=, proxyServerAddress=, proxyServerPort=0}"/>
+         <property name="platform" value="Windows 10"/>
+      </properties>
+      <testcase name="Test Cases/create new account from rootorg" classname="Test Cases/create new account from rootorg" status="PASSED">
+         <system-out><![CDATA[2018-05-30 11:48:54 - [TEST_CASE][PASSED] - Test Cases/create new account from rootorg: Test Cases/create new account from rootorg
+
+2018-05-30 11:48:55 - [TEST_STEP][PASSED] - openBrowser: Browser is opened with url: 'http://rootorg.admin.kademi-ci.co/'
+
+2018-05-30 11:49:11 - [MESSAGE][PASSED] - Browser is opened with url: 'http://rootorg.admin.kademi-ci.co/'
+
+2018-05-30 11:49:11 - [TEST_STEP][PASSED] - maximizeWindow: Current window maximized
+
+2018-05-30 11:49:12 - [MESSAGE][PASSED] - Current window maximized
+
+2018-05-30 11:49:12 - [TEST_STEP][PASSED] - setText: Text 'vlad@kademi.co' is set on object 'Object Repository/Kademi-vladtest22/input_email'
+
+2018-05-30 11:49:13 - [MESSAGE][PASSED] - Text 'vlad@kademi.co' is set on object 'Object Repository/Kademi-vladtest22/input_email'
+
+2018-05-30 11:49:13 - [TEST_STEP][PASSED] - setText: Text 'SMG_H&K_MP5k_PDW' is set on object 'Object Repository/Kademi-vladtest22/input_password'
+
+2018-05-30 11:49:13 - [MESSAGE][PASSED] - Text 'SMG_H&K_MP5k_PDW' is set on object 'Object Repository/Kademi-vladtest22/input_password'
+
+2018-05-30 11:49:13 - [TEST_STEP][PASSED] - sendKeys: Keys 'ENTER + ' sent to object: 'Object Repository/Kademi-vladtest22/input_password'
+
+2018-05-30 11:49:13 - [MESSAGE][PASSED] - Keys 'ENTER + ' sent to object: 'Object Repository/Kademi-vladtest22/input_password'
+
+2018-05-30 11:49:13 - [TEST_STEP][PASSED] - delay: Delayed 20 second(s)
+
+2018-05-30 11:49:33 - [MESSAGE][PASSED] - Delayed 20 second(s)
+
+2018-05-30 11:49:33 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/span_Groups  users' is clicked on
+
+2018-05-30 11:49:34 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/span_Groups  users' is clicked on
+
+2018-05-30 11:49:34 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/span_Organisations' is clicked on
+
+2018-05-30 11:49:39 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/span_Organisations' is clicked on
+
+2018-05-30 11:49:39 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/button_Tools' is clicked on
+
+2018-05-30 11:49:40 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/button_Tools' is clicked on
+
+2018-05-30 11:49:40 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/a_Create account' is clicked on
+
+2018-05-30 11:49:40 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/a_Create account' is clicked on
+
+2018-05-30 11:49:40 - [TEST_STEP][PASSED] - focus: Object: 'Object Repository/Kademi-vladtest22/div_modal-create-account' is focused
+
+2018-05-30 11:49:40 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/div_modal-create-account' is focused
+
+2018-05-30 11:49:40 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/input_title' is clicked on
+
+2018-05-30 11:49:41 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/input_title' is clicked on
+
+2018-05-30 11:49:41 - [TEST_STEP][PASSED] - sendKeys: Keys 'vladtest52b' sent to object: 'Object Repository/Kademi-vladtest22/input_title'
+
+2018-05-30 11:49:41 - [MESSAGE][PASSED] - Keys 'vladtest52b' sent to object: 'Object Repository/Kademi-vladtest22/input_title'
+
+2018-05-30 11:49:41 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/input_orgId' is clicked on
+
+2018-05-30 11:49:41 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/input_orgId' is clicked on
+
+2018-05-30 11:49:41 - [TEST_STEP][PASSED] - sendKeys: Keys 'vladtest52b' sent to object: 'Object Repository/Kademi-vladtest22/input_orgId'
+
+2018-05-30 11:49:41 - [MESSAGE][PASSED] - Keys 'vladtest52b' sent to object: 'Object Repository/Kademi-vladtest22/input_orgId'
+
+2018-05-30 11:49:41 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/button_Create' is clicked on
+
+2018-05-30 11:49:42 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/button_Create' is clicked on
+
+2018-05-30 11:49:42 - [TEST_STEP][PASSED] - delay: Delayed 15 second(s)
+
+2018-05-30 11:49:57 - [MESSAGE][PASSED] - Delayed 15 second(s)
+
+2018-05-30 11:49:57 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/span_Groups  users (1)' is clicked on
+
+2018-05-30 11:50:06 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/span_Groups  users (1)' is clicked on
+
+2018-05-30 11:50:06 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/span_Users' is clicked on
+
+2018-05-30 11:50:09 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/span_Users' is clicked on
+
+2018-05-30 11:50:09 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/a_Add new user' is clicked on
+
+2018-05-30 11:50:09 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/a_Add new user' is clicked on
+
+2018-05-30 11:50:09 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:50:10 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:50:10 - [TEST_STEP][PASSED] - focus: Object: 'Object Repository/kademi-vladtest/div_modal-new-user' is focused
+
+2018-05-30 11:50:10 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/div_modal-new-user' is focused
+
+2018-05-30 11:50:10 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/input_nickName' is clicked on
+
+2018-05-30 11:50:10 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/input_nickName' is clicked on
+
+2018-05-30 11:50:10 - [TEST_STEP][PASSED] - sendKeys: Keys 'adminqa' sent to object: 'Object Repository/Kademi-vladtest22/input_nickName'
+
+2018-05-30 11:50:11 - [MESSAGE][PASSED] - Keys 'adminqa' sent to object: 'Object Repository/Kademi-vladtest22/input_nickName'
+
+2018-05-30 11:50:11 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/input_firstName' is clicked on
+
+2018-05-30 11:50:11 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/input_firstName' is clicked on
+
+2018-05-30 11:50:11 - [TEST_STEP][PASSED] - sendKeys: Keys 'adminqa' sent to object: 'Object Repository/Kademi-vladtest22/input_firstName'
+
+2018-05-30 11:50:11 - [MESSAGE][PASSED] - Keys 'adminqa' sent to object: 'Object Repository/Kademi-vladtest22/input_firstName'
+
+2018-05-30 11:50:11 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/input_surName' is clicked on
+
+2018-05-30 11:50:11 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/input_surName' is clicked on
+
+2018-05-30 11:50:11 - [TEST_STEP][PASSED] - sendKeys: Keys 'adminqa' sent to object: 'Object Repository/Kademi-vladtest22/input_surName'
+
+2018-05-30 11:50:11 - [MESSAGE][PASSED] - Keys 'adminqa' sent to object: 'Object Repository/Kademi-vladtest22/input_surName'
+
+2018-05-30 11:50:11 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/input_email (1)' is clicked on
+
+2018-05-30 11:50:11 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/input_email (1)' is clicked on
+
+2018-05-30 11:50:11 - [TEST_STEP][PASSED] - sendKeys: Keys 'adminqa@mailinator.com' sent to object: 'Object Repository/Kademi-vladtest22/input_email (1)'
+
+2018-05-30 11:50:12 - [MESSAGE][PASSED] - Keys 'adminqa@mailinator.com' sent to object: 'Object Repository/Kademi-vladtest22/input_email (1)'
+
+2018-05-30 11:50:12 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/select_group' is clicked on
+
+2018-05-30 11:50:12 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/select_group' is clicked on
+
+2018-05-30 11:50:12 - [TEST_STEP][PASSED] - selectOptionByValue: All options with value 'administrator' are selected in object 'Object Repository/Kademi-vladtest22/select_group'  using regular expression
+
+2018-05-30 11:50:12 - [MESSAGE][PASSED] - All options with value 'administrator' are selected in object 'Object Repository/Kademi-vladtest22/select_group'  using regular expression
+
+2018-05-30 11:50:12 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/button_Create and view' is clicked on
+
+2018-05-30 11:50:12 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/button_Create and view' is clicked on
+
+2018-05-30 11:50:12 - [TEST_STEP][PASSED] - delay: Delayed 5 second(s)
+
+2018-05-30 11:50:17 - [MESSAGE][PASSED] - Delayed 5 second(s)
+
+2018-05-30 11:50:17 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/a_Profile' is clicked on
+
+2018-05-30 11:50:23 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/a_Profile' is clicked on
+
+2018-05-30 11:50:23 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:50:24 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:50:24 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/input_password (1)' is clicked on
+
+2018-05-30 11:50:24 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/input_password (1)' is clicked on
+
+2018-05-30 11:50:24 - [TEST_STEP][PASSED] - sendKeys: Keys 'Pa$$w0rd' sent to object: 'Object Repository/Kademi-vladtest22/input_password (1)'
+
+2018-05-30 11:50:24 - [MESSAGE][PASSED] - Keys 'Pa$$w0rd' sent to object: 'Object Repository/Kademi-vladtest22/input_password (1)'
+
+2018-05-30 11:50:24 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/input_confirmPassword' is clicked on
+
+2018-05-30 11:50:24 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/input_confirmPassword' is clicked on
+
+2018-05-30 11:50:24 - [TEST_STEP][PASSED] - sendKeys: Keys 'Pa$$w0rd' sent to object: 'Object Repository/Kademi-vladtest22/input_confirmPassword'
+
+2018-05-30 11:50:24 - [MESSAGE][PASSED] - Keys 'Pa$$w0rd' sent to object: 'Object Repository/Kademi-vladtest22/input_confirmPassword'
+
+2018-05-30 11:50:24 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Email-job-case/Page_Manage users/button_Save-user_edit_page' is clicked on
+
+2018-05-30 11:50:25 - [MESSAGE][PASSED] - Object: 'Object Repository/Email-job-case/Page_Manage users/button_Save-user_edit_page' is clicked on
+
+2018-05-30 11:50:25 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/span_adminqa' is clicked on
+
+2018-05-30 11:50:25 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/span_adminqa' is clicked on
+
+2018-05-30 11:50:25 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/a_Log Out' is clicked on
+
+2018-05-30 11:50:25 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/a_Log Out' is clicked on
+
+2018-05-30 11:50:25 - [TEST_STEP][PASSED] - sendKeys: Keys 'adminqa@mailinator.com' sent to object: 'Object Repository/Kademi-vladtest22/input_email'
+
+2018-05-30 11:50:28 - [MESSAGE][PASSED] - Keys 'adminqa@mailinator.com' sent to object: 'Object Repository/Kademi-vladtest22/input_email'
+
+2018-05-30 11:50:28 - [TEST_STEP][PASSED] - sendKeys: Keys 'Pa$$w0rd' sent to object: 'Object Repository/Kademi-vladtest22/input_password'
+
+2018-05-30 11:50:28 - [MESSAGE][PASSED] - Keys 'Pa$$w0rd' sent to object: 'Object Repository/Kademi-vladtest22/input_password'
+
+2018-05-30 11:50:28 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/button_Log in' is clicked on
+
+2018-05-30 11:50:28 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/button_Log in' is clicked on]]></system-out>
+         <system-err><![CDATA[]]></system-err>
+      </testcase>
+      <testcase name="Test Cases/create rewardstore and auctions" classname="Test Cases/create rewardstore and auctions" status="PASSED">
+         <system-out><![CDATA[2018-05-30 11:50:28 - [TEST_CASE][PASSED] - Test Cases/create rewardstore and auctions: Test Cases/create rewardstore and auctions
+
+2018-05-30 11:50:29 - [TEST_STEP][PASSED] - openBrowser: Browser is opened with url: 'http://vladtest52b.admin.kademi-ci.co'
+
+2018-05-30 11:50:29 - [MESSAGE][PASSED] - Concatenated string array: '['http://','vladtest52b','.admin.kademi-ci.co']' into 'http://vladtest52b.admin.kademi-ci.co'
+
+2018-05-30 11:50:29 - [MESSAGE][WARNING] - A browser is already opened. Closing browser and opening a new one
+
+2018-05-30 11:50:40 - [MESSAGE][PASSED] - Browser is opened with url: 'http://vladtest52b.admin.kademi-ci.co'
+
+2018-05-30 11:50:40 - [TEST_STEP][PASSED] - maximizeWindow: Current window maximized
+
+2018-05-30 11:50:41 - [MESSAGE][PASSED] - Current window maximized
+
+2018-05-30 11:50:41 - [TEST_STEP][PASSED] - setText: Text 'adminqa@mailinator.com' is set on object 'Object Repository/kademi-vladtest/input_email'
+
+2018-05-30 11:50:41 - [MESSAGE][PASSED] - Text 'adminqa@mailinator.com' is set on object 'Object Repository/kademi-vladtest/input_email'
+
+2018-05-30 11:50:41 - [TEST_STEP][PASSED] - setText: Text 'Pa$$w0rd' is set on object 'Object Repository/kademi-vladtest/input_password'
+
+2018-05-30 11:50:42 - [MESSAGE][PASSED] - Text 'Pa$$w0rd' is set on object 'Object Repository/kademi-vladtest/input_password'
+
+2018-05-30 11:50:42 - [TEST_STEP][PASSED] - sendKeys: Keys 'ENTER + ' sent to object: 'Object Repository/kademi-vladtest/input_password'
+
+2018-05-30 11:50:42 - [MESSAGE][PASSED] - Keys 'ENTER + ' sent to object: 'Object Repository/kademi-vladtest/input_password'
+
+2018-05-30 11:50:42 - [TEST_STEP][PASSED] - delay: Delayed 15 second(s)
+
+2018-05-30 11:50:57 - [MESSAGE][PASSED] - Delayed 15 second(s)
+
+2018-05-30 11:50:57 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/span_Website Manager' is clicked on
+
+2018-05-30 11:50:57 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/span_Website Manager' is clicked on
+
+2018-05-30 11:50:57 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/span_Websites' is clicked on
+
+2018-05-30 11:51:00 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/span_Websites' is clicked on
+
+2018-05-30 11:51:00 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/i_fa fa-plus (3)' is clicked on
+
+2018-05-30 11:51:00 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/i_fa fa-plus (3)' is clicked on
+
+2018-05-30 11:51:00 - [TEST_STEP][PASSED] - focus: Object: 'Object Repository/kademi-vladtest/div_                        Ad' is focused
+
+2018-05-30 11:51:01 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/div_                        Ad' is focused
+
+2018-05-30 11:51:01 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/input_newName' is clicked on
+
+2018-05-30 11:51:01 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/input_newName' is clicked on
+
+2018-05-30 11:51:01 - [TEST_STEP][PASSED] - sendKeys: Keys 'vladtest52baucstore' sent to object: 'Object Repository/kademi-vladtest/input_newName'
+
+2018-05-30 11:51:01 - [MESSAGE][PASSED] - Concatenated string array: '['vladtest52b','aucstore']' into 'vladtest52baucstore'
+
+2018-05-30 11:51:01 - [MESSAGE][PASSED] - Keys 'vladtest52baucstore' sent to object: 'Object Repository/kademi-vladtest/input_newName'
+
+2018-05-30 11:51:01 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/button_Create website' is clicked on
+
+2018-05-30 11:51:01 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/button_Create website' is clicked on
+
+2018-05-30 11:51:01 - [TEST_STEP][PASSED] - delay: Delayed 10 second(s)
+
+2018-05-30 11:51:11 - [MESSAGE][PASSED] - Delayed 10 second(s)
+
+2018-05-30 11:51:11 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/span_fa fa-cogs' is clicked on
+
+2018-05-30 11:51:26 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/span_fa fa-cogs' is clicked on
+
+2018-05-30 11:51:26 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/div_KRewardStore' is clicked on
+
+2018-05-30 11:51:28 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/div_KRewardStore' is clicked on
+
+2018-05-30 11:51:28 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/span_fa fa-cloud-download' is clicked on
+
+2018-05-30 11:51:28 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/span_fa fa-cloud-download' is clicked on
+
+2018-05-30 11:51:28 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:51:29 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:51:29 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/button_Install (1)' is clicked on
+
+2018-05-30 11:51:29 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/button_Install (1)' is clicked on
+
+2018-05-30 11:51:29 - [TEST_STEP][PASSED] - delay: Delayed 20 second(s)
+
+2018-05-30 11:51:49 - [MESSAGE][PASSED] - Delayed 20 second(s)
+
+2018-05-30 11:51:49 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/a_Back to website manager - correct' is clicked on
+
+2018-05-30 11:51:52 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/a_Back to website manager - correct' is clicked on
+
+2018-05-30 11:51:52 - [TEST_STEP][PASSED] - delay: Delayed 2 second(s)
+
+2018-05-30 11:51:54 - [MESSAGE][PASSED] - Delayed 2 second(s)
+
+2018-05-30 11:51:54 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/Details-tab-for-website-properties' is clicked on
+
+2018-05-30 11:51:55 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/Details-tab-for-website-properties' is clicked on
+
+2018-05-30 11:51:55 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/span_fa fa-cogs' is clicked on
+
+2018-05-30 11:51:56 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/span_fa fa-cogs' is clicked on
+
+2018-05-30 11:51:56 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/div_KAuctions' is clicked on
+
+2018-05-30 11:51:58 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/div_KAuctions' is clicked on
+
+2018-05-30 11:51:58 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/span_fa fa-cloud-download' is clicked on
+
+2018-05-30 11:51:59 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/span_fa fa-cloud-download' is clicked on
+
+2018-05-30 11:51:59 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:52:00 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:52:00 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/button_Install (1)' is clicked on
+
+2018-05-30 11:52:00 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/button_Install (1)' is clicked on]]></system-out>
+         <system-err><![CDATA[]]></system-err>
+      </testcase>
+      <testcase name="Test Cases/Upload users, orgs and types" classname="Test Cases/Upload users, orgs and types" status="PASSED">
+         <system-out><![CDATA[2018-05-30 11:52:00 - [TEST_CASE][PASSED] - Test Cases/Upload users, orgs and types: Test Cases/Upload users, orgs and types
+
+2018-05-30 11:52:00 - [TEST_STEP][PASSED] - openBrowser: Browser is opened with url: 'http://vladtest52b.admin.kademi-ci.co'
+
+2018-05-30 11:52:00 - [MESSAGE][PASSED] - Concatenated string array: '['http://','vladtest52b','.admin.kademi-ci.co']' into 'http://vladtest52b.admin.kademi-ci.co'
+
+2018-05-30 11:52:00 - [MESSAGE][WARNING] - A browser is already opened. Closing browser and opening a new one
+
+2018-05-30 11:52:11 - [MESSAGE][PASSED] - Browser is opened with url: 'http://vladtest52b.admin.kademi-ci.co'
+
+2018-05-30 11:52:11 - [TEST_STEP][PASSED] - maximizeWindow: Current window maximized
+
+2018-05-30 11:52:12 - [MESSAGE][PASSED] - Current window maximized
+
+2018-05-30 11:52:12 - [TEST_STEP][PASSED] - setText: Text 'adminqa@mailinator.com' is set on object 'Object Repository/kademi-vladtest/input_email'
+
+2018-05-30 11:52:13 - [MESSAGE][PASSED] - Text 'adminqa@mailinator.com' is set on object 'Object Repository/kademi-vladtest/input_email'
+
+2018-05-30 11:52:13 - [TEST_STEP][PASSED] - setText: Text 'Pa$$w0rd' is set on object 'Object Repository/kademi-vladtest/input_password'
+
+2018-05-30 11:52:13 - [MESSAGE][PASSED] - Text 'Pa$$w0rd' is set on object 'Object Repository/kademi-vladtest/input_password'
+
+2018-05-30 11:52:13 - [TEST_STEP][PASSED] - sendKeys: Keys 'ENTER + ' sent to object: 'Object Repository/kademi-vladtest/input_password'
+
+2018-05-30 11:52:13 - [MESSAGE][PASSED] - Keys 'ENTER + ' sent to object: 'Object Repository/kademi-vladtest/input_password'
+
+2018-05-30 11:52:13 - [TEST_STEP][PASSED] - delay: Delayed 20 second(s)
+
+2018-05-30 11:52:33 - [MESSAGE][PASSED] - Delayed 20 second(s)
+
+2018-05-30 11:52:33 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/span_Groups  users' is clicked on
+
+2018-05-30 11:52:33 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/span_Groups  users' is clicked on
+
+2018-05-30 11:52:33 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:52:34 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:52:34 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/span_Users' is clicked on
+
+2018-05-30 11:52:37 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/span_Users' is clicked on
+
+2018-05-30 11:52:37 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:52:38 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:52:38 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/Page_Manage users/button_Tools_users_page' is clicked on
+
+2018-05-30 11:52:38 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/Page_Manage users/button_Tools_users_page' is clicked on
+
+2018-05-30 11:52:38 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:52:39 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:52:39 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/Page_Manage users/a_Import  remove users_users_page' is clicked on
+
+2018-05-30 11:52:41 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/Page_Manage users/a_Import  remove users_users_page' is clicked on
+
+2018-05-30 11:52:41 - [TEST_STEP][PASSED] - delay: Delayed 5 second(s)
+
+2018-05-30 11:52:46 - [MESSAGE][PASSED] - Delayed 5 second(s)
+
+2018-05-30 11:52:46 - [TEST_STEP][PASSED] - upload.Uploader.uploadFile: upload.Uploader.uploadFile is PASSED
+
+2018-05-30 11:52:47 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/span_Upload CSV XLS XLSX' is clicked on
+
+2018-05-30 11:52:51 - [MESSAGE][PASSED] - upload.Uploader.uploadFile is PASSED
+
+2018-05-30 11:52:51 - [TEST_STEP][PASSED] - delay: Delayed 5 second(s)
+
+2018-05-30 11:52:56 - [MESSAGE][PASSED] - Delayed 5 second(s)
+
+2018-05-30 11:52:56 - [TEST_STEP][NOT_RUN] - click: NOT_RUN: click
+
+2018-05-30 11:52:56 - [MESSAGE][NOT_RUN] - NOT_RUN: click
+
+2018-05-30 11:52:56 - [TEST_STEP][NOT_RUN] - delay: NOT_RUN: delay
+
+2018-05-30 11:52:56 - [MESSAGE][NOT_RUN] - NOT_RUN: delay
+
+2018-05-30 11:52:56 - [TEST_STEP][PASSED] - selectOptionByValue: All options with value 'participants' are selected in object 'Object Repository/Import-users-orgs/Page_Users Uploader/select_No default group_Group_selector'  using regular expression
+
+2018-05-30 11:52:57 - [MESSAGE][PASSED] - All options with value 'participants' are selected in object 'Object Repository/Import-users-orgs/Page_Users Uploader/select_No default group_Group_selector'  using regular expression
+
+2018-05-30 11:52:57 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/button_Next_uploaders' is clicked on
+
+2018-05-30 11:52:57 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/button_Next_uploaders' is clicked on
+
+2018-05-30 11:52:57 - [TEST_STEP][PASSED] - delay: Delayed 5 second(s)
+
+2018-05-30 11:53:02 - [MESSAGE][PASSED] - Delayed 5 second(s)
+
+2018-05-30 11:53:02 - [TEST_STEP][NOT_RUN] - click: NOT_RUN: click
+
+2018-05-30 11:53:02 - [MESSAGE][NOT_RUN] - NOT_RUN: click
+
+2018-05-30 11:53:02 - [TEST_STEP][NOT_RUN] - selectOptionByLabel: NOT_RUN: selectOptionByLabel
+
+2018-05-30 11:53:02 - [MESSAGE][NOT_RUN] - NOT_RUN: selectOptionByLabel
+
+2018-05-30 11:53:02 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-1' is clicked on
+
+2018-05-30 11:53:03 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-1' is clicked on
+
+2018-05-30 11:53:03 - [TEST_STEP][PASSED] - selectOptionByLabel: All options with label 'User ID' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-1'  using regular expression
+
+2018-05-30 11:53:04 - [MESSAGE][PASSED] - All options with label 'User ID' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-1'  using regular expression
+
+2018-05-30 11:53:04 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-2' is clicked on
+
+2018-05-30 11:53:04 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-2' is clicked on
+
+2018-05-30 11:53:04 - [TEST_STEP][PASSED] - selectOptionByLabel: All options with label 'Nickname' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-2'  using regular expression
+
+2018-05-30 11:53:05 - [MESSAGE][PASSED] - All options with label 'Nickname' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-2'  using regular expression
+
+2018-05-30 11:53:05 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-3' is clicked on
+
+2018-05-30 11:53:05 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-3' is clicked on
+
+2018-05-30 11:53:05 - [TEST_STEP][PASSED] - selectOptionByLabel: All options with label 'Email' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-3'  using regular expression
+
+2018-05-30 11:53:06 - [MESSAGE][PASSED] - All options with label 'Email' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-3'  using regular expression
+
+2018-05-30 11:53:06 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-4' is clicked on
+
+2018-05-30 11:53:07 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-4' is clicked on
+
+2018-05-30 11:53:07 - [TEST_STEP][PASSED] - selectOptionByLabel: All options with label 'First Name' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-4'  using regular expression
+
+2018-05-30 11:53:07 - [MESSAGE][PASSED] - All options with label 'First Name' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-4'  using regular expression
+
+2018-05-30 11:53:07 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-5' is clicked on
+
+2018-05-30 11:53:08 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-5' is clicked on
+
+2018-05-30 11:53:08 - [TEST_STEP][PASSED] - selectOptionByLabel: All options with label 'Last Name' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-5'  using regular expression
+
+2018-05-30 11:53:09 - [MESSAGE][PASSED] - All options with label 'Last Name' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-5'  using regular expression
+
+2018-05-30 11:53:09 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-6' is clicked on
+
+2018-05-30 11:53:09 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-6' is clicked on
+
+2018-05-30 11:53:09 - [TEST_STEP][PASSED] - selectOptionByLabel: All options with label 'Phone' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-6'  using regular expression
+
+2018-05-30 11:53:10 - [MESSAGE][PASSED] - All options with label 'Phone' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-6'  using regular expression
+
+2018-05-30 11:53:10 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:53:11 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:53:11 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/button_Next_uploaders' is clicked on
+
+2018-05-30 11:53:11 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/button_Next_uploaders' is clicked on
+
+2018-05-30 11:53:11 - [TEST_STEP][PASSED] - delay: Delayed 10 second(s)
+
+2018-05-30 11:53:21 - [MESSAGE][PASSED] - Delayed 10 second(s)
+
+2018-05-30 11:53:21 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/button_Import now_uploader' is clicked on
+
+2018-05-30 11:53:21 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/button_Import now_uploader' is clicked on
+
+2018-05-30 11:53:21 - [TEST_STEP][PASSED] - delay: Delayed 60 second(s)
+
+2018-05-30 11:54:21 - [MESSAGE][PASSED] - Delayed 60 second(s)
+
+2018-05-30 11:54:21 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/span_Dashboard' is clicked on
+
+2018-05-30 11:54:23 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/span_Dashboard' is clicked on
+
+2018-05-30 11:54:23 - [TEST_STEP][PASSED] - delay: Delayed 5 second(s)
+
+2018-05-30 11:54:28 - [MESSAGE][PASSED] - Delayed 5 second(s)
+
+2018-05-30 11:54:28 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/span_Groups  users' is clicked on
+
+2018-05-30 11:54:29 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/span_Groups  users' is clicked on
+
+2018-05-30 11:54:29 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:54:30 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:54:30 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/span_Organisation Types' is clicked on
+
+2018-05-30 11:54:32 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/span_Organisation Types' is clicked on
+
+2018-05-30 11:54:32 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:54:33 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:54:33 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/a_Add new organization types' is clicked on
+
+2018-05-30 11:54:33 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/a_Add new organization types' is clicked on
+
+2018-05-30 11:54:33 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:54:34 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:54:34 - [TEST_STEP][PASSED] - focus: Object: 'Object Repository/Import-users-orgs/div_orgype-creation-modal' is focused
+
+2018-05-30 11:54:34 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/div_orgype-creation-modal' is focused
+
+2018-05-30 11:54:34 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/input_orgtype_name' is clicked on
+
+2018-05-30 11:54:34 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/input_orgtype_name' is clicked on
+
+2018-05-30 11:54:34 - [TEST_STEP][PASSED] - sendKeys: Keys 'LG' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_name'
+
+2018-05-30 11:54:34 - [MESSAGE][PASSED] - Keys 'LG' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_name'
+
+2018-05-30 11:54:34 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/input_orgtype_displayName' is clicked on
+
+2018-05-30 11:54:35 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/input_orgtype_displayName' is clicked on
+
+2018-05-30 11:54:35 - [TEST_STEP][PASSED] - sendKeys: Keys 'Large' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_displayName'
+
+2018-05-30 11:54:35 - [MESSAGE][PASSED] - Keys 'Large' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_displayName'
+
+2018-05-30 11:54:35 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/button_Save_orgtype' is clicked on
+
+2018-05-30 11:54:35 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/button_Save_orgtype' is clicked on
+
+2018-05-30 11:54:35 - [TEST_STEP][PASSED] - delay: Delayed 3 second(s)
+
+2018-05-30 11:54:38 - [MESSAGE][PASSED] - Delayed 3 second(s)
+
+2018-05-30 11:54:38 - [TEST_STEP][PASSED] - refresh: Refresh successfully
+
+2018-05-30 11:54:39 - [MESSAGE][PASSED] - Refresh successfully
+
+2018-05-30 11:54:39 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/a_Add new organization types' is clicked on
+
+2018-05-30 11:54:39 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/a_Add new organization types' is clicked on
+
+2018-05-30 11:54:39 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:54:40 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:54:40 - [TEST_STEP][PASSED] - focus: Object: 'Object Repository/Import-users-orgs/div_orgype-creation-modal' is focused
+
+2018-05-30 11:54:40 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/div_orgype-creation-modal' is focused
+
+2018-05-30 11:54:40 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/input_orgtype_name' is clicked on
+
+2018-05-30 11:54:40 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/input_orgtype_name' is clicked on
+
+2018-05-30 11:54:40 - [TEST_STEP][PASSED] - sendKeys: Keys 'MD' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_name'
+
+2018-05-30 11:54:40 - [MESSAGE][PASSED] - Keys 'MD' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_name'
+
+2018-05-30 11:54:40 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/input_orgtype_displayName' is clicked on
+
+2018-05-30 11:54:40 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/input_orgtype_displayName' is clicked on
+
+2018-05-30 11:54:40 - [TEST_STEP][PASSED] - sendKeys: Keys 'Medium' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_displayName'
+
+2018-05-30 11:54:41 - [MESSAGE][PASSED] - Keys 'Medium' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_displayName'
+
+2018-05-30 11:54:41 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/button_Save_orgtype' is clicked on
+
+2018-05-30 11:54:41 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/button_Save_orgtype' is clicked on
+
+2018-05-30 11:54:41 - [TEST_STEP][PASSED] - delay: Delayed 3 second(s)
+
+2018-05-30 11:54:44 - [MESSAGE][PASSED] - Delayed 3 second(s)
+
+2018-05-30 11:54:44 - [TEST_STEP][PASSED] - refresh: Refresh successfully
+
+2018-05-30 11:54:47 - [MESSAGE][PASSED] - Refresh successfully
+
+2018-05-30 11:54:47 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/a_Add new organization types' is clicked on
+
+2018-05-30 11:54:47 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/a_Add new organization types' is clicked on
+
+2018-05-30 11:54:47 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:54:48 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:54:48 - [TEST_STEP][PASSED] - focus: Object: 'Object Repository/Import-users-orgs/div_orgype-creation-modal' is focused
+
+2018-05-30 11:54:48 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/div_orgype-creation-modal' is focused
+
+2018-05-30 11:54:48 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/input_orgtype_name' is clicked on
+
+2018-05-30 11:54:48 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/input_orgtype_name' is clicked on
+
+2018-05-30 11:54:48 - [TEST_STEP][PASSED] - sendKeys: Keys 'SM' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_name'
+
+2018-05-30 11:54:48 - [MESSAGE][PASSED] - Keys 'SM' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_name'
+
+2018-05-30 11:54:48 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/input_orgtype_displayName' is clicked on
+
+2018-05-30 11:54:48 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/input_orgtype_displayName' is clicked on
+
+2018-05-30 11:54:48 - [TEST_STEP][PASSED] - sendKeys: Keys 'Small' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_displayName'
+
+2018-05-30 11:54:49 - [MESSAGE][PASSED] - Keys 'Small' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_displayName'
+
+2018-05-30 11:54:49 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/button_Save_orgtype' is clicked on
+
+2018-05-30 11:54:49 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/button_Save_orgtype' is clicked on
+
+2018-05-30 11:54:49 - [TEST_STEP][PASSED] - delay: Delayed 3 second(s)
+
+2018-05-30 11:54:52 - [MESSAGE][PASSED] - Delayed 3 second(s)
+
+2018-05-30 11:54:52 - [TEST_STEP][PASSED] - refresh: Refresh successfully
+
+2018-05-30 11:54:54 - [MESSAGE][PASSED] - Refresh successfully
+
+2018-05-30 11:54:54 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/a_Add new organization types' is clicked on
+
+2018-05-30 11:54:54 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/a_Add new organization types' is clicked on
+
+2018-05-30 11:54:54 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:54:55 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:54:55 - [TEST_STEP][PASSED] - focus: Object: 'Object Repository/Import-users-orgs/div_orgype-creation-modal' is focused
+
+2018-05-30 11:54:55 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/div_orgype-creation-modal' is focused
+
+2018-05-30 11:54:55 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/input_orgtype_name' is clicked on
+
+2018-05-30 11:54:55 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/input_orgtype_name' is clicked on
+
+2018-05-30 11:54:55 - [TEST_STEP][PASSED] - sendKeys: Keys 'YLW' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_name'
+
+2018-05-30 11:54:55 - [MESSAGE][PASSED] - Keys 'YLW' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_name'
+
+2018-05-30 11:54:55 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/input_orgtype_displayName' is clicked on
+
+2018-05-30 11:54:55 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/input_orgtype_displayName' is clicked on
+
+2018-05-30 11:54:55 - [TEST_STEP][PASSED] - sendKeys: Keys 'Yellow' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_displayName'
+
+2018-05-30 11:54:55 - [MESSAGE][PASSED] - Keys 'Yellow' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_displayName'
+
+2018-05-30 11:54:55 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/button_Save_orgtype' is clicked on
+
+2018-05-30 11:54:56 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/button_Save_orgtype' is clicked on
+
+2018-05-30 11:54:56 - [TEST_STEP][PASSED] - delay: Delayed 3 second(s)
+
+2018-05-30 11:54:59 - [MESSAGE][PASSED] - Delayed 3 second(s)
+
+2018-05-30 11:54:59 - [TEST_STEP][PASSED] - refresh: Refresh successfully
+
+2018-05-30 11:55:00 - [MESSAGE][PASSED] - Refresh successfully
+
+2018-05-30 11:55:00 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/a_Add new organization types' is clicked on
+
+2018-05-30 11:55:00 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/a_Add new organization types' is clicked on
+
+2018-05-30 11:55:00 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:55:01 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:55:01 - [TEST_STEP][PASSED] - focus: Object: 'Object Repository/Import-users-orgs/div_orgype-creation-modal' is focused
+
+2018-05-30 11:55:01 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/div_orgype-creation-modal' is focused
+
+2018-05-30 11:55:01 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/input_orgtype_name' is clicked on
+
+2018-05-30 11:55:01 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/input_orgtype_name' is clicked on
+
+2018-05-30 11:55:01 - [TEST_STEP][PASSED] - sendKeys: Keys 'BLK' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_name'
+
+2018-05-30 11:55:01 - [MESSAGE][PASSED] - Keys 'BLK' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_name'
+
+2018-05-30 11:55:01 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/input_orgtype_displayName' is clicked on
+
+2018-05-30 11:55:01 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/input_orgtype_displayName' is clicked on
+
+2018-05-30 11:55:01 - [TEST_STEP][PASSED] - sendKeys: Keys 'Black' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_displayName'
+
+2018-05-30 11:55:01 - [MESSAGE][PASSED] - Keys 'Black' sent to object: 'Object Repository/Import-users-orgs/input_orgtype_displayName'
+
+2018-05-30 11:55:01 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/button_Save_orgtype' is clicked on
+
+2018-05-30 11:55:01 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/button_Save_orgtype' is clicked on
+
+2018-05-30 11:55:01 - [TEST_STEP][PASSED] - delay: Delayed 3 second(s)
+
+2018-05-30 11:55:04 - [MESSAGE][PASSED] - Delayed 3 second(s)
+
+2018-05-30 11:55:04 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/span_Dashboard' is clicked on
+
+2018-05-30 11:55:07 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/span_Dashboard' is clicked on
+
+2018-05-30 11:55:07 - [TEST_STEP][PASSED] - delay: Delayed 5 second(s)
+
+2018-05-30 11:55:12 - [MESSAGE][PASSED] - Delayed 5 second(s)
+
+2018-05-30 11:55:12 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/span_Groups  users' is clicked on
+
+2018-05-30 11:55:12 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/span_Groups  users' is clicked on
+
+2018-05-30 11:55:12 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:55:13 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:55:13 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/span_Organisations' is clicked on
+
+2018-05-30 11:55:16 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/span_Organisations' is clicked on
+
+2018-05-30 11:55:16 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:55:17 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:55:17 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/button_Tools_Organisations_page' is clicked on
+
+2018-05-30 11:55:17 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/button_Tools_Organisations_page' is clicked on
+
+2018-05-30 11:55:17 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:55:18 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:55:18 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Import-users-orgs/a_Import wizard_organisations' is clicked on
+
+2018-05-30 11:55:19 - [MESSAGE][PASSED] - Object: 'Object Repository/Import-users-orgs/a_Import wizard_organisations' is clicked on
+
+2018-05-30 11:55:19 - [TEST_STEP][PASSED] - delay: Delayed 5 second(s)
+
+2018-05-30 11:55:24 - [MESSAGE][PASSED] - Delayed 5 second(s)
+
+2018-05-30 11:55:24 - [TEST_STEP][PASSED] - upload.Uploader.uploadFile: upload.Uploader.uploadFile is PASSED
+
+2018-05-30 11:55:24 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/span_Upload CSV XLS XLSX' is clicked on
+
+2018-05-30 11:55:27 - [MESSAGE][PASSED] - upload.Uploader.uploadFile is PASSED
+
+2018-05-30 11:55:27 - [TEST_STEP][PASSED] - delay: Delayed 5 second(s)
+
+2018-05-30 11:55:32 - [MESSAGE][PASSED] - Delayed 5 second(s)
+
+2018-05-30 11:55:32 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/button_Next_uploaders' is clicked on
+
+2018-05-30 11:55:32 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/button_Next_uploaders' is clicked on
+
+2018-05-30 11:55:32 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:55:33 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:55:33 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/button_Next_uploaders' is clicked on
+
+2018-05-30 11:55:33 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/button_Next_uploaders' is clicked on
+
+2018-05-30 11:55:33 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:55:34 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:55:34 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-0' is clicked on
+
+2018-05-30 11:55:35 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-0' is clicked on
+
+2018-05-30 11:55:35 - [TEST_STEP][PASSED] - selectOptionByLabel: All options with label 'Org ID' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-0'  using regular expression
+
+2018-05-30 11:55:35 - [MESSAGE][PASSED] - All options with label 'Org ID' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-0'  using regular expression
+
+2018-05-30 11:55:35 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-1' is clicked on
+
+2018-05-30 11:55:36 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-1' is clicked on
+
+2018-05-30 11:55:36 - [TEST_STEP][PASSED] - selectOptionByLabel: All options with label 'Type' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-1'  using regular expression
+
+2018-05-30 11:55:36 - [MESSAGE][PASSED] - All options with label 'Type' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-1'  using regular expression
+
+2018-05-30 11:55:36 - [TEST_STEP][NOT_RUN] - click: NOT_RUN: click
+
+2018-05-30 11:55:36 - [MESSAGE][NOT_RUN] - NOT_RUN: click
+
+2018-05-30 11:55:36 - [TEST_STEP][NOT_RUN] - selectOptionByLabel: NOT_RUN: selectOptionByLabel
+
+2018-05-30 11:55:36 - [MESSAGE][NOT_RUN] - NOT_RUN: selectOptionByLabel
+
+2018-05-30 11:55:36 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-3' is clicked on
+
+2018-05-30 11:55:37 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-3' is clicked on
+
+2018-05-30 11:55:37 - [TEST_STEP][PASSED] - selectOptionByLabel: All options with label 'Name' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-3'  using regular expression
+
+2018-05-30 11:55:37 - [MESSAGE][PASSED] - All options with label 'Name' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-3'  using regular expression
+
+2018-05-30 11:55:37 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-4' is clicked on
+
+2018-05-30 11:55:37 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-4' is clicked on
+
+2018-05-30 11:55:37 - [TEST_STEP][PASSED] - selectOptionByLabel: All options with label 'Address' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-4'  using regular expression
+
+2018-05-30 11:55:38 - [MESSAGE][PASSED] - All options with label 'Address' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-4'  using regular expression
+
+2018-05-30 11:55:38 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-5' is clicked on
+
+2018-05-30 11:55:38 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-5' is clicked on
+
+2018-05-30 11:55:38 - [TEST_STEP][PASSED] - selectOptionByLabel: All options with label 'Address Line2' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-5'  using regular expression
+
+2018-05-30 11:55:39 - [MESSAGE][PASSED] - All options with label 'Address Line2' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-5'  using regular expression
+
+2018-05-30 11:55:39 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-6' is clicked on
+
+2018-05-30 11:55:39 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-6' is clicked on
+
+2018-05-30 11:55:39 - [TEST_STEP][PASSED] - selectOptionByLabel: All options with label 'State' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-6'  using regular expression
+
+2018-05-30 11:55:40 - [MESSAGE][PASSED] - All options with label 'State' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-6'  using regular expression
+
+2018-05-30 11:55:40 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-7' is clicked on
+
+2018-05-30 11:55:40 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-7' is clicked on
+
+2018-05-30 11:55:40 - [TEST_STEP][PASSED] - selectOptionByLabel: All options with label 'Phone' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-7'  using regular expression
+
+2018-05-30 11:55:41 - [MESSAGE][PASSED] - All options with label 'Phone' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-7'  using regular expression
+
+2018-05-30 11:55:41 - [TEST_STEP][NOT_RUN] - click: NOT_RUN: click
+
+2018-05-30 11:55:41 - [MESSAGE][NOT_RUN] - NOT_RUN: click
+
+2018-05-30 11:55:41 - [TEST_STEP][NOT_RUN] - selectOptionByLabel: NOT_RUN: selectOptionByLabel
+
+2018-05-30 11:55:41 - [MESSAGE][NOT_RUN] - NOT_RUN: selectOptionByLabel
+
+2018-05-30 11:55:41 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-9' is clicked on
+
+2018-05-30 11:55:41 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-9' is clicked on
+
+2018-05-30 11:55:41 - [TEST_STEP][PASSED] - selectOptionByLabel: All options with label 'Country' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-9'  using regular expression
+
+2018-05-30 11:55:42 - [MESSAGE][PASSED] - All options with label 'Country' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-9'  using regular expression
+
+2018-05-30 11:55:42 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-10' is clicked on
+
+2018-05-30 11:55:42 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-10' is clicked on
+
+2018-05-30 11:55:42 - [TEST_STEP][PASSED] - selectOptionByLabel: All options with label 'Email' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-10'  using regular expression
+
+2018-05-30 11:55:43 - [MESSAGE][PASSED] - All options with label 'Email' are selected in object 'Object Repository/products-add-upload/Page_Products Uploader/select_Do not importBase CostB-10'  using regular expression
+
+2018-05-30 11:55:43 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:55:44 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:55:44 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/button_Next_uploaders' is clicked on
+
+2018-05-30 11:55:44 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/button_Next_uploaders' is clicked on
+
+2018-05-30 11:55:44 - [TEST_STEP][PASSED] - delay: Delayed 10 second(s)
+
+2018-05-30 11:55:54 - [MESSAGE][PASSED] - Delayed 10 second(s)
+
+2018-05-30 11:55:54 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_Products Uploader/button_Import now_uploader' is clicked on
+
+2018-05-30 11:55:54 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_Products Uploader/button_Import now_uploader' is clicked on
+
+2018-05-30 11:55:54 - [TEST_STEP][PASSED] - delay: Delayed 30 second(s)
+
+2018-05-30 11:56:24 - [MESSAGE][PASSED] - Delayed 30 second(s)
+
+2018-05-30 11:56:24 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/kademi-vladtest/span_Dashboard' is clicked on
+
+2018-05-30 11:56:25 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/span_Dashboard' is clicked on]]></system-out>
+         <system-err><![CDATA[]]></system-err>
+      </testcase>
+      <testcase name="Test Cases/Upload products and categories" classname="Test Cases/Upload products and categories" status="FAILED">
+         <failure type="FAILED" message="Unable to click on object 'Object Repository/products-add-upload/Page_Reward Stores/a_Manage_reward_store' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/products-add-upload/Page_Reward Stores/a_Manage_reward_store' located by 'By.xpath: //a[(text() = ' Manage' or . = ' Manage')]' not found)"/>
+         <system-out><![CDATA[2018-05-30 11:56:25 - [TEST_CASE][FAILED] - Test Cases/Upload products and categories: Test Cases/Upload products and categories FAILED because (of) Unable to click on object 'Object Repository/products-add-upload/Page_Reward Stores/a_Manage_reward_store' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/products-add-upload/Page_Reward Stores/a_Manage_reward_store' located by 'By.xpath: //a[(text() = ' Manage' or . = ' Manage')]' not found)
+
+2018-05-30 11:56:26 - [TEST_STEP][PASSED] - openBrowser: Browser is opened with url: 'http://vladtest52b.admin.kademi-ci.co'
+
+2018-05-30 11:56:26 - [MESSAGE][PASSED] - Concatenated string array: '['http://','vladtest52b','.admin.kademi-ci.co']' into 'http://vladtest52b.admin.kademi-ci.co'
+
+2018-05-30 11:56:26 - [MESSAGE][WARNING] - A browser is already opened. Closing browser and opening a new one
+
+2018-05-30 11:56:34 - [MESSAGE][PASSED] - Browser is opened with url: 'http://vladtest52b.admin.kademi-ci.co'
+
+2018-05-30 11:56:34 - [TEST_STEP][PASSED] - maximizeWindow: Current window maximized
+
+2018-05-30 11:56:36 - [MESSAGE][PASSED] - Current window maximized
+
+2018-05-30 11:56:36 - [TEST_STEP][PASSED] - setText: Text 'adminqa@mailinator.com' is set on object 'Object Repository/kademi-vladtest/input_email'
+
+2018-05-30 11:56:36 - [MESSAGE][PASSED] - Text 'adminqa@mailinator.com' is set on object 'Object Repository/kademi-vladtest/input_email'
+
+2018-05-30 11:56:36 - [TEST_STEP][PASSED] - setText: Text 'Pa$$w0rd' is set on object 'Object Repository/kademi-vladtest/input_password'
+
+2018-05-30 11:56:36 - [MESSAGE][PASSED] - Text 'Pa$$w0rd' is set on object 'Object Repository/kademi-vladtest/input_password'
+
+2018-05-30 11:56:36 - [TEST_STEP][PASSED] - sendKeys: Keys 'ENTER + ' sent to object: 'Object Repository/kademi-vladtest/input_password'
+
+2018-05-30 11:56:36 - [MESSAGE][PASSED] - Keys 'ENTER + ' sent to object: 'Object Repository/kademi-vladtest/input_password'
+
+2018-05-30 11:56:36 - [TEST_STEP][PASSED] - delay: Delayed 20 second(s)
+
+2018-05-30 11:56:56 - [MESSAGE][PASSED] - Delayed 20 second(s)
+
+2018-05-30 11:56:56 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_vladtest49c Dashboard/span_Products  Stores' is clicked on
+
+2018-05-30 11:56:56 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_vladtest49c Dashboard/span_Products  Stores' is clicked on
+
+2018-05-30 11:56:56 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:56:57 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:56:57 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/products-add-upload/Page_vladtest49c Dashboard/span_Reward stores' is clicked on
+
+2018-05-30 11:57:01 - [MESSAGE][PASSED] - Object: 'Object Repository/products-add-upload/Page_vladtest49c Dashboard/span_Reward stores' is clicked on
+
+2018-05-30 11:57:01 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-05-30 11:57:02 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-05-30 11:57:02 - [TEST_STEP][FAILED] - click: Unable to click on object 'Object Repository/products-add-upload/Page_Reward Stores/a_Manage_reward_store' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/products-add-upload/Page_Reward Stores/a_Manage_reward_store' located by 'By.xpath: //a[(text() = ' Manage' or . = ' Manage')]' not found)
+
+2018-05-30 11:57:33 - [MESSAGE][FAILED] - Unable to click on object 'Object Repository/products-add-upload/Page_Reward Stores/a_Manage_reward_store' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/products-add-upload/Page_Reward Stores/a_Manage_reward_store' located by 'By.xpath: //a[(text() = ' Manage' or . = ' Manage')]' not found)
+[[ATTACHMENT|D:\\kademi\\Katalon\\Kademi_next\\Kademi\\Reports\\Reward store setup\\20180530_114843\\1527670653005.png]]]]></system-out>
+         <system-err><![CDATA[2018-05-30 11:56:25 - [TEST_CASE][FAILED] - Test Cases/Upload products and categories: Test Cases/Upload products and categories FAILED because (of) Unable to click on object 'Object Repository/products-add-upload/Page_Reward Stores/a_Manage_reward_store' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/products-add-upload/Page_Reward Stores/a_Manage_reward_store' located by 'By.xpath: //a[(text() = ' Manage' or . = ' Manage')]' not found)]]></system-err>
+      </testcase>
+      <system-out><![CDATA[2018-05-30 11:48:54 - [TEST_SUITE][FAILED] - Reward store setup: Test Cases/Upload products and categories FAILED because (of) Unable to click on object 'Object Repository/products-add-upload/Page_Reward Stores/a_Manage_reward_store' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/products-add-upload/Page_Reward Stores/a_Manage_reward_store' located by 'By.xpath: //a[(text() = ' Manage' or . = ' Manage')]' not found)]]></system-out>
+      <system-err><![CDATA[2018-05-30 11:48:54 - [TEST_SUITE][FAILED] - Reward store setup: Test Cases/Upload products and categories FAILED because (of) Unable to click on object 'Object Repository/products-add-upload/Page_Reward Stores/a_Manage_reward_store' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/products-add-upload/Page_Reward Stores/a_Manage_reward_store' located by 'By.xpath: //a[(text() = ' Manage' or . = ' Manage')]' not found)]]></system-err>
+   </testsuite>
+</testsuites>

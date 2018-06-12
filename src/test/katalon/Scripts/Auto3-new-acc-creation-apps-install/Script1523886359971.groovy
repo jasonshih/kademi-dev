@@ -110,7 +110,7 @@ WebUI.click(findTestObject('Kademi-vladtest22/input_confirmPassword'), FailureHa
 
 WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_confirmPassword'), GlobalVariable.admin_password)
 
-WebUI.click(findTestObject('Kademi-vladtest22/button_Save'))
+WebUI.click(findTestObject('Email-job-case/Page_Manage users/button_Save-user_edit_page'))
 
 WebUI.delay(5)
 

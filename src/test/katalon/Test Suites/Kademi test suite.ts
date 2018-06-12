@@ -4,41 +4,35 @@
    <name>Kademi test suite</name>
    <tag></tag>
    <isRerun>false</isRerun>
-   <lastRun>2018-04-20T15:24:10</lastRun>
+   <lastRun>2018-06-12T15:27:51</lastRun>
    <mailRecipient></mailRecipient>
    <numberOfRerun>0</numberOfRerun>
    <pageLoadTimeout>30</pageLoadTimeout>
    <pageLoadTimeoutDefault>true</pageLoadTimeoutDefault>
    <rerunFailedTestCasesOnly>false</rerunFailedTestCasesOnly>
-   <testSuiteGuid>0722d8be-71f2-4f4a-8565-98c5e3b5eaec</testSuiteGuid>
+   <testSuiteGuid>c2efcab4-a00a-4cc5-8cc5-48c834ce6ad1</testSuiteGuid>
    <testCaseLink>
-      <guid>687039a3-bc94-4076-8023-636bdac866e2</guid>
+      <guid>17b7dee2-442c-4fb5-b7b0-8ab0dd4bc7a7</guid>
       <isReuseDriver>false</isReuseDriver>
       <isRun>true</isRun>
       <testCaseId>Test Cases/Auto1-Create-user</testCaseId>
    </testCaseLink>
    <testCaseLink>
-      <guid>a98b347e-e648-459f-b59b-eee7e802892d</guid>
+      <guid>04929fb2-85a6-41e1-915b-43c802a162eb</guid>
       <isReuseDriver>false</isReuseDriver>
       <isRun>true</isRun>
       <testCaseId>Test Cases/Auto2-Keditor-Simple-Test</testCaseId>
    </testCaseLink>
    <testCaseLink>
-      <guid>55218282-5a24-49ec-a611-781c8cac1458</guid>
+      <guid>e5209d4c-9a85-46d0-8ab0-c1727d0395cb</guid>
       <isReuseDriver>false</isReuseDriver>
-      <isRun>true</isRun>
+      <isRun>false</isRun>
       <testCaseId>Test Cases/Auto3-new-acc-creation-apps-install</testCaseId>
    </testCaseLink>
    <testCaseLink>
-      <guid>3d6e9265-e30a-4bf3-ad9d-9e192d963d49</guid>
+      <guid>497b1aea-6d84-4204-b1d8-563716c99747</guid>
       <isReuseDriver>false</isReuseDriver>
       <isRun>false</isRun>
-      <testCaseId>Test Cases/Auto4-products-add-remove-upload</testCaseId>
-   </testCaseLink>
-   <testCaseLink>
-      <guid>9e07de4c-c2b0-458b-a7dc-73a9924d651b</guid>
-      <isReuseDriver>false</isReuseDriver>
-      <isRun>true</isRun>
       <testCaseId>Test Cases/Auto5-Multiple-Users-login-test</testCaseId>
       <variableLink>
          <testDataLinkId></testDataLinkId>
@@ -52,5 +46,11 @@
          <value></value>
          <variableId>7770d3a2-a035-4d6e-8e62-54e1183ef6d1</variableId>
       </variableLink>
+   </testCaseLink>
+   <testCaseLink>
+      <guid>d606c71a-5448-417f-878d-d4fed5782d2a</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>true</isRun>
+      <testCaseId>Test Cases/Auto6-Create-users-send-email</testCaseId>
    </testCaseLink>
 </TestSuiteEntity>

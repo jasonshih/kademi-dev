@@ -100,7 +100,7 @@ WebUI.click(findTestObject('Kademi-vladtest22/input_confirmPassword'), FailureHa
 
 WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_confirmPassword'), GlobalVariable.admin_password)
 
-WebUI.click(findTestObject('Kademi-vladtest22/button_Save'))
+WebUI.click(findTestObject('Email-job-case/Page_Manage users/button_Save-user_edit_page'))
 
 WebUI.click(findTestObject('Kademi-vladtest22/span_adminqa'))
 
@@ -276,7 +276,7 @@ WebUI.delay(10)
 
 WebUI.click(findTestObject('kademi-vladtest/a_Back to website manager - correct'))
 
-WebUI.click(findTestObject('kademi-vladtest/a_Details (1)'))
+WebUI.click(findTestObject('kademi-vladtest/Details-tab-for-website-properties'))
 
 WebUI.click(findTestObject('kademi-vladtest/span_Dashboard'))
 
@@ -298,7 +298,7 @@ WebUI.delay(20)
 
 WebUI.click(findTestObject('kademi-vladtest/a_Back to website manager - correct'))
 
-WebUI.click(findTestObject('kademi-vladtest/a_Details (1)'))
+WebUI.click(findTestObject('kademi-vladtest/Details-tab-for-website-properties'))
 
 WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cogs'))
 
@@ -332,7 +332,7 @@ WebUI.delay(10)
 
 WebUI.click(findTestObject('kademi-vladtest/a_Back to website manager - correct'))
 
-WebUI.click(findTestObject('kademi-vladtest/a_Details (1)'))
+WebUI.click(findTestObject('kademi-vladtest/Details-tab-for-website-properties'))
 
 WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cogs'))
 
@@ -366,7 +366,7 @@ WebUI.delay(10)
 
 WebUI.click(findTestObject('kademi-vladtest/a_Back to website manager - correct'))
 
-WebUI.click(findTestObject('kademi-vladtest/a_Details (1)'))
+WebUI.click(findTestObject('kademi-vladtest/Details-tab-for-website-properties'))
 
 WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cogs'))
 

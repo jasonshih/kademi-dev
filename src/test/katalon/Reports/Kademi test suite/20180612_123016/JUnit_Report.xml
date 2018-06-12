@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Kademi test suite" time="160" tests="0" failures="3" errors="0">
+   <testsuite name="Kademi test suite" tests="0" failures="3" errors="0" time="160" timestamp="2018-06-12 12:30:18" hostname="CI0-000-6057N$ - ci0-000-6057N" id="Test Suites/Kademi test suite">
+      <properties>
+         <property name="deviceName" value=""/>
+         <property name="devicePlatform" value=""/>
+         <property name="logFolder" value="D:\\kademi\\Katalon\\Kademi_next\\Kademi\\Reports\\Kademi test suite\\20180612_123016"/>
+         <property name="logFiles" value="D:\\kademi\\Katalon\\Kademi_next\\Kademi\\Reports\\Kademi test suite\\20180612_123016\\execution0.log"/>
+         <property name="attachments" value="D:\\kademi\\Katalon\\Kademi_next\\Kademi\\Reports\\Kademi test suite\\20180612_123016\\1528795879582.png, D:\\kademi\\Katalon\\Kademi_next\\Kademi\\Reports\\Kademi test suite\\20180612_123016\\1528795938166.png, D:\\kademi\\Katalon\\Kademi_next\\Kademi\\Reports\\Kademi test suite\\20180612_123016\\1528795978312.png"/>
+         <property name="hostName" value="CI0-000-6057N$ - ci0-000-6057N"/>
+         <property name="os" value="Windows 10 64bit"/>
+         <property name="katalonVersion" value="5.3.0.1"/>
+         <property name="browser" value="Chrome 66.0.3359.181"/>
+         <property name="hostAddress" value="192.168.248.1"/>
+         <property name="sessionId" value="ffc721d70e98deccaa234f64ceb71e83"/>
+         <property name="seleniumVersion" value="3.7.1"/>
+         <property name="proxyInformation" value="ProxyInformation{proxyOption=NO_PROXY, proxyServerType=HTTP, password=, proxyServerAddress=, proxyServerPort=0}"/>
+         <property name="platform" value="Windows 10"/>
+      </properties>
+      <testcase name="Test Cases/Auto1-Create-user" classname="Test Cases/Auto1-Create-user" status="FAILED">
+         <failure type="FAILED" message="Unable to click on object 'Object Repository/Kademi-vladtest22/span_Groups  users (1)' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/Kademi-vladtest22/span_Groups  users (1)' located by 'By.xpath: //span[(text() = 'Groups &amp; users' or . = 'Groups &amp; users')]' not found)"/>
+         <system-out><![CDATA[2018-06-12 12:30:19 - [TEST_CASE][FAILED] - Test Cases/Auto1-Create-user: Test Cases/Auto1-Create-user FAILED because (of) Unable to click on object 'Object Repository/Kademi-vladtest22/span_Groups  users (1)' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/Kademi-vladtest22/span_Groups  users (1)' located by 'By.xpath: //span[(text() = 'Groups & users' or . = 'Groups & users')]' not found)
+
+2018-06-12 12:30:19 - [TEST_STEP][PASSED] - Statement - rnd = new java.util.Random(): null
+
+2018-06-12 12:30:19 - [TEST_STEP][PASSED] - Statement - randomdigit = rnd.nextInt(9999): null
+
+2018-06-12 12:30:19 - [TEST_STEP][PASSED] - Statement - usertestname = com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords.concatenate(["autouserqa", randomdigit]): Concatenated string array: '['autouserqa','9124']' into 'autouserqa9124'
+
+2018-06-12 12:30:19 - [MESSAGE][PASSED] - Concatenated string array: '['autouserqa','9124']' into 'autouserqa9124'
+
+2018-06-12 12:30:19 - [TEST_STEP][PASSED] - openBrowser: Browser is opened with url: 'http://vladtest50c.admin.kademi-ci.co'
+
+2018-06-12 12:30:31 - [MESSAGE][PASSED] - Browser is opened with url: 'http://vladtest50c.admin.kademi-ci.co'
+
+2018-06-12 12:30:31 - [TEST_STEP][PASSED] - maximizeWindow: Current window maximized
+
+2018-06-12 12:30:33 - [MESSAGE][PASSED] - Current window maximized
+
+2018-06-12 12:30:33 - [TEST_STEP][PASSED] - setText: Text 'adminqa@mailinator.com' is set on object 'Object Repository/kademi-vladtest/input_email'
+
+2018-06-12 12:30:33 - [MESSAGE][PASSED] - Text 'adminqa@mailinator.com' is set on object 'Object Repository/kademi-vladtest/input_email'
+
+2018-06-12 12:30:33 - [TEST_STEP][PASSED] - setText: Text 'Pa$$w0rd' is set on object 'Object Repository/kademi-vladtest/input_password'
+
+2018-06-12 12:30:33 - [MESSAGE][PASSED] - Text 'Pa$$w0rd' is set on object 'Object Repository/kademi-vladtest/input_password'
+
+2018-06-12 12:30:33 - [TEST_STEP][PASSED] - sendKeys: Keys 'ENTER + ' sent to object: 'Object Repository/kademi-vladtest/input_password'
+
+2018-06-12 12:30:33 - [MESSAGE][PASSED] - Keys 'ENTER + ' sent to object: 'Object Repository/kademi-vladtest/input_password'
+
+2018-06-12 12:30:33 - [TEST_STEP][PASSED] - delay: Delayed 15 second(s)
+
+2018-06-12 12:30:48 - [MESSAGE][PASSED] - Delayed 15 second(s)
+
+2018-06-12 12:30:48 - [TEST_STEP][FAILED] - click: Unable to click on object 'Object Repository/Kademi-vladtest22/span_Groups  users (1)' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/Kademi-vladtest22/span_Groups  users (1)' located by 'By.xpath: //span[(text() = 'Groups & users' or . = 'Groups & users')]' not found)
+
+2018-06-12 12:31:19 - [MESSAGE][FAILED] - Unable to click on object 'Object Repository/Kademi-vladtest22/span_Groups  users (1)' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/Kademi-vladtest22/span_Groups  users (1)' located by 'By.xpath: //span[(text() = 'Groups & users' or . = 'Groups & users')]' not found)
+[[ATTACHMENT|D:\\kademi\\Katalon\\Kademi_next\\Kademi\\Reports\\Kademi test suite\\20180612_123016\\1528795879582.png]]]]></system-out>
+         <system-err><![CDATA[2018-06-12 12:30:19 - [TEST_CASE][FAILED] - Test Cases/Auto1-Create-user: Test Cases/Auto1-Create-user FAILED because (of) Unable to click on object 'Object Repository/Kademi-vladtest22/span_Groups  users (1)' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/Kademi-vladtest22/span_Groups  users (1)' located by 'By.xpath: //span[(text() = 'Groups & users' or . = 'Groups & users')]' not found)]]></system-err>
+      </testcase>
+      <testcase name="Test Cases/Auto2-Keditor-Simple-Test" classname="Test Cases/Auto2-Keditor-Simple-Test" status="FAILED">
+         <failure type="FAILED" message="Unable to click on object 'Object Repository/Kademi-vladtest22/span_Content' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/Kademi-vladtest22/span_Content' located by 'By.xpath: //span[(text() = 'Content' or . = 'Content')]' not found)"/>
+         <system-out><![CDATA[2018-06-12 12:31:19 - [TEST_CASE][FAILED] - Test Cases/Auto2-Keditor-Simple-Test: Test Cases/Auto2-Keditor-Simple-Test FAILED because (of) Unable to click on object 'Object Repository/Kademi-vladtest22/span_Content' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/Kademi-vladtest22/span_Content' located by 'By.xpath: //span[(text() = 'Content' or . = 'Content')]' not found)
+
+2018-06-12 12:31:20 - [TEST_STEP][PASSED] - Statement - rnd = new java.util.Random(): null
+
+2018-06-12 12:31:20 - [TEST_STEP][PASSED] - Statement - randomdigit = rnd.nextInt(9999): null
+
+2018-06-12 12:31:20 - [TEST_STEP][PASSED] - Statement - pagetestname = com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords.concatenate(["pagetest", randomdigit]): Concatenated string array: '['pagetest','9365']' into 'pagetest9365'
+
+2018-06-12 12:31:20 - [MESSAGE][PASSED] - Concatenated string array: '['pagetest','9365']' into 'pagetest9365'
+
+2018-06-12 12:31:20 - [TEST_STEP][PASSED] - openBrowser: Browser is opened with url: 'http://vladtest50c.admin.kademi-ci.co'
+
+2018-06-12 12:31:20 - [MESSAGE][WARNING] - A browser is already opened. Closing browser and opening a new one
+
+2018-06-12 12:31:30 - [MESSAGE][PASSED] - Browser is opened with url: 'http://vladtest50c.admin.kademi-ci.co'
+
+2018-06-12 12:31:30 - [TEST_STEP][PASSED] - maximizeWindow: Current window maximized
+
+2018-06-12 12:31:31 - [MESSAGE][PASSED] - Current window maximized
+
+2018-06-12 12:31:31 - [TEST_STEP][PASSED] - setText: Text 'adminqa@mailinator.com' is set on object 'Object Repository/kademi-vladtest/input_email'
+
+2018-06-12 12:31:31 - [MESSAGE][PASSED] - Text 'adminqa@mailinator.com' is set on object 'Object Repository/kademi-vladtest/input_email'
+
+2018-06-12 12:31:31 - [TEST_STEP][PASSED] - setText: Text 'Pa$$w0rd' is set on object 'Object Repository/kademi-vladtest/input_password'
+
+2018-06-12 12:31:32 - [MESSAGE][PASSED] - Text 'Pa$$w0rd' is set on object 'Object Repository/kademi-vladtest/input_password'
+
+2018-06-12 12:31:32 - [TEST_STEP][PASSED] - sendKeys: Keys 'ENTER + ' sent to object: 'Object Repository/kademi-vladtest/input_password'
+
+2018-06-12 12:31:32 - [MESSAGE][PASSED] - Keys 'ENTER + ' sent to object: 'Object Repository/kademi-vladtest/input_password'
+
+2018-06-12 12:31:32 - [TEST_STEP][PASSED] - delay: Delayed 15 second(s)
+
+2018-06-12 12:31:47 - [MESSAGE][PASSED] - Delayed 15 second(s)
+
+2018-06-12 12:31:47 - [TEST_STEP][FAILED] - click: Unable to click on object 'Object Repository/Kademi-vladtest22/span_Content' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/Kademi-vladtest22/span_Content' located by 'By.xpath: //span[(text() = 'Content' or . = 'Content')]' not found)
+
+2018-06-12 12:32:18 - [MESSAGE][FAILED] - Unable to click on object 'Object Repository/Kademi-vladtest22/span_Content' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/Kademi-vladtest22/span_Content' located by 'By.xpath: //span[(text() = 'Content' or . = 'Content')]' not found)
+[[ATTACHMENT|D:\\kademi\\Katalon\\Kademi_next\\Kademi\\Reports\\Kademi test suite\\20180612_123016\\1528795938166.png]]]]></system-out>
+         <system-err><![CDATA[2018-06-12 12:31:19 - [TEST_CASE][FAILED] - Test Cases/Auto2-Keditor-Simple-Test: Test Cases/Auto2-Keditor-Simple-Test FAILED because (of) Unable to click on object 'Object Repository/Kademi-vladtest22/span_Content' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/Kademi-vladtest22/span_Content' located by 'By.xpath: //span[(text() = 'Content' or . = 'Content')]' not found)]]></system-err>
+      </testcase>
+      <testcase name="Test Cases/Auto6-Create-users-send-email" classname="Test Cases/Auto6-Create-users-send-email" status="FAILED">
+         <failure type="FAILED" message="Unable to select option by value 'contacts' of object 'Object Repository/Kademi-vladtest22/select_group'  using regular expression (Root cause: No option matched.)"/>
+         <system-out><![CDATA[2018-06-12 12:32:18 - [TEST_CASE][FAILED] - Test Cases/Auto6-Create-users-send-email: Test Cases/Auto6-Create-users-send-email FAILED because (of) Unable to select option by value 'contacts' of object 'Object Repository/Kademi-vladtest22/select_group'  using regular expression (Root cause: No option matched.)
+
+2018-06-12 12:32:18 - [TEST_STEP][PASSED] - Statement - rnd = new java.util.Random(): null
+
+2018-06-12 12:32:18 - [TEST_STEP][PASSED] - Statement - randomdigit = rnd.nextInt(9999): null
+
+2018-06-12 12:32:18 - [TEST_STEP][PASSED] - Statement - emailtestname = com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords.concatenate(["emailjob", randomdigit]): Concatenated string array: '['emailjob','3181']' into 'emailjob3181'
+
+2018-06-12 12:32:18 - [MESSAGE][PASSED] - Concatenated string array: '['emailjob','3181']' into 'emailjob3181'
+
+2018-06-12 12:32:18 - [TEST_STEP][PASSED] - openBrowser: Browser is opened with url: 'http://vladtest51w.admin.kademi-ci.co'
+
+2018-06-12 12:32:18 - [MESSAGE][WARNING] - A browser is already opened. Closing browser and opening a new one
+
+2018-06-12 12:32:28 - [MESSAGE][PASSED] - Browser is opened with url: 'http://vladtest51w.admin.kademi-ci.co'
+
+2018-06-12 12:32:28 - [TEST_STEP][PASSED] - maximizeWindow: Current window maximized
+
+2018-06-12 12:32:29 - [MESSAGE][PASSED] - Current window maximized
+
+2018-06-12 12:32:29 - [TEST_STEP][PASSED] - setText: Text 'adminqa@mailinator.com' is set on object 'Object Repository/kademi-vladtest/input_email'
+
+2018-06-12 12:32:29 - [MESSAGE][PASSED] - Text 'adminqa@mailinator.com' is set on object 'Object Repository/kademi-vladtest/input_email'
+
+2018-06-12 12:32:29 - [TEST_STEP][PASSED] - setText: Text 'Pa$$w0rd' is set on object 'Object Repository/kademi-vladtest/input_password'
+
+2018-06-12 12:32:30 - [MESSAGE][PASSED] - Text 'Pa$$w0rd' is set on object 'Object Repository/kademi-vladtest/input_password'
+
+2018-06-12 12:32:30 - [TEST_STEP][PASSED] - sendKeys: Keys 'ENTER + ' sent to object: 'Object Repository/kademi-vladtest/input_password'
+
+2018-06-12 12:32:30 - [MESSAGE][PASSED] - Keys 'ENTER + ' sent to object: 'Object Repository/kademi-vladtest/input_password'
+
+2018-06-12 12:32:30 - [TEST_STEP][PASSED] - delay: Delayed 20 second(s)
+
+2018-06-12 12:32:50 - [MESSAGE][PASSED] - Delayed 20 second(s)
+
+2018-06-12 12:32:50 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/span_Groups  users' is clicked on
+
+2018-06-12 12:32:50 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/span_Groups  users' is clicked on
+
+2018-06-12 12:32:50 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-06-12 12:32:51 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-06-12 12:32:51 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/span_Users' is clicked on
+
+2018-06-12 12:32:55 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/span_Users' is clicked on
+
+2018-06-12 12:32:55 - [TEST_STEP][PASSED] - Statement - usertestname = <not implemented yet for class: org.codehaus.groovy.ast.expr.EmptyExpression>: null
+
+2018-06-12 12:32:55 - [TEST_STEP][FAILED] - Statement - For (def index : (1..10)): Unable to select option by value 'contacts' of object 'Object Repository/Kademi-vladtest22/select_group'  using regular expression (Root cause: No option matched.)
+
+2018-06-12 12:32:55 - [TEST_STEP][PASSED] - Statement - usertestname = "autouserqa" + index: null
+
+2018-06-12 12:32:55 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/a_Add new user' is clicked on
+
+2018-06-12 12:32:55 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/a_Add new user' is clicked on
+
+2018-06-12 12:32:55 - [TEST_STEP][PASSED] - delay: Delayed 1 second(s)
+
+2018-06-12 12:32:56 - [MESSAGE][PASSED] - Delayed 1 second(s)
+
+2018-06-12 12:32:56 - [TEST_STEP][PASSED] - focus: Object: 'Object Repository/kademi-vladtest/div_modal-new-user' is focused
+
+2018-06-12 12:32:56 - [MESSAGE][PASSED] - Object: 'Object Repository/kademi-vladtest/div_modal-new-user' is focused
+
+2018-06-12 12:32:56 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/input_nickName' is clicked on
+
+2018-06-12 12:32:56 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/input_nickName' is clicked on
+
+2018-06-12 12:32:56 - [TEST_STEP][PASSED] - sendKeys: Keys 'autouserqa1' sent to object: 'Object Repository/Kademi-vladtest22/input_nickName'
+
+2018-06-12 12:32:56 - [MESSAGE][PASSED] - Keys 'autouserqa1' sent to object: 'Object Repository/Kademi-vladtest22/input_nickName'
+
+2018-06-12 12:32:56 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/input_firstName' is clicked on
+
+2018-06-12 12:32:57 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/input_firstName' is clicked on
+
+2018-06-12 12:32:57 - [TEST_STEP][PASSED] - sendKeys: Keys 'autouserqa1' sent to object: 'Object Repository/Kademi-vladtest22/input_firstName'
+
+2018-06-12 12:32:57 - [MESSAGE][PASSED] - Keys 'autouserqa1' sent to object: 'Object Repository/Kademi-vladtest22/input_firstName'
+
+2018-06-12 12:32:57 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/input_surName' is clicked on
+
+2018-06-12 12:32:57 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/input_surName' is clicked on
+
+2018-06-12 12:32:57 - [TEST_STEP][PASSED] - sendKeys: Keys 'autouserqa1' sent to object: 'Object Repository/Kademi-vladtest22/input_surName'
+
+2018-06-12 12:32:57 - [MESSAGE][PASSED] - Keys 'autouserqa1' sent to object: 'Object Repository/Kademi-vladtest22/input_surName'
+
+2018-06-12 12:32:57 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/input_email (1)' is clicked on
+
+2018-06-12 12:32:57 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/input_email (1)' is clicked on
+
+2018-06-12 12:32:57 - [TEST_STEP][PASSED] - sendKeys: Keys 'autouserqa1@mailinator.com' sent to object: 'Object Repository/Kademi-vladtest22/input_email (1)'
+
+2018-06-12 12:32:57 - [MESSAGE][PASSED] - Concatenated string array: '['autouserqa1','@mailinator.com']' into 'autouserqa1@mailinator.com'
+
+2018-06-12 12:32:57 - [MESSAGE][PASSED] - Keys 'autouserqa1@mailinator.com' sent to object: 'Object Repository/Kademi-vladtest22/input_email (1)'
+
+2018-06-12 12:32:57 - [TEST_STEP][PASSED] - click: Object: 'Object Repository/Kademi-vladtest22/select_group' is clicked on
+
+2018-06-12 12:32:58 - [MESSAGE][PASSED] - Object: 'Object Repository/Kademi-vladtest22/select_group' is clicked on
+
+2018-06-12 12:32:58 - [TEST_STEP][FAILED] - selectOptionByValue: Unable to select option by value 'contacts' of object 'Object Repository/Kademi-vladtest22/select_group'  using regular expression (Root cause: No option matched.)
+
+2018-06-12 12:32:58 - [MESSAGE][FAILED] - No option matched.
+
+2018-06-12 12:32:58 - [MESSAGE][FAILED] - Unable to select option by value 'contacts' of object 'Object Repository/Kademi-vladtest22/select_group'  using regular expression (Root cause: No option matched.)
+[[ATTACHMENT|D:\\kademi\\Katalon\\Kademi_next\\Kademi\\Reports\\Kademi test suite\\20180612_123016\\1528795978312.png]]]]></system-out>
+         <system-err><![CDATA[2018-06-12 12:32:18 - [TEST_CASE][FAILED] - Test Cases/Auto6-Create-users-send-email: Test Cases/Auto6-Create-users-send-email FAILED because (of) Unable to select option by value 'contacts' of object 'Object Repository/Kademi-vladtest22/select_group'  using regular expression (Root cause: No option matched.)]]></system-err>
+      </testcase>
+      <system-out><![CDATA[2018-06-12 12:30:18 - [TEST_SUITE][FAILED] - Kademi test suite: Test Cases/Auto1-Create-user FAILED because (of) Unable to click on object 'Object Repository/Kademi-vladtest22/span_Groups  users (1)' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/Kademi-vladtest22/span_Groups  users (1)' located by 'By.xpath: //span[(text() = 'Groups & users' or . = 'Groups & users')]' not found)]]></system-out>
+      <system-err><![CDATA[2018-06-12 12:30:18 - [TEST_SUITE][FAILED] - Kademi test suite: Test Cases/Auto1-Create-user FAILED because (of) Unable to click on object 'Object Repository/Kademi-vladtest22/span_Groups  users (1)' (Root cause: com.kms.katalon.core.webui.exception.WebElementNotFoundException: Web element with id: 'Object Repository/Kademi-vladtest22/span_Groups  users (1)' located by 'By.xpath: //span[(text() = 'Groups & users' or . = 'Groups & users')]' not found)]]></system-err>
+   </testsuite>
+</testsuites>

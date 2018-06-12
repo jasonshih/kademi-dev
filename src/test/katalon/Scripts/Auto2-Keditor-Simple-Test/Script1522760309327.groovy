@@ -26,7 +26,7 @@ def randomdigit = rnd.nextInt(9999)
 
 def pagetestname = WebUI.concatenate(((['pagetest', randomdigit]) as String[]))
 
-WebUI.openBrowser('http://vladtest47d.admin.kademi-ci.co')
+WebUI.openBrowser('http://vladtest52m.admin.kademi-ci.co')
 
 WebUI.maximizeWindow()
 
@@ -118,7 +118,7 @@ WebUI.verifyElementVisible(findTestObject('kademi-vladtest/keditor image verify 
 
 WebUI.verifyElementPresent(findTestObject('kademi-vladtest/keditor text verify - p_Lorem ipsum dolor sit amet c'), 5)
 
-WebUI.takeScreenshot('D:\\WORK\\katalon-screens\\keditor.png')
+not_run: WebUI.takeScreenshot('D:\\WORK\\katalon-screens\\keditor.png')
 
 WebUI.click(findTestObject('kademi-vladtest/i_fa fa-save'))
 
