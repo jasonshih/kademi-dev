@@ -4,6 +4,14 @@
    <name>select_Select a website-email-job</name>
    <tag></tag>
    <elementGuidId>f546c185-95f6-4298-b61a-b13c911fb732</elementGuidId>
+   <selectorCollection>
+      <entry>
+         <key>BASIC</key>
+         <value>//select[@name = 'themeSiteId' and @id = 'themeSiteId' and (contains(text(), '
+                                    Select a website') or contains(., '
+                                    Select a website'))]</value>
+      </entry>
+   </selectorCollection>
    <selectorMethod>BASIC</selectorMethod>
    <useRalativeImagePath>false</useRalativeImagePath>
    <webElementProperties>
@@ -36,14 +44,11 @@
    </webElementProperties>
    <webElementProperties>
       <isSelected>true</isSelected>
-      <matchCondition>equals</matchCondition>
+      <matchCondition>contains</matchCondition>
       <name>text</name>
       <type>Main</type>
       <value>
-                                    Select a website
-                                                                        vladtest49ublogs
-                                                                        vladtest49uestore
-                                                                    </value>
+                                    Select a website</value>
    </webElementProperties>
    <webElementProperties>
       <isSelected>false</isSelected>
