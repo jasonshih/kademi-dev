@@ -14,7 +14,7 @@
    <testCaseLink>
       <guid>17b7dee2-442c-4fb5-b7b0-8ab0dd4bc7a7</guid>
       <isReuseDriver>false</isReuseDriver>
-      <isRun>false</isRun>
+      <isRun>true</isRun>
       <testCaseId>Test Cases/Auto1-Create-user</testCaseId>
    </testCaseLink>
    <testCaseLink>
@@ -50,7 +50,7 @@
    <testCaseLink>
       <guid>d606c71a-5448-417f-878d-d4fed5782d2a</guid>
       <isReuseDriver>false</isReuseDriver>
-      <isRun>false</isRun>
+      <isRun>true</isRun>
       <testCaseId>Test Cases/Auto6-Create-users-send-email</testCaseId>
    </testCaseLink>
 </TestSuiteEntity>
