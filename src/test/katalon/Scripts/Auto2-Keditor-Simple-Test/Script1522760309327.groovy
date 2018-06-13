@@ -62,6 +62,8 @@ WebUI.delay(2)
 
 WebUI.click(findTestObject('kademi-vladtest/a_testfolder'))
 
+WebUI.delay(2)
+
 WebUI.click(findTestObject('Kademi-vladtest22/a_New Page_manage_web_pages'))
 
 WebUI.delay(1)
