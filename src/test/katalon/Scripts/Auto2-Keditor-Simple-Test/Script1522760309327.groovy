@@ -29,7 +29,7 @@ def pagetestname = WebUI.concatenate(((['pagetest', randomdigit]) as String[]))
 WebUI.openBrowser('http://vladtest52e.admin.kademi-ci.co')
 
 not_run: WebUI.maximizeWindow()
-	
+
 WebUI.setViewPortSize(1920, 1080)
 
 WebUI.setText(findTestObject('kademi-vladtest/input_email'), GlobalVariable.admin)
@@ -62,7 +62,7 @@ WebUI.delay(2)
 
 WebUI.click(findTestObject('kademi-vladtest/a_testfolder'))
 
-WebUI.click(findTestObject('kademi-vladtest/i_fa fa-pencil (1)'))
+WebUI.click(findTestObject('Kademi-vladtest22/a_New Page_manage_web_pages'))
 
 WebUI.delay(1)
 
