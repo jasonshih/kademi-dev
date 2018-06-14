@@ -4,6 +4,12 @@
    <name>Choose-recepients-group-modal</name>
    <tag></tag>
    <elementGuidId>8272e81e-d746-45e6-b815-92dae4038214</elementGuidId>
+   <selectorCollection>
+      <entry>
+         <key>BASIC</key>
+         <value>id(&quot;modal-choose-group&quot;)/div[@class=&quot;modal-dialog modal-sm&quot;]/div[@class=&quot;modal-content&quot;]</value>
+      </entry>
+   </selectorCollection>
    <selectorMethod>BASIC</selectorMethod>
    <useRalativeImagePath>false</useRalativeImagePath>
    <webElementProperties>
@@ -21,201 +27,15 @@
       <value>modal-content</value>
    </webElementProperties>
    <webElementProperties>
-      <isSelected>true</isSelected>
-      <matchCondition>equals</matchCondition>
+      <isSelected>false</isSelected>
+      <matchCondition>contains</matchCondition>
       <name>text</name>
       <type>Main</type>
       <value>
-                    
-                        ×
-                        Choose groups
-                    
-                    
-                        
-                            Choose whether a groups should be a recipient, excluded, or to not care about. When a group is excluded then members of that group will not receive the email, even if they are in a recipient group
-                        
-                        
-                            
-                                
-                                    
-                                        Group
-                                        Recipient
-                                        Exclude
-                                        Remove group
-                                    
-                                
-                                
-                                                                        
-                                        administrator
-
-                                                                                
-                                                                                        
-                                            Included
-                                        
-                                        
-                                                                                        
-                                            Excluded
-                                        
-                                        
-                                                                                        
-                                            Neither
-                                        
-                                    
-                                                                        
-                                        blog-authors
-
-                                                                                
-                                                                                        
-                                            Included
-                                        
-                                        
-                                                                                        
-                                            Excluded
-                                        
-                                        
-                                                                                        
-                                            Neither
-                                        
-                                    
-                                                                        
-                                        blog-users
-
-                                                                                
-                                                                                        
-                                            Included
-                                        
-                                        
-                                                                                        
-                                            Excluded
-                                        
-                                        
-                                                                                        
-                                            Neither
-                                        
-                                    
-                                                                        
-                                        contacts
-
-                                                                                
-                                                                                        
-                                            Included
-                                        
-                                        
-                                                                                        
-                                            Excluded
-                                        
-                                        
-                                                                                        
-                                            Neither
-                                        
-                                    
-                                                                        
-                                        customers
-
-                                                                                
-                                                                                        
-                                            Included
-                                        
-                                        
-                                                                                        
-                                            Excluded
-                                        
-                                        
-                                                                                        
-                                            Neither
-                                        
-                                    
-                                                                        
-                                        ecommerce-users
-
-                                                                                
-                                                                                        
-                                            Included
-                                        
-                                        
-                                                                                        
-                                            Excluded
-                                        
-                                        
-                                                                                        
-                                            Neither
-                                        
-                                    
-                                                                        
-                                        leads
-
-                                                                                
-                                                                                        
-                                            Included
-                                        
-                                        
-                                                                                        
-                                            Excluded
-                                        
-                                        
-                                                                                        
-                                            Neither
-                                        
-                                    
-                                                                        
-                                        public
-
-                                                                                
-                                                                                        
-                                            Included
-                                        
-                                        
-                                                                                        
-                                            Excluded
-                                        
-                                        
-                                                                                        
-                                            Neither
-                                        
-                                    
-                                                                        
-                                        sales
-
-                                                                                
-                                                                                        
-                                            Included
-                                        
-                                        
-                                                                                        
-                                            Excluded
-                                        
-                                        
-                                                                                        
-                                            Neither
-                                        
-                                    
-                                                                        
-                                        sales-manager
-
-                                                                                
-                                                                                        
-                                            Included
-                                        
-                                        
-                                                                                        
-                                            Excluded
-                                        
-                                        
-                                                                                        
-                                            Neither
-                                        
-                                    
-                                                                    
-                            
-                        
-                    
-                    
-                        Close
-                    
-                </value>
+Choose groups</value>
    </webElementProperties>
    <webElementProperties>
-      <isSelected>false</isSelected>
+      <isSelected>true</isSelected>
       <matchCondition>equals</matchCondition>
       <name>xpath</name>
       <type>Main</type>

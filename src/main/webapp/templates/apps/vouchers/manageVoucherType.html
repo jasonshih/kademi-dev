@@ -41,18 +41,25 @@
                         <div class="form-group">
                             <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
                         </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="title">Title</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control required" name="title" value="$!page.voucherType.title"/>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="name">Name/Code</label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <input type="text" class="form-control required simpleChars reallySimpleChars" id="name"
                                        name="name" value="$page.voucherType.name"/>
                                 <small><i>A unique identifier for this voucher type, simple characters only, no spaces etc</i>
                                 </small>
                             </div>
-                        </div>
-                        <div class="form-group">
+
                             <label class="col-sm-2 control-label" for="name">Template</label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <input type="text" class="form-control" id="template" name="template"
                                        value="$!page.voucherType.template"/>
                                 <small><i>If specified, this template will be used to display the voucher cashier page</i>
@@ -60,16 +67,10 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="title">Title</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control required" name="title" value="$!page.voucherType.title"/>
-                            </div>
-                        </div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="redeemingOrg">Redeeming organisation</label>
-                            <div class="col-sm-9">
+                            <div class="col-sm-4">
                                 <!--                                <a href="#" class="btn btn-default change-redeeming-org">
                                                                     <span class="org-title">$page.voucherType.redeemingOrg.formattedName</span>
                                                                     <span class="glyphicon glyphicon-cog"></span>
@@ -81,23 +82,27 @@
                                        value="$!page.voucherType.redeemingOrg.id"/>
                                 <small><i>Users within this organisation will be able to redeem vouchers</i></small>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="validForDays">Valid for days</label>
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control" name="validForDays"
-                                       value="$!page.voucherType.validForDays"/>
-                                <small><i>If specified, vouchers will only be valid for a certain number of days once issued</i>
-                                </small>
+                            <label class="col-sm-2 control-label" for="cashValue">Cash value</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" name="cashValue" value="$!page.voucherType.cashValue"/>
+                                <small><i>Used to track exposure and liabilities in reporting.</i></small>
                             </div>
                         </div>
 
+
                         <div class="form-group">
+                            <label class="col-sm-2 control-label" for="validForDays">Valid for days</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" name="validForDays" value="$!page.voucherType.validForDays"/>
+                                <small>
+                                    <i>If specified, vouchers will only be valid for a certain number of days once issued</i>
+                                </small>
+                            </div>
+
                             <label class="col-sm-2 control-label" for="staticExpiryDate">Static Expiry Date</label>
-                            <div class="col-sm-9">
+                            <div class="col-sm-3">
                                 <div class="form-group">
-                                    <div class="col-sm-5">
                                         <div class="input-group">
                                             <input type="text" name="staticExpiryDate" placeholder="Expiry date"
                                                    data-format="DD/MM/YYYY"
@@ -105,22 +110,14 @@
                                                    class="form-control DateTime"/>
                                             <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                         </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="cashValue">Cash value</label>
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control" name="cashValue" value="$!page.voucherType.cashValue"/>
-                                <small><i>Used to track exposure and liabilities in reporting.</i></small>
-                            </div>
-                        </div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="voucherIdTemplate">ID Template</label>
-                            <div class="col-sm-9">
+                            <div class="col-sm-10">
                                 <div class="input-group">
 
                                     <input type="text" class="form-control" id="voucherIdTemplate" name="voucherIdTemplate"
@@ -134,6 +131,14 @@
                                         page for details. Eg <b>YY-@{randomHex(2)}</b></i></small>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="title">Notes</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" name="notes">$!page.voucherType.notes</textarea>
+                            </div>
+                        </div>
+
 
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-9">

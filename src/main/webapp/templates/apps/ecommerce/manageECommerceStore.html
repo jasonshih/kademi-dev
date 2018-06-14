@@ -216,7 +216,7 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th colspan="9">$rules.rules.size() rules</th>
+                                <th colspan="10">$rules.rules.size() rules</th>
                             </tr>
                             <tr>
                                 <th>Promotion</th>
@@ -228,6 +228,7 @@
                                 <th>Add</th>
                                 <th>Multiply</th>
                                 <th>Notes</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -242,6 +243,9 @@
                                 <td>$!rule.addValue</td>
                                 <td>$!rule.multValue</td>
                                 <td>$!rule.notes</td>
+                                <td>
+                                    <a href="$page.href?ruleNum=$foreach.count"><i class="fa fa-pencil"></i></a>
+                                </td>
                             </tr>
                             #end
                         </tbody>

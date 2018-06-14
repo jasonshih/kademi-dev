@@ -1,0 +1,124 @@
+<html>
+    <head>
+        <title>$view.title</title>
+
+    </head>
+    <body>
+        #set( $rules = $services.pricingRulesService.rules($page.storeWebsite) )
+        #set( $rule = $rules.rules[$formatter.toInteger($params.ruleNum)] )
+
+        <h1>Edit pricing rule</h1>
+
+        <hr/>
+
+        <form id="detailsForm" name="frmDetails" action="$page.href" method="post" class="form-horizontal">
+            <input type="hidden" name="ruleNum" value="$params.ruleNum" />
+
+            <h2>Activation</h2>
+            <p class="lead">These parameters control when this rule is applied.</p>
+            <div class="form-group">
+                <label class="control-label col-md-2" for="promotionName">promotionName</label>
+                <div class="col-md-10">
+                    <input type="text" name="promotionName" value="$!rule.promotionName" placeholder="" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="userId">User Id</label>
+                <div class="col-md-4">
+                    <input type="text" name="userId" value="$!rule.userId" placeholder="" class="form-control" />
+                </div>
+
+                <label class="control-label col-md-2" for="groupName">User group</label>
+                <div class="col-md-4">
+                    <input type="text" name="groupName" value="$!rule.groupName" placeholder="" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="orgId">Organisation ID</label>
+                <div class="col-md-4">
+                    <input type="text" name="orgId" value="$!rule.orgId" placeholder="" class="form-control" />
+                </div>
+
+                <label class="control-label col-md-2" for="orgType">Org type</label>
+                <div class="col-md-4">
+                    <input type="text" name="orgType" value="$!rule.orgType" placeholder="" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="minQuantity">min quantity</label>
+                <div class="col-md-4">
+                    <input type="text" name="minQuantity" value="$!rule.minQuantity" placeholder="" class="form-control" />
+                </div>
+
+                <label class="control-label col-md-2" for="maxQuantity">max quantity</label>
+                <div class="col-md-4">
+                    <input type="text" name="maxQuantity" value="$!rule.maxQuantity" placeholder="" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="categoryName">Product category</label>
+                <div class="col-md-4">
+                    <input type="text" name="categoryName" value="$!rule.categoryName" placeholder="" class="form-control" />
+                </div>
+
+                <label class="control-label col-md-2" for="baseProductCode">Product code</label>
+                <div class="col-md-4">
+                    <input type="text" name="baseProductCode" value="$!rule.baseProductCode" placeholder="" class="form-control" />
+                </div>
+            </div>
+            <hr/>
+
+            <h2>Pricing adjustments</h2>
+            <p class="lead">These parameters control how the product price is changed when the rule is applied.</p>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="mvelExpression">Expression (MVEL)</label>
+                <div class="col-md-10">
+                    <textarea name="mvelExpression" class="form-control" >$!rule.mvelExpression</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2" for="addValue">Add value</label>
+                <div class="col-md-4">
+                    <input type="text" name="addValue" value="$!rule.addValue" placeholder="" class="form-control" />
+                </div>
+
+                <label class="control-label col-md-2" for="multValue">Multiplier</label>
+                <div class="col-md-4">
+                    <input type="text" name="multValue" value="$!rule.multValue" placeholder="" class="form-control" />
+                </div>
+            </div>
+
+            <hr/>
+
+            <h2>Notes</h2>
+            <textarea name="notes" placeholder="" class="form-control" >$!rule.notes</textarea>
+
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn btn-success">
+                        <span class="glyphicon glyphicon-floppy-save"></span>
+                        Save
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <script>
+            $(function () {
+                var detailsForm = $('#detailsForm');
+                detailsForm.forms({
+                    onSuccess: function (resp) {
+                        if (resp.status) {
+                            Msg.info(resp.messages[0]);
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

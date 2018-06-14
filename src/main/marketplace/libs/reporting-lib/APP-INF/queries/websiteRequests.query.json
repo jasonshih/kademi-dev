@@ -1,0 +1,37 @@
+{
+    "stored_fields":     [
+        "contentType",
+        "deviceCategory",
+        "durationMs",
+        "numBytes",
+        "operataingSystemFamily",
+        "operataingSystemName",
+        "operatingSystemVersion",
+        "referrer",
+        "reqDate",
+        "reqMethod",
+        "reqUrl",
+        "reqUser",
+        "resultCode",
+        "trackingId",
+        "url",
+        "userAgent",
+        "userAgentVersion",
+        "website"
+    ],
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "range": {
+                        "reqDate": {
+                            "gte": "$startDate",
+                            "lte": "$endDate"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
+
