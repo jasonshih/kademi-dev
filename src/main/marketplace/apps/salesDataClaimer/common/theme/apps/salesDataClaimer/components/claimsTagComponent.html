@@ -1,36 +1,116 @@
+#if(!$expireIn)
+    #set( $expireIn = 0 )
+#end
+#set( $expireIn = $formatter.toInteger($expireIn) )
+
 #if ($bgTransparent == "true")
     #set ($formBgColor = "transparent")
 #end
 
 #if ($page)
-    #set($app = $applications.salesDataClaimer )
-    #set($salesRecords = $app.call('getUnclaimedSales', $page, 'sales-transactions', ['type', 'accountName', 'distributor']))
-    
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Customer name</th>
-                <th>Close date</th>
-                <th>Claim type</th>
-                <th>Distributor</th>
-                <th>Claim expire date</th>
-                <th>Options</th>
-            </tr>
-        </thead>
-        <tbody>
-    #foreach($record in $salesRecords)
-        #set($dealDate = $formatter.toDate($record.periodFrom))
-        <tr>
-            <td>$record.accountName</td>
-            <td>$formatter.formatDate($dealDate)</td>
-            <td>$record.distributor</td>
-            <td>$record.type</td>
-            <td>-</td>
-            <td><button class="btn btn-primary">Claim</button></td>
-        </tr>
+    #set( $claimTypes = $applications.get('salesDataClaimer').getAppSettings(null, null).claimTypes.split('\n'))    
+    #set( $currentTab = "pending-claims" )
+    #if( $request.params.tab )
+        #set( $currentTab = $request.params.tab )
     #end
-        </tbody>
-    </table>
+        
+    #set($app = $applications.salesDataClaimer )
+    #set($filteredSalesRecords = [])
+    
+    #if( $currentTab == "pending-claims")
+        #set($salesRecords = $app.call('getUnclaimedSales', $page, $dataSeries, ['type', 'accountName', 'distributor'], [{key: 'type', value: 'NET NEW REWARD'}]))
+        #if($expireIn > 0)
+            #foreach($record in $salesRecords)
+                #set($dealDate = $formatter.toDate($record.periodFrom))
+                #set($expireDate = $formatter.addDays($dealDate, $expireIn))
+                #if( !$formatter.between( $expireDate, null, $formatter.getNow()) )
+                    #if( $filteredSalesRecords.add($record) )#end
+                #end
+            #end
+        #else
+            #set( $filteredSalesRecords = $salesRecords )
+        #end
+    #else
+        #set($filteredSalesRecords = $app.call('getclaimedSales', $page, $dataSeries, ['type', 'accountName', 'distributor'], [{key: 'type', value: 'NET NEW REWARD'}]))
+    #end
+    
+    <div class="">
+        <ul class="nav nav-tabs">
+          <li #if($currentTab=="pending-claims")class="active"#end><a href="?tab=pending-claims">Pending Claims</a></li>
+          <li #if($currentTab=="post-claims")class="active"#end><a href="?tab=post-claims">Past Claims</a></li>
+        </ul>
+    
+        <div class="dropdown" style="position: absolute; top: 0; right: 15px;">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Filter Claims
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                #foreach( $claimType in $claimTypes )
+                    <li><a class="filter-claims-option">$claimType.trim()</a></li>
+                #end  
+            </ul>
+        </div>
+    </div>
+    
+    
+    
+    #if($currentTab == "pending-claims")
+        <div id="pending-claims">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Customer name</th>
+                        <th>Close date</th>
+                        <th>Claim type</th>
+                        <th>Distributor</th>
+                        <th>Claim expire date</th>
+                        <th>Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    #foreach($record in $filteredSalesRecords)
+                        #set($dealDate = $formatter.toDate($record.periodFrom))
+                        #set($expireDate = $formatter.addDays($dealDate, $expireIn))
+                        <tr>
+                            <td>$record.accountName</td>
+                            <td>$formatter.formatDate($dealDate)</td>
+                            <td>$record.type</td>
+                            <td>$record.distributor</td>
+                            <td>#if($expireIn > 0) $formatter.formatDate($expireDate) #else - #end</td>
+                            <td><button class="btn btn-primary tagClaim" data-salesdataid="$formatter.toString($record.recordId)">Claim</button></td>
+                        </tr>
+                    #end
+                </tbody>
+            </table>
+        </div>
+    #elseif($currentTab == "post-claims")
+        
+        <div id="post-claims">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Customer name</th>
+                        <th>Close date</th>
+                        <th>Claim type</th>
+                        <th>Distributor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    #foreach($record in $filteredSalesRecords)
+                        #set($dealDate = $formatter.toDate($record.periodFrom))
+                        #set($expireDate = $formatter.addDays($dealDate, $expireIn))
+                        <tr>
+                            <td>$record.accountName</td>
+                            <td>$formatter.formatDate($dealDate)</td>
+                            <td>$record.type</td>
+                            <td>$record.distributor</td>
+                        </tr>
+                    #end
+                </tbody>
+            </table>
+        </div>
+        
+        
+    #end
 #else
     Preview shall go here
 #end

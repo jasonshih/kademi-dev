@@ -3,70 +3,37 @@
     var contentEditor = $.contentEditor;
     var flog = KEditor.log;
 
-    KEditor.components['claimForm'] = {
+    KEditor.components['claimsTag'] = {
         settingEnabled: true,
 
-        settingTitle: 'Claim Form Settings',
+        settingTitle: 'Claims Tag Settings',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "claimForm" component');
+            flog('initSettingForm "claimsTag" component');
 
             return $.ajax({
-                url: '_components/claimForm?settings',
+                url: '_components/claimsTag?settings',
                 type: 'get',
                 dataType: 'html',
                 success: function (resp) {
                     form.html(resp);
 
-                    form.find('.txt-form-title').on('change', function () {
+                    form.find('.txt-expire-in').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
-                        component.attr('data-form-title', this.value);
-                        keditor.initDynamicContent(dynamicElement);
-                    });
-
-                    form.find('.txt-form-description').on('change', function () {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-
-                        component.attr('data-form-description', this.value);
+                        component.attr('data-expire-in', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
-                    form.find('.select-claim-type').on('change', function () {
+                    form.find('.select-data-series').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
-                        component.attr('data-claim-type', this.value);
+                        component.attr('data-data-series', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
-                    var colorPicker = form.find('.txt-bg-color');
-                    contentEditor.initSimpleColorPicker(colorPicker, function (color) {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-
-                        component.attr('data-form-bg-color', color);
-                        keditor.initDynamicContent(dynamicElement);
-                    });
-                    
-                    form.find('.chk-bg-transparent').on('click', function () {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-
-                        component.attr('data-bg-transparent', this.checked);
-                        keditor.initDynamicContent(dynamicElement);
-                        colorPicker.prop('disabled', this.checked);
-                    });
-                    
-                    form.find('.chk-hide-preview-receipt').on('click', function () {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-
-                        component.attr('data-hide-preview-receipt', this.checked);
-                        keditor.initDynamicContent(dynamicElement);
-                    });
                 }
             });
         },
@@ -75,12 +42,8 @@
             flog('showSettingForm "claimForm" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.txt-form-title').val(dataAttributes['data-form-title']);
-            form.find('.txt-form-description').val(dataAttributes['data-form-description']);
-            form.find('.select-claim-type').val(dataAttributes['data-claim-type']);
-            form.find('.txt-bg-color').prop('disabled', dataAttributes['data-bg-transparent'] === 'true').val(dataAttributes['data-form-bg-color'] || '').trigger('update');
-            form.find('.chk-bg-transparent').prop('checked', dataAttributes['data-bg-transparent'] === 'true');
-            form.find('.chk-hide-preview-receipt').prop('checked', dataAttributes['data-hide-preview-receipt'] === 'true');
+            form.find('.txt-expire-in').val(dataAttributes['data-expire-in']);
+            form.find('.select-data-series').val(dataAttributes['data-data-series']);
         }
     };
 

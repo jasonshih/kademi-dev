@@ -39,6 +39,13 @@ controllerMappings
         .addMethod('POST', 'saveProductClaim', 'promotion')
         .enabled(true)
         .build();
+        
+controllerMappings
+        .websiteController()
+        .path('/salesDataClaimsProducts/tagClaim')
+        .addMethod('POST', 'createClaimTagging')
+        .enabled(true)
+        .build();
 
 controllerMappings
         .websiteController()
@@ -566,6 +573,102 @@ function saveProductClaim(page, params, files) {
     return views.jsonObjectView(JSON.stringify(result));
 }
 
+function getClaimSalesById(salesDataId){
+    var salesQuery = {
+            "stored_fields": [
+                "periodFrom",
+                "type",
+                "recordId"
+            ],
+            "query": { 
+                        "bool": {
+                            "must": [
+                                {
+                                    "term": {
+                                        "recordId": salesDataId
+                                    }
+                                }
+                            ]
+                        }
+                    },
+            "size": 1
+        };
+        
+    var sm = applications.search.searchManager;
+    var salesDataResp = sm.search(JSON.stringify(salesQuery), 'dataseries');
+    
+    var record = {};
+    if(salesDataResp.hits.hits.length > 0){
+        var hit = salesDataResp.hits.hits[0];
+        record = {
+            "periodFrom": hit.fields.periodFrom.value,
+            "type": hit.fields.type.value,
+            "recordId": hit.fields.recordId.value
+        };
+    }
+    return record;
+}
+
+function createClaimTagging(page, params, files) {
+    log.info('createClaimTagging > page={}, params={}', page, params);
+
+    var result = {
+        status: true
+    };
+
+    try {
+        var org = page.organisation;
+        var db = getDB(page);
+        var contactFormService = services.contactFormService;
+        var salesDataId = params.salesDataId;
+        var salesDataRecord = getClaimSalesById(salesDataId)
+        
+        transactionManager.runInTransaction(function () {                                            
+            
+            var cr = contactFormService.processContactRequest(page, params, files);
+            var enteredUser = applications.userApp.findUserResource(cr.profile);
+            var now = formatter.formatDateISO8601(formatter.now, org.timezone);
+            
+            var tempDateTime = salesDataRecord.periodFrom;
+            var soldDateTmp = formatter.parseDate(tempDateTime);
+            var soldDate = formatter.formatDateISO8601(soldDateTmp, org.timezone);
+            var soldBy = enteredUser.name;
+            var soldById = enteredUser.userId;
+            var custProfileBean = enteredUser.extProfileBean;
+            
+            var claimId = 'claim-' + generateRandomText(32);
+            var claimObj = {
+                recordId: claimId,
+                enteredDate: now,
+                modifiedDate: now,
+                amount: 1,
+                status: RECORD_STATUS.APPROVED,
+                soldBy: soldBy,
+                soldById: soldById,
+                soldDate: soldDate,
+                taggedFromSalesRecordId: salesDataId,
+                claimType: salesDataRecord.type
+            };
+            
+            securityManager.runAsUser(enteredUser, function () {
+                db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
+                eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId, "claimType": salesDataRecord.type});
+                eventManager.goalAchieved("claimProcessedGoal", custProfileBean, {"claim": claimId, "claimType": salesDataRecord.type, 'status': RECORD_STATUS.APPROVED});
+            });
+            
+            result.data = {};
+            result.data.claimId = claimId;
+        });
+
+    } catch (e) {
+        log.error('Error when saving claim: ' + e, e);
+        result.status = false;
+        result.messages = ['Error when updating claim: ' + e];
+    }
+
+    return views.jsonObjectView(JSON.stringify(result));
+}
+
 function getClaimGroupContactRequest(rf, claimGroupId) {
     log.info("claimGroupId ---=> {} ", claimGroupId);
     
@@ -604,10 +707,54 @@ function findClaimGroupById(rf, claimGroupId) {
     return claimGroup;
 }
 
-function getUnclaimedSales(rf, dataSeriesName, extraFields) {
+function getClaimedSales(rf, userId){
+    
+    var query = {  
+               "query":{  
+                  "bool":{  
+                     "must":[  
+                        {  
+                           "exists":{  
+                              "field":"taggedFromSalesRecordId"
+                           }
+                        }
+                     ]
+                  }
+               }
+            }
+    
+    if(userId){
+        query.query.bool.must.push(
+            {
+                "term": {
+                    "soldById": userId
+                }
+            }
+        )        
+    }
+    
+    var db = getDB(rf);
+    var queryResults = db.search(JSON.stringify(query));
+    
+    
+    var claimedSalesIds = [];
+    for (var index in queryResults.hits.hits) {  
+        var hit = queryResults.hits.hits[index];
+        var ClaimSalesId = hit.source.taggedFromSalesRecordId
+        
+        claimedSalesIds.push(ClaimSalesId );
+    }
+    
+    return claimedSalesIds
+}
+
+function getUnclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
+    var claimedSalesIds = getClaimedSales(rf, null);
+        
     var salesQuery = {
             "stored_fields": [
                 "periodFrom",
+                "recordId"
             ],
             "query": { 
                         "bool": {
@@ -631,18 +778,33 @@ function getUnclaimedSales(rf, dataSeriesName, extraFields) {
                                         }
                                     }
                                 }*/
+                            ],
+                            "must_not": [
+                                {
+                                    "terms": {
+                                        "recordId": claimedSalesIds
+                                    }
+                                }
                             ]
                         }
                     },
             "size": 10000
         };
-    
+        
     if (extraFields != null) {
         for (var fieldIndex in extraFields) {
             salesQuery.stored_fields.push(extraFields[fieldIndex]);
         }
     }
-        
+    
+    /*if (filteringParams != null) {
+        for (var filterIndex in filteringParams) {
+            var filter = filteringParams[filterIndex];
+            
+            salesQuery.query.bool.must.push(filter);
+        }
+    } */
+    
     var sm = applications.search.searchManager;
     var salesDataResp = sm.search(JSON.stringify(salesQuery), 'dataseries');
 
@@ -651,7 +813,88 @@ function getUnclaimedSales(rf, dataSeriesName, extraFields) {
     for (var index in salesDataResp.hits.hits) {  
         var hit = salesDataResp.hits.hits[index];
         var record = {
-            "periodFrom": hit.fields.periodFrom.value
+            "periodFrom": hit.fields.periodFrom.value,
+            "recordId": hit.fields.recordId.value.toString()
+        };
+        
+        if (extraFields != null) {
+            for (var fieldIndex in extraFields) {
+                record[extraFields[fieldIndex]] = hit.fields[extraFields[fieldIndex]].value;
+            }
+        }
+          
+        data.push(record);
+    }
+    
+    return data;
+}
+
+function getclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
+    var userId = securityManager.currentUser.userId
+    var claimedSalesIds = getClaimedSales(rf, userId);
+        
+    var salesQuery = {
+            "stored_fields": [
+                "periodFrom",
+                "recordId"
+            ],
+            "query": { 
+                        "bool": {
+                            "must": [
+                                {
+                                    "term": {
+                                        "dataSeriesName": dataSeriesName
+                                    }
+                                },
+                                {
+                                    "terms": {
+                                        "recordId": claimedSalesIds
+                                    }
+                                },
+                                {
+                                    "term": {
+                                        "assignedToOrg": securityManager.currentUser.primaryMembership.org.id
+                                    }
+                                }/*,
+                                {
+                                    "range": {
+                                        "periodFrom": {
+                                            "gte": formatter.formatDate(queryManager.commonStartDate),
+                                            "lte": formatter.formatDate(queryManager.commonFinishDate),
+                                            "format":"dd/MM/yyyy"
+                                        }
+                                    }
+                                }*/
+                            ]
+                        }
+                    },
+            "size": 10000
+        };
+        
+    if (extraFields != null) {
+        for (var fieldIndex in extraFields) {
+            salesQuery.stored_fields.push(extraFields[fieldIndex]);
+        }
+    }
+    
+    /*if (filteringParams != null) {
+        for (var filterIndex in filteringParams) {
+            var filter = filteringParams[filterIndex];
+            
+            salesQuery.query.bool.must.push(filter);
+        }
+    } */
+    
+    var sm = applications.search.searchManager;
+    var salesDataResp = sm.search(JSON.stringify(salesQuery), 'dataseries');
+
+    var data = [];
+
+    for (var index in salesDataResp.hits.hits) {  
+        var hit = salesDataResp.hits.hits[index];
+        var record = {
+            "periodFrom": hit.fields.periodFrom.value,
+            "recordId": hit.fields.recordId.value.toString()
         };
         
         if (extraFields != null) {

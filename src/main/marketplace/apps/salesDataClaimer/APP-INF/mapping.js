@@ -122,6 +122,15 @@ var recordMapping = {
                     "type": "text"
                 }
             }
+        },        
+        "taggedFromSalesRecordId": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
         }
     }
 };
