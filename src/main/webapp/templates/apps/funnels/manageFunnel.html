@@ -727,6 +727,7 @@
                         #end
                     </select>
                     <hr/>
+                    <a href="leads?startNode=" class="btn btn-info pull-right btn-review-start" style="display: none">Review</a>
                     <p class="lead">Journeys to start: <b class="num-journeys"></b></p>
                 </div>
                 <div class="modal-footer">
@@ -773,8 +774,10 @@
                 var val = $(e.target).closest("select").val();
                 flog("val", val);
                 $.get(window.location.pathname + "?startNode=" + val, function (resp) {
-                    flog("resop", resp);
                     $(".num-journeys").text(resp.data);
+                    var startReviewHref = "leads?startNode=" + val;
+                    $(".btn-review-start").attr("href", startReviewHref);
+                    $(".btn-review-start").show();
                 });
             });
         });

@@ -1,0 +1,121 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Funnels</title>
+        <script src="/theme/apps/leadman/leadsFolder.js?v=02" >//</script>
+    </head>
+    <body>
+        <div id="lead" class="">
+            <p class="lead" id="leadsHeading">$page.matchedStartProfiles.size() profiles to start</p>
+
+            <input type="hidden" name="startNodeId" value="$!params.startNode" />
+
+            <hr />
+
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-success btn-start-journeys pull-right">
+                        <i class="fa fa-play-circle"></i>
+                        Start
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <colgroup>
+                        <col/>
+                        <col/>
+                        <col style="width: 50px" />
+                        <col style="width: 50px" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th></th>
+                            <th><input type="checkbox" class="chk-all"/></th>
+                        </tr>
+                    </thead>
+                    <tbody id="lead-tbody">
+                        #if( $page.matchedStartProfiles.isEmpty() )
+                        <tr>
+                            <td colspan="3">No matching profiles found</td>
+                        </tr>
+                        #else
+                        #foreach($profile in $page.matchedStartProfiles)
+                        <tr>
+                            <td>$!profile.formattedName</td>
+                            <td>$!profile.email</td>
+                            <td>
+                                <a href="/manageUsers/$profile.id" class="btn btn-info">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            </td>
+                            <td><input type="checkbox" value="$profile.id" class="profile-check"/></td>
+                        </tr>
+
+                        #end
+                        #end
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+
+
+
+
+
+
+
+        <script type="text/javascript">
+            $(function () {
+                $(".btn-start-journeys").click(function(e) {
+                    var nodeId = $(e.target).closest(".modal-content").find("select").val();
+                    triggerGoal(nodeId);
+                });
+            });
+
+            function triggerGoal(nextNodeId) {
+                flog("triggerGoal", nextNodeId);
+                var ids = [];
+
+                $("#lead-tbody").find('.profile-check:checked').each(function (i, item) {
+                    var id = $(item).val();
+                    ids.push(id);
+                });
+
+                if (ids.length < 1) {
+                    Msg.info('Please select at least one profile to start');
+                } else {
+                    Kalert.confirm('Are you sure you want to start ' + ids.length + ' profile' + (ids.length > 1 ? 's' : '') + '? ', 'Trigger', function () {
+                        var startNodeId = $("input[name=startNodeId]").val();
+                        flog("StartNode: ", startNodeId);
+                        $.ajax({
+                            url: window.location.pathname,
+                            type: 'POST',
+                            dataType: 'JSON',
+                            data: {
+                                startNodeId : startNodeId,
+                                profileIds : ids,
+                            },
+                            success: function (resp) {
+                                Kalert.close();
+
+                                if (resp.status) {
+                                    Msg.success(resp.messages);
+                                } else {
+                                    Msg.warning(resp.messages);
+                                }
+                            },
+                            error: function () {
+                                Kalert.close();
+                                Msg.error('Oh No! Something went wrong!');
+                            }
+                        });
+                    });
+                }
+            }
+        </script>
+    </body>
+</html>
