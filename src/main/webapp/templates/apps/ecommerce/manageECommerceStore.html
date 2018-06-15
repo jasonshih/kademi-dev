@@ -205,7 +205,18 @@
                     #set( $rules = $services.pricingRulesService.rules($page.storeWebsite) )
 
                     #if( $rulesFile )
-                    <a href="$rulesDir.href" class="btn btn-info pull-right">Edit files</a>
+                    <div class="btn-group pull-right">
+                        <a href="$page.href?ruleNum=new" class="btn btn-success">
+                            <i class="fa fa-plus-circle"></i>
+                            Add
+                        </a>
+                        <a href="$rulesDir.href" class="btn btn-info ">
+                            <i class="fa fa-folder-open-o"></i>
+                            Files
+                        </a>
+                    </div>
+
+
                     #end
 
                     <h2>Pricing rules</h2>

@@ -282,6 +282,9 @@
                     flog("triggger", $(e.target).closest(".modal-content").find("select"), nodeId);
                     triggerGoal(nodeId);
                 });
+                $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+                    $("#lead-tbody").reloadFragment();
+                });
             });
 
             function triggerGoal(nextNodeId) {
