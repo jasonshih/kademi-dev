@@ -1,0 +1,73 @@
+<html>
+    <head>
+        <title>$view.title</title>
+
+    </head>
+    <body>
+        <a href="$page.href#tax-tab" class="btn btn-info pull-right">
+            <i class="fa fa-arrow-circle-left"></i>
+            Back to pricing rules
+        </a>
+        #set( $rules = $services.pricingRulesService.rules($page.storeWebsite) )
+        #if( $params.taxProviderId == "new" )
+            #set( $provider = false )
+        <h1>Create tax calculation provider</h1>
+        #else
+            #set( $provider = $rules.taxCalcProvider($params.taxProviderId) )
+            #if( $provider )
+            <h1>Edit tax calc provider: $params.taxProviderId</h1>
+            #else
+            <h1 class="text-danger">Couldnt find tax calc provider: $params.taxProviderId</h1>
+            #break
+            #end
+        #end
+
+        <hr/>
+
+        <form id="detailsForm" name="frmDetails" action="$page.href" method="post" class="form-horizontal">
+            <input type="hidden" name="taxProviderId" value="$params.taxProviderId" />
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="title">Title</label>
+                <div class="col-md-10">
+                    <input type="text" name="title" value="$!provider.title" placeholder="" class="form-control" />
+                </div>
+            </div>    
+            
+            <div class="form-group">
+                <label class="control-label col-md-2" for="defaultRate">defaultRate</label>
+                <div class="col-md-4">
+                    <input type="text" name="defaultRate" value="$!provider.defaultRate" placeholder="" class="form-control" />
+                </div>
+
+            </div>            
+
+            
+            <h3>Country tax rates</h3>
+            <textarea name="countryRates" placeholder="" class="form-control" style="min-height: 100px">$formatter.toProperties($provider.countryRates)</textarea>
+            <i>Enter a line for each country rate in the form country-code=rate, eg US=0.125</i>
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-lg btn-success pull-right">
+                        <span class="glyphicon glyphicon-floppy-save"></span>
+                        Save
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <script>
+            $(function () {
+                var detailsForm = $('#detailsForm');
+                detailsForm.forms({
+                    onSuccess: function (resp) {
+                        if (resp.status) {
+                            Msg.info(resp.messages[0]);
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

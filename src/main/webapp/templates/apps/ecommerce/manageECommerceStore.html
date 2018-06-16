@@ -204,7 +204,6 @@
                     #set( $rulesFile = $rulesDir.child("pricing-rules.csv") )
                     #set( $rules = $services.pricingRulesService.rules($page.storeWebsite) )
 
-                    #if( $rulesFile )
                     <div class="btn-group pull-right">
                         <a href="$page.href?ruleNum=new" class="btn btn-success">
                             <i class="fa fa-plus-circle"></i>
@@ -217,12 +216,8 @@
                     </div>
 
 
-                    #end
-
                     <h2>Pricing rules</h2>
 
-
-                    #if( $rulesFile )
 
                     <table class="table table-striped">
                         <thead>
@@ -255,63 +250,13 @@
                                 <td>$!rule.multValue</td>
                                 <td>$!rule.notes</td>
                                 <td>
-                                    <a href="$page.href?ruleNum=$foreach.count"><i class="fa fa-pencil"></i></a>
+                                    <a class="btn btn-info" href="$page.href?ruleNum=$foreach.count"><i class="fa fa-pencil"></i></a>
                                 </td>
                             </tr>
                             #end
                         </tbody>
                     </table>
-                    #else
-                    <p class="lead">No pricing rules file exists for this website</p>
 
-                    <a href="${rulesDir.href}texteditor?fileName=pricing-rules.csv">Create and edit as a text file</a>
-
-                    <br/>
-
-                    OR upload a spread sheet in the correct format here:
-                    <a href="${rulesDir.href}">Upload to this directory</a>
-
-                    Use this format as a CSV file (omit the header row)
-                    <br/>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr class="odd">
-                                <th colspan="9">1 rules</th>
-                            </tr>
-                            <tr class="even">
-                                <th>Promotion</th>
-                                <th>User ID</th>
-                                <th>Group</th>
-                                <th>Org ID</th>
-                                <th>Org Type</th>
-                                <th>Expression</th>
-                                <th>Add</th>
-                                <th>Multiply</th>
-                                <th>Notes</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="odd">
-                                <td class="first">promo1</td>
-                                <td>admin</td>
-                                <td>administrators</td>
-                                <td>myorg</td>
-                                <td>trade</td>
-                                <td></td>
-                                <td>1</td>
-                                <td>0.9</td>
-                                <td class="last">just a test</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div class="well">
-                    You can copy/paste this as a template:
-
-                    <textarea class="form-control">promo1,admin,administrators,myorg,trade,,1,0.9,just an example</textarea>
-                    </div>
-
-                    #end
                 </div>
                 <div id="shipping" class="tab-pane">
                     <h2>Shipping providers</h2>
@@ -319,17 +264,32 @@
                     #set( $rulesDir = $rootFolder.find("/repositories/$page.storeWebsite.name/$page.storeWebsite.liveBranch/WEB-INF/") )
                     #set( $shippingFile = $rulesDir.child("shipping.settings.xml") )
 
-                    #if( $shippingFile )
-                    <a href="/repositories/ecom1/version1/WEB-INF/"></a>
-
+                    <div class="btn-group pull-right">
+                        <a href="$page.href?shippingId=new" class="btn btn-success">
+                            <i class="fa fa-plus-circle"></i>
+                            Add
+                        </a>
+                        <a href="$rulesDir.href" class="btn btn-info ">
+                            <i class="fa fa-folder-open-o"></i>
+                            Files
+                        </a>
+                    </div>
+                    
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th colspan="9">$rules.shippingProviders.size() provider</th>
+                                <th colspan="3">
+                                    #if( $rules.shippingProviders )
+                                    $rules.shippingProviders.size() providers
+                                    #else
+                                    No shipping providers
+                                    #end
+                                </th>
                             </tr>
                             <tr>
                                 <th>ID</th>
                                 <th>Title</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -337,35 +297,47 @@
                             <tr>
                                 <td>$provider.id</td>
                                 <td>$provider.title</td>
+                                <td>
+                                    <a class="btn btn-info" href="$page.href?shippingId=$provider.id"><i class="fa fa-pencil"></i></a>
+                                </td>                                
                             </tr>
                             <tr>
                                 <td></td>
-                                <td>$provider.detailedDescription</td>
+                                <td colspan="2">$provider.detailedDescription</td>
                             </tr>
                             #end
                         </tbody>
                     </table>
-                    #else
-                    <p class="lead">No shipping providers file exists for this website</p>
 
-                    <a href="${rulesDir.href}texteditor?fileName=shipping.settings.xml">Create and edit as a text file</a>
-
-                    #end
                 </div>
                 <div id="tax" class="tab-pane">
                     <h2>Tax providers</h2>
 
-                    #if( $shippingFile )
-                    <a href="/repositories/ecom1/version1/WEB-INF/"></a>
-
+                    <div class="btn-group pull-right">
+                        <a href="$page.href?taxProviderId=new" class="btn btn-success">
+                            <i class="fa fa-plus-circle"></i>
+                            Add
+                        </a>
+                        <a href="$rulesDir.href" class="btn btn-info ">
+                            <i class="fa fa-folder-open-o"></i>
+                            Files
+                        </a>
+                    </div>
+                    
                     <table class="table table-striped">
+                        <cols>
+                            <col />
+                            <col />
+                            <col style="width: 50px" />
+                        </cols>
                         <thead>
                             <tr>
-                                <th colspan="9">$rules.shippingProviders.size() tax providers</th>
+                                <th colspan="3">$rules.shippingProviders.size() tax providers</th>
                             </tr>
                             <tr>
                                 <th>ID</th>
                                 <th>Title</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -373,20 +345,17 @@
                             <tr>
                                 <td>$provider.id</td>
                                 <td>$provider.title</td>
+                                <td>
+                                    <a class="btn btn-info" href="$page.href?taxProviderId=$provider.id"><i class="fa fa-pencil"></i></a>
+                                </td>                                  
                             </tr>
                             <tr>
                                 <td></td>
-                                <td>$provider.detailedDescription</td>
+                                <td colspan="2">$provider.detailedDescription</td>
                             </tr>
                             #end
                         </tbody>
                     </table>
-                    #else
-                    <p class="lead">No shipping providers file exists for this website</p>
-
-                    <a href="${rulesDir.href}texteditor?fileName=shipping.settings.xml">Create and edit as a text file</a>
-
-                    #end
                 </div>
             </div>
         </div>

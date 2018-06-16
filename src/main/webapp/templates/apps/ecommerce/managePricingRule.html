@@ -11,6 +11,7 @@
         #set( $rules = $services.pricingRulesService.rules($page.storeWebsite) )
         #if( $params.ruleNum == "new" )
             #set( $rule = false )
+            #set( $ruleNum = "new" )
             <h1>Create pricing rule</h1>
         #else
             #set( $ruleNum = $formatter.toInteger($params.ruleNum) - 1 )
