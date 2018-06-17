@@ -230,6 +230,7 @@
                                 <th>Group</th>
                                 <th>Org ID</th>
                                 <th>Org Type</th>
+                                <th>Product/Category</th>
                                 <th>Expression</th>
                                 <th>Add</th>
                                 <th>Multiply</th>
@@ -245,6 +246,10 @@
                                 <td>$!rule.groupName</td>
                                 <td>$!rule.orgId</td>
                                 <td>$!rule.orgType</td>
+                                <td>
+                                    $!rule.baseProductCode
+                                    $!rule.categoryName
+                                </td>
                                 <td>$!rule.mvelExpression</td>
                                 <td>$!rule.addValue</td>
                                 <td>$!rule.multValue</td>
@@ -274,7 +279,7 @@
                             Files
                         </a>
                     </div>
-                    
+
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -299,7 +304,7 @@
                                 <td>$provider.title</td>
                                 <td>
                                     <a class="btn btn-info" href="$page.href?shippingId=$provider.id"><i class="fa fa-pencil"></i></a>
-                                </td>                                
+                                </td>
                             </tr>
                             <tr>
                                 <td></td>
@@ -323,7 +328,7 @@
                             Files
                         </a>
                     </div>
-                    
+
                     <table class="table table-striped">
                         <cols>
                             <col />
@@ -347,7 +352,7 @@
                                 <td>$provider.title</td>
                                 <td>
                                     <a class="btn btn-info" href="$page.href?taxProviderId=$provider.id"><i class="fa fa-pencil"></i></a>
-                                </td>                                  
+                                </td>
                             </tr>
                             <tr>
                                 <td></td>
