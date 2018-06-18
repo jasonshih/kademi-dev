@@ -41,6 +41,8 @@
 
         Msg.info('Doing search...', "manageSKUs", 2000);
 
+        var uri = URI(window.location);
+        uri.setSearch("dataQuery", $('#data-query').val());
         var data = {
             dataQuery: $('#data-query').val(),
         };
@@ -48,23 +50,16 @@
 
         $('.btn-export-points').attr('href', 'skus.csv?' + $.param(data));
 
-        var target = $('#pointsTable');
-        target.load();
+        var target = $('#productsTableContainer');
 
-
-        var link = window.location.pathname + '?' + $.param(data);
+        var link = uri.toString();
         flog('new link', link);
 
-        $.ajax({
-            type: 'GET',
-            url: link,
-            dataType: 'html',
-            success: function (content) {
-                flog('response', content);
+        $("#productsTableBody,#pointsFooter").reloadFragment({
+            url : link,
+            whenComplete : function() {
                 Msg.success('Search complete', "manageSKUs", 2000);
-                var newBody = $(content).find('#pointsTable');
 
-                target.replaceWith(newBody);
                 history.pushState(null, null, link);
 
                 initUpdateSku();
@@ -156,6 +151,7 @@
             }, 1000)
         });
     }
+
 
     function initUpdateBaseCost() {
         $('#productsTableBody').on('change', '.input-sku-baseCost', function (e) {
@@ -288,56 +284,58 @@
 
         var modalUpCrop;
         var btnUploadImage = modalChangeImg.find('.btn-upload-img');
-        btnUploadImage.on('click', function (e) {
-            e.preventDefault();
+        if( btnUploadImage.length > 0 ) {
+            btnUploadImage.on('click', function (e) {
+                e.preventDefault();
 
-            var skuId = modalChangeImg.find('input[name=skuId]').val();
+                var skuId = modalChangeImg.find('input[name=skuId]').val();
 
-            modalUpCrop.attr('data-skuid', skuId);
-            modalUpCrop.attr('data-rowid', modalChangeImg.attr('data-rowid'));
-            btnUploadImage.upcropImage('setUrl', '/skus/?skuId=' + skuId);
-            modalChangeImg.modal('hide');
-        });
-        btnUploadImage.upcropImage({
-            buttonContinueText: 'Save',
-            fieldName: 'skuImg',
-            onReady: function (upcropContainer) {
-                modalUpCrop = upcropContainer.closest('.modal');
-            },
-            onCropComplete: function (resp) {
-                flog("onCropComplete:", resp, resp.nextHref);
-                reloadRow(modalUpCrop.attr('data-rowid'));
-                Msg.info("Crop success");
-            },
-            onContinue: function (resp) {
-                flog("onContinue:", resp, resp.result.nextHref);
+                modalUpCrop.attr('data-skuid', skuId);
+                modalUpCrop.attr('data-rowid', modalChangeImg.attr('data-rowid'));
+                btnUploadImage.upcropImage('setUrl', '/skus/?skuId=' + skuId);
+                modalChangeImg.modal('hide');
+            });
+            btnUploadImage.upcropImage({
+                buttonContinueText: 'Save',
+                fieldName: 'skuImg',
+                onReady: function (upcropContainer) {
+                    modalUpCrop = upcropContainer.closest('.modal');
+                },
+                onCropComplete: function (resp) {
+                    flog("onCropComplete:", resp, resp.nextHref);
+                    reloadRow(modalUpCrop.attr('data-rowid'));
+                    Msg.info("Crop success");
+                },
+                onContinue: function (resp) {
+                    flog("onContinue:", resp, resp.result.nextHref);
 
-                var skuId = modalUpCrop.attr('data-skuid');
-                var rowId = modalUpCrop.attr('data-rowid');
+                    var skuId = modalUpCrop.attr('data-skuid');
+                    var rowId = modalUpCrop.attr('data-rowid');
 
-                $.ajax({
-                    url: window.location.pathname + '?skuId=' + skuId,
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        uploadedHref: resp.result.nextHref,
-                        applyImage: true
-                    },
-                    success: function (resp) {
-                        flog("success");
-                        if (resp.status) {
-                            Msg.info("Done");
-                            reloadRow(rowId);
-                        } else {
-                            Msg.error("An error occured processing the variant image.");
+                    $.ajax({
+                        url: window.location.pathname + '?skuId=' + skuId,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            uploadedHref: resp.result.nextHref,
+                            applyImage: true
+                        },
+                        success: function (resp) {
+                            flog("success");
+                            if (resp.status) {
+                                Msg.info("Done");
+                                reloadRow(rowId);
+                            } else {
+                                Msg.error("An error occured processing the variant image.");
+                            }
+                        },
+                        error: function () {
+                            Msg.error('An error occured processing the variant image.');
                         }
-                    },
-                    error: function () {
-                        Msg.error('An error occured processing the variant image.');
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+        }
 
         modalChangeImg.find('form').forms({
             onSuccess: function () {
@@ -467,6 +465,44 @@
         });
     }
 
+    function initUpdateSkuFields() {
+        flog("initUpdateSkuFields");
+        $('#productsTableBody').on('change', '.input-sku-field', function (e) {
+            flog("initUpdateSkuFields; on change");
+            var target = $(e.target);
+            var fieldName = target.data("field-name");
+            var value = target.val();
+            var row = target.closest('tr');
+            var rowId = row.attr('id');
+            var skuId = row.data('skuid');
+            updateSkuField(skuId,fieldName, value, rowId);
+        });
+    }
+
+    function updateSkuField(skuId, fieldName, value, rowId) {
+        var data = {};
+        data["updateSkuId"] = skuId;
+        data[fieldName] = value;
+        $.ajax({
+            type: 'POST',
+            url: window.location.pathname,
+            data: data,
+            dataType: "json",
+            success: function (resp) {
+                if (resp.status) {
+                    Msg.success(resp.messages);
+                    reloadRow(rowId);
+                } else {
+                    Msg.error(resp.messages);
+                }
+            },
+            error: function (resp) {
+                Msg.error("An error occured setting the " + fieldName);
+            }
+        });
+    }
+
+
     function removeSkuImage(skuId, rowId) {
         $.ajax({
             type: 'POST',
@@ -519,6 +555,7 @@
 
     // Run Init functions
     $(function () {
+        flog("manageSkus: init");
         initUpdateSku();
         initUpdateSkuTitle();
         initUpdateBaseCost();
@@ -526,6 +563,7 @@
         initProductsCsv();
         initUpdateSkuStock();
         initLoadSkuStockQuantity();
+        initUpdateSkuFields();
     });
 
 })();
