@@ -64,10 +64,10 @@
                     <div class="col-sm-3 item-price center-content">
                         <div>
                             <span class="lead">
-                                $$formatter.formatCurrency($item.finalCost)
+                                $$formatter.formatCurrency($item.finalCost)<br/>
 
-                                #if( $item.adjustedPriceExTax > 0 && $item.adjustedPriceExTax < $item.listUnitPriceExTax )
-                                <small><s><i class="text-muted text-sm">( $formatter.formatCurrency($item.listUnitPriceExTax) )</i></s></small>
+                                #if( $item.finalCost > 0 && $item.finalCost < $item.finalListPriceIncTax )
+                                <small><s><i class="text-muted text-sm">( $formatter.formatCurrency($item.finalListPriceIncTax) )</i></s></small>
                                 #end
                             </span>
                         </div>
