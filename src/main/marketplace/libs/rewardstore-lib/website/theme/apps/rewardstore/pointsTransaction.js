@@ -1,15 +1,17 @@
 $(function () {
     function reloadPointsTx() {
-        var ids = [];
-        $('.pointsTransactionTable').each(function () {
-            var table = $(this);
-            ids.push('#'+table.parent().attr('id'));
-        });
-
-        if (ids.length){
-            var obj = $(ids.join(','));
-
-            obj.reloadFragment();
+        var c = $('.pointsTransactionTable');
+        if (c.length){
+            var first = c.first();
+            first.reloadFragment({
+                url: window.location.href,
+                whenComplete: function (resp) {
+                    var newHtml = $(resp).find('.pointsTransactionTable');
+                    c.each(function (index, item) {
+                        $(item).replaceWith(newHtml.eq(index));
+                    })
+                }
+            })
         }
     }
 
