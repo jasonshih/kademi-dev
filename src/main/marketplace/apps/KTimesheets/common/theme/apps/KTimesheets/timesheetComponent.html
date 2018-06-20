@@ -23,7 +23,9 @@
                 #end
             </tr>
             <tr>
-                <th></th>
+                <th>
+                    <a href="#" class="text-muted pull-right ts-unhide"><small>Unhide all</small></a>
+                </th>
 
                 #foreach( $day in $timesheet.days )
                 <th>$formatter.getDayOfWeekName($day)</th>
@@ -51,7 +53,8 @@
             #if( $showItem )
             <tr>
                 <td>
-                    #if( $item.class.simpleName == "Task" )
+                    #if( $item.is("task") )
+                    <a class="pull-right text-muted hide-ts-item hide-ts-item-$item.id" href="#" data-hide-id="$item.id"><i class="fa fa-eye"></i></a>
                     <a href="/tasks/$item.id/ .taskViewModal" class="mr btn btn-danger btn-sm btn-circle" data-target="#modalEditTask" data-toggle="modal">T</a>
                     $item.formattedName
                     #if( $item.relatedLead )
@@ -61,7 +64,8 @@
                     #end
                     </a>
                     <input type="hidden" class="form-control timesheet-item" name="item" value="$item.id" />
-                    #elseif( $item.class.simpleName == "Lead" )
+                    #elseif( $item.is("lead") )
+                    <a class="pull-right text-muted hide-ts-item" href="#" data-hide-id="$item.id"><i class="fa fa-eye"></i></a>
                     <a href="/leads/$item.id">$item.formattedName</a>
                     <input type="hidden" class="form-control timesheet-item" name="item" value="$item.id" />
                     #else
