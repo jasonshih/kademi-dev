@@ -178,3 +178,16 @@ table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:af
 .leadDropFilter .dropdown-menu > li > a{
     padding-left: 10px;
 }
+
+/* add pencil icon to editable cell */
+
+#leadTable td.editable:after{
+    content: "\f040";
+    float: right;
+    font-family: FontAwesome;
+}
+
+#leadTable td.editable.editing:after{
+     content: "";
+     float: none;
+}

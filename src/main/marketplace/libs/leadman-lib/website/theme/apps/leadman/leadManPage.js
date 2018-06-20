@@ -249,6 +249,7 @@
                 .on('click', 'tbody td.editable', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
+                    $(this).addClass('editing');
                     editor.inline(this, {
                         onBlur: 'submit'
                     });
@@ -283,6 +284,7 @@
                     cell.data( scores[data.leadId] ).draw();
                 }
             }
+            $('#leadTable').find('.editable.editing').removeClass('editing');
         });
 
         dataTable.draw();

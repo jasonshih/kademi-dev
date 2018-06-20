@@ -12,25 +12,25 @@
                 #set($request.params.leadType = 'active')
                 #end
                 <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-info $formatter.ifEqual('active', '', $request.params.leadType, 'active')">
-                        <input type="radio" name="leadType" id="active" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'active')/> <span id="activeLeadTotal"></span> Active
+                    <label class="btn btn-primary $formatter.ifEqual('active', '', $request.params.leadType, 'active')">
+                        Active <input type="radio" name="leadType" id="active" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'active')/> <span id="activeLeadTotal" class="badge"></span>
                     </label>
                     <label class="btn btn-success $formatter.ifEqual('active', '', $request.params.leadType, 'closed')">
-                        <input type="radio" name="leadType" id="closed" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'closed')/> <span id="closedLeadTotal"></span> Closed
+                        Closed <input type="radio" name="leadType" id="closed" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'closed')/> <span id="closedLeadTotal" class="badge"></span>
                     </label>
-                    <label class="btn btn-warning $formatter.ifEqual('active', '', $request.params.leadType, 'cancelled')">
-                        <input type="radio" name="leadType" id="cancelled" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'cancelled')/> <span id="cancelledLeadTotal"></span> Cancelled
+                    <label class="btn btn-danger $formatter.ifEqual('active', '', $request.params.leadType, 'cancelled')">
+                        Cancelled <input type="radio" name="leadType" id="cancelled" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $request.params.leadType, 'cancelled')/> <span id="cancelledLeadTotal" class="badge"></span>
                     </label>
                 </div>
             </div>
 
             <div class="form-group leadDropFilter" id="tagsDropWrap">
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="tagsDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        Tags
-                        <span class="caret"></span>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary">Tags</button>
+                    <button  id="tagsDrop" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-caret-down"></i>
                     </button>
-                    <ul class="dropdown-menu" aria-labelledby="tagsDrop">
+                    <ul class="dropdown-menu">
                         #foreach($tag in $page.availableTags)
                         <li><a data-filter="tags" class="$formatter.ifTrue($params.tags.contains($tag.id.toString()), 'filterSelected', '')" href="$tag.id"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.tags.contains($tag.id.toString()), '', 'hide')"></i></span> $formatter.firstNotNull($tag.title, $tag.name)</a></li>
                         #end
@@ -41,8 +41,9 @@
             <div class="form-group leadDropFilter">
                 #if($page.teamsForUser && $page.teamsForUser.size() > 0)
                 <div class="btn-group">
+                    <button type="button" class="btn btn-primary"><span class="aggr-title">Team </span></button>
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="aggr-title">Team </span> <i class="fa fa-caret-down"></i>
+                        <i class="fa fa-caret-down"></i>
                     </button>
                     <ul class="dropdown-menu">
                         #foreach($o in $page.teamsForUser)
@@ -59,10 +60,10 @@
             </div>
 
             <div class="form-group leadDropFilter" id="assingedToDropWrap">
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="assingedToDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        Assigned to
-                        <span class="caret"></span>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary"><span class="aggr-title">Assigned to </span></button>
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-caret-down"></i>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="assingedToDrop">
                         #foreach($t in $page.find("/leads").teamMembers)
@@ -75,10 +76,12 @@
             </div>
 
             <div class="form-group leadDropFilter" id="sourcesDropWrap">
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="sourcesDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <div class="btn-group">
+                    <button class="btn btn-primary" type="button" id="sourcesDrop">
                         Sources
-                        <span class="caret"></span>
+                    </button>
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-caret-down"></i>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="sourcesDrop">
                         <li><a data-filter="sources" class="$formatter.ifTrue($params.sources.contains('NOSOURCE'), 'filterSelected', '')" href="NOSOURCE"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.sources.contains('NOSOURCE'), '', 'hide')"></i></span> Leads with no source</a></li>
@@ -92,10 +95,12 @@
             </div>
 
             <div class="form-group leadDropFilter" id="journeysDropWrap">
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="journeysDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <div class="btn-group">
+                    <button class="btn btn-primary" type="button" id="journeysDrop">
                         Journey
-                        <span class="caret"></span>
+                    </button>
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-caret-down"></i>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="journeysDrop">
                         #foreach( $funnel in $page.find("/leads/").funnels)

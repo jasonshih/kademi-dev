@@ -61,3 +61,4 @@ controllerMappings.addComponent("content/components", "photoEDM")
         .build();
 
 controllerMappings.addComponent("content/components", "countdown", "html", "Shows a countdown timer from a date", "Content App component");
+controllerMappings.addComponent("content/components", "menu2", "file", "Displays a menu, with big search box", "Content App component");
