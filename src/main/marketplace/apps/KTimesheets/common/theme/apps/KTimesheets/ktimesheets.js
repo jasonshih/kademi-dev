@@ -134,10 +134,11 @@ function updateTotals(table) {
         if (i > 0) {
             var td = $(n);
             var total = calcTotal(bodyRows, i);
-            td.text(total);
+            td.text(total.toFixed(2));
             grandTotal += total;
         }
     });
+    grandTotal = grandTotal.toFixed(2);
     table.find(".grand-total").text(grandTotal);
 }
 
