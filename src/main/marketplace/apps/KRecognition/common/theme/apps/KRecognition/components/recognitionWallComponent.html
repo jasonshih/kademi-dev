@@ -1,4 +1,5 @@
-#if ($page && "$!page.class.simpleName" != "ThemeCheckerPage")
+I'M A RECOGNITION WALL
+
 <div class="text-right">
     #if( $user )
     <a href="#postForumQuestion" data-toggle="modal" class="btn btn-primary">
@@ -8,15 +9,18 @@
     #end
     <p>&nbsp;</p>
 </div>
+
+#set( $forum = $services.forumManager.forums.get(0) )
+
 <div class="well">
-    #set($questions = $page.questions)
+    #set($questions = $services.forumManager.myStream($forum, null) )
     #if( $questions.isEmpty() )
     <p>No one has posted any questions yet, <a href="#postForumQuestion" data-toggle="modal">be the first to ask</a></p>
     #else
 
     <ul class="row">
         #foreach($post in $questions)
-        <li class="thumbnail col-sm-6 col-md-3">
+        <li class="thumbnail col-sm-6 col-md-6">
             <div class="forumQuestionWrap">
                 <div class="questionAvatar"
                      style="background-image: url($formatter.profilePicHref($post.poster)); background-size: cover">
@@ -29,7 +33,7 @@
                         <i class="fa fa-comments-o"></i>
                         <strong>$post.numReplies</strong> replies
                     </p>
-                    <h4><a href="$post.name">$post.title</a></h4>
+                    <h4><a href="/community/$forum.name/$post.name">$post.title</a></h4>
                     <i class="fa fa-user"></i> Posted by <em><a href="#">$post.poster.nickName</a></em>
                     <p class="questionNotes">$!post.notes</p>
 
@@ -40,6 +44,8 @@
     </ul>
     #end
 </div>
+
+
 <div class="modal fade" id="postForumQuestion" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -48,7 +54,7 @@
                 </button>
                 <h4 class="modal-title">Ask a question</h4>
             </div>
-            <form method="POST" action="." class="form-horizontal">
+            <form method="POST" action="/community/$forum.name/" class="form-horizontal">
                 <div class="modal-body">
 
                     <div class="form-group">
@@ -74,16 +80,3 @@
         </div>
     </div>
 </div>
-#else
-    <div>
-        <div class="text-right">
-            <a href="#postForumQuestion" data-toggle="modal" class="btn btn-primary"><i class="fa fa-plus"><!----></i> Post
-                a question</a>
-            <p>&nbsp;</p>
-        </div>
-        <div class="well">
-            <p>No one has posted any questions yet, <a href="#postForumQuestion" data-toggle="modal">be the first to ask</a>
-            </p>
-        </div>
-    </div>
-#end

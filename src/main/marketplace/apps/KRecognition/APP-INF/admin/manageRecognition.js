@@ -21,16 +21,18 @@
             .build();
 
     controllerMappings.addEventListener('RecognitionEvent', true, "_onRecognitionAwarded");
-    
-    controllerMappings.addComponent("KRecognition/components", 
+
+    controllerMappings.addComponent("KRecognition/components",
         "levelPanel", "html", "Displays the current level for a topic", "Recognition");
-    
+
     controllerMappings.addComponent("KRecognition/components",
         "levelProgressPanel", "html", "Displays levels progress panel", "Recognition");
-        
-    controllerMappings.addComponent("KRecognition/components", 
+
+    controllerMappings.addComponent("KRecognition/components",
         "badgesPanel", "html", "Displays the achieved badges for a topic", "Recognition");
-            
+
+    controllerMappings.addComponent("KRecognition/components",
+        "recognitionWall", "html", "Displays a facebook style wall of actitivy", "Recognition");
 
     g._onRecognitionAwarded = function (rf, event) {
         var award = event.award;
@@ -53,7 +55,7 @@
 
     /**
      * API for creating a new topic
-     * 
+     *
      * @param {type} page
      * @param {type} params
      * @returns {unresolved}
@@ -73,7 +75,7 @@
 
     /**
      * API to retrieve all the topics and there levels/badges in JSON
-     * 
+     *
      * @returns {undefined}
      */
     g._getTopicsAsJson = function () {
@@ -122,7 +124,7 @@
 
     /**
      * API to delete an award
-     * 
+     *
      * @param {type} page
      * @param {type} params
      * @returns {undefined}
