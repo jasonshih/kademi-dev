@@ -16,10 +16,29 @@ I'M A RECOGNITION WALL
 
 <div class="well">
 
+
+    #if( $postsResp.hits.total == 0 )
+    <p>No one has posted anything yet, <a href="#postForumQuestion" data-toggle="modal">be the first to ask</a></p>
+    #else
+
+        #foreach($postHit in $postsResp.hits.hits)
     <div class="panel panel-default">
-        <div class="panel-heading"><a href="#" class="pull-right">View all</a> <h4>Stackoverflow</h4></div>
+        <div class="panel-heading">
+            <a href="#" class="pull-right">View all</a>
+            <div class="questionAvatar pull-left" style="width: 20px; height: 20px; background-image: url($formatter.profilePicHref($post.poster)); background-size: cover"></div>
+            <h4>$postHit.fields.title.value</h4>
+            <small>
+            <i class="fa fa-clock-o"></i>
+            <abbr title="$formatter.formatDateISO8601($postHit.fields.postDate.value)" class="timeago">$postHit.fields.postDate.value</abbr>
+            &nbsp;
+            <i class="fa fa-comments-o"></i>
+            <strong>$postHit.fields.numInteractions.value</strong> replies
+            </small>
+        </div>
+
         <div class="panel-body">
-            <img src="//placehold.it/150x150" class="img-circle pull-right"> <a href="#">Keyword: Bootstrap</a>
+            <img src="//placehold.it/150x150" class="img-circle pull-right">
+            <a href="#">CONTENT GOES HERE</a>
             <div class="clearfix"></div>
             <hr>
 
@@ -29,7 +48,8 @@ I'M A RECOGNITION WALL
             <form>
                 <div class="input-group">
                     <div class="input-group-btn">
-                        <button class="btn btn-default">+1</button><button class="btn btn-default"><i class="glyphicon glyphicon-share"></i></button>
+                        <button class="btn btn-default">+1</button>
+                        <button class="btn btn-default"><i class="glyphicon glyphicon-share"></i></button>
                     </div>
                     <input class="form-control" placeholder="Add a comment.." type="text">
                 </div>
@@ -37,35 +57,7 @@ I'M A RECOGNITION WALL
 
         </div>
     </div>
-
-    #if( $postsResp.hits.total == 0 )
-    <p>No one has posted anything yet, <a href="#postForumQuestion" data-toggle="modal">be the first to ask</a></p>
-    #else
-
-    <ul class="row">
-        #foreach($postHit in $postsResp.hits.hits)
-        <li class="">
-            <div class="forumQuestionWrap">
-                <div class="questionAvatar" style="background-image: url($formatter.profilePicHref($post.poster)); background-size: cover">
-                    <img src="$formatter.profilePicHref($post.poster)" alt="" style="visibility: hidden"/>
-                </div>
-                <div class="questionDetails">
-                    <p>
-                        <i class="fa fa-clock-o"></i>
-                        <abbr title="$formatter.formatDateISO8601($postHit.fields.postDate.value)" class="timeago">$postHit.fields.postDate.value</abbr>
-                        &nbsp;
-                        <i class="fa fa-comments-o"></i>
-                        <strong>$postHit.fields.numInteractions.value</strong> replies
-                    </p>
-                    <h4><a href="/community/$forum.name/$postHit.fields.name.value">$postHit.fields.title.value</a></h4>
-                    <i class="fa fa-user"></i>
-                    Posted by
-                    <em><a href="#">$postHit.fields.profileId.value</a></em>
-                </div>
-            </div>
-        </li>
         #end
-    </ul>
     #end
 </div>
 
