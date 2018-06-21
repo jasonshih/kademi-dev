@@ -21,12 +21,12 @@ function doWallSearch(forum, pageFrom, pageSize) {
 
 
 function appendCriteria(query, forum) {
-    // TODO: Add user constraint + followers
+    // TODO: Add constraint to limit to posts from current user and followers
     var must = [
         {"term": {"forumId": forum.id}}
     ];
 
-    queryJson.query = {
+    query.query = {
         "bool": {
             "must": must
         }
