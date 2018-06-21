@@ -8,17 +8,22 @@
 #end
 
 #if ($page)
-    #set( $claimTypes = $applications.get('salesDataClaimer').getAppSettings(null, null).claimTypes.split('\n'))    
+    
     #set( $currentTab = "pending-claims" )
     #if( $request.params.tab )
         #set( $currentTab = $request.params.tab )
     #end
-        
+    
+    #set( $currentFilter = "SHOW ALL")
+    #if( $request.params.filter )
+        #set( $currentFilter = $request.params.filter )
+    #end
+    
     #set($app = $applications.salesDataClaimer )
     #set($filteredSalesRecords = [])
     
     #if( $currentTab == "pending-claims")
-        #set($salesRecords = $app.call('getUnclaimedSales', $page, $dataSeries, ['type', 'accountName', 'distributor'], [{key: 'type', value: 'NET NEW REWARD'}]))
+        #set($salesRecords = $app.call('getUnclaimedSales', $page, $dataSeries, ['type', 'accountName', 'distributor', 'dealRegBonus'], [{key: 'type', value: 'NET NEW REWARD'}]))
         #if($expireIn > 0)
             #foreach($record in $salesRecords)
                 #set($dealDate = $formatter.toDate($record.periodFrom))
@@ -31,7 +36,18 @@
             #set( $filteredSalesRecords = $salesRecords )
         #end
     #else
-        #set($filteredSalesRecords = $app.call('getclaimedSales', $page, $dataSeries, ['type', 'accountName', 'distributor'], [{key: 'type', value: 'NET NEW REWARD'}]))
+        #set($filteredSalesRecords = $app.call('getclaimedSales', $page, $dataSeries, ['type', 'accountName', 'distributor', 'dealRegBonus'], [{key: 'type', value: 'NET NEW REWARD'}]))
+    #end
+    
+    #if($currentFilter != "SHOW ALL")
+        #set( $tempRecords = [] )
+        #foreach($record in $filteredSalesRecords)
+            #if( $currentFilter == $record.type )
+                #if( $tempRecords.add($record) )#end
+            #end
+        #end
+        
+        #set( $filteredSalesRecords = $tempRecords)
     #end
     
     <div class="">
@@ -44,73 +60,75 @@
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Filter Claims
             <span class="caret"></span></button>
             <ul class="dropdown-menu">
-                #foreach( $claimType in $claimTypes )
-                    <li><a class="filter-claims-option">$claimType.trim()</a></li>
-                #end  
+                <li ><a class="filter-claims-option" style="cursor: pointer;">SHOW ALL</a></li>
+                <li value="NET NEW REWARD"><a class="filter-claims-option" style="cursor: pointer;">NET NEW REWARD</a></li>
+                <li value="CROSS SELL REWARD"><a class="filter-claims-option" style="cursor: pointer;">CROSS SELL REWARD</a></li>
             </ul>
         </div>
     </div>
     
-    
-    
-    #if($currentTab == "pending-claims")
-        <div id="pending-claims">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Customer name</th>
-                        <th>Close date</th>
-                        <th>Claim type</th>
-                        <th>Distributor</th>
-                        <th>Claim expire date</th>
-                        <th>Options</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    #foreach($record in $filteredSalesRecords)
-                        #set($dealDate = $formatter.toDate($record.periodFrom))
-                        #set($expireDate = $formatter.addDays($dealDate, $expireIn))
+    <div id="claims-table">
+        #if($currentTab == "pending-claims")
+            <div id="pending-claims">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>$record.accountName</td>
-                            <td>$formatter.formatDate($dealDate)</td>
-                            <td>$record.type</td>
-                            <td>$record.distributor</td>
-                            <td>#if($expireIn > 0) $formatter.formatDate($expireDate) #else - #end</td>
-                            <td><button class="btn btn-primary tagClaim" data-salesdataid="$formatter.toString($record.recordId)">Claim</button></td>
+                            <th>Customer name</th>
+                            <th>Close date</th>
+                            <th>Claim type</th>
+                            <th>Distributor</th>
+                            <th>Deal Reg bonus</th>
+                            <th>Claim expire date</th>
+                            <th>Options</th>
                         </tr>
-                    #end
-                </tbody>
-            </table>
-        </div>
-    #elseif($currentTab == "post-claims")
-        
-        <div id="post-claims">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Customer name</th>
-                        <th>Close date</th>
-                        <th>Claim type</th>
-                        <th>Distributor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    #foreach($record in $filteredSalesRecords)
-                        #set($dealDate = $formatter.toDate($record.periodFrom))
-                        #set($expireDate = $formatter.addDays($dealDate, $expireIn))
+                    </thead>
+                    <tbody>
+                        #foreach($record in $filteredSalesRecords)
+                            #set($dealDate = $formatter.toDate($record.periodFrom))
+                            #set($expireDate = $formatter.addDays($dealDate, $expireIn))
+                            <tr>
+                                <td>$record.accountName</td>
+                                <td>$formatter.formatDate($dealDate)</td>
+                                <td>$record.type</td>
+                                <td>$record.distributor</td>
+                                <td style="text-align: center;">#if($record.dealRegBonus == true) <i class="fa fa-star"></i> #end</td>
+                                <td style="text-align: center;">#if($expireIn > 0) $formatter.formatDate($expireDate) #else - #end</td>
+                                <td><button class="btn btn-primary tagClaim" data-salesdataid="$formatter.toString($record.recordId)">Claim</button></td>
+                            </tr>
+                        #end
+                    </tbody>
+                </table>
+            </div>
+        #elseif($currentTab == "post-claims")
+            
+            <div id="post-claims">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>$record.accountName</td>
-                            <td>$formatter.formatDate($dealDate)</td>
-                            <td>$record.type</td>
-                            <td>$record.distributor</td>
+                            <th>Customer name</th>
+                            <th>Close date</th>
+                            <th>Claim type</th>
+                            <th>Distributor</th>
+                            <th>Deal Reg bonus</th>
                         </tr>
-                    #end
-                </tbody>
-            </table>
-        </div>
-        
-        
-    #end
+                    </thead>
+                    <tbody>
+                        #foreach($record in $filteredSalesRecords)
+                            #set($dealDate = $formatter.toDate($record.periodFrom))
+                            #set($expireDate = $formatter.addDays($dealDate, $expireIn))
+                            <tr>
+                                <td>$record.accountName</td>
+                                <td>$formatter.formatDate($dealDate)</td>
+                                <td>$record.type</td>
+                                <td>$record.distributor</td>
+                                <td style="text-align: center;">#if($record.dealRegBonus == true) <i class="fa fa-star"></i> #end</td>
+                            </tr>
+                        #end
+                    </tbody>
+                </table>
+            </div>
+        #end
+    </div>
 #else
     Preview shall go here
 #end
