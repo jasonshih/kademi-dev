@@ -12,6 +12,8 @@ I'M A RECOGNITION WALL
 
 #set( $forum = $services.forumManager.forums.get(0) )
 
+$applications.KRecognition.call("doSomething")
+
 <div class="well">
     #set($questions = $services.forumManager.myStream($forum, null) )
     #if( $questions.isEmpty() )
