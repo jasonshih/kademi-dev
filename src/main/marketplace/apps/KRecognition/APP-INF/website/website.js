@@ -8,7 +8,8 @@ function doWallSearch(forum, pageFrom, pageSize) {
             "relatedAppName",
             "relatedId",
             "profileId",
-            "postDate"
+            "postDate",
+            "numInteractions"
         ],
         "from": pageFrom,
         "size": pageSize

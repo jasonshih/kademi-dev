@@ -24,21 +24,21 @@ I'M A RECOGNITION WALL
         #foreach($postHit in $postsResp.hits.hits)
         <li class="">
             <div class="forumQuestionWrap">
-                <div class="questionAvatar"
-                     style="background-image: url($formatter.profilePicHref($post.poster)); background-size: cover">
-                    <img src="$formatter.profilePicHref($post.poster)" alt="" style="visibility: hidden"></div>
+                <div class="questionAvatar" style="background-image: url($formatter.profilePicHref($post.poster)); background-size: cover">
+                    <img src="$formatter.profilePicHref($post.poster)" alt="" style="visibility: hidden"/>
+                </div>
                 <div class="questionDetails">
                     <p>
                         <i class="fa fa-clock-o"></i>
-                        <abbr title="$formatter.formatDateISO8601($post.fields.postDate.value)" class="timeago">$post.fields.postDate.value</abbr>
+                        <abbr title="$formatter.formatDateISO8601($postHit.fields.postDate.value)" class="timeago">$postHit.fields.postDate.value</abbr>
                         &nbsp;
                         <i class="fa fa-comments-o"></i>
-                        <strong>$post.numReplies</strong> replies
+                        <strong>$postHit.fields.numInteractions.value</strong> replies
                     </p>
-                    <h4><a href="/community/$forum.name/$post.name">$postHit.fields.title.value</a></h4>
-                    <i class="fa fa-user"></i> Posted by <em><a href="#">$post.fields.profileId.value</a></em>
-
-
+                    <h4><a href="/community/$forum.name/$postHit.fields.name.value">$postHit.fields.title.value</a></h4>
+                    <i class="fa fa-user"></i>
+                    Posted by
+                    <em><a href="#">$postHit.fields.profileId.value</a></em>
                 </div>
             </div>
         </li>
@@ -46,6 +46,7 @@ I'M A RECOGNITION WALL
     </ul>
     #end
 </div>
+
 
 
 <div class="modal fade" id="postForumQuestion" tabindex="-1" role="dialog">
