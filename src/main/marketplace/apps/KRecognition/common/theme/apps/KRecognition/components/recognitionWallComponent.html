@@ -12,17 +12,17 @@ I'M A RECOGNITION WALL
 
 #set( $forum = $services.forumManager.forums.get(0) )
 
-$applications.KRecognition.call("doSomething")
+#set( $postsResp = $applications.KRecognition.call("doWallSearch", $forum, 0, 100) )
 
 <div class="well">
-    #set($questions = $services.forumManager.myStream($forum, null) )
-    #if( $questions.isEmpty() )
-    <p>No one has posted any questions yet, <a href="#postForumQuestion" data-toggle="modal">be the first to ask</a></p>
+
+    #if( $postsResp.hits.total == 0 )
+    <p>No one has posted anything yet, <a href="#postForumQuestion" data-toggle="modal">be the first to ask</a></p>
     #else
 
     <ul class="row">
-        #foreach($post in $questions)
-        <li class="thumbnail col-sm-6 col-md-6">
+        #foreach($postHit in $postsResp.hits.hits)
+        <li class="">
             <div class="forumQuestionWrap">
                 <div class="questionAvatar"
                      style="background-image: url($formatter.profilePicHref($post.poster)); background-size: cover">
@@ -30,14 +30,14 @@ $applications.KRecognition.call("doSomething")
                 <div class="questionDetails">
                     <p>
                         <i class="fa fa-clock-o"></i>
-                        <abbr title="$formatter.formatDateISO8601($post.postDate)" class="timeago">$post.postDate</abbr>
+                        <abbr title="$formatter.formatDateISO8601($post.fields.postDate.value)" class="timeago">$post.fields.postDate.value</abbr>
                         &nbsp;
                         <i class="fa fa-comments-o"></i>
                         <strong>$post.numReplies</strong> replies
                     </p>
-                    <h4><a href="/community/$forum.name/$post.name">$post.title</a></h4>
-                    <i class="fa fa-user"></i> Posted by <em><a href="#">$post.poster.nickName</a></em>
-                    <p class="questionNotes">$!post.notes</p>
+                    <h4><a href="/community/$forum.name/$post.name">$postHit.fields.title.value</a></h4>
+                    <i class="fa fa-user"></i> Posted by <em><a href="#">$post.fields.profileId.value</a></em>
+
 
                 </div>
             </div>

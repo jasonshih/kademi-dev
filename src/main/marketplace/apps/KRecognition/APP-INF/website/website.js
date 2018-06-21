@@ -1,12 +1,14 @@
 function doWallSearch(forum, pageFrom, pageSize) {
-    log.info("doSomething");
+    log.info("doWallSearch", forum.id, pageFrom, pageSize);
 
     var query = {
         "stored_fields": [
             "name",
             "title",
             "relatedAppName",
-            "relatedId"
+            "relatedId",
+            "profileId",
+            "postDate"
         ],
         "from": pageFrom,
         "size": pageSize
