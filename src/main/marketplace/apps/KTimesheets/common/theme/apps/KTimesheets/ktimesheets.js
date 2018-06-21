@@ -16,9 +16,40 @@ $(function () {
         });
     }
 
+
+    flog("init hiding");
+    $("body").on("click", ".hide-ts-item", function(e) {
+        e.preventDefault();
+        flog("click hide");
+        var link = $(e.target).closest("a");
+        var tr = link.closest("tr");
+        var id = link.data("hide-id");
+
+        if (typeof(window.localStorage) !== "undefined") {
+            var hideTsIds = localStorage.getItem("hideTsIds");
+            hideTsIds = hideTsIds + " " + id;
+            localStorage.setItem("hideTsIds", hideTsIds);
+            tr.hide(500);
+        } else {
+            alert("Sorry, no local storage");
+        }
+    });
+
+    $("body").on("click", ".ts-unhide", function(e) {
+        e.preventDefault();
+        if (typeof(window.localStorage) !== "undefined") {
+            flog("unhide");
+            localStorage.removeItem("hideTsIds");
+            $(".hide-ts-item").closest("tr").show();
+            Msg.info("Done un-hide");
+        } else {
+            alert("Sorry, no local storage");
+        }
+    });
+
+
     $(".timesheet-table").each(function (i, n) {
         var table = $(n);
-
         updateTotals(table);
 
         $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
@@ -26,6 +57,7 @@ $(function () {
             table.reloadFragment({
                 whenComplete: function (newDom, resp, status, xhr) {
                     updateTotals(table);
+                    hideHiddenRows();
                     var newSubmitForm = newDom.find(".timesheet-dates");
                     var form = table.closest(".timesheet").find(".timesheet-dates");
                     flog("update form", form, newSubmitForm);
@@ -78,6 +110,22 @@ $(function () {
     });
 });
 
+function hideHiddenRows() {
+    var hideTsIds = localStorage.getItem("hideTsIds");
+    flog("hideHiddenRows: hideTsIds", hideTsIds);
+    if( hideTsIds != null) {
+        var arr = hideTsIds.split(" ");
+        for( var i=0; i<arr.length; i++ ) {
+            var id = arr[i];
+            var sel = ".hide-ts-item-" + id;
+            var link = $(sel);
+            var tr = link.closest("tr");
+            tr.hide();
+        }
+    }
+
+}
+
 function updateTotals(table) {
     var bodyRows = table.find("tbody tr");
     var tr = table.find(".totals");
@@ -86,10 +134,11 @@ function updateTotals(table) {
         if (i > 0) {
             var td = $(n);
             var total = calcTotal(bodyRows, i);
-            td.text(total);
+            td.text(total.toFixed(2));
             grandTotal += total;
         }
     });
+    grandTotal = grandTotal.toFixed(2);
     table.find(".grand-total").text(grandTotal);
 }
 

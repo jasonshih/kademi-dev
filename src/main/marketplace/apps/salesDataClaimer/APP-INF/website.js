@@ -819,7 +819,9 @@ function getUnclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
         
         if (extraFields != null) {
             for (var fieldIndex in extraFields) {
-                record[extraFields[fieldIndex]] = hit.fields[extraFields[fieldIndex]].value;
+                if(hit.fields[extraFields[fieldIndex]]){
+                    record[extraFields[fieldIndex]] = hit.fields[extraFields[fieldIndex]].value;
+                }
             }
         }
           

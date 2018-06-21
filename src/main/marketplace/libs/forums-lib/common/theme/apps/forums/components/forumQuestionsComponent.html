@@ -1,7 +1,9 @@
 #if ($page && "$!page.class.simpleName" != "ThemeCheckerPage")
 <div class="text-right">
     #if( $user )
-    <a href="#postForumQuestion" data-toggle="modal" class="btn btn-primary"><i class="fa fa-plus"><!----></i> Post a
+    <a href="#postForumQuestion" data-toggle="modal" class="btn btn-primary">
+        <i class="fa fa-plus"><!----></i>
+        Post a
         question</a>
     #end
     <p>&nbsp;</p>
@@ -21,10 +23,11 @@
                     <img src="$formatter.profilePicHref($post.poster)" alt="" style="visibility: hidden"></div>
                 <div class="questionDetails">
                     <p>
-                        <i class="fa fa-clock-o"></i> <abbr title="$formatter.formatDateISO8601($post.postDate)"
-                                                            class="timeago">$post.postDate</abbr>
-                        &nbsp;<i class="fa fa-comments-o"></i> <strong>$post.numReplies</strong> replies
-
+                        <i class="fa fa-clock-o"></i>
+                        <abbr title="$formatter.formatDateISO8601($post.postDate)" class="timeago">$post.postDate</abbr>
+                        &nbsp;
+                        <i class="fa fa-comments-o"></i>
+                        <strong>$post.numReplies</strong> replies
                     </p>
                     <h4><a href="$post.name">$post.title</a></h4>
                     <i class="fa fa-user"></i> Posted by <em><a href="#">$post.poster.nickName</a></em>

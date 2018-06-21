@@ -24,8 +24,8 @@
 		<tr>
     		<td>$formatter.formatDate($record.periodFrom, $page.organisation.timezone)</td>
     		<td>$formatter.formatDate($record.periodTo, $page.organisation.timezone)</td>
-            <td>$!record.productSku</td>
     		<td>$!record.amount</td>
+            <td>$!record.productSku</td>
             #if ($dataSeries.userSeries.get($entry.key).fieldset.pairsOrdered)
 	            #foreach ($field in $dataSeries.userSeries.get($entry.key).fieldset.pairsOrdered)
 		    		<td>$!record.fieldValue($field.name)</td>

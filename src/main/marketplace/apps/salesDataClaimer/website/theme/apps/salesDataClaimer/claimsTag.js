@@ -2,6 +2,7 @@
     
     $(function () {
         initTagClaim();
+        initTagClaimFilter()
     });
     
     function initTagClaim() {
@@ -32,9 +33,30 @@
         });
     }
     
+    function initTagClaimFilter(){
+        $('.filter-claims-option').on('click', function(e){
+        	//console.log( $(this).text())
+        	var filter = $(this).text()
+        	filterUnclaimedSalesRecords(filter)
+        })
+    }
+    
     function reloadUnclaimedSalesRecords(callback) {
         $('#pending-claims').reloadFragment({
             url: window.location.pathname,
+            whenComplete: function () {
+                initTagClaim() 
+            }
+        });
+    }
+    
+    function filterUnclaimedSalesRecords(filter, callback) {
+        var currentTab = "pending-claims"
+        if($('#post-claims').length){
+            currentTab = "post-claims"
+        }
+        $('#claims-table').reloadFragment({
+            url: window.location.pathname + '?tab='+ currentTab + '&filter=' + filter,
             whenComplete: function () {
                 initTagClaim() 
             }
