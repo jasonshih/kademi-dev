@@ -107,3 +107,56 @@
 .text-white{
     color: #fff;
 }
+
+.panel-leadProfile{
+    color: #fff;
+    .bg-variant(@brand-primary);
+    .leadscore{
+        color: @brand-info;
+        font-size: 50px;
+        font-weight: 900;
+        sup{
+            font-size: 20px;
+            font-weight: 300;
+        }
+    }
+    .leadscore-text{
+        font-weight: 300;
+    }
+    .profile-avatar-img{
+        display: inline-block;
+    }
+    .leadTitle{
+        a{
+            color: #fff;
+            &:hover{
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+.panel-leadProfileTabs{
+    color: #fff;
+    .bg-variant(@brand-primary);
+    .nav-pills{
+        li a{
+            padding-left: 25px;
+            padding-right: 25px;
+            color: @white;
+            &:hover, &:focus{
+                .bg-variant(lighten(@brand-primary, 5%));
+            }
+        }
+        .active a{
+            .bg-variant(lighten(@brand-primary, 5%));
+            &:hover{
+                .bg-variant(lighten(@brand-primary, 5%));
+            }
+        }
+    }
+}
+
+.panel-leadProfileTabContent{
+    .bg-variant(@gray-lighter);
+}

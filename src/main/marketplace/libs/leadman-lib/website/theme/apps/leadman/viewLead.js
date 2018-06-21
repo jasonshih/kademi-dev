@@ -776,6 +776,10 @@
         })
     }
 
+    function initSelectPicker() {
+        $('.selectpicker').selectpicker();
+    }
+
     // Run init functions
     $(function () {
         initViewLeadsPage();
@@ -798,5 +802,6 @@
         initLeadActivity();
         initTags();
         initClosingLead();
+        initSelectPicker();
     }
 })();

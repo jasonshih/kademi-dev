@@ -43,7 +43,11 @@
         {
             "appId": "fuelux-lib",
             "branch": "3.13.0"
-        }          
+        },
+        {
+            "appId": "bootstrap-select-lib",
+            "branch": "1.12.4"
+        }
     ],
 
     "dependencies": [
@@ -240,9 +244,9 @@
             }
         },
         {
-            "css": {
-                "cssMedia": "all",
-                "path": "/theme/apps/leadman/viewLead.css"
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/leadman/viewLead.less"
             }
         },
         {
