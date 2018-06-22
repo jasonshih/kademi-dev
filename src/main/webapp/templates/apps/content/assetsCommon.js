@@ -256,6 +256,11 @@ function initForm(redirectOnCreated) {
         }
     });
 
+    $('.form-edit').on("click", ".btn-remove-value", function(e) {
+        e.preventDefault();
+        $(e.target).closest("div").remove();
+    });
+
     $('.form-asset-main').forms({
         onValid: function (form) {
             form.find('.contenteditor').each(function () {

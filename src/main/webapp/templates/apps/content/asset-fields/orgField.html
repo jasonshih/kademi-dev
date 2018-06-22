@@ -1,0 +1,16 @@
+#if( $fieldDef.allowMany )
+    #foreach( $org in $fieldDef.findSelectedOrgs($fieldValue) )
+        <div class="input-group">
+            <input type="text" name="$fieldDef.name" value="$org.id" data-text="$org.formattedName" class="form-control entity-select" data-entity-type="organisation" />
+            <span class="input-group-btn">
+                <a href="#" class="btn btn-primary btn-remove-value"><i class="fa fa-remove"></i></a>
+            </span>
+        </div>
+    #end
+    <br/>
+    <div>
+        <input type="text" name="$fieldDef.name" value="" class="form-control entity-select" data-entity-type="organisation" />
+    </div>
+#else
+    <input type="text" name="$fieldDef.name" value="$fieldValue" />
+#end
