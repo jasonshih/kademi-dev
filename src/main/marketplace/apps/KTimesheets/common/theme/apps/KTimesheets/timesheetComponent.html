@@ -1,6 +1,11 @@
 
-#set( $timesheet = $services.timesheetManager.timesheet )
+#set( $standardItems = $formatter.toList($formatter.split($applications.KTimesheets.appSettings.standardItems)) )
 
+$standardItems
+
+#set( $timesheet = $services.timesheetManager.timesheet($standardItems) )
+
+$timesheet
 <div class="timesheet">
     <div class="table-responsive">
     <table class="table table-striped timesheet-table" id="the-timesheet">
@@ -27,6 +32,7 @@
                     <a href="#" class="text-muted pull-right ts-unhide"><small>Unhide all</small></a>
                 </th>
 
+
                 #foreach( $day in $timesheet.days )
                 <th>$formatter.getDayOfWeekName($day)</th>
                 #end
@@ -36,7 +42,7 @@
         <tbody>
             #foreach( $item in $timesheet.workItems )
             #set( $showItem = true )
-            #if( $item.class.simpleName == "Task" )
+            #if( $item.is("task") )
                 #if( $item.completedDate )
                     #if( $formatter.durationDays($item.completedDate, $formatter.now) > 14 )
                         #set( $showItem = false )
@@ -53,8 +59,9 @@
             #if( $showItem )
             <tr>
                 <td>
-                    #if( $item.is("task") )
                     <a class="pull-right text-muted hide-ts-item hide-ts-item-$item.id" href="#" data-hide-id="$item.id"><i class="fa fa-eye"></i></a>
+
+                    #if( $item.is("task") )
                     <a href="/tasks/$item.id/ .taskViewModal" class="mr btn btn-danger btn-sm btn-circle" data-target="#modalEditTask" data-toggle="modal">T</a>
                     $item.formattedName
                     #if( $item.relatedLead )
@@ -64,10 +71,12 @@
                     #end
                     </a>
                     <input type="hidden" class="form-control timesheet-item" name="item" value="$item.id" />
+
                     #elseif( $item.is("lead") )
-                    <a class="pull-right text-muted hide-ts-item" href="#" data-hide-id="$item.id"><i class="fa fa-eye"></i></a>
-                    <a href="/leads/$item.id">$item.formattedName</a>
+                    <a href="/leads/$item.id" class="mr btn btn-info btn-sm btn-circle">L</a>
+                    $item.formattedName
                     <input type="hidden" class="form-control timesheet-item" name="item" value="$item.id" />
+
                     #else
                     $item
                     <input type="hidden" class="form-control timesheet-item" name="item" value="$item" />
