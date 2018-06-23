@@ -26,7 +26,7 @@ def randomdigit = rnd.nextInt(99999)
 
 def acctestname = WebUI.concatenate(((['tstacc', randomdigit]) as String[]))
 
-WebUI.openBrowser('http://katalontestacc.admin.kademi-ci.co')
+WebUI.openBrowser('http://katalontestacc2.admin.kademi-ci.co')
 
 WebUI.maximizeWindow()
 
@@ -136,7 +136,7 @@ WebUI.delay(10)
 
 WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cogs'))
 
-WebUI.click(findTestObject('kademi-vladtest/div_KRewardStore'))
+WebUI.click(findTestObject('kademi-vladtest/div_KSignup'))
 
 WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cloud-download'))
 
@@ -148,7 +148,33 @@ WebUI.delay(15)
 
 WebUI.click(findTestObject('kademi-vladtest/span_Dashboard'))
 
-WebUI.delay(10)
+WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cog'))
 
-WebUI.closeBrowser()
+WebUI.delay(4)
+
+WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cogs'))
+
+WebUI.click(findTestObject('kademi-vladtest/div_KContactus'))
+
+WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cloud-download'))
+
+WebUI.delay(1)
+
+WebUI.click(findTestObject('kademi-vladtest/button_Install (1)'))
+
+WebUI.delay(15)
+
+WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cogs'))
+
+WebUI.click(findTestObject('kademi-vladtest/div_KRewardStore'))
+
+WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cloud-download'))
+
+WebUI.delay(1)
+
+WebUI.click(findTestObject('kademi-vladtest/button_Install (1)'))
+
+WebUI.delay(20)
+
+not_run: WebUI.closeBrowser()
 
