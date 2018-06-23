@@ -258,6 +258,8 @@ WebUI.switchToWindowIndex(0)
 
 WebUI.click(findTestObject('Email-job-case/Page_Manage users/span_Talk  Connect'), FailureHandling.STOP_ON_FAILURE)
 
+WebUI.delay(1)
+
 WebUI.click(findTestObject('kademi-vladtest/span_Contact requests'), FailureHandling.STOP_ON_FAILURE)
 
 WebUI.delay(2)
